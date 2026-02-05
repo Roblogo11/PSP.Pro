@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Mail, Phone, MapPin, Send, Loader2, MessageSquare } from 'lucide-react'
+import { GoogleReviews } from '@/components/google-reviews'
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -246,6 +247,11 @@ export default function ContactPage() {
             </form>
           </div>
         </div>
+      </div>
+
+      {/* Google Reviews */}
+      <div className="max-w-6xl mx-auto mt-12">
+        <GoogleReviews />
       </div>
 
       {/* Google Maps */}

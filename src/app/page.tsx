@@ -13,6 +13,7 @@ import {
   Flame,
   Activity
 } from 'lucide-react'
+import { GoogleReviews } from '@/components/google-reviews'
 
 export default function HomePage() {
   return (
@@ -89,6 +90,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Google Reviews Section */}
+      <GoogleReviews />
 
       {/* Features Section */}
       <section className="py-20 px-6">
