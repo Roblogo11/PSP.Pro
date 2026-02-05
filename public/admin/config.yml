@@ -1,80 +1,239 @@
 backend:
   name: git-gateway
-  branch: main # Change to 'master' if your default branch is named 'master'
+  branch: main
 
-# Optional: Use local backend for development
+# Local development backend
 local_backend: true
 
+# Media storage
 media_folder: "public/media"
 public_folder: "/media"
 
+# ============================================
+# PSP.Pro Content Collections
+# ============================================
+
 collections:
-  - name: "photography"
-    label: "Photography Gallery"
-    folder: "content/galleries/photography"
+  # ============================================
+  # DRILLS - Video training library
+  # ============================================
+  - name: "drills"
+    label: "Training Drills"
+    folder: "content/drills"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    slug: "{{slug}}"
+    editor:
+      preview: false
     fields:
-      - {label: "Title", name: "title", widget: "string"}
-      - {label: "Description", name: "description", widget: "text", required: false}
-      - {label: "Image", name: "image", widget: "image"}
-      - {label: "Thumbnail", name: "thumbnail", widget: "image", required: false}
-      - label: "Categories"
-        name: "categories"
-        widget: "select"
-        multiple: true
-        options: ["products", "events", "portraits", "lifestyle", "headshots", "commercial"]
-      - {label: "Featured", name: "featured", widget: "boolean", default: false}
-      - {label: "Publish Date", name: "date", widget: "datetime"}
-      - {label: "Alt Text", name: "alt", widget: "string", required: false}
+      - {label: "Title", name: "title", widget: "string", hint: "e.g., Long Toss Progression"}
+      - {label: "Slug", name: "slug", widget: "string", hint: "URL-friendly version (e.g., long-toss-progression)"}
+      - {label: "Description", name: "description", widget: "text", hint: "Brief overview of the drill"}
+      - {label: "Instructions", name: "instructions", widget: "markdown", required: false, hint: "Detailed step-by-step instructions"}
 
-  - name: "video"
-    label: "Video Gallery"
-    folder: "content/galleries/video"
-    create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    fields:
-      - {label: "Title", name: "title", widget: "string"}
-      - {label: "Description", name: "description", widget: "text", required: false}
-      - label: "Media Type"
-        name: "mediaType"
-        widget: "select"
-        options: ["video-file", "youtube", "vimeo"]
-        default: "video-file"
-      - {label: "Video File", name: "video", widget: "file", required: false, hint: "Upload video file (max 50MB)"}
-      - {label: "YouTube URL", name: "youtubeUrl", widget: "string", required: false}
-      - {label: "Vimeo URL", name: "vimeoUrl", widget: "string", required: false}
+      # Media
+      - label: "Video URL"
+        name: "videoUrl"
+        widget: "string"
+        hint: "Cloudflare Stream, Vimeo, or YouTube URL"
       - {label: "Thumbnail", name: "thumbnail", widget: "image"}
-      - label: "Categories"
-        name: "categories"
-        widget: "select"
-        multiple: true
-        options: ["corporate", "events", "promotional", "documentary", "wedding"]
-      - {label: "Featured", name: "featured", widget: "boolean", default: false}
-      - {label: "Publish Date", name: "date", widget: "datetime"}
-      - {label: "Duration", name: "duration", widget: "string", required: false, hint: "e.g., 2:30"}
 
-  - name: "drone"
-    label: "Drone Gallery"
-    folder: "content/galleries/drone"
+      # Categorization
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        options:
+          - {label: "Mechanics", value: "mechanics"}
+          - {label: "Speed & Agility", value: "speed"}
+          - {label: "Power Training", value: "power"}
+          - {label: "Recovery & Mobility", value: "recovery"}
+          - {label: "Warmup", value: "warmup"}
+          - {label: "Conditioning", value: "conditioning"}
+
+      - label: "Difficulty Level"
+        name: "difficulty"
+        widget: "select"
+        options: ["beginner", "intermediate", "advanced"]
+
+      - label: "Tags"
+        name: "tags"
+        widget: "list"
+        hint: "e.g., throwing, arm-strength, velocity"
+        default: []
+
+      # Metadata
+      - {label: "Duration (seconds)", name: "duration", widget: "number", hint: "Total drill duration"}
+      - label: "Equipment Needed"
+        name: "equipment"
+        widget: "list"
+        default: ["none"]
+        hint: "e.g., medicine ball, resistance bands"
+
+      - label: "Focus Areas"
+        name: "focusAreas"
+        widget: "list"
+        default: []
+        hint: "e.g., shoulder strength, hip mobility"
+
+      # Publishing
+      - {label: "Published", name: "published", widget: "boolean", default: true}
+      - {label: "Featured", name: "featured", widget: "boolean", default: false}
+      - {label: "Publish Date", name: "date", widget: "datetime"}
+
+  # ============================================
+  # BLOG - Training tips & local SEO content
+  # ============================================
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "content/blog"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - {label: "Title", name: "title", widget: "string"}
-      - {label: "Description", name: "description", widget: "text", required: false}
-      - label: "Media Type"
-        name: "mediaType"
+      - {label: "Slug", name: "slug", widget: "string"}
+      - {label: "Description", name: "description", widget: "text", hint: "SEO meta description"}
+      - {label: "Featured Image", name: "image", widget: "image"}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+      # Categorization
+      - label: "Category"
+        name: "category"
         widget: "select"
-        options: ["image", "video"]
-        default: "image"
-      - {label: "Image", name: "image", widget: "image", required: false}
-      - {label: "Video File", name: "video", widget: "file", required: false}
-      - {label: "Thumbnail", name: "thumbnail", widget: "image"}
-      - label: "Categories"
-        name: "categories"
-        widget: "select"
-        multiple: true
-        options: ["aerial", "real-estate", "events", "landscape", "construction"]
+        options:
+          - {label: "Training Tips", value: "training-tips"}
+          - {label: "Velocity Training", value: "velocity"}
+          - {label: "Injury Prevention", value: "injury-prevention"}
+          - {label: "Athlete Nutrition", value: "nutrition"}
+          - {label: "Mental Performance", value: "mental"}
+          - {label: "Success Stories", value: "success-stories"}
+          - {label: "Local Events", value: "local-events"}
+
+      - label: "Tags"
+        name: "tags"
+        widget: "list"
+        default: []
+
+      # Author
+      - {label: "Author", name: "author", widget: "string", default: "PSP Coaching Staff"}
+      - {label: "Author Bio", name: "authorBio", widget: "text", required: false}
+
+      # SEO
+      - {label: "SEO Keywords", name: "keywords", widget: "list", required: false, hint: "Virginia Beach, Norfolk, athletic training, etc."}
+
+      # Publishing
+      - {label: "Published", name: "published", widget: "boolean", default: false}
       - {label: "Featured", name: "featured", widget: "boolean", default: false}
       - {label: "Publish Date", name: "date", widget: "datetime"}
-      - {label: "Alt Text", name: "alt", widget: "string", required: false}
+
+  # ============================================
+  # PROGRAMS - Training program offerings
+  # ============================================
+  - name: "programs"
+    label: "Training Programs"
+    folder: "content/programs"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Program Name", name: "title", widget: "string"}
+      - {label: "Slug", name: "slug", widget: "string"}
+      - {label: "Tagline", name: "tagline", widget: "string", hint: "One-line description"}
+      - {label: "Description", name: "description", widget: "markdown"}
+      - {label: "Hero Image", name: "image", widget: "image"}
+
+      # Program Details
+      - label: "Sport"
+        name: "sport"
+        widget: "select"
+        options: ["baseball", "softball", "both"]
+
+      - label: "Age Range"
+        name: "ageRange"
+        widget: "string"
+        hint: "e.g., 12-18"
+
+      - {label: "Duration", name: "duration", widget: "string", hint: "e.g., 8 weeks, 3 months"}
+      - {label: "Sessions Per Week", name: "sessionsPerWeek", widget: "number"}
+
+      # Pricing
+      - {label: "Price (USD)", name: "price", widget: "number"}
+      - {label: "Pricing Note", name: "pricingNote", widget: "string", required: false, hint: "e.g., per month, one-time"}
+
+      # Features
+      - label: "What's Included"
+        name: "features"
+        widget: "list"
+        hint: "Bullet points of program benefits"
+
+      - label: "Program Highlights"
+        name: "highlights"
+        widget: "list"
+        required: false
+
+      # CTA
+      - {label: "CTA Text", name: "ctaText", widget: "string", default: "Enroll Now"}
+      - {label: "CTA Link", name: "ctaLink", widget: "string", default: "/contact"}
+
+      # Status
+      - {label: "Published", name: "published", widget: "boolean", default: true}
+      - {label: "Featured", name: "featured", widget: "boolean", default: false}
+      - {label: "Display Order", name: "order", widget: "number", default: 0}
+
+  # ============================================
+  # TESTIMONIALS - Parent & athlete reviews
+  # ============================================
+  - name: "testimonials"
+    label: "Testimonials"
+    folder: "content/testimonials"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Reviewer Name", name: "name", widget: "string"}
+      - {label: "Slug", name: "slug", widget: "string"}
+      - {label: "Role", name: "role", widget: "string", hint: "e.g., Parent of Athlete, Softball Player"}
+      - {label: "Quote", name: "quote", widget: "text"}
+      - {label: "Photo", name: "photo", widget: "image", required: false}
+
+      # Details
+      - label: "Sport"
+        name: "sport"
+        widget: "select"
+        options: ["baseball", "softball", "other"]
+        required: false
+
+      - {label: "Rating (1-5)", name: "rating", widget: "number", min: 1, max: 5, default: 5}
+      - {label: "Location", name: "location", widget: "string", required: false, hint: "e.g., Virginia Beach, VA"}
+
+      # Publishing
+      - {label: "Featured", name: "featured", widget: "boolean", default: false}
+      - {label: "Display on Homepage", name: "showOnHomepage", widget: "boolean", default: true}
+      - {label: "Date", name: "date", widget: "datetime"}
+
+  # ============================================
+  # SITE SETTINGS - Global configuration
+  # ============================================
+  - name: "settings"
+    label: "Site Settings"
+    files:
+      - label: "General Settings"
+        name: "general"
+        file: "content/settings/general.json"
+        fields:
+          - {label: "Site Name", name: "siteName", widget: "string", default: "PSP.Pro"}
+          - {label: "Tagline", name: "tagline", widget: "string"}
+          - {label: "Contact Email", name: "email", widget: "string"}
+          - {label: "Contact Phone", name: "phone", widget: "string"}
+          - {label: "Address", name: "address", widget: "text"}
+          - {label: "Social Media Links", name: "social", widget: "object", fields: [
+              {label: "Facebook", name: "facebook", widget: "string", required: false},
+              {label: "Instagram", name: "instagram", widget: "string", required: false},
+              {label: "Twitter", name: "twitter", widget: "string", required: false},
+              {label: "YouTube", name: "youtube", widget: "string", required: false}
+            ]}
+
+      - label: "Homepage Settings"
+        name: "homepage"
+        file: "content/settings/homepage.json"
+        fields:
+          - {label: "Hero Title", name: "heroTitle", widget: "string"}
+          - {label: "Hero Subtitle", name: "heroSubtitle", widget: "text"}
+          - {label: "Hero CTA Text", name: "heroCta", widget: "string"}
+          - {label: "Hero Background", name: "heroImage", widget: "image"}

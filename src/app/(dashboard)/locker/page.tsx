@@ -3,6 +3,9 @@ import { Activity, Dumbbell, Target, Flame } from 'lucide-react'
 import { VelocityChart } from '@/components/dashboard/velocity-chart'
 import { NextSessionCard } from '@/components/dashboard/next-session-card'
 import { StatCard } from '@/components/dashboard/stat-card'
+import { ProgressRing } from '@/components/dashboard/progress-ring'
+import { ActivityFeed } from '@/components/dashboard/activity-feed'
+import { AchievementBadges } from '@/components/dashboard/achievement-badges'
 
 // Force dynamic rendering for this protected dashboard page
 export const dynamic = 'force-dynamic'
@@ -70,6 +73,49 @@ export default function AthleteLockerPage() {
 
         {/* Next Session Card - Takes 2 columns on desktop */}
         <NextSessionCard sessionDate={upcomingSession} />
+      </div>
+
+      {/* Progress & Activity Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        {/* Progress Rings */}
+        <div className="command-panel">
+          <h2 className="text-xl font-bold text-white mb-6">
+            Your Progress
+          </h2>
+          <div className="grid grid-cols-2 gap-6">
+            <ProgressRing
+              progress={72}
+              label="Drills Complete"
+              value="18/25"
+              size={110}
+            />
+            <ProgressRing
+              progress={85}
+              label="Goal Progress"
+              value="68 MPH"
+              size={110}
+              color="#10B981"
+            />
+          </div>
+        </div>
+
+        {/* Activity Feed */}
+        <div className="command-panel lg:col-span-2">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-white">
+              Recent Activity
+            </h2>
+            <button className="text-sm text-slate-400 hover:text-orange transition-colors">
+              View All
+            </button>
+          </div>
+          <ActivityFeed maxItems={4} />
+        </div>
+      </div>
+
+      {/* Achievement Badges Section */}
+      <div className="command-panel mb-6">
+        <AchievementBadges />
       </div>
 
       {/* Assigned Drills Section */}

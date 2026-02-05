@@ -1,10 +1,22 @@
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
 import { Sidebar } from '@/components/layout/sidebar'
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // Protect dashboard routes - require authentication
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/login')
+  }
+
   return (
     <div className="flex min-h-screen" style={{ backgroundColor: '#050A18' }}>
       <Sidebar />
