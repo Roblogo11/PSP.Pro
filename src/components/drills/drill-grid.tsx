@@ -60,11 +60,11 @@ export function DrillGrid({ drills, loading = false }: DrillGridProps) {
           title={drill.title}
           description={drill.description || undefined}
           thumbnailUrl={drill.thumbnail_url || undefined}
-          category={drill.category || 'general'}
+          category={drill.tags?.[0] || 'general'}
           difficulty={drill.difficulty as 'beginner' | 'intermediate' | 'advanced'}
-          duration={drill.duration_seconds}
+          duration={drill.duration}
           tags={drill.tags || []}
-          featured={drill.featured}
+          featured={false}
         />
       ))}
     </div>

@@ -1,26 +1,21 @@
-// Primary funnel flow - the "Linear OS" path
+// Primary navigation flow - PSP.Pro Athletic Training
 export const FUNNEL_ROUTES = [
-  { path: '/', name: 'Home', keywords: ['start', 'main', 'landing'] },
-  { path: '/video', name: 'Video Production', keywords: ['film', 'recording', 'cinematography', '4k'] },
-  { path: '/shock-kit', name: 'The Shock Kit', keywords: ['social', 'content', 'monthly', 'package'] },
-  { path: '/website-help', name: 'AI + Website Help', keywords: ['web', 'design', 'ai', 'development'] },
-  { path: '/get-started', name: 'Get Started', keywords: ['begin', 'services', 'contact', 'quote'] },
+  { path: '/', name: 'Home', keywords: ['start', 'main', 'landing', 'psp'] },
+  { path: '/about', name: 'About', keywords: ['team', 'story', 'coaches', 'who'] },
+  { path: '/pricing', name: 'Pricing', keywords: ['cost', 'price', 'packages', 'rates', 'sessions'] },
+  { path: '/get-started', name: 'Get Started', keywords: ['begin', 'assessment', 'training', 'onboard'] },
+  { path: '/contact', name: 'Contact', keywords: ['email', 'phone', 'message', 'reach', 'location'] },
 ] as const
 
-// Spoke pages - accessible via Cmd+K and footer, not in main funnel
+// Additional pages - accessible via Cmd+K and navigation
 export const SPOKE_ROUTES = [
-  { path: '/drone', name: 'Drone Services', keywords: ['aerial', 'flying', 'fpv', 'dji'], category: 'Services' },
-  { path: '/photography', name: 'Photography', keywords: ['photo', 'shoot', 'portrait', 'headshot'], category: 'Services' },
-  { path: '/podcast', name: 'Podcast Production', keywords: ['audio', 'interview', 'recording', 'studio'], category: 'Services' },
-  { path: '/seo', name: 'SEO Services', keywords: ['search', 'optimization', 'google', 'ranking'], category: 'Services' },
-  { path: '/motion-graphics', name: 'Motion Graphics', keywords: ['animation', 'video', 'effects'], category: 'Services' },
-  { path: '/digital-builds', name: 'Digital Builds', keywords: ['web', 'app', 'development'], category: 'Services' },
-  { path: '/website-redesign', name: 'Website Redesign', keywords: ['redesign', 'refresh', 'update'], category: 'Services' },
-  { path: '/website-fix', name: 'Website Fix', keywords: ['fix', 'repair', 'bug', 'issue'], category: 'Services' },
-  { path: '/blog', name: 'Blog', keywords: ['articles', 'news', 'insights', 'posts'], category: 'Resources' },
-  { path: '/about', name: 'About Us', keywords: ['team', 'story', 'company', 'who'], category: 'Company' },
-  { path: '/pricing', name: 'Pricing', keywords: ['cost', 'price', 'packages', 'rates'], category: 'Company' },
-  { path: '/contact', name: 'Contact', keywords: ['email', 'phone', 'message', 'reach'], category: 'Company' },
+  { path: '/blog', name: 'Training Tips', keywords: ['articles', 'tips', 'insights', 'advice'], category: 'Resources' },
+  { path: '/faq', name: 'FAQ', keywords: ['questions', 'answers', 'help', 'info'], category: 'Resources' },
+  { path: '/booking', name: 'Book Session', keywords: ['schedule', 'appointment', 'reserve', 'time'], category: 'Training' },
+  { path: '/locker', name: 'Dashboard', keywords: ['locker', 'stats', 'progress', 'profile'], category: 'Training' },
+  { path: '/drills', name: 'Training Drills', keywords: ['drills', 'exercises', 'practice', 'workouts'], category: 'Training' },
+  { path: '/login', name: 'Login', keywords: ['signin', 'auth', 'account'], category: 'Account' },
+  { path: '/signup', name: 'Sign Up', keywords: ['register', 'join', 'create account'], category: 'Account' },
 ] as const
 
 // All routes combined for search

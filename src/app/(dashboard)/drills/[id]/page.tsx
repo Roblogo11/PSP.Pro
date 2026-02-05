@@ -64,7 +64,7 @@ export default function DrillDetailPage() {
           .eq('drill_id', id)
 
         setCompletionCount(completions?.length || 0)
-        setIsCompleted(completions && completions.length > 0)
+        setIsCompleted(!!completions && completions.length > 0)
       }
     } catch (error) {
       console.error('Error fetching drill:', error)
@@ -190,9 +190,11 @@ export default function DrillDetailPage() {
 
             {/* Meta Tags */}
             <div className="flex flex-wrap gap-3">
-              <span className="px-3 py-2 bg-orange/10 text-orange text-sm font-medium rounded-lg border border-orange/20">
-                {drill.category}
-              </span>
+              {drill.tags && drill.tags.length > 0 && (
+                <span className="px-3 py-2 bg-orange/10 text-orange text-sm font-medium rounded-lg border border-orange/20">
+                  {drill.tags[0]}
+                </span>
+              )}
               <span
                 className={`px-3 py-2 text-sm font-medium rounded-lg border capitalize ${
                   difficultyColors[drill.difficulty as keyof typeof difficultyColors]
@@ -202,19 +204,19 @@ export default function DrillDetailPage() {
               </span>
               <span className="px-3 py-2 bg-white/5 text-slate-300 text-sm font-medium rounded-lg border border-white/10 flex items-center gap-2">
                 <Clock className="w-4 h-4" />
-                {formatDuration(drill.duration_seconds)}
+                {formatDuration(drill.duration)}
               </span>
             </div>
           </div>
 
           {/* Instructions */}
-          {drill.instructions && (
+          {drill.description && (
             <div className="glass-card p-8">
               <h2 className="text-2xl font-display font-bold text-white mb-4">
                 Instructions
               </h2>
               <div className="prose prose-invert prose-orange max-w-none">
-                <ReactMarkdown>{drill.instructions}</ReactMarkdown>
+                <ReactMarkdown>{drill.description}</ReactMarkdown>
               </div>
             </div>
           )}
@@ -231,12 +233,8 @@ export default function DrillDetailPage() {
               <div className="flex items-center justify-between">
                 <span className="text-slate-400">Duration</span>
                 <span className="text-white font-semibold">
-                  {formatDuration(drill.duration_seconds)}
+                  {formatDuration(drill.duration)}
                 </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-slate-400">Views</span>
-                <span className="text-white font-semibold">{drill.view_count || 0}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-400">Your Completions</span>
@@ -244,24 +242,6 @@ export default function DrillDetailPage() {
               </div>
             </div>
           </div>
-
-          {/* Equipment Needed */}
-          {drill.equipment_needed && drill.equipment_needed.length > 0 && (
-            <div className="glass-card p-6">
-              <h3 className="text-lg font-display font-bold text-white mb-4 flex items-center gap-2">
-                <Dumbbell className="w-5 h-5 text-orange" />
-                Equipment Needed
-              </h3>
-              <ul className="space-y-2">
-                {drill.equipment_needed.map((item, idx) => (
-                  <li key={idx} className="text-slate-300 flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-orange" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
 
           {/* Tags */}
           {drill.tags && drill.tags.length > 0 && (
@@ -283,23 +263,6 @@ export default function DrillDetailPage() {
             </div>
           )}
 
-          {/* Focus Areas */}
-          {drill.focus_areas && drill.focus_areas.length > 0 && (
-            <div className="glass-card p-6">
-              <h3 className="text-lg font-display font-bold text-white mb-4 flex items-center gap-2">
-                <Award className="w-5 h-5 text-orange" />
-                Focus Areas
-              </h3>
-              <ul className="space-y-2">
-                {drill.focus_areas.map((area, idx) => (
-                  <li key={idx} className="text-slate-300 flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-orange" />
-                    {area}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
         </div>
       </div>
     </div>

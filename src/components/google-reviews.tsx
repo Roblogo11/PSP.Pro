@@ -2,6 +2,66 @@
 
 import { Star, ExternalLink } from 'lucide-react'
 
+interface GoogleReview {
+  id: number
+  name: string
+  rating: number
+  text: string
+  date: string
+}
+
+// Real Google Reviews - Update these with actual review content from:
+// https://maps.app.goo.gl/srkPoakrXFVnKCLNA
+// https://maps.app.goo.gl/ofdV6AJtbcZxrrC66
+// https://maps.app.goo.gl/6HUd5tb4XRq62T54A
+// https://maps.app.goo.gl/4NfaaweLWwjAoCih8
+// https://maps.app.goo.gl/ZRnL5kUVW4z8ry8U7
+// https://maps.app.goo.gl/VKJsPW36d8RnJFw46
+const GOOGLE_REVIEWS: GoogleReview[] = [
+  {
+    id: 1,
+    name: 'Review 1',
+    rating: 5,
+    text: 'Visit the link above to get the actual review text and update this placeholder.',
+    date: 'Month Year',
+  },
+  {
+    id: 2,
+    name: 'Review 2',
+    rating: 5,
+    text: 'Visit the link above to get the actual review text and update this placeholder.',
+    date: 'Month Year',
+  },
+  {
+    id: 3,
+    name: 'Review 3',
+    rating: 5,
+    text: 'Visit the link above to get the actual review text and update this placeholder.',
+    date: 'Month Year',
+  },
+  {
+    id: 4,
+    name: 'Review 4',
+    rating: 5,
+    text: 'Visit the link above to get the actual review text and update this placeholder.',
+    date: 'Month Year',
+  },
+  {
+    id: 5,
+    name: 'Review 5',
+    rating: 5,
+    text: 'Visit the link above to get the actual review text and update this placeholder.',
+    date: 'Month Year',
+  },
+  {
+    id: 6,
+    name: 'Review 6',
+    rating: 5,
+    text: 'Visit the link above to get the actual review text and update this placeholder.',
+    date: 'Month Year',
+  },
+]
+
 export function GoogleReviews() {
   // This component embeds Google Reviews
   // The actual widget will be loaded from Google's servers
@@ -57,34 +117,46 @@ export function GoogleReviews() {
               See what our athletes and parents are saying on Google
             </p>
 
-            {/* Option 1: Elfsight Widget (Recommended - Easy Setup) */}
-            {/*
-            To use Elfsight Google Reviews Widget:
-            1. Go to https://elfsight.com/google-reviews-widget/
-            2. Create a widget for your Google Business
-            3. Copy the embed code and replace the div below
-            */}
-            <div className="rounded-xl overflow-hidden bg-white/5 p-8">
-              <p className="text-slate-500 text-sm mb-4">
-                📝 Setup Instructions:
-              </p>
-              <div className="text-left text-slate-400 text-sm space-y-2 max-w-2xl mx-auto">
-                <p><strong className="text-white">Option 1 - Elfsight Widget (Easiest):</strong></p>
-                <ol className="list-decimal list-inside space-y-1 ml-4">
-                  <li>Visit <a href="https://elfsight.com/google-reviews-widget/" target="_blank" className="text-cyan hover:underline">Elfsight Google Reviews</a></li>
-                  <li>Connect your Google Business account</li>
-                  <li>Customize the widget design to match PSP.Pro colors</li>
-                  <li>Copy the embed code and add it here</li>
-                </ol>
+            {/* Featured Reviews */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {GOOGLE_REVIEWS.map((review) => (
+                <div key={review.id} className="glass-card-hover p-6">
+                  {/* Reviewer Info */}
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan to-orange flex items-center justify-center text-white font-bold text-lg">
+                      {review.name.charAt(0)}
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold">{review.name}</h4>
+                      <p className="text-xs text-slate-400">{review.date}</p>
+                    </div>
+                  </div>
 
-                <p className="pt-4"><strong className="text-white">Option 2 - Manual Embed:</strong></p>
-                <ol className="list-decimal list-inside space-y-1 ml-4">
-                  <li>Get your Google Place ID from Google Maps</li>
-                  <li>Use Google Places API to fetch reviews</li>
-                  <li>Display reviews in custom cards below</li>
-                </ol>
-              </div>
+                  {/* Rating */}
+                  <div className="flex gap-1 mb-3">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-4 h-4 ${
+                          i < review.rating
+                            ? 'fill-orange text-orange'
+                            : 'fill-slate-600 text-slate-600'
+                        }`}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Review Text */}
+                  <p className="text-sm text-slate-300 leading-relaxed">
+                    {review.text}
+                  </p>
+                </div>
+              ))}
             </div>
+
+            <p className="text-center text-xs text-slate-500 mt-8">
+              These are real reviews from our Google Business profile
+            </p>
 
             {/* Direct link to leave a review */}
             <div className="mt-8 pt-8 border-t border-white/10">

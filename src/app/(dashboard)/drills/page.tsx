@@ -72,9 +72,9 @@ export default function DrillsPage() {
   const handleFilterChange = (filters: FilterState) => {
     let filtered = [...drills]
 
-    // Filter by category
+    // Filter by category (using tags)
     if (filters.category) {
-      filtered = filtered.filter((drill) => drill.category === filters.category)
+      filtered = filtered.filter((drill) => drill.tags?.includes(filters.category!))
     }
 
     // Filter by difficulty

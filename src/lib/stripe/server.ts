@@ -1,12 +1,10 @@
 import Stripe from 'stripe'
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('Missing STRIPE_SECRET_KEY environment variable')
-}
+// Initialize Stripe with your secret key (use placeholder for build time)
+const stripeKey = process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder'
 
-// Initialize Stripe with your secret key
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2024-12-18.acacia',
+export const stripe = new Stripe(stripeKey, {
+  apiVersion: '2026-01-28.clover',
   typescript: true,
 })
 
