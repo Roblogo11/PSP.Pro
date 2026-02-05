@@ -31,11 +31,29 @@ export default function HomePage() {
         <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 text-center">
           {/* Logo */}
           <div className="mb-8">
-            <img
-              src="/images/PSP-black-300x99-1.png"
-              alt="ProPer Sports Performance"
-              className="h-20 mx-auto brightness-0 invert"
-            />
+            <svg
+              width="300"
+              height="100"
+              viewBox="0 0 300 100"
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-20 mx-auto"
+              style={{
+                filter: 'drop-shadow(0 0 20px rgba(0, 180, 216, 0.4))',
+              }}
+            >
+              <text
+                x="150"
+                y="60"
+                fontFamily="system-ui, -apple-system, sans-serif"
+                fontSize="56"
+                fontWeight="800"
+                fill="#FFFFFF"
+                textAnchor="middle"
+                letterSpacing="3"
+              >
+                PSP<tspan fill="#00B4D8">.Pro</tspan>
+              </text>
+            </svg>
             <p className="text-sm mt-2" style={{ color: '#4A5568' }}>Athletic OS</p>
           </div>
 

@@ -96,7 +96,7 @@ export function GoogleReviews() {
                   ))}
                 </div>
               </div>
-              <p className="text-sm text-slate-400">Based on 50+ Google reviews</p>
+              <p className="text-sm text-slate-400">Based on 6 Google reviews</p>
               <a
                 href="https://www.google.com/maps/place/ProPer+Sports+Performance+LLC"
                 target="_blank"
