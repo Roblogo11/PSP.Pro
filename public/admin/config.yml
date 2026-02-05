@@ -1,0 +1,80 @@
+backend:
+  name: git-gateway
+  branch: main # Change to 'master' if your default branch is named 'master'
+
+# Optional: Use local backend for development
+local_backend: true
+
+media_folder: "public/media"
+public_folder: "/media"
+
+collections:
+  - name: "photography"
+    label: "Photography Gallery"
+    folder: "content/galleries/photography"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "text", required: false}
+      - {label: "Image", name: "image", widget: "image"}
+      - {label: "Thumbnail", name: "thumbnail", widget: "image", required: false}
+      - label: "Categories"
+        name: "categories"
+        widget: "select"
+        multiple: true
+        options: ["products", "events", "portraits", "lifestyle", "headshots", "commercial"]
+      - {label: "Featured", name: "featured", widget: "boolean", default: false}
+      - {label: "Publish Date", name: "date", widget: "datetime"}
+      - {label: "Alt Text", name: "alt", widget: "string", required: false}
+
+  - name: "video"
+    label: "Video Gallery"
+    folder: "content/galleries/video"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "text", required: false}
+      - label: "Media Type"
+        name: "mediaType"
+        widget: "select"
+        options: ["video-file", "youtube", "vimeo"]
+        default: "video-file"
+      - {label: "Video File", name: "video", widget: "file", required: false, hint: "Upload video file (max 50MB)"}
+      - {label: "YouTube URL", name: "youtubeUrl", widget: "string", required: false}
+      - {label: "Vimeo URL", name: "vimeoUrl", widget: "string", required: false}
+      - {label: "Thumbnail", name: "thumbnail", widget: "image"}
+      - label: "Categories"
+        name: "categories"
+        widget: "select"
+        multiple: true
+        options: ["corporate", "events", "promotional", "documentary", "wedding"]
+      - {label: "Featured", name: "featured", widget: "boolean", default: false}
+      - {label: "Publish Date", name: "date", widget: "datetime"}
+      - {label: "Duration", name: "duration", widget: "string", required: false, hint: "e.g., 2:30"}
+
+  - name: "drone"
+    label: "Drone Gallery"
+    folder: "content/galleries/drone"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "text", required: false}
+      - label: "Media Type"
+        name: "mediaType"
+        widget: "select"
+        options: ["image", "video"]
+        default: "image"
+      - {label: "Image", name: "image", widget: "image", required: false}
+      - {label: "Video File", name: "video", widget: "file", required: false}
+      - {label: "Thumbnail", name: "thumbnail", widget: "image"}
+      - label: "Categories"
+        name: "categories"
+        widget: "select"
+        multiple: true
+        options: ["aerial", "real-estate", "events", "landscape", "construction"]
+      - {label: "Featured", name: "featured", widget: "boolean", default: false}
+      - {label: "Publish Date", name: "date", widget: "datetime"}
+      - {label: "Alt Text", name: "alt", widget: "string", required: false}

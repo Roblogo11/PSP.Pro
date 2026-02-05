@@ -1,0 +1,14 @@
+RewriteEngine On
+RewriteBase /
+
+# 1. THE ASSET BRIDGE
+# If the browser asks for /_next/... (absolute path), 
+# redirect it to the actual _next folder in this directory.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^_next/(.*)$ _next/$1 [L,QSA]
+
+# 2. THE ROUTING FIX
+# Ensures /photography/ loads /photography/index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ $1/index.html [L]
