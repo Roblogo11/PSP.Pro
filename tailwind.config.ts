@@ -42,6 +42,21 @@ const config: Config = {
           900: '#871200',
         },
 
+        // Accent 2: PSP Blue (Logo Cyan - Tech & Speed)
+        cyan: {
+          DEFAULT: '#00B4D8',
+          50: '#E0F7FF',
+          100: '#B8EEFF',
+          200: '#8FE5FF',
+          300: '#66DCFF',
+          400: '#3DD3FF',
+          500: '#00B4D8',
+          600: '#0096B8',
+          700: '#007898',
+          800: '#005A78',
+          900: '#003C58',
+        },
+
         // Utility: Slate Gray (Secondary Text & UI Elements)
         slate: {
           DEFAULT: '#4A5568',

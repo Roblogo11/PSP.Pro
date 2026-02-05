@@ -8,14 +8,17 @@ export default async function DashboardLayout({
   children: React.ReactNode
 }) {
   // Protect dashboard routes - require authentication
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  // TEMPORARILY DISABLED for local preview without Supabase
+  // Uncomment when Supabase is configured:
 
-  if (!user) {
-    redirect('/login')
-  }
+  // const supabase = await createClient()
+  // const {
+  //   data: { user },
+  // } = await supabase.auth.getUser()
+
+  // if (!user) {
+  //   redirect('/login')
+  // }
 
   return (
     <div className="flex min-h-screen" style={{ backgroundColor: '#050A18' }}>

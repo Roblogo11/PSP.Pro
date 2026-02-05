@@ -178,7 +178,7 @@
 
   /* Divider */
   .divider-glow {
-    @apply h-px w-full bg-gradient-to-r from-transparent via-orange/50 to-transparent;
+    @apply h-px w-full bg-gradient-to-r from-transparent via-orange-500/50 to-transparent;
   }
 }
 
