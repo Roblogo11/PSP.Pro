@@ -1,0 +1,190 @@
+import type { Config } from 'tailwindcss'
+
+const config: Config = {
+  content: [
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        // PSP.Pro Brand Colors - Premium Athletic OS Theme
+        border: '#1F2937', // Subtle border
+
+        // Primary: Deep Navy (Command Center Background)
+        navy: {
+          DEFAULT: '#050A18',
+          50: '#0F1623',
+          100: '#0A1120',
+          200: '#080D1C',
+          300: '#060B19',
+          400: '#050A18',
+          500: '#040916',
+          600: '#030714',
+          700: '#020612',
+          800: '#010410',
+          900: '#00020E',
+        },
+
+        // Accent: Electric Orange (High-Energy CTAs & Highlights)
+        orange: {
+          DEFAULT: '#FF4B2B',
+          50: '#FFE5E0',
+          100: '#FFD1C9',
+          200: '#FFAA9A',
+          300: '#FF836B',
+          400: '#FF673C',
+          500: '#FF4B2B',
+          600: '#FF2E0D',
+          700: '#E31F00',
+          800: '#B51800',
+          900: '#871200',
+        },
+
+        // Utility: Slate Gray (Secondary Text & UI Elements)
+        slate: {
+          DEFAULT: '#4A5568',
+          50: '#F8FAFC',
+          100: '#F1F5F9',
+          200: '#E2E8F0',
+          300: '#CBD5E1',
+          400: '#94A3B8',
+          500: '#64748B',
+          600: '#4A5568',
+          700: '#334155',
+          800: '#1E293B',
+          900: '#0F172A',
+        },
+
+        // Text: Soft White (Primary Text)
+        white: {
+          DEFAULT: '#F7FAFC',
+          soft: '#E2E8F0',
+          muted: '#CBD5E1',
+        },
+
+        // Glassmorphism overlays
+        glass: {
+          light: 'rgba(247, 250, 252, 0.05)',
+          medium: 'rgba(247, 250, 252, 0.1)',
+          dark: 'rgba(5, 10, 24, 0.8)',
+        },
+      },
+
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Montserrat', 'Inter', 'system-ui', 'sans-serif'],
+      },
+
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+
+        // PSP.Pro Signature Gradients
+        'gradient-athletic': 'linear-gradient(135deg, #050A18 0%, #0F1623 50%, #FF4B2B 100%)',
+        'gradient-velocity': 'linear-gradient(90deg, #FF4B2B 0%, #FF673C 50%, #FF836B 100%)',
+        'gradient-command': 'linear-gradient(180deg, rgba(5,10,24,0.95) 0%, rgba(15,22,35,0.9) 100%)',
+
+        // Subtle grid pattern for dashboard
+        'grid-pattern': "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FF4B2B' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+      },
+
+      boxShadow: {
+        // Glassmorphism & Glow Effects
+        'glass': '0 8px 32px 0 rgba(255, 75, 43, 0.1)',
+        'glass-lg': '0 12px 48px 0 rgba(255, 75, 43, 0.15)',
+        'glow-orange': '0 0 20px rgba(255, 75, 43, 0.4)',
+        'glow-orange-lg': '0 0 40px rgba(255, 75, 43, 0.6)',
+        'inner-glow': 'inset 0 0 20px rgba(255, 75, 43, 0.1)',
+        'command-panel': '0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 75, 43, 0.1)',
+      },
+
+      backdropBlur: {
+        'xs': '2px',
+        'glass': '12px',
+      },
+
+      animation: {
+        'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'float': 'float 6s ease-in-out infinite',
+        'slide-up': 'slide-up 0.5s ease-out',
+        'slide-down': 'slide-down 0.5s ease-out',
+        'slide-left': 'slide-left 0.5s ease-out',
+        'slide-right': 'slide-right 0.5s ease-out',
+        'fade-in': 'fade-in 0.5s ease-out',
+        'fade-in-slow': 'fade-in 1s ease-out',
+        'scale-in': 'scale-in 0.3s ease-out',
+        'glow-pulse': 'glow-pulse 3s ease-in-out infinite',
+        'velocity-line': 'velocity-line 2s ease-in-out infinite',
+      },
+
+      keyframes: {
+        'pulse-glow': {
+          '0%, 100%': {
+            opacity: '1',
+            boxShadow: '0 0 20px rgba(255, 75, 43, 0.4)',
+          },
+          '50%': {
+            opacity: '0.8',
+            boxShadow: '0 0 40px rgba(255, 75, 43, 0.6)',
+          },
+        },
+        'float': {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-20px)' },
+        },
+        'slide-up': {
+          '0%': { transform: 'translateY(30px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        'slide-down': {
+          '0%': { transform: 'translateY(-30px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        'slide-left': {
+          '0%': { transform: 'translateX(30px)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        'slide-right': {
+          '0%': { transform: 'translateX(-30px)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'scale-in': {
+          '0%': { transform: 'scale(0.95)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        'glow-pulse': {
+          '0%, 100%': {
+            opacity: '0.8',
+            filter: 'drop-shadow(0 0 8px rgba(255, 75, 43, 0.4))',
+          },
+          '50%': {
+            opacity: '1',
+            filter: 'drop-shadow(0 0 16px rgba(255, 75, 43, 0.8))',
+          },
+        },
+        'velocity-line': {
+          '0%, 100%': {
+            transform: 'translateX(-100%)',
+            opacity: '0',
+          },
+          '50%': {
+            opacity: '1',
+          },
+          '100%': {
+            transform: 'translateX(100%)',
+            opacity: '0',
+          },
+        },
+      },
+    },
+  },
+  plugins: [],
+}
+
+export default config

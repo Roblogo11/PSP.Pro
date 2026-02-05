@@ -2,69 +2,214 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap');
+
 @layer base {
   :root {
     --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
-    --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-display: 'Montserrat', 'Inter', system-ui, sans-serif;
+
+    /* PSP.Pro Brand Colors */
+    --color-navy: #050A18;
+    --color-orange: #FF4B2B;
+    --color-slate: #4A5568;
+    --color-white: #F7FAFC;
   }
 
   * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-primary text-white antialiased;
-    font-feature-settings: 'cv11', 'ss01';
-    font-variation-settings: 'opsz' 32;
+    @apply border-slate-800/50;
   }
 
   html {
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Custom scrollbar */
+  body {
+    @apply text-white antialiased;
+    background-color: #050A18;
+    font-family: var(--font-inter);
+    font-feature-settings: 'cv11', 'ss01';
+    font-variation-settings: 'opsz' 32;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FF4B2B' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  /* Custom Scrollbar - Higgsfield Style */
   ::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
+    height: 10px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-dark-200;
+    background-color: #0A1120;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-secondary/50 rounded-full;
+    background-color: rgba(255, 75, 43, 0.5);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-secondary;
+    background-color: #FF4B2B;
+  }
+
+  /* Firefox Scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 75, 43, 0.5) #0A1120;
+  }
+}
+
+@layer components {
+  /* Glassmorphism Card - The Signature PSP.Pro Look */
+  .glass-card {
+    @apply bg-white/5 border border-white/10 rounded-2xl;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow:
+      0 8px 32px 0 rgba(0, 0, 0, 0.37),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300;
+  }
+
+  .glass-card-hover:hover {
+    @apply bg-white/10;
+    border-color: rgba(255, 75, 43, 0.3);
+    box-shadow: 0 0 20px rgba(255, 75, 43, 0.4);
+    transform: translateY(-2px);
+  }
+
+  /* Command Panel Style - For Dashboard Widgets */
+  .command-panel {
+    @apply glass-card p-6;
+    background: linear-gradient(
+      135deg,
+      rgba(247, 250, 252, 0.05) 0%,
+      rgba(247, 250, 252, 0.02) 100%
+    );
+  }
+
+  .command-panel-active {
+    @apply command-panel;
+    border-color: rgba(255, 75, 43, 0.5);
+    box-shadow: 0 0 20px rgba(255, 75, 43, 0.4);
+  }
+
+  /* Bento Grid Container */
+  .bento-grid {
+    @apply grid gap-4 md:gap-6;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  /* Gradient Text Effects */
+  .text-gradient-orange {
+    background: linear-gradient(90deg, #FF836B 0%, #FF4B2B 50%, #FF2E0D 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-velocity {
+    background: linear-gradient(90deg, #FF4B2B 0%, #FF673C 50%, #FF836B 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* High-Tech Buttons */
+  .btn-primary {
+    background-color: #FF4B2B;
+    @apply text-white font-semibold px-6 py-3 rounded-xl;
+    @apply transition-all duration-300;
+    @apply transform hover:scale-105;
+    box-shadow: 0 0 20px rgba(255, 75, 43, 0.4);
+  }
+
+  .btn-primary:hover {
+    background-color: #FF2E0D;
+    box-shadow: 0 0 40px rgba(255, 75, 43, 0.6);
+  }
+
+  .btn-ghost {
+    @apply bg-white/5 hover:bg-white/10 text-white font-semibold px-6 py-3 rounded-xl;
+    @apply border border-white/10;
+    @apply transition-all duration-300;
+  }
+
+  .btn-ghost:hover {
+    border-color: rgba(255, 75, 43, 0.3);
+  }
+
+  .btn-icon {
+    @apply glass-card p-3 hover:bg-white/10;
+    @apply transition-all duration-300 cursor-pointer;
+  }
+
+  .btn-icon:hover {
+    border-color: rgba(255, 75, 43, 0.3);
+  }
+
+  /* Stat Display - For Metrics */
+  .stat-value {
+    @apply text-4xl md:text-5xl font-bold text-gradient-orange;
+  }
+
+  .stat-label {
+    @apply text-sm md:text-base text-slate-400 uppercase tracking-wider;
+  }
+
+  /* Loading States */
+  .skeleton {
+    @apply animate-pulse bg-white/5 rounded-xl;
+  }
+
+  /* Divider */
+  .divider-glow {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-orange/50 to-transparent;
   }
 }
 
 @layer utilities {
+  /* Text Utilities */
   .text-balance {
     text-wrap: balance;
   }
 
-  /* Slow hex rotation animation */
-  .animate-hex-spin {
-    animation: hex-spin 8s linear infinite;
-  }
-
-  @keyframes hex-spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
+  /* Glow Text Effects */
   .glow-text {
-    text-shadow: 0 0 20px rgba(14, 165, 233, 0.5);
+    text-shadow: 0 0 20px rgba(255, 75, 43, 0.5);
   }
 
-  .glow-text-accent {
-    text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+  .glow-text-strong {
+    text-shadow: 0 0 30px rgba(255, 75, 43, 0.8);
+  }
+
+  /* GPU-Accelerated Animations */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+  }
+
+  .will-change-transform {
+    will-change: transform;
+  }
+
+  .will-change-opacity {
+    will-change: opacity;
   }
 
   /* Intersection Observer Animation Classes */
@@ -84,52 +229,85 @@
   }
 
   @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
-  .animate-fade-in.is-visible {
-    opacity: 1;
+  /* Responsive Utilities */
+  .mobile-safe {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
-  .animate-slide-left {
+  /* Focus States - Accessibility */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+
+  .focus-ring:focus {
+    --tw-ring-color: #FF4B2B;
+    --tw-ring-offset-color: #050A18;
+  }
+
+  /* Backdrop Blur Layers */
+  .backdrop-layer-1 {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .backdrop-layer-2 {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .backdrop-layer-3 {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+}
+
+/* Framer Motion Layout Animations */
+.page-transition {
+  animation: pageEnter 0.4s ease-out;
+}
+
+@keyframes pageEnter {
+  from {
     opacity: 0;
-    transform: translateX(-30px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transform: translateY(20px);
   }
-
-  .animate-slide-left.is-visible {
+  to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
+  }
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white;
+    color: black;
   }
 
-  .animate-slide-right {
-    opacity: 0;
-    transform: translateX(30px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  .glass-card {
+    border: 1px solid #ccc;
+    box-shadow: none;
   }
+}
 
-  .animate-slide-right.is-visible {
-    opacity: 1;
-    transform: translateX(0);
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .glass-card {
+    border-width: 2px;
   }
+}
 
-  /* GPU-accelerated utilities for smooth animations */
-  .gpu-accelerated {
-    transform: translateZ(0);
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-  }
-
-  .will-change-transform {
-    will-change: transform;
-  }
-
-  .will-change-opacity {
-    will-change: opacity;
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
