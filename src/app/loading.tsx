@@ -7,67 +7,102 @@ export default function Loading() {
       }}
       aria-hidden="true"
     >
-      <div className="relative flex flex-col items-center">
+      <div className="relative flex flex-col items-center max-w-md mx-auto px-6">
         {/* Cyan glow effect behind logo */}
         <div
-          className="absolute inset-0 blur-3xl opacity-50"
+          className="absolute inset-0 blur-3xl opacity-60"
           style={{
             background: 'radial-gradient(circle, rgba(0, 180, 216, 0.6) 0%, rgba(0, 180, 216, 0.3) 50%, transparent 70%)',
-            transform: 'scale(2)',
+            transform: 'scale(2.5)',
           }}
         />
 
         {/* PSP Logo */}
-        <div className="relative z-10 mb-8">
+        <div className="relative z-10 mb-6">
           <img
             src="/images/PSP-black-300x99-1.png"
             alt="ProPer Sports Performance"
-            className="h-24 brightness-0 invert"
+            className="h-20 md:h-24 brightness-0 invert animate-pulse"
             style={{
-              filter: 'brightness(0) invert(1) drop-shadow(0 0 20px rgba(0, 180, 216, 0.5))',
+              filter: 'brightness(0) invert(1) drop-shadow(0 0 25px rgba(0, 180, 216, 0.6))',
+              animationDuration: '2s',
             }}
           />
         </div>
 
+        {/* Brand Tagline */}
+        <p
+          className="relative z-10 text-xs md:text-sm tracking-[0.3em] uppercase mb-8 opacity-70"
+          style={{
+            color: '#CBD5E1',
+            textShadow: '0 0 8px rgba(0, 180, 216, 0.3)',
+          }}
+        >
+          Athletic OS
+        </p>
+
         {/* Loading animation - Cyan pulse rings */}
-        <div className="relative flex items-center justify-center" style={{ width: '80px', height: '80px' }}>
+        <div className="relative flex items-center justify-center mb-6" style={{ width: '90px', height: '90px' }}>
           {/* Outer ring */}
           <div
             className="absolute inset-0 rounded-full animate-ping"
             style={{
-              border: '3px solid rgba(0, 180, 216, 0.4)',
-              animationDuration: '1.5s',
+              border: '3px solid rgba(0, 180, 216, 0.5)',
+              animationDuration: '1.8s',
             }}
           />
           {/* Middle ring */}
           <div
             className="absolute inset-2 rounded-full animate-ping"
             style={{
-              border: '3px solid rgba(0, 180, 216, 0.6)',
-              animationDuration: '1.2s',
+              border: '3px solid rgba(0, 180, 216, 0.7)',
+              animationDuration: '1.4s',
             }}
           />
-          {/* Inner circle */}
+          {/* Inner circle - rotating gradient */}
           <div
             className="absolute inset-4 rounded-full"
             style={{
-              background: 'linear-gradient(135deg, rgba(0, 180, 216, 0.3) 0%, rgba(255, 75, 43, 0.2) 100%)',
-              boxShadow: '0 0 30px rgba(0, 180, 216, 0.4)',
+              background: 'linear-gradient(135deg, rgba(0, 180, 216, 0.4) 0%, rgba(255, 75, 43, 0.3) 100%)',
+              boxShadow: '0 0 35px rgba(0, 180, 216, 0.5), inset 0 0 20px rgba(0, 180, 216, 0.2)',
+              animation: 'spin 3s linear infinite',
             }}
           />
         </div>
 
         {/* Loading text */}
-        <p
-          className="mt-8 text-sm font-semibold tracking-wider uppercase"
-          style={{
-            color: '#00B4D8',
-            textShadow: '0 0 10px rgba(0, 180, 216, 0.5)',
-          }}
-        >
-          Loading Athletic OS...
-        </p>
+        <div className="relative z-10 text-center">
+          <p
+            className="text-base md:text-lg font-bold tracking-wide mb-2"
+            style={{
+              color: '#F7FAFC',
+              textShadow: '0 0 15px rgba(0, 180, 216, 0.4)',
+            }}
+          >
+            Powering Up
+          </p>
+          <p
+            className="text-xs md:text-sm tracking-wider uppercase opacity-60"
+            style={{
+              color: '#00B4D8',
+              textShadow: '0 0 8px rgba(0, 180, 216, 0.3)',
+            }}
+          >
+            Progression Over Perfection
+          </p>
+        </div>
       </div>
+
+      <style jsx>{`
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </div>
   )
 }
