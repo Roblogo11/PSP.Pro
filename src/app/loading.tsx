@@ -1,57 +1,72 @@
-import Image from 'next/image'
-
-const LOGO_URL = 'https://roblogo.com/wp-content/uploads/2025/02/smp-icon-anim.gif'
-
 export default function Loading() {
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm"
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center"
       style={{
-        background: 'linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(26, 26, 46, 0.9) 50%, rgba(10, 10, 10, 0.95) 100%)',
+        background: 'linear-gradient(135deg, #004663 0%, #006687 25%, #0088AB 50%, #006687 75%, #004663 100%)',
       }}
       aria-hidden="true"
     >
-      <div className="relative" style={{ width: '140px', height: '140px' }}>
-        {/* Soft glow behind hex */}
+      <div className="relative flex flex-col items-center">
+        {/* Cyan glow effect behind logo */}
         <div
-          className="absolute inset-0 blur-2xl opacity-60"
+          className="absolute inset-0 blur-3xl opacity-50"
           style={{
-            background: 'radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(236, 72, 153, 0.2) 50%, transparent 70%)',
-            transform: 'scale(1.5)',
+            background: 'radial-gradient(circle, rgba(0, 180, 216, 0.6) 0%, rgba(0, 180, 216, 0.3) 50%, transparent 70%)',
+            transform: 'scale(2)',
           }}
         />
-        {/* Spinning hex border */}
-        <div
-          className="absolute inset-0 animate-hex-spin"
-          style={{
-            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-            background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.5) 0%, rgba(236, 72, 153, 0.3) 100%)',
-          }}
-        />
-        {/* Static hex background with logo */}
-        <div
-          className="absolute inset-[6px]"
-          style={{
-            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-            background: 'rgba(10, 10, 10, 0.9)',
-          }}
-        />
-        {/* Static logo centered - clipped to hex */}
-        <div
-          className="absolute inset-[6px] flex items-center justify-center overflow-hidden"
-          style={{
-            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-          }}
-        >
-          <Image
-            src={LOGO_URL}
-            alt=""
-            width={90}
-            height={90}
-            priority
-            unoptimized
+
+        {/* PSP Logo */}
+        <div className="relative z-10 mb-8">
+          <img
+            src="/images/PSP-black-300x99-1.png"
+            alt="ProPer Sports Performance"
+            className="h-24 brightness-0 invert"
+            style={{
+              filter: 'brightness(0) invert(1) drop-shadow(0 0 20px rgba(0, 180, 216, 0.5))',
+            }}
           />
         </div>
+
+        {/* Loading animation - Cyan pulse rings */}
+        <div className="relative flex items-center justify-center" style={{ width: '80px', height: '80px' }}>
+          {/* Outer ring */}
+          <div
+            className="absolute inset-0 rounded-full animate-ping"
+            style={{
+              border: '3px solid rgba(0, 180, 216, 0.4)',
+              animationDuration: '1.5s',
+            }}
+          />
+          {/* Middle ring */}
+          <div
+            className="absolute inset-2 rounded-full animate-ping"
+            style={{
+              border: '3px solid rgba(0, 180, 216, 0.6)',
+              animationDuration: '1.2s',
+            }}
+          />
+          {/* Inner circle */}
+          <div
+            className="absolute inset-4 rounded-full"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 180, 216, 0.3) 0%, rgba(255, 75, 43, 0.2) 100%)',
+              boxShadow: '0 0 30px rgba(0, 180, 216, 0.4)',
+            }}
+          />
+        </div>
+
+        {/* Loading text */}
+        <p
+          className="mt-8 text-sm font-semibold tracking-wider uppercase"
+          style={{
+            color: '#00B4D8',
+            textShadow: '0 0 10px rgba(0, 180, 216, 0.5)',
+          }}
+        >
+          Loading Athletic OS...
+        </p>
       </div>
     </div>
   )

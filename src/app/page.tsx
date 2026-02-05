@@ -16,14 +16,16 @@ import {
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen" style={{ backgroundColor: '#050A18' }}>
+    <main className="min-h-screen">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-grid-pattern opacity-20" />
 
-        {/* Glow Effect */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-orange/10 rounded-full blur-[150px]" />
+        {/* Cyan Glow Effect - PSP Blue */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] rounded-full blur-[150px]" style={{ background: 'radial-gradient(circle, rgba(0, 180, 216, 0.15) 0%, rgba(0, 180, 216, 0.05) 50%, transparent 100%)' }} />
+        {/* Orange accent glow */}
+        <div className="absolute bottom-0 right-0 w-[800px] h-[800px] rounded-full blur-[150px]" style={{ background: 'radial-gradient(circle, rgba(255, 75, 43, 0.08) 0%, transparent 70%)' }} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 text-center">
           {/* Logo */}

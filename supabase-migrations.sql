@@ -187,10 +187,7 @@ CREATE TABLE public.drill_completions (
   notes TEXT,
 
   -- Timestamps
-  completed_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()) NOT NULL,
-
-  -- Prevent duplicate completions within same hour
-  UNIQUE(user_id, drill_id, date_trunc('hour', completed_at))
+  completed_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()) NOT NULL
 );
 
 -- Indexes

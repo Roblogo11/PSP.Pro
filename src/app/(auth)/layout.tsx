@@ -19,13 +19,11 @@ export default async function AuthLayout({
   }
 
   return (
-    <div className="min-h-screen bg-navy flex flex-col">
-      {/* Background Pattern */}
-      <div className="fixed inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
-
-      {/* Glow Effect */}
+    <div className="min-h-screen flex flex-col">
+      {/* Cyan Glow Effect - PSP Blue */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-orange/10 rounded-full blur-[150px]" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full blur-[150px]" style={{ background: 'radial-gradient(circle, rgba(0, 180, 216, 0.15) 0%, transparent 70%)' }} />
+        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] rounded-full blur-[150px]" style={{ background: 'radial-gradient(circle, rgba(255, 75, 43, 0.08) 0%, transparent 70%)' }} />
       </div>
 
       {/* Header */}

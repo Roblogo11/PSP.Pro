@@ -22,39 +22,38 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'AI-Native Creative Studio | Norfolk Virginia Beach 757 | ShockAI',
+  title: 'PSP.Pro - Elite Baseball & Softball Training | Virginia Beach',
   description:
-    'AI-powered video production, web development, drone photography, and creative services. Serving Norfolk, Virginia Beach, Chesapeake & the 757 area.',
+    'ProPer Sports Performance - Elite baseball and softball training in Virginia Beach. Track velocity, master mechanics, and dominate the diamond with data-driven performance.',
   keywords: [
-    'Norfolk',
     'Virginia Beach',
-    '757',
+    'baseball training',
+    'softball training',
+    'velocity tracking',
+    'sports performance',
+    'athletic training',
     'Hampton Roads',
-    'video production',
-    'web development',
-    'drone photography',
-    'creative studio',
-    'AI',
+    '757',
   ],
-  authors: [{ name: 'ShockAI' }],
-  creator: 'ShockAI',
-  publisher: 'ShockAI',
-  metadataBase: new URL('https://shockai.io'),
+  authors: [{ name: 'Proper Sports Performance' }],
+  creator: 'PSP.Pro',
+  publisher: 'Proper Sports Performance',
+  metadataBase: new URL('https://propersports.pro'),
   alternates: {
-    canonical: 'https://shockai.io',
+    canonical: 'https://propersports.pro',
   },
   openGraph: {
-    title: 'AI-Native Creative Studio | Norfolk Virginia Beach 757 | ShockAI',
+    title: 'PSP.Pro - Elite Baseball & Softball Training | Virginia Beach',
     description:
-      'AI-powered video production, web development, drone photography, and creative services. Serving Norfolk, Virginia Beach & the 757.',
-    url: 'https://shockai.io',
-    siteName: 'ShockAI',
+      'Elite baseball and softball training in Virginia Beach. Track velocity, master mechanics, and dominate the diamond with data-driven performance.',
+    url: 'https://propersports.pro',
+    siteName: 'PSP.Pro',
     images: [
       {
         url: siteConfig.meta.ogImage,
         width: 1200,
         height: 630,
-        alt: 'ShockAI - AI-Native Creative Studio',
+        alt: 'PSP.Pro - ProPer Sports Performance',
       },
     ],
     locale: 'en_US',
@@ -62,11 +61,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI-Native Creative Studio | Norfolk Virginia Beach 757 | ShockAI',
+    title: 'PSP.Pro - Elite Baseball & Softball Training | Virginia Beach',
     description:
-      'AI-powered video production, web development, and creative services in the 757.',
+      'Elite baseball and softball training in Virginia Beach. Track velocity, master mechanics, and dominate the diamond.',
     images: [siteConfig.meta.ogImage],
-    creator: '@shockmp',
+    creator: '@propersports',
   },
   robots: {
     index: true,
@@ -91,7 +90,7 @@ export default function RootLayout({
       <head>
         <JsonLdSchema />
       </head>
-      <body className="min-h-screen bg-cyber-grid">
+      <body className="min-h-screen">
         <Providers>
           <CommandPalette />
           <ShockAssistant />
