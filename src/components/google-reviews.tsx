@@ -98,7 +98,7 @@ export function GoogleReviews() {
               </div>
               <p className="text-sm text-slate-400">Based on 6 Google reviews</p>
               <a
-                href="https://www.google.com/maps/place/ProPer+Sports+Performance+LLC"
+                href="https://www.google.com/maps/place/ProPer+Sports+Performance+LLC/@36.7951297,-76.6938487,10z/data=!3m1!4b1!4m6!3m5!1s0xa7b9ac5c0e36dc21:0x91c996d6f9dfaa64!8m2!3d36.7955845!4d-76.3642165!16s%2Fg%2F11v05ftwvx?entry=ttu&g_ep=EgoyMDI2MDIwMS4wIKXMDSoKLDEwMDc5MjA2OUgBUAM%3D"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-cyan hover:text-cyan-400 text-sm mt-2 font-semibold"
@@ -163,7 +163,7 @@ export function GoogleReviews() {
               <h3 className="text-xl font-bold text-white mb-4">Trained with us?</h3>
               <p className="text-slate-400 mb-4">Share your experience and help other athletes find us!</p>
               <a
-                href="https://g.page/r/CWTqn2_9mpyREBM/review"
+                href="https://www.google.com/maps/place/ProPer+Sports+Performance+LLC/@36.7951297,-76.6938487,10z/data=!3m1!4b1!4m6!3m5!1s0xa7b9ac5c0e36dc21:0x91c996d6f9dfaa64!8m2!3d36.7955845!4d-76.3642165!16s%2Fg%2F11v05ftwvx?entry=ttu&g_ep=EgoyMDI2MDIwMS4wIKXMDSoKLDEwMDc5MjA2OUgBUAM%3D"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary inline-flex items-center gap-2"
