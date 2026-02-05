@@ -247,6 +247,25 @@ export default function ContactPage() {
           </div>
         </div>
       </div>
+
+      {/* Google Maps */}
+      <div className="max-w-6xl mx-auto mt-12">
+        <div className="command-panel p-6">
+          <h2 className="text-2xl font-bold text-white mb-6 text-center">Find Our Facility</h2>
+          <div className="rounded-xl overflow-hidden">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d817928.3911902515!2d-77.02362511877753!3d36.793764492389535!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa7b9ac5c0e36dc21%3A0x91c996d6f9dfaa64!2sProPer%20Sports%20Performance%20LLC!5e0!3m2!1sen!2sus!4v1770330366049!5m2!1sen!2sus"
+              width="100%"
+              height="400"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="w-full"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
