@@ -2,11 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Home, Zap, DollarSign, Package, Briefcase, Star, Menu, X } from 'lucide-react'
+import { Home, Zap, Users, Video, Activity, Package, Menu, X } from 'lucide-react'
 import { GenerativeMotion, FloatingShapes, GridPattern } from '@/components/generative-motion'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
 
-type PanelId = 'hero' | 'shockkit' | 'monthly' | 'small' | 'large' | 'singles' | 'services'
+type PanelId = 'hero' | 'individual' | 'group' | 'packages' | 'specialty'
 
 interface NavItem {
   id: PanelId
@@ -15,13 +15,11 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { id: 'hero', label: 'Pricing', icon: Home },
-  { id: 'shockkit', label: 'Shock Kit - $750', icon: Zap },
-  { id: 'monthly', label: 'Monthly - $700', icon: Package },
-  { id: 'small', label: 'Small Business - $3500', icon: Briefcase },
-  { id: 'large', label: 'Large Business - $8000', icon: Star },
-  { id: 'singles', label: 'Single Purchases', icon: DollarSign },
-  { id: 'services', label: 'All Services', icon: Package },
+  { id: 'hero', label: 'Training Programs', icon: Home },
+  { id: 'individual', label: '1-on-1 Training', icon: Zap },
+  { id: 'group', label: 'Group Training', icon: Users },
+  { id: 'packages', label: 'Training Packages', icon: Package },
+  { id: 'specialty', label: 'Specialty Services', icon: Video },
 ]
 
 export default function PricingPage() {
@@ -39,9 +37,9 @@ export default function PricingPage() {
       <aside className="hidden lg:flex lg:flex-col lg:w-64 bg-dark-200/50 backdrop-blur-sm border-r border-secondary/10 fixed h-screen overflow-y-auto">
         <div className="p-6">
           <h2 className="text-2xl font-bold bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent mb-2">
-            Select For Pricing
+            Training Programs
           </h2>
-          <p className="text-sm text-gray-400">No long term contracts</p>
+          <p className="text-sm text-gray-400">Pricing & Packages</p>
         </div>
         <nav className="flex-1 px-4 pb-6">
           {navItems.map((item) => {
@@ -107,99 +105,83 @@ export default function PricingPage() {
 
             <div className="relative z-10 max-w-6xl mx-auto px-6 py-20 text-center">
               <div className="inline-block mb-6 px-4 py-2 bg-secondary/10 border border-secondary/20 rounded-full">
-                <span className="text-secondary font-semibold">Select For Pricing</span>
+                <span className="text-secondary font-semibold">PSP.Pro Training</span>
               </div>
 
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-secondary to-accent bg-clip-text text-transparent">
-                Get Quick Answers
+                Elite Training Programs
               </h1>
 
               <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto">
-                [ Time, Price & Tools. Email for answers today! ]
+                Baseball & softball training programs designed to elevate your game through velocity development, mechanics refinement, and athletic performance.
               </p>
 
-              <a
-                href="mailto:shockmediapr@gmail.com"
-                className="inline-block px-8 py-4 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform text-lg mb-12"
-              >
-                Email Now
-              </a>
-
-              {/* Special Pricing Banner */}
               <Link
-                href="/pricing/specials"
-                className="block max-w-3xl mx-auto mb-12 p-4 sm:p-6 rounded-xl bg-gradient-to-r from-accent/20 to-secondary/20 border-2 border-accent/40 hover:border-accent/60 transition-all hover:scale-[1.02] sm:hover:scale-105"
+                href="/get-started"
+                className="inline-block px-8 py-4 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform text-lg mb-16"
               >
-                <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-4 text-center sm:text-left">
-                  <div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-1">⚡ Special Event Pricing ⚡</h3>
-                    <p className="text-gray-300 text-sm sm:text-base">Must present QR code or flyer to verify special pricing!</p>
-                  </div>
-                  <div className="flex-shrink-0">
-                    <span className="inline-block px-5 sm:px-6 py-2 sm:py-3 bg-accent rounded-lg font-bold text-dark-300 text-sm sm:text-base">View Specials →</span>
-                  </div>
-                </div>
+                Book Your Session
               </Link>
 
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
                 <button
-                  onClick={() => setActivePanel('shockkit')}
+                  onClick={() => setActivePanel('individual')}
                   className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10 hover:border-secondary/30 transition-all text-left"
                 >
-                  <Zap className="w-10 h-10 text-accent mb-3" />
-                  <h3 className="text-xl font-bold mb-2">The Shock Kit!</h3>
-                  <p className="text-gray-400 text-sm mb-3">Get Views</p>
-                  <span className="text-secondary font-bold">Go Now →</span>
+                  <Zap className="w-10 h-10 text-secondary mb-3" />
+                  <h3 className="text-xl font-bold mb-2">1-on-1 Sessions</h3>
+                  <p className="text-gray-400 text-sm mb-3">Personalized Training</p>
+                  <span className="text-secondary font-bold">View Programs →</span>
                 </button>
 
                 <button
-                  onClick={() => setActivePanel('monthly')}
+                  onClick={() => setActivePanel('group')}
+                  className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-accent/10 hover:border-accent/30 transition-all text-left"
+                >
+                  <Users className="w-10 h-10 text-accent mb-3" />
+                  <h3 className="text-xl font-bold mb-2">Group Training</h3>
+                  <p className="text-gray-400 text-sm mb-3">Small Group Sessions</p>
+                  <span className="text-accent font-bold">View Programs →</span>
+                </button>
+
+                <button
+                  onClick={() => setActivePanel('packages')}
                   className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10 hover:border-secondary/30 transition-all text-left"
                 >
                   <Package className="w-10 h-10 text-secondary mb-3" />
-                  <h3 className="text-xl font-bold mb-2">Social Media Boost</h3>
-                  <p className="text-gray-400 text-sm mb-3">Get Noticed</p>
-                  <span className="text-secondary font-bold">View →</span>
+                  <h3 className="text-xl font-bold mb-2">Training Packages</h3>
+                  <p className="text-gray-400 text-sm mb-3">Save with Bundles</p>
+                  <span className="text-secondary font-bold">View Packages →</span>
                 </button>
 
                 <button
-                  onClick={() => setActivePanel('small')}
-                  className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10 hover:border-secondary/30 transition-all text-left"
+                  onClick={() => setActivePanel('specialty')}
+                  className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-accent/10 hover:border-accent/30 transition-all text-left"
                 >
-                  <Briefcase className="w-10 h-10 text-secondary mb-3" />
-                  <h3 className="text-xl font-bold mb-2">Small Business</h3>
-                  <p className="text-gray-400 text-sm mb-3">Boost Post</p>
-                  <span className="text-secondary font-bold">View →</span>
-                </button>
-
-                <button
-                  onClick={() => setActivePanel('singles')}
-                  className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10 hover:border-secondary/30 transition-all text-left"
-                >
-                  <DollarSign className="w-10 h-10 text-accent mb-3" />
-                  <h3 className="text-xl font-bold mb-2">Single Purchases</h3>
-                  <p className="text-gray-400 text-sm mb-3">No Contract</p>
-                  <span className="text-secondary font-bold">View →</span>
+                  <Video className="w-10 h-10 text-accent mb-3" />
+                  <h3 className="text-xl font-bold mb-2">Specialty Services</h3>
+                  <p className="text-gray-400 text-sm mb-3">Video & Recovery</p>
+                  <span className="text-accent font-bold">View Services →</span>
                 </button>
               </div>
 
               <div className="mt-16 p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10 max-w-4xl mx-auto">
-                <h3 className="text-2xl font-bold mb-4">AI-Powered Services</h3>
+                <h3 className="text-2xl font-bold mb-4">Why Choose PSP.Pro?</h3>
                 <div className="grid md:grid-cols-3 gap-6 text-left">
                   <div>
-                    <Zap className="w-8 h-8 text-secondary mb-3" />
-                    <h4 className="font-bold mb-2">AI-Accelerated Media Production</h4>
-                    <p className="text-gray-400 text-sm">From 4K drone captures to rapid post-production. AI supercharges our speed and precision.</p>
+                    <Activity className="w-8 h-8 text-secondary mb-3" />
+                    <h4 className="font-bold mb-2">Science-Based Training</h4>
+                    <p className="text-gray-400 text-sm">Evidence-based methodologies for measurable results</p>
                   </div>
                   <div>
-                    <Zap className="w-8 h-8 text-secondary mb-3" />
-                    <h4 className="font-bold mb-2">Generative Visual Systems</h4>
-                    <p className="text-gray-400 text-sm">3D, motion graphics, and AI-rendered imagery designed to surprise and inspire.</p>
+                    <Zap className="w-8 h-8 text-accent mb-3" />
+                    <h4 className="font-bold mb-2">Expert Coaching</h4>
+                    <p className="text-gray-400 text-sm">Experienced trainers dedicated to your success</p>
                   </div>
                   <div>
-                    <Zap className="w-8 h-8 text-secondary mb-3" />
-                    <h4 className="font-bold mb-2">Web + Digital Builds</h4>
-                    <p className="text-gray-400 text-sm">Websites and interactive media created with AI-driven design systems.</p>
+                    <Video className="w-8 h-8 text-secondary mb-3" />
+                    <h4 className="font-bold mb-2">Modern Technology</h4>
+                    <p className="text-gray-400 text-sm">Video analysis and performance tracking systems</p>
                   </div>
                 </div>
               </div>
@@ -207,470 +189,420 @@ export default function PricingPage() {
           </section>
         )}
 
-        {/* Shock Kit Panel */}
-        {activePanel === 'shockkit' && (
+        {/* Individual Training Panel */}
+        {activePanel === 'individual' && (
           <section className="relative min-h-screen overflow-hidden">
             <FloatingShapes />
             <div className="absolute inset-0 bg-gradient-to-br from-dark-300/90 via-dark-200/90 to-dark-100/90" />
 
             <div className="relative z-10 max-w-5xl mx-auto px-6 py-20">
               <div className="text-center mb-12">
-                <div className="inline-block mb-4 px-4 py-2 bg-accent/10 border border-accent/20 rounded-full">
-                  <span className="text-accent font-semibold">⚡ The Shock Kit ⚡</span>
-                </div>
-                <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                  Get a quick boost to your Socials with (3) post
-                </h2>
-              </div>
-
-              <div className="max-w-3xl mx-auto p-10 rounded-2xl bg-gradient-to-br from-dark-200/80 to-dark-100/80 backdrop-blur-sm border border-accent/20 mb-12">
-                <div className="text-center mb-8">
-                  <div className="text-6xl font-bold text-accent mb-2">$750</div>
-                  <p className="text-xl text-gray-300">Choose any 3:</p>
-                </div>
-
-                <ul className="space-y-3 text-gray-300 mb-8">
-                  <li className="flex items-start gap-3">
-                    <span className="text-accent text-xl">✓</span>
-                    <span>10s Viral Reels</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-accent text-xl">✓</span>
-                    <span>30s Commercial</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-accent text-xl">✓</span>
-                    <span>Post / Motion Graphics</span>
-                  </li>
-                </ul>
-
-                <div className="p-6 rounded-xl bg-dark-300/50 border border-accent/10 mb-6">
-                  <h3 className="font-bold mb-3">How does it work? Don't worry it's simple…</h3>
-                  <p className="text-gray-400 leading-relaxed">
-                    First, mix and match the perfect content, then we meet at your business, we analyze & plan scenes, and finish with shooting & post edits.
-                  </p>
-                  <p className="text-accent font-bold mt-4">⚡ Just like that … We are done. ⚡</p>
-                  <p className="text-gray-400 text-sm mt-2">(ShockAI does emergency projects also.)</p>
-                </div>
-
-                <div className="text-center">
-                  <a
-                    href="mailto:shockmediapr@gmail.com"
-                    className="inline-block px-8 py-4 bg-gradient-to-r from-accent to-secondary rounded-lg font-semibold hover:scale-105 transition-transform"
-                  >
-                    Get Started
-                  </a>
-                  <p className="text-gray-400 text-sm mt-4">We have 3 levels available. See all kits below.</p>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Monthly Panel */}
-        {activePanel === 'monthly' && (
-          <section className="relative min-h-screen overflow-hidden">
-            <GridPattern />
-            <div className="absolute inset-0 bg-gradient-to-br from-dark-300/90 via-dark-200/90 to-dark-100/90" />
-
-            <div className="relative z-10 max-w-5xl mx-auto px-6 py-20">
-              <div className="text-center mb-12">
                 <div className="inline-block mb-4 px-4 py-2 bg-secondary/10 border border-secondary/20 rounded-full">
-                  <span className="text-secondary font-semibold">Monthly Service</span>
+                  <span className="text-secondary font-semibold">1-on-1 Training</span>
                 </div>
                 <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                  Social Media By Post
+                  Personalized Individual Sessions
                 </h2>
-                <p className="text-xl text-gray-300">Grow your IG, FB, YT, by letting us handle it.</p>
+                <p className="text-xl text-gray-300">Focused attention on your specific development goals</p>
               </div>
 
-              <div className="max-w-3xl mx-auto p-10 rounded-2xl bg-gradient-to-br from-dark-200/80 to-dark-100/80 backdrop-blur-sm border border-secondary/20 mb-12">
-                <div className="text-center mb-8">
-                  <div className="text-6xl font-bold text-secondary mb-2">$700</div>
-                  <p className="text-xl text-gray-300">Social Media:</p>
-                </div>
+              <div className="grid md:grid-cols-2 gap-8 mb-12">
+                <div className="p-8 rounded-2xl bg-gradient-to-br from-dark-200/80 to-dark-100/80 backdrop-blur-sm border border-secondary/20">
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-bold mb-2">1-on-1 Pitching Session</h3>
+                    <div className="flex items-baseline gap-2 mb-4">
+                      <span className="text-5xl font-bold text-secondary">$75</span>
+                      <span className="text-gray-400">/ 60 minutes</span>
+                    </div>
+                  </div>
 
-                <ul className="space-y-3 text-gray-300 mb-8">
-                  <li className="flex items-start gap-3">
-                    <span className="text-secondary text-xl">✓</span>
-                    <span>Fresh Videos Monthly</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-secondary text-xl">✓</span>
-                    <span>SEO'd Social Post</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-secondary text-xl">✓</span>
-                    <span>Post / Motion Graphics</span>
-                  </li>
-                </ul>
-
-                <div className="p-6 rounded-xl bg-dark-300/50 border border-secondary/10 mb-6">
-                  <h3 className="font-bold mb-3">How does it work? Don't worry it's simple…</h3>
-                  <p className="text-gray-400 leading-relaxed">
-                    We analyze & plan scenes, boost plus drive interactions, edit shooting & post graphics and more.
-                  </p>
-                  <p className="text-secondary font-bold mt-4">⚡ We do this monthly … Fresh content and Social Media Management. ⚡</p>
-                  <p className="text-gray-400 mt-2">Start getting organic growth now!</p>
-                </div>
-
-                <div className="text-center">
-                  <a
-                    href="mailto:shockmediapr@gmail.com"
-                    className="inline-block px-8 py-4 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform"
-                  >
-                    Email Now
-                  </a>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Small Business Panel */}
-        {activePanel === 'small' && (
-          <section className="relative min-h-screen overflow-hidden">
-            <GenerativeMotion />
-            <div className="absolute inset-0 bg-gradient-to-br from-dark-300/90 via-dark-200/90 to-dark-100/90" />
-
-            <div className="relative z-10 max-w-5xl mx-auto px-6 py-20">
-              <div className="text-center mb-12">
-                <div className="inline-block mb-4 px-4 py-2 bg-secondary/10 border border-secondary/20 rounded-full">
-                  <span className="text-secondary font-semibold">Small Business Package</span>
-                </div>
-                <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                  Small Business Boost
-                </h2>
-                <p className="text-xl text-gray-300">Grow your team by letting us handle it.</p>
-              </div>
-
-              <div className="max-w-3xl mx-auto p-10 rounded-2xl bg-gradient-to-br from-dark-200/80 to-dark-100/80 backdrop-blur-sm border border-secondary/20 mb-12">
-                <div className="text-center mb-8">
-                  <div className="text-6xl font-bold text-secondary mb-2">$3500</div>
-                  <p className="text-xl text-gray-300">Social & Web Boosting: 3m</p>
-                </div>
-
-                <ul className="space-y-3 text-gray-300 mb-8">
-                  <li className="flex items-start gap-3">
-                    <span className="text-secondary text-xl">✓</span>
-                    <span>Grow 3 socials</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-secondary text-xl">✓</span>
-                    <span>Generate SEO leads</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-secondary text-xl">✓</span>
-                    <span>Dominate the local map</span>
-                  </li>
-                </ul>
-
-                <div className="p-6 rounded-xl bg-dark-300/50 border border-secondary/10 mb-6">
-                  <h3 className="font-bold mb-3">How does it work? Don't worry it's simple…</h3>
-                  <p className="text-gray-400 leading-relaxed">
-                    First, we meet at your business, we analyze & plan scenes, and finish with shooting & post edits. We then organize your website while adding SEO and new creative content.
-                  </p>
-                  <p className="text-secondary font-bold mt-4">⚡ And just like that … We are done. ⚡</p>
-                  <p className="text-gray-400 mt-2">( Start getting organic growth now! )</p>
-                </div>
-
-                <div className="text-center">
-                  <a
-                    href="mailto:shockmediapr@gmail.com"
-                    className="inline-block px-8 py-4 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform"
-                  >
-                    Email Now
-                  </a>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Large Business Panel */}
-        {activePanel === 'large' && (
-          <section className="relative min-h-screen overflow-hidden">
-            <FloatingShapes />
-            <div className="absolute inset-0 bg-gradient-to-br from-dark-300/90 via-dark-200/90 to-dark-100/90" />
-
-            <div className="relative z-10 max-w-5xl mx-auto px-6 py-20">
-              <div className="text-center mb-12">
-                <div className="inline-block mb-4 px-4 py-2 bg-accent/10 border border-accent/20 rounded-full">
-                  <span className="text-accent font-semibold">Large Business Package</span>
-                </div>
-                <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                  Large Business
-                </h2>
-                <p className="text-xl text-gray-300">Go hands off and let us build your social</p>
-              </div>
-
-              <div className="max-w-3xl mx-auto p-10 rounded-2xl bg-gradient-to-br from-dark-200/80 to-dark-100/80 backdrop-blur-sm border border-accent/20 mb-12">
-                <div className="text-center mb-8">
-                  <div className="text-6xl font-bold text-accent mb-2">$8000</div>
-                  <p className="text-xl text-gray-300">Grow All Platforms: 3m</p>
-                </div>
-
-                <ul className="space-y-3 text-gray-300 mb-8">
-                  <li className="flex items-start gap-3">
-                    <span className="text-accent text-xl">✓</span>
-                    <span>Low CPC (SEO)</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-accent text-xl">✓</span>
-                    <span>Ads targeting</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-accent text-xl">✓</span>
-                    <span>Commercial videos</span>
-                  </li>
-                </ul>
-
-                <div className="p-6 rounded-xl bg-dark-300/50 border border-accent/10 mb-6">
-                  <h3 className="font-bold mb-3">How does it work? Don't worry it's simple…</h3>
-                  <p className="text-gray-400 leading-relaxed">
-                    Everything in the small business package with the addition to more ranked pages and Google ads campaigns
-                  </p>
-                  <p className="text-accent font-bold mt-4">⚡ Growing takes effort… and the right keywords. ⚡</p>
-                  <p className="text-gray-400 mt-2">( Start getting organic growth now! )</p>
-                </div>
-
-                <div className="text-center">
-                  <a
-                    href="mailto:shockmediapr@gmail.com"
-                    className="inline-block px-8 py-4 bg-gradient-to-r from-accent to-secondary rounded-lg font-semibold hover:scale-105 transition-transform"
-                  >
-                    Email Now
-                  </a>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Single Purchases Panel */}
-        {activePanel === 'singles' && (
-          <section className="relative min-h-screen overflow-hidden">
-            <GridPattern />
-            <div className="absolute inset-0 bg-gradient-to-br from-dark-300/90 via-dark-200/90 to-dark-100/90" />
-
-            <div className="relative z-10 max-w-6xl mx-auto px-6 py-20">
-              <div className="text-center mb-12">
-                <div className="inline-block mb-4 px-4 py-2 bg-secondary/10 border border-secondary/20 rounded-full">
-                  <span className="text-secondary font-semibold">⚡ Shock'em Onetime ⚡</span>
-                </div>
-                <h2 className="text-4xl md:text-5xl font-bold mb-6">Single Purchases</h2>
-                <p className="text-xl text-gray-300 mb-2">No contract single service products for business growth</p>
-                <p className="text-sm text-gray-400">⚡ Responds Within 24hrs ⚡ (emergency service available)</p>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
-                  <h3 className="text-2xl font-bold mb-2">Google Boost</h3>
-                  <div className="text-3xl font-bold text-secondary mb-4">$1250</div>
-                  <p className="text-gray-300 mb-4">Google Map Boost</p>
-                  <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                    Google is the most profitable search engine that exist right now. Take advantage with our experts and optimize or create a successful Google profile.
-                  </p>
-                  <a
-                    href="mailto:shockmediapr@gmail.com"
-                    className="inline-block px-6 py-3 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform"
-                  >
-                    Request Pricing
-                  </a>
-                </div>
-
-                <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
-                  <h3 className="text-2xl font-bold mb-2">Site Audit</h3>
-                  <div className="text-3xl font-bold text-secondary mb-4">$220</div>
-                  <p className="text-gray-300 mb-4">Deep Keyword Research</p>
-                  <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                    Keywords can tell us everything about your site. This includes your competitors. After a SEO audit from ShockMP, you will have everything you need for growth.
-                  </p>
-                  <a
-                    href="mailto:shockmediapr@gmail.com"
-                    className="inline-block px-6 py-3 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform"
-                  >
-                    Request Pricing
-                  </a>
-                </div>
-
-                <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
-                  <h3 className="text-2xl font-bold mb-2">High Def Photo</h3>
-                  <div className="text-3xl font-bold text-secondary mb-4">$120</div>
-                  <p className="text-gray-300 mb-4">One Pose Needed</p>
-                  <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                    We take as many shots as possible, so when we finally choose one, it'll be perfect. Get pro level content now.
-                  </p>
-                  <a
-                    href="mailto:shockmediapr@gmail.com"
-                    className="inline-block px-6 py-3 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform"
-                  >
-                    Request Pricing
-                  </a>
-                </div>
-
-                <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
-                  <h3 className="text-2xl font-bold mb-2">Social Media Post</h3>
-                  <div className="text-3xl font-bold text-secondary mb-4">$75</div>
-                  <p className="text-gray-300 mb-4">SEO One Post</p>
-                  <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                    Sometimes keyword research can be the difference in views. Today's social platforms require more than strategy and trendy targeting.
-                  </p>
-                  <a
-                    href="mailto:shockmediapr@gmail.com"
-                    className="inline-block px-6 py-3 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform"
-                  >
-                    Request Pricing
-                  </a>
-                </div>
-
-                <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-accent/10 md:col-span-2">
-                  <h3 className="text-2xl font-bold mb-2">Expert Consultation</h3>
-                  <div className="text-3xl font-bold text-accent mb-4">$70/hr</div>
-                  <p className="text-gray-300 mb-4">Ask & We Answer</p>
-                  <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                    Sometimes talking to a few experts is worth it. From simple questions, to complex guidance, knowing what to do is half the battle. First hr($70… $50/hr) after.
-                  </p>
-                  <a
-                    href="mailto:shockmediapr@gmail.com"
-                    className="inline-block px-6 py-3 bg-gradient-to-r from-accent to-secondary rounded-lg font-semibold hover:scale-105 transition-transform"
-                  >
-                    Request Pricing
-                  </a>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* All Services Panel */}
-        {activePanel === 'services' && (
-          <section className="relative min-h-screen overflow-hidden">
-            <GenerativeMotion />
-            <div className="absolute inset-0 bg-gradient-to-br from-dark-300/90 via-dark-200/90 to-dark-100/90" />
-
-            <div className="relative z-10 max-w-6xl mx-auto px-6 py-20">
-              <div className="text-center mb-12">
-                <div className="inline-block mb-4 px-4 py-2 bg-accent/10 border border-accent/20 rounded-full">
-                  <span className="text-accent font-semibold">⚡ All Services ⚡</span>
-                </div>
-                <h2 className="text-4xl md:text-5xl font-bold mb-6">Complete Service List</h2>
-                <p className="text-xl text-gray-300">Services & standard explanations</p>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
-                  <h3 className="text-2xl font-bold mb-6 text-secondary">Website & Branding</h3>
-                  <ul className="space-y-3 text-gray-300">
+                  <ul className="space-y-3 text-gray-300 mb-8">
                     <li className="flex items-start gap-3">
-                      <span className="text-secondary mt-1">→</span>
-                      <span><strong>SEO</strong> – Optimizes website for good rankings</span>
+                      <span className="text-secondary text-xl">✓</span>
+                      <span>Velocity development techniques</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-secondary mt-1">→</span>
-                      <span><strong>Adwords</strong> – Paid way to gain new clients</span>
+                      <span className="text-secondary text-xl">✓</span>
+                      <span>Pitching mechanics refinement</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-secondary mt-1">→</span>
-                      <span><strong>Logos</strong> – Designed with 3D options</span>
+                      <span className="text-secondary text-xl">✓</span>
+                      <span>Command and control work</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-secondary mt-1">→</span>
-                      <span><strong>Logo reveals</strong> – Animated logo introduction</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-secondary mt-1">→</span>
-                      <span><strong>Full Branding</strong> – Complete identity package</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-secondary mt-1">→</span>
-                      <span><strong>Tracking</strong> – Google tracking for web & social</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-secondary mt-1">→</span>
-                      <span><strong>Local Maps (GMBP)</strong> – Listings across all webs</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-secondary mt-1">→</span>
-                      <span><strong>Listings</strong> – Backlink additions to directories</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-secondary mt-1">→</span>
-                      <span><strong>Content Revision</strong> – Website edits & updates</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-secondary mt-1">→</span>
-                      <span><strong>Website Remake</strong> – Remodel an old website</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-secondary mt-1">→</span>
-                      <span><strong>Page Update</strong> – Keep pages refreshed</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-secondary mt-1">→</span>
-                      <span><strong>Maintenance</strong> – Unlimited edits via monthly</span>
+                      <span className="text-secondary text-xl">✓</span>
+                      <span>Personalized training plan</span>
                     </li>
                   </ul>
+
+                  <Link
+                    href="/get-started"
+                    className="block text-center px-8 py-4 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform"
+                  >
+                    Book Pitching Session
+                  </Link>
+                </div>
+
+                <div className="p-8 rounded-2xl bg-gradient-to-br from-dark-200/80 to-dark-100/80 backdrop-blur-sm border border-accent/20">
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-bold mb-2">1-on-1 Hitting Session</h3>
+                    <div className="flex items-baseline gap-2 mb-4">
+                      <span className="text-5xl font-bold text-accent">$75</span>
+                      <span className="text-gray-400">/ 60 minutes</span>
+                    </div>
+                  </div>
+
+                  <ul className="space-y-3 text-gray-300 mb-8">
+                    <li className="flex items-start gap-3">
+                      <span className="text-accent text-xl">✓</span>
+                      <span>Power development training</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-accent text-xl">✓</span>
+                      <span>Swing mechanics optimization</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-accent text-xl">✓</span>
+                      <span>Plate discipline and approach</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-accent text-xl">✓</span>
+                      <span>Customized drill progression</span>
+                    </li>
+                  </ul>
+
+                  <Link
+                    href="/get-started"
+                    className="block text-center px-8 py-4 bg-gradient-to-r from-accent to-secondary rounded-lg font-semibold hover:scale-105 transition-transform"
+                  >
+                    Book Hitting Session
+                  </Link>
+                </div>
+              </div>
+
+              <div className="p-6 rounded-xl bg-dark-300/50 border border-secondary/10 text-center">
+                <p className="text-gray-300 mb-4">
+                  <span className="font-bold text-secondary">New athletes:</span> First session includes comprehensive assessment and personalized training plan development
+                </p>
+                <p className="text-gray-400 text-sm">
+                  Save with our multi-session packages – see Training Packages for details
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Group Training Panel */}
+        {activePanel === 'group' && (
+          <section className="relative min-h-screen overflow-hidden">
+            <GridPattern />
+            <div className="absolute inset-0 bg-gradient-to-br from-dark-300/90 via-dark-200/90 to-dark-100/90" />
+
+            <div className="relative z-10 max-w-5xl mx-auto px-6 py-20">
+              <div className="text-center mb-12">
+                <div className="inline-block mb-4 px-4 py-2 bg-accent/10 border border-accent/20 rounded-full">
+                  <span className="text-accent font-semibold">Group Training</span>
+                </div>
+                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                  Small Group Sessions
+                </h2>
+                <p className="text-xl text-gray-300">Train with peers in a competitive, supportive environment</p>
+              </div>
+
+              <div className="max-w-3xl mx-auto mb-12">
+                <div className="p-10 rounded-2xl bg-gradient-to-br from-dark-200/80 to-dark-100/80 backdrop-blur-sm border border-accent/20">
+                  <div className="text-center mb-8">
+                    <h3 className="text-3xl font-bold mb-3">Group Speed & Agility</h3>
+                    <div className="flex items-baseline gap-2 justify-center mb-2">
+                      <span className="text-6xl font-bold text-accent">$50</span>
+                      <span className="text-gray-400">/ athlete</span>
+                    </div>
+                    <p className="text-gray-400">90-minute sessions • Max 6 athletes</p>
+                  </div>
+
+                  <ul className="space-y-3 text-gray-300 mb-8">
+                    <li className="flex items-start gap-3">
+                      <span className="text-accent text-xl">✓</span>
+                      <span>Speed and acceleration training</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-accent text-xl">✓</span>
+                      <span>Agility and change of direction</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-accent text-xl">✓</span>
+                      <span>Explosive power development</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-accent text-xl">✓</span>
+                      <span>Sport-specific movement patterns</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-accent text-xl">✓</span>
+                      <span>Competitive training environment</span>
+                    </li>
+                  </ul>
+
+                  <div className="p-6 rounded-xl bg-dark-300/50 border border-accent/10 mb-8">
+                    <h4 className="font-bold mb-3 text-center">Perfect For:</h4>
+                    <p className="text-gray-400 leading-relaxed text-center">
+                      Athletes looking to improve overall athleticism, speed, and explosiveness in a group setting. Ideal for off-season training and supplementing position-specific work.
+                    </p>
+                  </div>
+
+                  <Link
+                    href="/get-started"
+                    className="block text-center px-8 py-4 bg-gradient-to-r from-accent to-secondary rounded-lg font-semibold hover:scale-105 transition-transform"
+                  >
+                    Book Group Training
+                  </Link>
+                </div>
+              </div>
+
+              <div className="text-center">
+                <p className="text-gray-400 text-sm">
+                  Limited spots available • First come, first served • Contact us for team training options
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Training Packages Panel */}
+        {activePanel === 'packages' && (
+          <section className="relative min-h-screen overflow-hidden">
+            <GenerativeMotion />
+            <div className="absolute inset-0 bg-gradient-to-br from-dark-300/90 via-dark-200/90 to-dark-100/90" />
+
+            <div className="relative z-10 max-w-6xl mx-auto px-6 py-20">
+              <div className="text-center mb-12">
+                <div className="inline-block mb-4 px-4 py-2 bg-secondary/10 border border-secondary/20 rounded-full">
+                  <span className="text-secondary font-semibold">Training Packages</span>
+                </div>
+                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                  Save with Multi-Session Packages
+                </h2>
+                <p className="text-xl text-gray-300">Commit to your development and save on training sessions</p>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-8 mb-12">
+                <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10 hover:border-secondary/30 transition-all">
+                  <div className="text-center mb-6">
+                    <h3 className="text-2xl font-bold mb-2">5-Session Pack</h3>
+                    <div className="mb-4">
+                      <div className="text-4xl font-bold text-secondary mb-1">$350</div>
+                      <div className="text-sm text-gray-400 line-through">$375 value</div>
+                      <div className="text-accent font-semibold">Save $25</div>
+                    </div>
+                  </div>
+                  <ul className="space-y-2 text-gray-300 mb-6 text-sm">
+                    <li className="flex items-start gap-2">
+                      <span className="text-secondary">✓</span>
+                      <span>5 individual sessions</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-secondary">✓</span>
+                      <span>90-day expiration</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-secondary">✓</span>
+                      <span>Progress tracking</span>
+                    </li>
+                  </ul>
+                  <Link
+                    href="/get-started"
+                    className="block text-center px-6 py-3 bg-secondary/20 border border-secondary/30 rounded-lg font-semibold hover:bg-secondary/30 transition-all"
+                  >
+                    Purchase Pack
+                  </Link>
+                </div>
+
+                <div className="p-8 rounded-xl bg-gradient-to-br from-secondary/20 to-accent/20 border-2 border-secondary/50 relative">
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-secondary to-accent rounded-full text-sm font-bold">
+                    Most Popular
+                  </div>
+                  <div className="text-center mb-6">
+                    <h3 className="text-2xl font-bold mb-2">10-Session Pack</h3>
+                    <div className="mb-4">
+                      <div className="text-5xl font-bold text-secondary mb-1">$675</div>
+                      <div className="text-sm text-gray-400 line-through">$750 value</div>
+                      <div className="text-accent font-semibold">Save $75</div>
+                    </div>
+                  </div>
+                  <ul className="space-y-2 text-gray-300 mb-6 text-sm">
+                    <li className="flex items-start gap-2">
+                      <span className="text-secondary">✓</span>
+                      <span>10 individual sessions</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-secondary">✓</span>
+                      <span>120-day expiration</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-secondary">✓</span>
+                      <span>Progress tracking</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-accent">✓</span>
+                      <span>Free video analysis</span>
+                    </li>
+                  </ul>
+                  <Link
+                    href="/get-started"
+                    className="block text-center px-6 py-3 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform"
+                  >
+                    Purchase Pack
+                  </Link>
+                </div>
+
+                <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-accent/10 hover:border-accent/30 transition-all">
+                  <div className="text-center mb-6">
+                    <h3 className="text-2xl font-bold mb-2">20-Session Pack</h3>
+                    <div className="mb-4">
+                      <div className="text-4xl font-bold text-accent mb-1">$1,300</div>
+                      <div className="text-sm text-gray-400 line-through">$1,500 value</div>
+                      <div className="text-accent font-semibold">Save $200</div>
+                    </div>
+                  </div>
+                  <ul className="space-y-2 text-gray-300 mb-6 text-sm">
+                    <li className="flex items-start gap-2">
+                      <span className="text-accent">✓</span>
+                      <span>20 individual sessions</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-accent">✓</span>
+                      <span>180-day expiration</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-accent">✓</span>
+                      <span>Progress tracking</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-accent">✓</span>
+                      <span>Monthly video analysis</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-accent">✓</span>
+                      <span>Priority scheduling</span>
+                    </li>
+                  </ul>
+                  <Link
+                    href="/get-started"
+                    className="block text-center px-6 py-3 bg-accent/20 border border-accent/30 rounded-lg font-semibold hover:bg-accent/30 transition-all"
+                  >
+                    Purchase Pack
+                  </Link>
+                </div>
+              </div>
+
+              <div className="p-6 rounded-xl bg-dark-300/50 border border-secondary/10 text-center max-w-3xl mx-auto">
+                <p className="text-gray-300">
+                  <span className="font-bold text-secondary">Package Benefits:</span> Mix and match pitching and hitting sessions • Transfer to family members • Pause for injuries • Satisfaction guaranteed
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Specialty Services Panel */}
+        {activePanel === 'specialty' && (
+          <section className="relative min-h-screen overflow-hidden">
+            <FloatingShapes />
+            <div className="absolute inset-0 bg-gradient-to-br from-dark-300/90 via-dark-200/90 to-dark-100/90" />
+
+            <div className="relative z-10 max-w-6xl mx-auto px-6 py-20">
+              <div className="text-center mb-12">
+                <div className="inline-block mb-4 px-4 py-2 bg-accent/10 border border-accent/20 rounded-full">
+                  <span className="text-accent font-semibold">Specialty Services</span>
+                </div>
+                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                  Specialized Performance Services
+                </h2>
+                <p className="text-xl text-gray-300">Enhance your training with video analysis and recovery sessions</p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-8 mb-12">
+                <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
+                  <Video className="w-12 h-12 text-secondary mb-4" />
+                  <h3 className="text-2xl font-bold mb-2">Video Analysis Session</h3>
+                  <div className="flex items-baseline gap-2 mb-4">
+                    <span className="text-4xl font-bold text-secondary">$50</span>
+                    <span className="text-gray-400">/ 30 minutes</span>
+                  </div>
+                  <p className="text-gray-300 mb-6">
+                    In-depth video breakdown of your pitching or hitting mechanics with actionable feedback and drill recommendations.
+                  </p>
+                  <ul className="space-y-2 text-gray-300 mb-6 text-sm">
+                    <li className="flex items-start gap-2">
+                      <span className="text-secondary">✓</span>
+                      <span>Frame-by-frame analysis</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-secondary">✓</span>
+                      <span>Side-by-side comparisons</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-secondary">✓</span>
+                      <span>Detailed written report</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-secondary">✓</span>
+                      <span>Corrective drill plan</span>
+                    </li>
+                  </ul>
+                  <Link
+                    href="/get-started"
+                    className="block text-center px-6 py-3 bg-secondary/20 border border-secondary/30 rounded-lg font-semibold hover:bg-secondary/30 transition-all"
+                  >
+                    Book Analysis
+                  </Link>
                 </div>
 
                 <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-accent/10">
-                  <h3 className="text-2xl font-bold mb-6 text-accent">Production & Photography</h3>
-                  <ul className="space-y-3 text-gray-300">
-                    <li className="flex items-start gap-3">
-                      <span className="text-accent mt-1">→</span>
-                      <span><strong>1(hr) Photos</strong> – Full shooting</span>
+                  <Activity className="w-12 h-12 text-accent mb-4" />
+                  <h3 className="text-2xl font-bold mb-2">Recovery & Mobility</h3>
+                  <div className="flex items-baseline gap-2 mb-4">
+                    <span className="text-4xl font-bold text-accent">$45</span>
+                    <span className="text-gray-400">/ 45 minutes</span>
+                  </div>
+                  <p className="text-gray-300 mb-6">
+                    Guided recovery session focused on mobility, flexibility, and injury prevention for optimal performance.
+                  </p>
+                  <ul className="space-y-2 text-gray-300 mb-6 text-sm">
+                    <li className="flex items-start gap-2">
+                      <span className="text-accent">✓</span>
+                      <span>Dynamic stretching protocols</span>
                     </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-accent mt-1">→</span>
-                      <span><strong>30s Videos</strong> – Ad ready</span>
+                    <li className="flex items-start gap-2">
+                      <span className="text-accent">✓</span>
+                      <span>Mobility assessments</span>
                     </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-accent mt-1">→</span>
-                      <span><strong>Social Post</strong> – SEO keywords added</span>
+                    <li className="flex items-start gap-2">
+                      <span className="text-accent">✓</span>
+                      <span>Foam rolling techniques</span>
                     </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-accent mt-1">→</span>
-                      <span><strong>Social Maintenance</strong> – Boost content</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-accent mt-1">→</span>
-                      <span><strong>Instagram</strong> – 3 post weekly max</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-accent mt-1">→</span>
-                      <span><strong>Facebook</strong> – Biz only post & groups</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-accent mt-1">→</span>
-                      <span><strong>Youtube</strong> – All videos hosted</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-accent mt-1">→</span>
-                      <span><strong>TikTok</strong> – Personal story post</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-accent mt-1">→</span>
-                      <span><strong>Commercial Photo</strong> – Website Ready Photo</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-accent mt-1">→</span>
-                      <span><strong>Promotional Video</strong> – Ad ready videos</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-accent mt-1">→</span>
-                      <span><strong>Content Reposting</strong> – Viral repost and edits</span>
+                    <li className="flex items-start gap-2">
+                      <span className="text-accent">✓</span>
+                      <span>Personalized recovery plan</span>
                     </li>
                   </ul>
+                  <Link
+                    href="/get-started"
+                    className="block text-center px-6 py-3 bg-accent/20 border border-accent/30 rounded-lg font-semibold hover:bg-accent/30 transition-all"
+                  >
+                    Book Recovery
+                  </Link>
                 </div>
               </div>
 
-              <div className="mt-12 text-center">
-                <a
-                  href="mailto:shockmediapr@gmail.com"
-                  className="inline-block px-8 py-4 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform"
-                >
-                  Request Custom Quote
-                </a>
+              <div className="p-8 rounded-xl bg-dark-300/50 border border-secondary/10 text-center">
+                <h3 className="text-2xl font-bold mb-4">Add-On Services</h3>
+                <p className="text-gray-300 mb-4">
+                  Enhance any training session with video analysis (+$25) or extended mobility work (+$20)
+                </p>
+                <p className="text-gray-400 text-sm">
+                  Recovery sessions recommended 1-2x per week for optimal performance and injury prevention
+                </p>
               </div>
             </div>
           </section>

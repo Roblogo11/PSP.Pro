@@ -2,11 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Home, Info, Briefcase, Users, Mail, Menu, X } from 'lucide-react'
+import { Home, Target, Users, MapPin, Award, TrendingUp, Menu, X } from 'lucide-react'
 import { GenerativeMotion, FloatingShapes, GridPattern } from '@/components/generative-motion'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
 
-type PanelId = 'hero' | 'story' | 'what-we-do' | 'team' | 'contact'
+type PanelId = 'hero' | 'mission' | 'approach' | 'location' | 'values'
 
 interface NavItem {
   id: PanelId
@@ -15,11 +15,11 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { id: 'hero', label: 'Quick Start', icon: Home },
-  { id: 'story', label: 'Our Story', icon: Info },
-  { id: 'what-we-do', label: 'What We Do', icon: Briefcase },
-  { id: 'team', label: 'Meet The Team', icon: Users },
-  { id: 'contact', label: 'Get Started', icon: Mail },
+  { id: 'hero', label: 'Welcome', icon: Home },
+  { id: 'mission', label: 'Our Mission', icon: Target },
+  { id: 'approach', label: 'Our Approach', icon: TrendingUp },
+  { id: 'location', label: 'Location', icon: MapPin },
+  { id: 'values', label: 'Our Values', icon: Award },
 ]
 
 export default function AboutPage() {
@@ -37,9 +37,9 @@ export default function AboutPage() {
       <aside className="hidden lg:flex lg:flex-col lg:w-64 bg-dark-200/50 backdrop-blur-sm border-r border-secondary/10 fixed h-screen overflow-y-auto">
         <div className="p-6">
           <h2 className="text-2xl font-bold bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent mb-2">
-            About Us
+            About PSP.Pro
           </h2>
-          <p className="text-sm text-gray-400">Shock Media Production</p>
+          <p className="text-sm text-gray-400">Proper Sports Performance</p>
         </div>
         <nav className="flex-1 px-4 pb-6">
           {navItems.map((item) => {
@@ -105,68 +105,70 @@ export default function AboutPage() {
 
             <div className="relative z-10 max-w-6xl mx-auto px-6 py-20 text-center">
               <div className="inline-block mb-6 px-4 py-2 bg-secondary/10 border border-secondary/20 rounded-full">
-                <span className="text-secondary font-semibold">About Shock Media Production</span>
+                <span className="text-secondary font-semibold">About PSP.Pro</span>
               </div>
 
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-secondary to-accent bg-clip-text text-transparent">
-                Shock the Media and Beat the Algorithm
+                Proper Sports Performance
               </h1>
 
-              <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-                The creative force combining multiple expert craftsmen into one powerhouse — Shock Media Production.
+              <p className="text-xl md:text-2xl text-gray-300 mb-6 max-w-3xl mx-auto leading-relaxed">
+                Virginia Beach's premier baseball and softball training facility focused on velocity development and mechanics improvement.
+              </p>
+
+              <p className="text-2xl md:text-3xl font-bold text-accent mb-12">
+                Progression Over Perfection
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                <a
-                  href="https://www.youtube.com/watch?v=rM2iyf9Ivz8"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={() => setActivePanel('mission')}
                   className="px-8 py-4 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform"
                 >
-                  Check Out Our YouTube
-                </a>
-                <button
-                  onClick={() => setActivePanel('story')}
-                  className="px-8 py-4 bg-dark-200/50 backdrop-blur-sm border border-secondary/20 rounded-lg font-semibold hover:border-secondary/50 transition-all"
-                >
-                  Learn Our Story
+                  Learn More
                 </button>
+                <Link
+                  href="/get-started"
+                  className="px-8 py-4 bg-dark-200/50 backdrop-blur-sm border border-secondary/20 rounded-lg font-semibold hover:border-secondary/50 transition-all text-center"
+                >
+                  Get Started
+                </Link>
               </div>
 
               <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
                 <button
-                  onClick={() => setActivePanel('story')}
+                  onClick={() => setActivePanel('mission')}
                   className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10 hover:border-secondary/30 transition-all group"
                 >
-                  <Info className="w-10 h-10 text-secondary mb-3 mx-auto group-hover:scale-110 transition-transform" />
-                  <h3 className="text-lg font-semibold mb-2">Our Story</h3>
-                  <p className="text-gray-400 text-sm">How we got started</p>
+                  <Target className="w-10 h-10 text-secondary mb-3 mx-auto group-hover:scale-110 transition-transform" />
+                  <h3 className="text-lg font-semibold mb-2">Our Mission</h3>
+                  <p className="text-gray-400 text-sm">Elevating athlete performance</p>
                 </button>
 
                 <button
-                  onClick={() => setActivePanel('what-we-do')}
+                  onClick={() => setActivePanel('approach')}
                   className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-accent/10 hover:border-accent/30 transition-all group"
                 >
-                  <Briefcase className="w-10 h-10 text-accent mb-3 mx-auto group-hover:scale-110 transition-transform" />
-                  <h3 className="text-lg font-semibold mb-2">What We Do</h3>
-                  <p className="text-gray-400 text-sm">Our services</p>
+                  <TrendingUp className="w-10 h-10 text-accent mb-3 mx-auto group-hover:scale-110 transition-transform" />
+                  <h3 className="text-lg font-semibold mb-2">Our Approach</h3>
+                  <p className="text-gray-400 text-sm">Science-based training</p>
                 </button>
 
                 <button
-                  onClick={() => setActivePanel('team')}
+                  onClick={() => setActivePanel('location')}
                   className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10 hover:border-secondary/30 transition-all group"
                 >
-                  <Users className="w-10 h-10 text-secondary mb-3 mx-auto group-hover:scale-110 transition-transform" />
-                  <h3 className="text-lg font-semibold mb-2">Meet The Team</h3>
-                  <p className="text-gray-400 text-sm">Our creators</p>
+                  <MapPin className="w-10 h-10 text-secondary mb-3 mx-auto group-hover:scale-110 transition-transform" />
+                  <h3 className="text-lg font-semibold mb-2">Location</h3>
+                  <p className="text-gray-400 text-sm">Virginia Beach area</p>
                 </button>
               </div>
             </div>
           </section>
         )}
 
-        {/* Story Panel */}
-        {activePanel === 'story' && (
+        {/* Mission Panel */}
+        {activePanel === 'mission' && (
           <section className="relative min-h-screen overflow-hidden">
             <FloatingShapes />
             <div className="absolute inset-0 bg-gradient-to-br from-dark-300/90 via-dark-200/90 to-dark-100/90" />
@@ -174,42 +176,45 @@ export default function AboutPage() {
             <div className="relative z-10 max-w-4xl mx-auto px-6 py-20">
               <div className="text-center mb-12">
                 <div className="inline-block mb-4 px-4 py-2 bg-secondary/10 border border-secondary/20 rounded-full">
-                  <span className="text-secondary font-semibold">Our Story</span>
+                  <span className="text-secondary font-semibold">Our Mission</span>
                 </div>
                 <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                  How Shock Media Production Got Started
+                  Developing Elite Athletes
                 </h2>
               </div>
 
               <div className="space-y-8">
                 <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
                   <p className="text-xl text-gray-300 leading-relaxed mb-6">
-                    Multiple craftsmen combining their expert skills into one company — that's ShockMP. It's the creative force that brings us together and fuels everything we make.
+                    At PSP.Pro, we believe in <span className="text-secondary font-bold">Progression Over Perfection</span>. Our mission is to develop elite baseball and softball athletes through science-based training methodologies that focus on continuous improvement.
+                  </p>
+                  <p className="text-lg text-gray-400 leading-relaxed">
+                    We specialize in velocity development, mechanics refinement, and overall athletic performance enhancement for athletes of all levels.
                   </p>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10 hover:border-secondary/30 transition-all">
-                    <h3 className="text-2xl font-bold mb-3 text-secondary">Expert Craftsmen</h3>
+                    <h3 className="text-2xl font-bold mb-3 text-secondary">Baseball Training</h3>
                     <p className="text-gray-300 leading-relaxed">
-                      We bring together the best talent in video production, photography, web development, and AI innovation.
+                      Specialized pitching and hitting programs designed to maximize velocity, power, and consistency.
                     </p>
                   </div>
 
                   <div className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-accent/10 hover:border-accent/30 transition-all">
-                    <h3 className="text-2xl font-bold mb-3 text-accent">Creative Force</h3>
+                    <h3 className="text-2xl font-bold mb-3 text-accent">Softball Excellence</h3>
                     <p className="text-gray-300 leading-relaxed">
-                      Our passion for pushing creative boundaries drives us to deliver exceptional results for every project.
+                      Comprehensive softball training focusing on mechanics, speed development, and game performance.
                     </p>
                   </div>
                 </div>
 
                 <div className="text-center mt-12">
                   <button
-                    onClick={() => setActivePanel('what-we-do')}
+                    onClick={() => setActivePanel('approach')}
                     className="px-8 py-4 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform"
                   >
-                    Learn What We Do
+                    See Our Approach
                   </button>
                 </div>
               </div>
@@ -217,8 +222,8 @@ export default function AboutPage() {
           </section>
         )}
 
-        {/* What We Do Panel */}
-        {activePanel === 'what-we-do' && (
+        {/* Approach Panel */}
+        {activePanel === 'approach' && (
           <section className="relative min-h-screen overflow-hidden">
             <GridPattern />
             <div className="absolute inset-0 bg-gradient-to-br from-dark-300/90 via-dark-200/90 to-dark-100/90" />
@@ -226,54 +231,52 @@ export default function AboutPage() {
             <div className="relative z-10 max-w-4xl mx-auto px-6 py-20">
               <div className="text-center mb-12">
                 <div className="inline-block mb-4 px-4 py-2 bg-accent/10 border border-accent/20 rounded-full">
-                  <span className="text-accent font-semibold">What We Do</span>
+                  <span className="text-accent font-semibold">Our Approach</span>
                 </div>
                 <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                  Your Creative Extension
+                  Science-Based Athletic Development
                 </h2>
               </div>
 
               <div className="space-y-8">
                 <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-accent/10">
                   <p className="text-xl text-gray-300 leading-relaxed mb-6">
-                    We work as an extension to agencies, helping them deliver stunning visuals and creative assets when they need them most.
-                  </p>
-                  <p className="text-lg text-gray-400 leading-relaxed">
-                    Your advertising firm might not have a camera guy or a web artist immediately available — we do!
+                    We combine cutting-edge technology with proven training methodologies to deliver measurable results.
                   </p>
                 </div>
 
                 <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
-                  <h3 className="text-2xl font-bold mb-4 text-secondary">Keep the Creativity Flowing</h3>
-                  <p className="text-lg text-gray-300 leading-relaxed mb-4">
-                    Pay per project — no need for full-time hires when you need specialized creative talent.
-                  </p>
+                  <h3 className="text-2xl font-bold mb-4 text-secondary">Training Specialties</h3>
                   <ul className="space-y-3 text-gray-300">
                     <li className="flex items-start gap-3">
                       <span className="text-secondary text-xl">→</span>
-                      <span>Video Production & Cinematics</span>
+                      <span><strong>Velocity Development</strong> – Increase throwing velocity through biomechanics and strength training</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="text-secondary text-xl">→</span>
-                      <span>Professional Photography & Drone Services</span>
+                      <span><strong>Mechanics Analysis</strong> – Video breakdown and corrective exercises for optimal movement patterns</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="text-secondary text-xl">→</span>
-                      <span>Web Development & Design</span>
+                      <span><strong>Power Development</strong> – Build explosive strength for hitting and throwing</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="text-secondary text-xl">→</span>
-                      <span>AI-Powered Creative Solutions</span>
+                      <span><strong>Speed & Agility</strong> – Improve athletic movement and on-field performance</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-secondary text-xl">→</span>
+                      <span><strong>Recovery & Mobility</strong> – Prevent injury and optimize recovery for peak performance</span>
                     </li>
                   </ul>
                 </div>
 
                 <div className="text-center mt-12">
                   <button
-                    onClick={() => setActivePanel('team')}
+                    onClick={() => setActivePanel('location')}
                     className="px-8 py-4 bg-gradient-to-r from-accent to-secondary rounded-lg font-semibold hover:scale-105 transition-transform"
                   >
-                    Meet Our Team
+                    Visit Our Facility
                   </button>
                 </div>
               </div>
@@ -281,129 +284,125 @@ export default function AboutPage() {
           </section>
         )}
 
-        {/* Team Panel */}
-        {activePanel === 'team' && (
+        {/* Location Panel */}
+        {activePanel === 'location' && (
           <section className="relative min-h-screen overflow-hidden">
             <FloatingShapes />
             <div className="absolute inset-0 bg-gradient-to-br from-dark-300/90 via-dark-200/90 to-dark-100/90" />
 
-            <div className="relative z-10 max-w-6xl mx-auto px-6 py-20">
+            <div className="relative z-10 max-w-4xl mx-auto px-6 py-20">
               <div className="text-center mb-12">
                 <div className="inline-block mb-4 px-4 py-2 bg-secondary/10 border border-secondary/20 rounded-full">
-                  <span className="text-secondary font-semibold">Our Team</span>
+                  <span className="text-secondary font-semibold">Location</span>
                 </div>
                 <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                  Learn more about ShockAI© CEO's
+                  Serving Virginia Beach & Hampton Roads
                 </h2>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-8 mb-12">
-                {/* Robbie */}
-                <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10 hover:border-secondary/30 transition-all">
-                  <div className="mb-6">
-                    <h3 className="text-2xl font-bold mb-2">
-                      YouTuber <span className="text-secondary">@RobbieCreates</span>
-                    </h3>
-                  </div>
-                  <div className="space-y-4 text-gray-300">
-                    <p className="leading-relaxed">
-                      Robbie is a multi-passionate creator who fell off the deep-end of AI.
-                    </p>
-                    <p className="leading-relaxed">
-                      Loving every moment of the AI evolution, he now delivers us the research. Exploring every worthy avenue of AI business enhancements. R&D beast!
-                    </p>
-                    <Link
-                      href="/about/ceo-robbie-creates"
-                      className="inline-block px-6 py-3 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform"
-                    >
-                      Robbie's Bio
-                    </Link>
+              <div className="space-y-8">
+                <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
+                  <div className="flex items-start gap-4 mb-6">
+                    <MapPin className="w-8 h-8 text-secondary flex-shrink-0 mt-1" />
+                    <div>
+                      <h3 className="text-2xl font-bold mb-3 text-white">Virginia Beach Training Facility</h3>
+                      <p className="text-lg text-gray-300 leading-relaxed mb-4">
+                        Located in the heart of Virginia Beach, our state-of-the-art facility serves athletes throughout the Hampton Roads region.
+                      </p>
+                      <p className="text-gray-400">
+                        Serving Virginia Beach, Chesapeake, Norfolk, and surrounding areas
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                {/* PMBAI */}
-                <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-accent/10 hover:border-accent/30 transition-all">
-                  <div className="mb-6">
-                    <h3 className="text-2xl font-bold mb-2">
-                      YouTuber <span className="text-accent">@PMBAI</span>
-                    </h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10 hover:border-secondary/30 transition-all">
+                    <h3 className="text-xl font-bold mb-3 text-secondary">World-Class Facility</h3>
+                    <p className="text-gray-300 leading-relaxed">
+                      Modern training equipment, video analysis systems, and dedicated space for athlete development.
+                    </p>
                   </div>
-                  <div className="space-y-4 text-gray-300">
-                    <p className="leading-relaxed">
-                      Addicted to movie cinematics, this creator found a way to bridge AI and cinema.
+
+                  <div className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-accent/10 hover:border-accent/30 transition-all">
+                    <h3 className="text-xl font-bold mb-3 text-accent">Expert Coaching</h3>
+                    <p className="text-gray-300 leading-relaxed">
+                      Experienced coaches dedicated to helping athletes reach their full potential.
                     </p>
-                    <p className="leading-relaxed">
-                      This untapped avenue is the largest growing media force on the planet.
-                    </p>
-                    <Link
-                      href="/about/ceo-pmbai"
-                      className="inline-block px-6 py-3 bg-gradient-to-r from-accent to-secondary rounded-lg font-semibold hover:scale-105 transition-transform"
-                    >
-                      PMBAI's Bio
-                    </Link>
                   </div>
                 </div>
-              </div>
 
-              <div className="text-center">
-                <button
-                  onClick={() => setActivePanel('contact')}
-                  className="px-8 py-4 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform"
-                >
-                  Get Started with Us
-                </button>
+                <div className="text-center mt-12">
+                  <button
+                    onClick={() => setActivePanel('values')}
+                    className="px-8 py-4 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform"
+                  >
+                    Learn Our Values
+                  </button>
+                </div>
               </div>
             </div>
           </section>
         )}
 
-        {/* Contact Panel */}
-        {activePanel === 'contact' && (
+        {/* Values Panel */}
+        {activePanel === 'values' && (
           <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
             <GenerativeMotion />
             <div className="absolute inset-0 bg-gradient-to-br from-dark-300/90 via-dark-200/90 to-dark-100/90" />
 
             <div className="relative z-10 max-w-4xl mx-auto px-6 py-20 text-center">
               <div className="inline-block mb-6 px-4 py-2 bg-accent/10 border border-accent/20 rounded-full">
-                <span className="text-accent font-semibold">Get Started</span>
+                <span className="text-accent font-semibold">Our Values</span>
               </div>
 
               <h2 className="text-5xl md:text-6xl font-bold mb-6">
-                Ready to Work Together?
+                What We Stand For
               </h2>
 
               <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
-                Let's create something amazing. Reach out to us and let's discuss your next project.
+                Our core values guide everything we do at PSP.Pro
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                <Link
-                  href="/contact"
-                  className="px-8 py-4 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform"
-                >
-                  Contact Us
-                </Link>
-                <Link
-                  href="/pricing"
-                  className="px-8 py-4 bg-dark-200/50 backdrop-blur-sm border border-secondary/20 rounded-lg font-semibold hover:border-secondary/50 transition-all"
-                >
-                  View Pricing
-                </Link>
+              <div className="grid md:grid-cols-2 gap-6 mb-12">
+                <div className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
+                  <Award className="w-12 h-12 text-secondary mb-4 mx-auto" />
+                  <h3 className="text-2xl font-bold mb-3">Excellence</h3>
+                  <p className="text-gray-400">Striving for the highest standards in every training session</p>
+                </div>
+
+                <div className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-accent/10">
+                  <TrendingUp className="w-12 h-12 text-accent mb-4 mx-auto" />
+                  <h3 className="text-2xl font-bold mb-3">Progress</h3>
+                  <p className="text-gray-400">Celebrating continuous improvement over perfection</p>
+                </div>
+
+                <div className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
+                  <Users className="w-12 h-12 text-secondary mb-4 mx-auto" />
+                  <h3 className="text-2xl font-bold mb-3">Community</h3>
+                  <p className="text-gray-400">Building a supportive environment for athlete growth</p>
+                </div>
+
+                <div className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-accent/10">
+                  <Target className="w-12 h-12 text-accent mb-4 mx-auto" />
+                  <h3 className="text-2xl font-bold mb-3">Results</h3>
+                  <p className="text-gray-400">Delivering measurable outcomes through proven methods</p>
+                </div>
               </div>
 
-              <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-                <div className="p-4 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
-                  <div className="text-3xl font-bold text-secondary mb-2">Fast</div>
-                  <p className="text-gray-400 text-sm">Quick turnaround times</p>
-                </div>
-                <div className="p-4 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-accent/10">
-                  <div className="text-3xl font-bold text-accent mb-2">Expert</div>
-                  <p className="text-gray-400 text-sm">Professional quality</p>
-                </div>
-                <div className="p-4 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
-                  <div className="text-3xl font-bold text-secondary mb-2">Flexible</div>
-                  <p className="text-gray-400 text-sm">Pay per project</p>
-                </div>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/pricing"
+                  className="px-8 py-4 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform"
+                >
+                  View Training Programs
+                </Link>
+                <Link
+                  href="/get-started"
+                  className="px-8 py-4 bg-dark-200/50 backdrop-blur-sm border border-secondary/20 rounded-lg font-semibold hover:border-secondary/50 transition-all"
+                >
+                  Start Training Today
+                </Link>
               </div>
             </div>
           </section>

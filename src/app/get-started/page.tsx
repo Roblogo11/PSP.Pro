@@ -1,862 +1,573 @@
 'use client'
 
 import { useState } from 'react'
-import { Container } from '@/components/ui/container'
-import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import {
-  Home,
-  Sparkles,
-  Zap,
-  Video,
-  Globe,
-  Camera,
-  Mic,
-  Mail,
-  Menu,
-  X,
-  Plane,
-  Radio
-} from 'lucide-react'
-import { GenerativeMotion, FloatingShapes, GridPattern, WaveAnimation } from '@/components/generative-motion'
+import { Home, User, Target, Calendar, CheckCircle, ArrowRight, Menu, X } from 'lucide-react'
+import { GenerativeMotion, FloatingShapes, GridPattern } from '@/components/generative-motion'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
-import Image from 'next/image'
-import { siteConfig } from '@/config/site'
 
-type PanelId = 'home' | 'services' | 'motiongraphics' | 'shockkit' | 'videography' | 'websites' | 'photography' | 'podcast' | 'contact'
+type PanelId = 'welcome' | 'profile' | 'goals' | 'schedule' | 'confirmation'
 
 interface NavItem {
   id: PanelId
   label: string
-  icon: React.ComponentType<{ className?: string }>
+  icon: React.ElementType
+  step: number
 }
 
 const navItems: NavItem[] = [
-  { id: 'home', label: 'Quick Start', icon: Home },
-  { id: 'services', label: 'Services', icon: Sparkles },
-  { id: 'motiongraphics', label: 'Motion Graphics', icon: Sparkles },
-  { id: 'shockkit', label: 'Shock Kit', icon: Zap },
-  { id: 'videography', label: 'Videography', icon: Video },
-  { id: 'websites', label: 'Websites', icon: Globe },
-  { id: 'photography', label: 'Photography', icon: Camera },
-  { id: 'podcast', label: 'Podcast', icon: Mic },
-  { id: 'contact', label: 'Contact', icon: Mail },
+  { id: 'welcome', label: 'Welcome', icon: Home, step: 1 },
+  { id: 'profile', label: 'Your Info', icon: User, step: 2 },
+  { id: 'goals', label: 'Training Goals', icon: Target, step: 3 },
+  { id: 'schedule', label: 'Schedule', icon: Calendar, step: 4 },
+  { id: 'confirmation', label: 'Get Started', icon: CheckCircle, step: 5 },
 ]
 
 export default function GetStartedPage() {
-  const [activePanel, setActivePanel] = useState<PanelId>('home')
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [activePanel, setActivePanel] = useState<PanelId>('welcome')
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  const handleNavClick = (panelId: PanelId) => {
+    setActivePanel(panelId)
+    setIsMobileMenuOpen(false)
+  }
+
+  const currentStep = navItems.find(item => item.id === activePanel)?.step || 1
 
   return (
-    <main className="min-h-screen bg-primary flex">
-      {/* Mobile Menu Toggle */}
-      <button
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="fixed top-4 left-4 z-50 lg:hidden p-2 rounded-lg bg-gradient-to-br from-secondary to-accent border border-white/10 text-white hover:scale-105 transition-transform"
-      >
-        {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-      </button>
-
+    <div className="min-h-screen bg-dark-300 text-white flex">
       {/* Sidebar Navigation */}
-      <aside
-        className={`fixed lg:sticky top-0 left-0 h-screen w-64 bg-gradient-to-b from-secondary via-accent to-secondary border-r border-white/10 transform transition-transform duration-300 z-40 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
-      >
-        <div className="p-6 space-y-2">
-          <a href="/" className="block mb-6 hover:opacity-80 transition-opacity">
-            <h2 className="text-2xl font-bold text-white">
-              Shock⚡ <span className="text-sm block text-gray-200">AI</span>
-            </h2>
-          </a>
+      <aside className="hidden lg:flex lg:flex-col lg:w-64 bg-dark-200/50 backdrop-blur-sm border-r border-secondary/10 fixed h-screen overflow-y-auto">
+        <div className="p-6">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent mb-2">
+            Get Started
+          </h2>
+          <p className="text-sm text-gray-400">Athlete Onboarding</p>
+        </div>
+        <nav className="flex-1 px-4 pb-6">
           {navItems.map((item) => {
             const Icon = item.icon
             const isActive = activePanel === item.id
+            const isCompleted = item.step < currentStep
             return (
               <button
                 key={item.id}
-                onClick={() => {
-                  setActivePanel(item.id)
-                  setSidebarOpen(false)
-                }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                onClick={() => handleNavClick(item.id)}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-all ${
                   isActive
-                    ? 'bg-white text-secondary border border-white/30 shadow-lg'
-                    : 'text-white hover:bg-white/10'
+                    ? 'bg-secondary/20 text-secondary border border-secondary/30'
+                    : isCompleted
+                    ? 'text-accent hover:text-white hover:bg-dark-100/50'
+                    : 'text-gray-400 hover:text-white hover:bg-dark-100/50'
                 }`}
               >
-                <Icon className="w-5 h-5" />
-                <span className="font-medium">{item.label}</span>
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                  isActive ? 'bg-secondary text-white' : isCompleted ? 'bg-accent text-white' : 'bg-dark-100 text-gray-500'
+                }`}>
+                  {isCompleted ? '✓' : item.step}
+                </div>
+                <span className="text-sm font-medium">{item.label}</span>
               </button>
             )
           })}
-          <a
-            href="mailto:shockmediapr@gmail.com"
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-white text-dark-400 font-bold hover:scale-105 transition-transform mt-4"
-          >
-            <span>🔔</span>
-            <span>Join Alerts</span>
-          </a>
-        </div>
+        </nav>
       </aside>
 
-      {/* Main Content Area */}
-      <div className="flex-1 overflow-auto">
-        {activePanel === 'home' && <HomePanel />}
-        {activePanel === 'services' && <ServicesPanel />}
-        {activePanel === 'motiongraphics' && <MotionGraphicsPanel />}
-        {activePanel === 'shockkit' && <ShockKitPanel />}
-        {activePanel === 'videography' && <VideographyPanel />}
-        {activePanel === 'websites' && <WebsitesPanel />}
-        {activePanel === 'photography' && <PhotographyPanel />}
-        {activePanel === 'podcast' && <PodcastPanel />}
-        {activePanel === 'contact' && <ContactPanel />}
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-dark-200/90 backdrop-blur-sm rounded-lg border border-secondary/20"
+      >
+        {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+      </button>
 
-        {/* Funnel Navigation (Final Step - Contact CTA) */}
-        <FunnelNav />
-      </div>
-    </main>
-  )
-}
-
-function HomePanel() {
-  const services = [
-    { href: '/photography', icon: Camera, title: 'Photography', description: 'Professional product, event & portrait photography' },
-    { href: '/video', icon: Video, title: 'Videography', description: 'Cinematic video production for every occasion' },
-    { href: '/drone', icon: Plane, title: 'Drone Services', description: 'Aerial photography and videography' },
-    { href: '/podcast', icon: Mic, title: 'Podcast Studio', description: 'AI & business insights for modern creators' },
-    { href: '/motion-graphics', icon: Zap, title: 'Motion Graphics', description: 'Eye-catching animations and effects' },
-    { href: '/shock-kit', icon: Radio, title: 'Shock Kit', description: 'Premium creative toolkit and resources' },
-    { href: '/website-help', icon: Globe, title: 'Website Help', description: 'Modern, responsive website solutions' },
-    { href: '/contact', icon: Mail, title: 'Get Started', description: 'Connect with our team today' },
-  ]
-
-  return (
-    <div className="min-h-screen relative">
-      {/* Animated Background */}
-      <div className="absolute inset-0">
-        <GenerativeMotion />
-        <GridPattern />
-        <FloatingShapes />
-      </div>
-
-      <div className="relative z-10 p-4 md:p-8 lg:p-16">
-        <div className="max-w-6xl mx-auto">
-          {/* Header */}
-          <div className="relative mb-12 p-6 md:p-12 rounded-2xl bg-gradient-to-br from-secondary to-accent overflow-hidden">
-            <div className="absolute inset-0 bg-dark-400/40" />
-            <div className="relative z-10 text-center">
-              <h1 className="text-5xl lg:text-7xl font-bold text-white mb-4">
-                Welcome to Shock Media
-              </h1>
-              <p className="text-xl text-gray-200 max-w-3xl mx-auto">
-                Your AI-native marketing studio in Norfolk, Virginia Beach & Chesapeake. Start exploring our services below to find the perfect solution for your creative needs.
-              </p>
-            </div>
-          </div>
-
-          {/* Journey Content */}
-          <div className="space-y-8 mb-12">
-            <div className="bg-dark-100/80 border border-secondary/20 rounded-2xl p-8 backdrop-blur-sm">
-              <h2 className="text-3xl font-bold text-white mb-4 flex items-center gap-3">
-                <Sparkles className="w-8 h-8 text-secondary" />
-                Your Creative Journey Starts Here
-              </h2>
-              <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                Whether you're launching a new product, capturing life's precious moments, or building your brand's digital presence, Shock Media delivers AI-powered creativity that sets you apart. Our integrated approach combines cutting-edge technology with artistic vision to bring your ideas to life.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-3">
-                  <h3 className="text-xl font-semibold text-secondary">For Businesses</h3>
-                  <p className="text-gray-400">
-                    Elevate your brand with professional <Link href="/photography" className="text-secondary hover:text-accent transition-colors underline">photography</Link>, cinematic <Link href="/video" className="text-secondary hover:text-accent transition-colors underline">videography</Link>, and custom <Link href="/website-help" className="text-secondary hover:text-accent transition-colors underline">web solutions</Link> that drive results.
-                  </p>
-                </div>
-                <div className="space-y-3">
-                  <h3 className="text-xl font-semibold text-secondary">For Creators</h3>
-                  <p className="text-gray-400">
-                    Access premium tools through our <Link href="/shock-kit" className="text-secondary hover:text-accent transition-colors underline">Shock Kit</Link>, learn from industry experts on our <Link href="/podcast" className="text-secondary hover:text-accent transition-colors underline">podcast</Link>, and bring your vision to life with <Link href="/motion-graphics" className="text-secondary hover:text-accent transition-colors underline">motion graphics</Link>.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Navigation Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {services.map((service) => (
-                <Link
-                  key={service.href}
-                  href={service.href}
-                  className="group p-6 rounded-xl bg-dark-100/50 border border-secondary/10 hover:border-secondary/40 backdrop-blur-sm transition-all duration-300 hover:scale-105 text-left"
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-40 bg-dark-300/95 backdrop-blur-md">
+          <nav className="flex flex-col gap-2 p-6 mt-20">
+            {navItems.map((item) => {
+              const Icon = item.icon
+              const isActive = activePanel === item.id
+              const isCompleted = item.step < currentStep
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => handleNavClick(item.id)}
+                  className={`flex items-center gap-3 px-6 py-4 rounded-lg transition-all ${
+                    isActive
+                      ? 'bg-secondary/20 text-secondary border border-secondary/30'
+                      : isCompleted
+                      ? 'text-accent hover:text-white hover:bg-dark-100/50'
+                      : 'text-gray-400 hover:text-white hover:bg-dark-100/50'
+                  }`}
                 >
-                  <service.icon className="w-8 h-8 text-secondary mb-3 group-hover:scale-110 transition-transform" />
-                  <h3 className="text-sm font-bold text-white mb-1">{service.title}</h3>
-                  <p className="text-xs text-gray-400 leading-snug">{service.description}</p>
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* CTA Section */}
-          <div className="bg-gradient-to-r from-secondary/20 to-accent/20 border border-secondary/30 rounded-2xl p-8 text-center">
-            <h3 className="text-2xl font-bold text-white mb-3">Ready to Transform Your Vision?</h3>
-            <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-              Explore our <Link href="/pricing" className="text-secondary hover:text-accent transition-colors underline font-semibold">core services</Link> or <Link href="/contact" className="text-secondary hover:text-accent transition-colors underline font-semibold">get in touch</Link> to discuss your project today.
-            </p>
-            <div className="flex gap-4 justify-center flex-wrap">
-              <Link href="/pricing">
-                <Button size="lg" className="group">
-                  <Sparkles className="mr-2 w-5 h-5" />
-                  View All Services
-                </Button>
-              </Link>
-              <Link href="/contact">
-                <Button variant="outline" size="lg" className="group">
-                  <Mail className="mr-2 w-5 h-5" />
-                  Contact Us
-                </Button>
-              </Link>
-            </div>
-          </div>
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                    isActive ? 'bg-secondary text-white' : isCompleted ? 'bg-accent text-white' : 'bg-dark-100 text-gray-500'
+                  }`}>
+                    {isCompleted ? '✓' : item.step}
+                  </div>
+                  <span className="font-medium">{item.label}</span>
+                </button>
+              )
+            })}
+          </nav>
         </div>
-      </div>
-    </div>
-  )
-}
+      )}
 
-function ServicesPanel() {
-  return (
-    <div className="min-h-screen relative">
-      {/* Animated Background */}
-      <div className="absolute inset-0">
-        <GenerativeMotion />
-        <GridPattern />
-        <FloatingShapes />
-      </div>
+      {/* Main Content */}
+      <main className="flex-1 lg:ml-64">
+        {/* Welcome Panel */}
+        {activePanel === 'welcome' && (
+          <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+            <GenerativeMotion />
+            <div className="absolute inset-0 bg-gradient-to-br from-dark-300/80 via-dark-200/80 to-dark-100/80" />
 
-      <div className="relative z-10 p-4 md:p-8 lg:p-16">
-        <div className="max-w-6xl mx-auto">
-        <div className="relative mb-12 p-6 md:p-12 rounded-2xl bg-gradient-services overflow-hidden">
-          <div className="absolute inset-0 bg-dark-400/30" />
-          <div className="relative z-10">
-            <h1 className="text-5xl lg:text-7xl font-bold text-white mb-4">
-              Our Services
-            </h1>
-            <p className="text-xl text-gray-200">
-              Comprehensive creative solutions powered by AI
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Link href="/motion-graphics">
-            <ServiceCard
-              icon={<Sparkles className="w-8 h-8" />}
-              title="Motion Graphics"
-              description="3D animations, generative visuals, and AI-rendered imagery"
-              features={['3D Visualization', 'Motion Design', 'AI-Generated Art', 'Platform Optimization']}
-            />
-          </Link>
-          <Link href="/video">
-            <ServiceCard
-              icon={<Video className="w-8 h-8" />}
-              title="Video Production"
-              description="4K drone cinematography to rapid post-production"
-              features={['Drone Cinematography', 'AI Editing', 'Color Grading', 'Multi-Platform']}
-            />
-          </Link>
-          <Link href="/website-help">
-            <ServiceCard
-              icon={<Globe className="w-8 h-8" />}
-              title="Web Development"
-              description="AI-driven design systems and interactive experiences"
-              features={['Custom Websites', 'Design Systems', 'E-commerce', 'Web Apps']}
-            />
-          </Link>
-          <Link href="/shock-kit">
-            <ServiceCard
-              icon={<Zap className="w-8 h-8" />}
-              title="Shock Kit"
-              description="Social media content packages - we create, you post"
-              features={['Content Creation', 'Brand Consistency', 'No Contracts', 'Fast Delivery']}
-            />
-          </Link>
-        </div>
-      </div>
-    </div>
-    </div>
-  )
-}
-
-function MotionGraphicsPanel() {
-  return (
-    <div className="min-h-screen relative">
-      {/* Animated Background with all effects */}
-      <div className="absolute inset-0">
-        <GenerativeMotion />
-        <GridPattern />
-        <FloatingShapes />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 p-4 md:p-8 lg:p-16">
-        <div className="max-w-6xl mx-auto">
-          {/* Header with enhanced gradient */}
-          <div className="relative mb-12 p-6 md:p-12 rounded-2xl bg-gradient-home overflow-hidden backdrop-blur-sm border border-secondary/20">
-            <div className="absolute inset-0 bg-dark-400/40" />
-            <WaveAnimation />
-            <div className="relative z-10">
-              <div className="flex items-center gap-4 mb-4">
-                <Sparkles className="w-12 h-12 text-secondary animate-pulse" />
-                <h1 className="text-5xl lg:text-7xl font-bold text-white">
-                  Generative Motion Graphics
-                </h1>
+            <div className="relative z-10 max-w-4xl mx-auto px-6 py-20 text-center">
+              <div className="inline-block mb-6 px-4 py-2 bg-secondary/10 border border-secondary/20 rounded-full">
+                <span className="text-secondary font-semibold">Step 1 of 5</span>
               </div>
-              <p className="text-xl text-gray-200">
-                3D, AI-Rendered Visuals & Dynamic Animations
+
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-secondary to-accent bg-clip-text text-transparent">
+                Welcome to PSP.Pro
+              </h1>
+
+              <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+                Ready to take your baseball or softball game to the next level? Let's get you set up for success.
               </p>
-            </div>
-          </div>
 
-          {/* Interactive Demo Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-            {/* Live Canvas Demo */}
-            <div className="relative h-96 rounded-xl overflow-hidden border-2 border-secondary/30 bg-dark-100">
-              <GenerativeMotion />
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="text-center space-y-2 bg-dark-400/80 backdrop-blur-sm p-6 rounded-lg border border-secondary/20">
-                  <Sparkles className="w-12 h-12 text-secondary mx-auto animate-pulse" />
-                  <p className="text-white font-bold text-xl">Live Particle System</p>
-                  <p className="text-gray-400 text-sm">Real-time generative animation</p>
+              <p className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto">
+                This quick onboarding process will help us understand your goals and get you scheduled for your first training session at our Virginia Beach facility.
+              </p>
+
+              <button
+                onClick={() => setActivePanel('profile')}
+                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform text-lg mb-16"
+              >
+                Start Your Journey
+                <ArrowRight className="w-5 h-5" />
+              </button>
+
+              <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+                <div className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
+                  <div className="text-3xl font-bold text-secondary mb-2">5 min</div>
+                  <p className="text-gray-400 text-sm">Quick setup process</p>
+                </div>
+                <div className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-accent/10">
+                  <div className="text-3xl font-bold text-accent mb-2">Expert</div>
+                  <p className="text-gray-400 text-sm">Professional coaches</p>
+                </div>
+                <div className="p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
+                  <div className="text-3xl font-bold text-secondary mb-2">Flexible</div>
+                  <p className="text-gray-400 text-sm">Schedule that fits you</p>
                 </div>
               </div>
             </div>
+          </section>
+        )}
 
-            {/* Logo Showcase */}
-            <div className="relative h-96 rounded-xl overflow-hidden border-2 border-accent/30 bg-gradient-to-br from-secondary/20 via-accent/20 to-cyan/20">
-              <FloatingShapes />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative">
-                  <Image
-                    src={siteConfig.meta.logo}
-                    alt="Logo"
-                    width={200}
-                    height={200}
-                    className="drop-shadow-2xl animate-float"
-                  />
-                  <div className="absolute inset-0 blur-3xl bg-secondary/30 animate-pulse" />
+        {/* Profile Panel */}
+        {activePanel === 'profile' && (
+          <section className="relative min-h-screen overflow-hidden">
+            <FloatingShapes />
+            <div className="absolute inset-0 bg-gradient-to-br from-dark-300/90 via-dark-200/90 to-dark-100/90" />
+
+            <div className="relative z-10 max-w-3xl mx-auto px-6 py-20">
+              <div className="text-center mb-12">
+                <div className="inline-block mb-4 px-4 py-2 bg-secondary/10 border border-secondary/20 rounded-full">
+                  <span className="text-secondary font-semibold">Step 2 of 5</span>
+                </div>
+                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                  Tell Us About Yourself
+                </h2>
+                <p className="text-xl text-gray-300">Help us personalize your training experience</p>
+              </div>
+
+              <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Full Name *</label>
+                    <input
+                      type="text"
+                      placeholder="Enter your full name"
+                      className="w-full px-4 py-3 rounded-lg bg-dark-100 border border-secondary/20 text-white placeholder-gray-500 focus:border-secondary focus:outline-none transition-colors"
+                    />
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">Age *</label>
+                      <input
+                        type="number"
+                        placeholder="Your age"
+                        className="w-full px-4 py-3 rounded-lg bg-dark-100 border border-secondary/20 text-white placeholder-gray-500 focus:border-secondary focus:outline-none transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">Sport *</label>
+                      <select className="w-full px-4 py-3 rounded-lg bg-dark-100 border border-secondary/20 text-white focus:border-secondary focus:outline-none transition-colors">
+                        <option value="">Select sport</option>
+                        <option value="baseball">Baseball</option>
+                        <option value="softball">Softball</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Email Address *</label>
+                    <input
+                      type="email"
+                      placeholder="your.email@example.com"
+                      className="w-full px-4 py-3 rounded-lg bg-dark-100 border border-secondary/20 text-white placeholder-gray-500 focus:border-secondary focus:outline-none transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Phone Number *</label>
+                    <input
+                      type="tel"
+                      placeholder="(555) 123-4567"
+                      className="w-full px-4 py-3 rounded-lg bg-dark-100 border border-secondary/20 text-white placeholder-gray-500 focus:border-secondary focus:outline-none transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Experience Level *</label>
+                    <select className="w-full px-4 py-3 rounded-lg bg-dark-100 border border-secondary/20 text-white focus:border-secondary focus:outline-none transition-colors">
+                      <option value="">Select experience level</option>
+                      <option value="beginner">Beginner (New to competitive play)</option>
+                      <option value="intermediate">Intermediate (Recreational/High School)</option>
+                      <option value="advanced">Advanced (Travel/College)</option>
+                      <option value="elite">Elite (College/Professional)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Parent/Guardian Email (if under 18)</label>
+                    <input
+                      type="email"
+                      placeholder="parent.email@example.com"
+                      className="w-full px-4 py-3 rounded-lg bg-dark-100 border border-secondary/20 text-white placeholder-gray-500 focus:border-secondary focus:outline-none transition-colors"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-8 flex gap-4">
+                  <button
+                    onClick={() => setActivePanel('welcome')}
+                    className="flex-1 px-6 py-3 bg-dark-100 border border-secondary/20 rounded-lg font-semibold hover:bg-dark-100/50 transition-all"
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={() => setActivePanel('goals')}
+                    className="flex-1 px-6 py-3 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform inline-flex items-center justify-center gap-2"
+                  >
+                    Continue
+                    <ArrowRight className="w-5 h-5" />
+                  </button>
                 </div>
               </div>
             </div>
-          </div>
+          </section>
+        )}
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-            <StatCard number="3D" label="Modeling & Animation" />
-            <StatCard number="AI" label="Image Generation" />
-            <StatCard number="Real-time" label="Rendering" />
-            <StatCard number="4K+" label="Output Quality" />
-          </div>
+        {/* Goals Panel */}
+        {activePanel === 'goals' && (
+          <section className="relative min-h-screen overflow-hidden">
+            <GridPattern />
+            <div className="absolute inset-0 bg-gradient-to-br from-dark-300/90 via-dark-200/90 to-dark-100/90" />
 
-          {/* Features */}
-          <div className="prose prose-invert max-w-none">
-            <h2 className="text-3xl font-bold text-white mb-6">What We Create</h2>
+            <div className="relative z-10 max-w-3xl mx-auto px-6 py-20">
+              <div className="text-center mb-12">
+                <div className="inline-block mb-4 px-4 py-2 bg-accent/10 border border-accent/20 rounded-full">
+                  <span className="text-accent font-semibold">Step 3 of 5</span>
+                </div>
+                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                  What Are Your Training Goals?
+                </h2>
+                <p className="text-xl text-gray-300">Select all that apply - we'll customize your program</p>
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <div className="relative p-6 rounded-xl bg-dark-100/80 backdrop-blur-sm border border-secondary/20 overflow-hidden group hover:border-secondary/40 transition-all">
-                <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative z-10">
-                  <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
-                    <Sparkles className="w-6 h-6 text-secondary" />
-                    AI-Generated Visuals
-                  </h3>
-                  <p className="text-gray-400 leading-relaxed">
-                    Stunning imagery created with cutting-edge AI models. From photorealistic renders to abstract art.
-                  </p>
+              <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-accent/10 mb-8">
+                <div className="space-y-4">
+                  <label className="flex items-start gap-4 p-4 rounded-lg bg-dark-100/50 border border-secondary/20 hover:border-secondary/40 cursor-pointer transition-all">
+                    <input type="checkbox" className="mt-1 w-5 h-5 rounded border-secondary/30 bg-dark-100 text-secondary focus:ring-secondary" />
+                    <div>
+                      <div className="font-semibold text-white mb-1">Increase Velocity</div>
+                      <div className="text-sm text-gray-400">Build throwing velocity through biomechanics and strength training</div>
+                    </div>
+                  </label>
+
+                  <label className="flex items-start gap-4 p-4 rounded-lg bg-dark-100/50 border border-secondary/20 hover:border-secondary/40 cursor-pointer transition-all">
+                    <input type="checkbox" className="mt-1 w-5 h-5 rounded border-secondary/30 bg-dark-100 text-secondary focus:ring-secondary" />
+                    <div>
+                      <div className="font-semibold text-white mb-1">Improve Mechanics</div>
+                      <div className="text-sm text-gray-400">Refine pitching or hitting mechanics for optimal performance</div>
+                    </div>
+                  </label>
+
+                  <label className="flex items-start gap-4 p-4 rounded-lg bg-dark-100/50 border border-secondary/20 hover:border-secondary/40 cursor-pointer transition-all">
+                    <input type="checkbox" className="mt-1 w-5 h-5 rounded border-secondary/30 bg-dark-100 text-secondary focus:ring-secondary" />
+                    <div>
+                      <div className="font-semibold text-white mb-1">Develop Power</div>
+                      <div className="text-sm text-gray-400">Build explosive strength for hitting and throwing</div>
+                    </div>
+                  </label>
+
+                  <label className="flex items-start gap-4 p-4 rounded-lg bg-dark-100/50 border border-secondary/20 hover:border-secondary/40 cursor-pointer transition-all">
+                    <input type="checkbox" className="mt-1 w-5 h-5 rounded border-secondary/30 bg-dark-100 text-secondary focus:ring-secondary" />
+                    <div>
+                      <div className="font-semibold text-white mb-1">Speed & Agility</div>
+                      <div className="text-sm text-gray-400">Improve athletic movement and on-field performance</div>
+                    </div>
+                  </label>
+
+                  <label className="flex items-start gap-4 p-4 rounded-lg bg-dark-100/50 border border-secondary/20 hover:border-secondary/40 cursor-pointer transition-all">
+                    <input type="checkbox" className="mt-1 w-5 h-5 rounded border-secondary/30 bg-dark-100 text-secondary focus:ring-secondary" />
+                    <div>
+                      <div className="font-semibold text-white mb-1">Injury Prevention</div>
+                      <div className="text-sm text-gray-400">Focus on mobility, flexibility, and proper recovery</div>
+                    </div>
+                  </label>
+
+                  <label className="flex items-start gap-4 p-4 rounded-lg bg-dark-100/50 border border-secondary/20 hover:border-secondary/40 cursor-pointer transition-all">
+                    <input type="checkbox" className="mt-1 w-5 h-5 rounded border-secondary/30 bg-dark-100 text-secondary focus:ring-secondary" />
+                    <div>
+                      <div className="font-semibold text-white mb-1">Mental Game</div>
+                      <div className="text-sm text-gray-400">Develop confidence, focus, and competitive mindset</div>
+                    </div>
+                  </label>
+                </div>
+
+                <div className="mt-6">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Additional Goals or Notes</label>
+                  <textarea
+                    rows={4}
+                    placeholder="Tell us more about what you want to achieve..."
+                    className="w-full px-4 py-3 rounded-lg bg-dark-100 border border-secondary/20 text-white placeholder-gray-500 focus:border-secondary focus:outline-none transition-colors resize-none"
+                  ></textarea>
                 </div>
               </div>
 
-              <div className="relative p-6 rounded-xl bg-dark-100/80 backdrop-blur-sm border border-accent/20 overflow-hidden group hover:border-accent/40 transition-all">
-                <div className="absolute inset-0 bg-gradient-to-br from-accent/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative z-10">
-                  <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
-                    <Zap className="w-6 h-6 text-accent" />
-                    3D Animations
-                  </h3>
-                  <p className="text-gray-400 leading-relaxed">
-                    Dynamic 3D motion graphics that bring your brand to life with depth and movement.
-                  </p>
-                </div>
-              </div>
-
-              <div className="relative p-6 rounded-xl bg-dark-100/80 backdrop-blur-sm border border-cyan/20 overflow-hidden group hover:border-cyan/40 transition-all">
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative z-10">
-                  <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
-                    <Video className="w-6 h-6 text-cyan" />
-                    Motion Design
-                  </h3>
-                  <p className="text-gray-400 leading-relaxed">
-                    Kinetic typography, logo animations, and dynamic transitions for any platform.
-                  </p>
-                </div>
-              </div>
-
-              <div className="relative p-6 rounded-xl bg-dark-100/80 backdrop-blur-sm border border-indigo/20 overflow-hidden group hover:border-indigo/40 transition-all">
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative z-10">
-                  <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
-                    <Globe className="w-6 h-6 text-indigo" />
-                    Platform Optimization
-                  </h3>
-                  <p className="text-gray-400 leading-relaxed">
-                    Content optimized for Instagram, TikTok, YouTube, and all major social platforms.
-                  </p>
-                </div>
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setActivePanel('profile')}
+                  className="flex-1 px-6 py-3 bg-dark-100 border border-secondary/20 rounded-lg font-semibold hover:bg-dark-100/50 transition-all"
+                >
+                  Back
+                </button>
+                <button
+                  onClick={() => setActivePanel('schedule')}
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-accent to-secondary rounded-lg font-semibold hover:scale-105 transition-transform inline-flex items-center justify-center gap-2"
+                >
+                  Continue
+                  <ArrowRight className="w-5 h-5" />
+                </button>
               </div>
             </div>
+          </section>
+        )}
 
-            {/* CTA */}
-            <div className="mt-12 text-center">
-              <div className="inline-block relative">
-                <div className="absolute inset-0 blur-xl bg-secondary/30 animate-pulse" />
-                <Link href="/motion-graphics">
-                  <Button size="lg" className="relative text-lg px-8 py-6">
-                    <Sparkles className="w-5 h-5 mr-2" />
-                    Start Your Motion Graphics Project
-                  </Button>
+        {/* Schedule Panel */}
+        {activePanel === 'schedule' && (
+          <section className="relative min-h-screen overflow-hidden">
+            <GenerativeMotion />
+            <div className="absolute inset-0 bg-gradient-to-br from-dark-300/90 via-dark-200/90 to-dark-100/90" />
+
+            <div className="relative z-10 max-w-3xl mx-auto px-6 py-20">
+              <div className="text-center mb-12">
+                <div className="inline-block mb-4 px-4 py-2 bg-secondary/10 border border-secondary/20 rounded-full">
+                  <span className="text-secondary font-semibold">Step 4 of 5</span>
+                </div>
+                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                  Choose Your Training
+                </h2>
+                <p className="text-xl text-gray-300">Select the program that fits your goals</p>
+              </div>
+
+              <div className="space-y-6 mb-8">
+                <label className="block p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border-2 border-secondary/20 hover:border-secondary/40 cursor-pointer transition-all">
+                  <div className="flex items-start gap-4">
+                    <input type="radio" name="training" className="mt-1 w-5 h-5" />
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="font-bold text-xl text-white">1-on-1 Pitching Session</div>
+                        <div className="text-secondary font-bold text-xl">$75</div>
+                      </div>
+                      <p className="text-gray-400 text-sm mb-3">60-minute individual pitching training session</p>
+                      <ul className="space-y-1 text-sm text-gray-400">
+                        <li>• Velocity development</li>
+                        <li>• Mechanics refinement</li>
+                        <li>• Personalized training plan</li>
+                      </ul>
+                    </div>
+                  </div>
+                </label>
+
+                <label className="block p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border-2 border-accent/20 hover:border-accent/40 cursor-pointer transition-all">
+                  <div className="flex items-start gap-4">
+                    <input type="radio" name="training" className="mt-1 w-5 h-5" />
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="font-bold text-xl text-white">1-on-1 Hitting Session</div>
+                        <div className="text-accent font-bold text-xl">$75</div>
+                      </div>
+                      <p className="text-gray-400 text-sm mb-3">60-minute individual hitting training session</p>
+                      <ul className="space-y-1 text-sm text-gray-400">
+                        <li>• Power development</li>
+                        <li>• Swing mechanics</li>
+                        <li>• Customized drill progression</li>
+                      </ul>
+                    </div>
+                  </div>
+                </label>
+
+                <label className="block p-6 rounded-xl bg-dark-200/50 backdrop-blur-sm border-2 border-secondary/20 hover:border-secondary/40 cursor-pointer transition-all">
+                  <div className="flex items-start gap-4">
+                    <input type="radio" name="training" className="mt-1 w-5 h-5" />
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="font-bold text-xl text-white">Group Speed & Agility</div>
+                        <div className="text-secondary font-bold text-xl">$50</div>
+                      </div>
+                      <p className="text-gray-400 text-sm mb-3">90-minute small group training (max 6 athletes)</p>
+                      <ul className="space-y-1 text-sm text-gray-400">
+                        <li>• Speed and acceleration</li>
+                        <li>• Agility and change of direction</li>
+                        <li>• Explosive power development</li>
+                      </ul>
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              <div className="p-6 rounded-xl bg-dark-300/50 border border-secondary/10 mb-8 text-center">
+                <p className="text-gray-300 mb-2">
+                  <span className="font-bold text-secondary">Want to save?</span> Check out our multi-session packages
+                </p>
+                <Link href="/pricing" className="text-accent hover:text-secondary transition-colors underline text-sm">
+                  View training packages →
                 </Link>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
 
-function ShockKitPanel() {
-  return (
-    <div className="min-h-screen relative">
-      {/* Animated Background */}
-      <div className="absolute inset-0">
-        <GenerativeMotion />
-        <GridPattern />
-        <FloatingShapes />
-      </div>
-
-      <div className="relative z-10 p-4 md:p-8 lg:p-16">
-        <div className="max-w-6xl mx-auto">
-        <div className="relative mb-12 p-6 md:p-12 rounded-2xl bg-gradient-shockkit overflow-hidden">
-          <div className="absolute inset-0 bg-dark-400/30" />
-          <div className="relative z-10">
-            <h1 className="text-5xl lg:text-7xl font-bold text-white mb-4">
-              The Shock Kit⚡
-            </h1>
-            <p className="text-xl text-gray-200">
-              Social Media Made Easy - We Create. You Post.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <StatCard number="3" label="Pricing Tiers" />
-          <StatCard number="0" label="Long-Term Contracts" />
-          <StatCard number="24-48h" label="Delivery Time" />
-        </div>
-
-        <div className="prose prose-invert max-w-none">
-          <h2 className="text-3xl font-bold text-white mb-6">What's Included?</h2>
-          <p className="text-gray-300 text-lg mb-8">
-            Social interactive media created with AI-driven design systems tailored for your brand.
-          </p>
-
-          <div className="grid grid-cols-1 gap-6">
-            <FeatureBox
-              title="Custom Content"
-              description="Brand-specific designs that match your identity and voice perfectly."
-            />
-            <FeatureBox
-              title="Flexible Plans"
-              description="Choose the package that fits your needs with no long-term commitments."
-            />
-            <FeatureBox
-              title="Fast Turnaround"
-              description="Get your content quickly so you can stay consistent on social media."
-            />
-          </div>
-
-          <div className="mt-12 text-center">
-            <Link href="/shock-kit">
-              <Button size="lg" className="text-lg px-8 py-6">
-                Get Your Shock Kit
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
-    </div>
-  )
-}
-
-function VideographyPanel() {
-  return (
-    <div className="min-h-screen relative">
-      {/* Animated Background */}
-      <div className="absolute inset-0">
-        <GenerativeMotion />
-        <GridPattern />
-        <FloatingShapes />
-      </div>
-
-      <div className="relative z-10 p-4 md:p-8 lg:p-16">
-        <div className="max-w-6xl mx-auto">
-        <div className="relative mb-12 p-6 md:p-12 rounded-2xl bg-gradient-videography overflow-hidden">
-          <div className="absolute inset-0 bg-dark-400/30" />
-          <div className="relative z-10">
-            <h1 className="text-5xl lg:text-7xl font-bold text-white mb-4">
-              Videography
-            </h1>
-            <p className="text-xl text-gray-200">
-              4K Drone to Post-Production
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-          <StatCard number="4K" label="Resolution" />
-          <StatCard number="60fps" label="Frame Rate" />
-          <StatCard number="AI" label="Enhanced Editing" />
-          <StatCard number="Fast" label="Turnaround" />
-        </div>
-
-        <div className="prose prose-invert max-w-none">
-          <h2 className="text-3xl font-bold text-white mb-6">Our Capabilities</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FeatureBox
-              title="Drone Cinematography"
-              description="Professional 4K aerial footage captured with precision and creativity."
-            />
-            <FeatureBox
-              title="AI-Assisted Editing"
-              description="Cutting-edge tools accelerate post-production while maintaining quality."
-            />
-            <FeatureBox
-              title="Color Grading"
-              description="Professional color correction and grading for cinematic results."
-            />
-            <FeatureBox
-              title="Multi-Platform Optimization"
-              description="Content optimized for every platform from YouTube to TikTok."
-            />
-          </div>
-
-          <div className="mt-12 flex justify-end">
-            <Link href="/video">
-              <Button size="lg" className="text-lg px-8 py-6">
-                <Video className="w-5 h-5 mr-2" />
-                Explore Videography
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
-    </div>
-  )
-}
-
-function WebsitesPanel() {
-  return (
-    <div className="min-h-screen relative">
-      {/* Animated Background */}
-      <div className="absolute inset-0">
-        <GenerativeMotion />
-        <GridPattern />
-        <FloatingShapes />
-      </div>
-
-      <div className="relative z-10 p-4 md:p-8 lg:p-16">
-        <div className="max-w-6xl mx-auto">
-        <div className="relative mb-12 p-6 md:p-12 rounded-2xl bg-gradient-websites overflow-hidden">
-          <div className="absolute inset-0 bg-dark-400/30" />
-          <div className="relative z-10">
-            <h1 className="text-5xl lg:text-7xl font-bold text-white mb-4">
-              Web Development
-            </h1>
-            <p className="text-xl text-gray-200">
-              AI-Driven Design Systems
-            </p>
-          </div>
-        </div>
-
-        <div className="prose prose-invert max-w-none">
-          <h2 className="text-3xl font-bold text-white mb-6">What We Build</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FeatureBox
-              title="Custom Websites"
-              description="Unique, responsive websites built with modern frameworks."
-            />
-            <FeatureBox
-              title="Design Systems"
-              description="Scalable component libraries for consistent brand experiences."
-            />
-            <FeatureBox
-              title="E-commerce"
-              description="Powerful online stores with seamless checkout experiences."
-            />
-            <FeatureBox
-              title="Web Applications"
-              description="Interactive applications with AI-powered features."
-            />
-          </div>
-
-          <div className="mt-12 flex justify-end">
-            <Link href="/website-help">
-              <Button size="lg" className="text-lg px-8 py-6">
-                <Globe className="w-5 h-5 mr-2" />
-                Explore Web Services
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
-    </div>
-  )
-}
-
-function PhotographyPanel() {
-  return (
-    <div className="min-h-screen relative">
-      {/* Animated Background */}
-      <div className="absolute inset-0">
-        <GenerativeMotion />
-        <GridPattern />
-        <FloatingShapes />
-      </div>
-
-      <div className="relative z-10 p-4 md:p-8 lg:p-16">
-        <div className="max-w-6xl mx-auto">
-        <div className="relative mb-12 p-6 md:p-12 rounded-2xl bg-gradient-photography overflow-hidden">
-          <div className="absolute inset-0 bg-dark-400/30" />
-          <div className="relative z-10">
-            <h1 className="text-5xl lg:text-7xl font-bold text-white mb-4">
-              Photography
-            </h1>
-            <p className="text-xl text-gray-200">
-              AI-Enhanced Photography Services
-            </p>
-          </div>
-        </div>
-
-        <div className="prose prose-invert max-w-none">
-          <h2 className="text-3xl font-bold text-white mb-6">Photography Services</h2>
-          <p className="text-gray-300 text-lg mb-8">
-            Professional photography enhanced with AI-powered editing and post-processing.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FeatureBox
-              title="Product Photography"
-              description="Stunning product shots for e-commerce and marketing."
-            />
-            <FeatureBox
-              title="Brand Photography"
-              description="Professional images that capture your brand essence."
-            />
-            <FeatureBox
-              title="AI Enhancement"
-              description="Advanced retouching and enhancement using AI tools."
-            />
-            <FeatureBox
-              title="Fast Delivery"
-              description="Quick turnaround without sacrificing quality."
-            />
-          </div>
-
-          <div className="mt-12 flex justify-end">
-            <Link href="/photography">
-              <Button size="lg" className="text-lg px-8 py-6">
-                <Camera className="w-5 h-5 mr-2" />
-                Explore Photography
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
-    </div>
-  )
-}
-
-function PodcastPanel() {
-  return (
-    <div className="min-h-screen relative">
-      {/* Animated Background */}
-      <div className="absolute inset-0">
-        <GenerativeMotion />
-        <GridPattern />
-        <FloatingShapes />
-      </div>
-
-      <div className="relative z-10 p-4 md:p-8 lg:p-16">
-        <div className="max-w-6xl mx-auto">
-        <div className="relative mb-12 p-6 md:p-12 rounded-2xl bg-gradient-podcast overflow-hidden">
-          <div className="absolute inset-0 bg-dark-400/30" />
-          <div className="relative z-10">
-            <h1 className="text-5xl lg:text-7xl font-bold text-white mb-4">
-              Podcast Production
-            </h1>
-            <p className="text-xl text-gray-200">
-              Full-Service Podcast Solutions
-            </p>
-          </div>
-        </div>
-
-        <div className="prose prose-invert max-w-none">
-          <h2 className="text-3xl font-bold text-white mb-6">Podcast Services</h2>
-          <p className="text-gray-300 text-lg mb-8">
-            From recording to distribution, we handle every aspect of podcast production.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FeatureBox
-              title="Recording & Production"
-              description="Professional audio recording with studio-quality equipment."
-            />
-            <FeatureBox
-              title="AI-Powered Editing"
-              description="Fast, precise editing using advanced AI audio tools."
-            />
-            <FeatureBox
-              title="Show Notes & SEO"
-              description="Optimized content for maximum discoverability."
-            />
-            <FeatureBox
-              title="Distribution"
-              description="Seamless publishing to all major podcast platforms."
-            />
-          </div>
-
-          <div className="mt-12 flex justify-end">
-            <Link href="/podcast">
-              <Button size="lg" className="text-lg px-8 py-6">
-                <Mic className="w-5 h-5 mr-2" />
-                Explore Podcast Services
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
-    </div>
-  )
-}
-
-function ContactPanel() {
-  return (
-    <div className="min-h-screen relative">
-      {/* Animated Background */}
-      <div className="absolute inset-0">
-        <GenerativeMotion />
-        <GridPattern />
-        <FloatingShapes />
-      </div>
-
-      <div className="relative z-10 p-4 md:p-8 lg:p-16">
-        <div className="max-w-6xl mx-auto">
-        <div className="relative mb-12 p-6 md:p-12 rounded-2xl bg-gradient-contact overflow-hidden">
-          <div className="absolute inset-0 bg-dark-400/30" />
-          <div className="relative z-10">
-            <h1 className="text-5xl lg:text-7xl font-bold text-white mb-4">
-              Get In Touch
-            </h1>
-            <p className="text-xl text-gray-200">
-              Let's create something amazing together
-            </p>
-          </div>
-        </div>
-
-        <div className="prose prose-invert max-w-none">
-          <h2 className="text-3xl font-bold text-white mb-6">Ready to Get Started?</h2>
-          <p className="text-gray-300 text-lg mb-8">
-            Whether you need a single service or a comprehensive creative solution, we're here to help.
-          </p>
-
-          <div className="bg-dark-100 rounded-xl p-8 border border-secondary/20">
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-xl font-bold text-white mb-2">Email</h3>
-                <p className="text-gray-300">shockmediapr@gmail.com</p>
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setActivePanel('goals')}
+                  className="flex-1 px-6 py-3 bg-dark-100 border border-secondary/20 rounded-lg font-semibold hover:bg-dark-100/50 transition-all"
+                >
+                  Back
+                </button>
+                <button
+                  onClick={() => setActivePanel('confirmation')}
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform inline-flex items-center justify-center gap-2"
+                >
+                  Continue
+                  <ArrowRight className="w-5 h-5" />
+                </button>
               </div>
-              <div>
-                <h3 className="text-xl font-bold text-white mb-2">Social</h3>
-                <div className="flex gap-4 text-gray-300">
-                  <a href="https://www.instagram.com/shockmp/" target="_blank" rel="noopener" className="hover:text-secondary">Instagram</a>
-                  <a href="https://www.youtube.com/@ShockMediaProductions" target="_blank" rel="noopener" className="hover:text-secondary">YouTube</a>
-                  <a href="https://www.tiktok.com/@shockmp" target="_blank" rel="noopener" className="hover:text-secondary">TikTok</a>
-                  <a href="https://www.linkedin.com/in/shock-media-productions-6762a02b6/" target="_blank" rel="noopener" className="hover:text-secondary">LinkedIn</a>
+            </div>
+          </section>
+        )}
+
+        {/* Confirmation Panel */}
+        {activePanel === 'confirmation' && (
+          <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+            <FloatingShapes />
+            <div className="absolute inset-0 bg-gradient-to-br from-dark-300/90 via-dark-200/90 to-dark-100/90" />
+
+            <div className="relative z-10 max-w-4xl mx-auto px-6 py-20 text-center">
+              <div className="inline-block mb-6 px-4 py-2 bg-accent/10 border border-accent/20 rounded-full">
+                <span className="text-accent font-semibold">Step 5 of 5</span>
+              </div>
+
+              <div className="mb-8">
+                <CheckCircle className="w-20 h-20 text-accent mx-auto mb-6" />
+                <h2 className="text-5xl md:text-6xl font-bold mb-6">
+                  You're Almost There!
+                </h2>
+                <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
+                  Ready to start your journey with PSP.Pro? Complete your booking and let's begin building your athletic excellence.
+                </p>
+              </div>
+
+              <div className="p-8 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10 mb-12 max-w-2xl mx-auto text-left">
+                <h3 className="text-2xl font-bold mb-6 text-center">What Happens Next?</h3>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-4">
+                    <div className="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-secondary font-bold">1</span>
+                    </div>
+                    <div>
+                      <div className="font-semibold text-white mb-1">Complete Your Booking</div>
+                      <p className="text-gray-400 text-sm">Schedule your first session at a time that works for you</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-accent font-bold">2</span>
+                    </div>
+                    <div>
+                      <div className="font-semibold text-white mb-1">Receive Confirmation</div>
+                      <p className="text-gray-400 text-sm">Get an email with your session details and facility info</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <div className="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-secondary font-bold">3</span>
+                    </div>
+                    <div>
+                      <div className="font-semibold text-white mb-1">Start Training</div>
+                      <p className="text-gray-400 text-sm">Meet your coach and begin your personalized training program</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="pt-4">
-                <Link href="/contact">
-                  <Button size="lg" className="w-full">
-                    Send Us a Message
-                  </Button>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                <Link
+                  href="/dashboard"
+                  className="px-8 py-4 bg-gradient-to-r from-secondary to-accent rounded-lg font-semibold hover:scale-105 transition-transform inline-flex items-center justify-center gap-2"
+                >
+                  Complete Booking
+                  <ArrowRight className="w-5 h-5" />
                 </Link>
+                <button
+                  onClick={() => setActivePanel('schedule')}
+                  className="px-8 py-4 bg-dark-200/50 backdrop-blur-sm border border-secondary/20 rounded-lg font-semibold hover:border-secondary/50 transition-all"
+                >
+                  Go Back
+                </button>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+                <div className="p-4 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
+                  <div className="text-3xl mb-2">📍</div>
+                  <p className="text-gray-400 text-sm">Virginia Beach Facility</p>
+                </div>
+                <div className="p-4 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-accent/10">
+                  <div className="text-3xl mb-2">💯</div>
+                  <p className="text-gray-400 text-sm">Satisfaction Guaranteed</p>
+                </div>
+                <div className="p-4 rounded-xl bg-dark-200/50 backdrop-blur-sm border border-secondary/10">
+                  <div className="text-3xl mb-2">📞</div>
+                  <p className="text-gray-400 text-sm">We'll Call to Confirm</p>
+                </div>
+              </div>
+
+              <div className="mt-12 p-6 rounded-xl bg-accent/10 border border-accent/20 max-w-2xl mx-auto">
+                <p className="text-lg font-semibold text-white mb-2">Progression Over Perfection</p>
+                <p className="text-gray-300 text-sm">
+                  Remember: every great athlete started somewhere. We're here to guide you every step of the way.
+                </p>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    </div>
-  )
-}
+          </section>
+        )}
 
-// Utility Components
-function StatCard({ number, label }: { number: string; label: string }) {
-  return (
-    <div className="p-4 md:p-6 rounded-xl bg-dark-100 border border-secondary/20 hover:border-secondary/40 transition-all hover:shadow-glow-md">
-      <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-secondary mb-1 md:mb-2 break-words">{number}</div>
-      <div className="text-gray-400 text-xs sm:text-sm leading-tight">{label}</div>
-    </div>
-  )
-}
-
-function FeatureBox({ title, description }: { title: string; description: string }) {
-  return (
-    <div className="p-6 rounded-xl bg-dark-100 border border-secondary/20 hover:border-secondary/40 transition-all">
-      <h3 className="text-xl font-bold text-white mb-3">{title}</h3>
-      <p className="text-gray-400 leading-relaxed">{description}</p>
-    </div>
-  )
-}
-
-function ServiceCard({
-  icon,
-  title,
-  description,
-  features
-}: {
-  icon: React.ReactNode
-  title: string
-  description: string
-  features: string[]
-}) {
-  return (
-    <div className="p-8 rounded-xl bg-dark-100 border border-secondary/20 hover:border-secondary/40 transition-all hover:shadow-glow-md">
-      <div className="text-secondary mb-4">{icon}</div>
-      <h3 className="text-2xl font-bold text-white mb-3">{title}</h3>
-      <p className="text-gray-400 mb-6">{description}</p>
-      <ul className="space-y-2">
-        {features.map((feature, index) => (
-          <li key={index} className="text-gray-300 flex items-center gap-2">
-            <span className="text-secondary">•</span>
-            {feature}
-          </li>
-        ))}
-      </ul>
+        <FunnelNav />
+      </main>
     </div>
   )
 }

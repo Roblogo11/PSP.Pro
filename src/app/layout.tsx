@@ -5,7 +5,6 @@ import { siteConfig } from '@/config/site'
 import { Providers } from '@/providers'
 import { CommandPalette } from '@/components/ui/command-palette'
 import { JsonLdSchema } from '@/components/seo/json-ld-schema'
-import { ShockAssistant } from '@/components/shock-assistant'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -93,7 +92,6 @@ export default function RootLayout({
       <body className="min-h-screen">
         <Providers>
           <CommandPalette />
-          <ShockAssistant />
           {children}
         </Providers>
       </body>
