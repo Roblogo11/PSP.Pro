@@ -178,16 +178,33 @@ export function PSPAssistant() {
       {/* Floating Chat Button - Top right on mobile, bottom right on desktop */}
       <motion.button
         onClick={handleOpen}
-        className="fixed top-6 sm:top-auto sm:bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-orange to-orange-600 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all"
-        whileHover={{ scale: 1.05 }}
+        className="fixed top-6 sm:top-auto sm:bottom-6 right-6 z-[100] flex items-center gap-2 px-5 py-3.5 rounded-full bg-gradient-to-r from-orange via-orange-500 to-orange-600 text-white text-sm font-bold shadow-2xl hover:shadow-orange/50 transition-all ring-4 ring-orange/20 hover:ring-orange/40"
+        style={{
+          animation: 'pulse-glow 3s ease-in-out infinite',
+        }}
+        whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
       >
         <MessageSquare className="w-5 h-5" />
-        <span className="hidden sm:inline">Questions?</span>
+        <span className="hidden sm:inline">Need Help?</span>
+        {/* Notification badge */}
+        <span className="absolute -top-1 -right-1 w-3 h-3 bg-cyan rounded-full animate-ping" />
+        <span className="absolute -top-1 -right-1 w-3 h-3 bg-cyan rounded-full" />
       </motion.button>
+
+      <style jsx global>{`
+        @keyframes pulse-glow {
+          0%, 100% {
+            box-shadow: 0 10px 30px rgba(184, 48, 26, 0.4), 0 0 20px rgba(184, 48, 26, 0.3);
+          }
+          50% {
+            box-shadow: 0 10px 40px rgba(184, 48, 26, 0.6), 0 0 30px rgba(184, 48, 26, 0.5);
+          }
+        }
+      `}</style>
 
       {/* Chat Panel */}
       <AnimatePresence>
