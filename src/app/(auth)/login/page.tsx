@@ -30,23 +30,37 @@ export default function LoginPage() {
       if (signInError) throw signInError
 
       if (data.user) {
+        // Wait briefly for auth state to propagate
+        await new Promise(resolve => setTimeout(resolve, 300))
+
         // Fetch user profile to determine role
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('role')
           .eq('id', data.user.id)
           .single()
 
-        // Redirect based on role
-        if (profile?.role === 'admin' || profile?.role === 'coach') {
-          router.push('/admin')
-        } else {
-          router.push('/locker')
+        if (profileError) {
+          console.error('Error fetching profile:', profileError)
+          throw new Error('Failed to load user profile. Please try again.')
         }
+
+        if (!profile) {
+          throw new Error('User profile not found')
+        }
+
+        // Use window.location for hard navigation (ensures auth state is fresh)
+        if (profile.role === 'admin' || profile.role === 'coach') {
+          window.location.href = '/admin'
+        } else {
+          window.location.href = '/locker'
+        }
+        // Don't set loading to false - we're navigating away
+        return
       }
     } catch (err: any) {
+      console.error('Login error:', err)
       setError(err.message || 'Failed to sign in. Please try again.')
-    } finally {
       setLoading(false)
     }
   }
