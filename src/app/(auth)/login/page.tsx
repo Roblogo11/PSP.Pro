@@ -43,7 +43,6 @@ export default function LoginPage() {
         } else {
           router.push('/locker')
         }
-        router.refresh()
       }
     } catch (err: any) {
       setError(err.message || 'Failed to sign in. Please try again.')
