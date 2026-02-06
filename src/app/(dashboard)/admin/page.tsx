@@ -65,23 +65,38 @@ export default function AdminDashboard() {
           .select('*', { count: 'exact', head: true })
           .eq('role', 'athlete')
 
-        // Get upcoming sessions count
-        const { count: sessionCount } = await supabase
+        // Get upcoming sessions count (coaches see only their sessions)
+        let sessionsQuery = supabase
           .from('bookings')
           .select('*', { count: 'exact', head: true })
           .in('status', ['confirmed', 'pending'])
           .gte('booking_date', new Date().toISOString().split('T')[0])
 
-        // Get total drills
-        const { count: drillCount } = await supabase
+        if (!isAdmin && profile?.id) {
+          sessionsQuery = sessionsQuery.eq('coach_id', profile.id)
+        }
+        const { count: sessionCount } = await sessionsQuery
+
+        // Get total drills (coaches see only their drills)
+        let drillsQuery = supabase
           .from('drills')
           .select('*', { count: 'exact', head: true })
 
-        // Get pending bookings
-        const { count: pendingCount } = await supabase
+        if (!isAdmin && profile?.id) {
+          drillsQuery = drillsQuery.eq('created_by', profile.id)
+        }
+        const { count: drillCount } = await drillsQuery
+
+        // Get pending bookings (coaches see only theirs)
+        let pendingQuery = supabase
           .from('bookings')
           .select('*', { count: 'exact', head: true })
           .eq('status', 'pending')
+
+        if (!isAdmin && profile?.id) {
+          pendingQuery = pendingQuery.eq('coach_id', profile.id)
+        }
+        const { count: pendingCount } = await pendingQuery
 
         setStats({
           totalAthletes: athleteCount || 0,
@@ -108,7 +123,8 @@ export default function AdminDashboard() {
         const supabase = createClient()
         const today = new Date().toISOString().split('T')[0]
 
-        const { data: sessions, error } = await supabase
+        // Coaches see only their sessions, admins see all
+        let sessionsQuery = supabase
           .from('bookings')
           .select(`
             id,
@@ -124,6 +140,12 @@ export default function AdminDashboard() {
           .order('booking_date', { ascending: true })
           .order('start_time', { ascending: true })
           .limit(5)
+
+        if (!isAdmin && profile?.id) {
+          sessionsQuery = sessionsQuery.eq('coach_id', profile.id)
+        }
+
+        const { data: sessions, error } = await sessionsQuery
 
         if (error) {
           console.error('Error loading upcoming sessions:', error)
