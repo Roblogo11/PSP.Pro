@@ -16,8 +16,11 @@ import {
   Upload,
   Youtube,
   CheckCircle,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { Tooltip } from '@/components/ui/tooltip'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
 
@@ -65,6 +68,7 @@ export default function DrillsManagementPage() {
   const [selectedDrill, setSelectedDrill] = useState<Drill | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
+  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false)
 
   // Form state
   const [formData, setFormData] = useState({
@@ -688,30 +692,6 @@ export default function DrillsManagementPage() {
                 />
               </div>
 
-              {/* Description */}
-              <div>
-                <label className="block text-sm font-semibold text-white mb-2">Description</label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Brief description of the drill..."
-                  rows={3}
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50 resize-none"
-                />
-              </div>
-
-              {/* Instructions */}
-              <div>
-                <label className="block text-sm font-semibold text-white mb-2">Instructions</label>
-                <textarea
-                  value={formData.instructions}
-                  onChange={(e) => setFormData({ ...formData, instructions: e.target.value })}
-                  placeholder="Step-by-step instructions..."
-                  rows={4}
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50 resize-none"
-                />
-              </div>
-
               {/* Video Source Toggle */}
               <div>
                 <label className="block text-sm font-semibold text-white mb-2">
@@ -760,18 +740,6 @@ export default function DrillsManagementPage() {
                 )}
               </div>
 
-              {/* Thumbnail URL */}
-              <div>
-                <label className="block text-sm font-semibold text-white mb-2">Thumbnail URL</label>
-                <input
-                  type="url"
-                  value={formData.thumbnail_url}
-                  onChange={(e) => setFormData({ ...formData, thumbnail_url: e.target.value })}
-                  placeholder="https://example.com/thumbnail.jpg"
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
-                />
-              </div>
-
               {/* Category and Difficulty */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -801,6 +769,61 @@ export default function DrillsManagementPage() {
                     <option value="advanced">Advanced</option>
                   </select>
                 </div>
+              </div>
+
+              {/* Advanced Options Toggle */}
+              <button
+                type="button"
+                onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}
+                className="w-full flex items-center justify-between px-4 py-3 bg-slate-800/30 hover:bg-slate-800/50 border border-white/10 rounded-xl text-white transition-all"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold">Advanced Options</span>
+                  <Tooltip content="Optional fields like description, tags, equipment. YouTube URL is all you need to get started!" />
+                </div>
+                {showAdvancedOptions ? (
+                  <ChevronUp className="w-5 h-5" />
+                ) : (
+                  <ChevronDown className="w-5 h-5" />
+                )}
+              </button>
+
+              {showAdvancedOptions && (
+                <>
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-semibold text-white mb-2">Description</label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  placeholder="Brief description of the drill..."
+                  rows={3}
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50 resize-none"
+                />
+              </div>
+
+              {/* Instructions */}
+              <div>
+                <label className="block text-sm font-semibold text-white mb-2">Instructions</label>
+                <textarea
+                  value={formData.instructions}
+                  onChange={(e) => setFormData({ ...formData, instructions: e.target.value })}
+                  placeholder="Step-by-step instructions..."
+                  rows={4}
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50 resize-none"
+                />
+              </div>
+
+              {/* Thumbnail URL */}
+              <div>
+                <label className="block text-sm font-semibold text-white mb-2">Thumbnail URL</label>
+                <input
+                  type="url"
+                  value={formData.thumbnail_url}
+                  onChange={(e) => setFormData({ ...formData, thumbnail_url: e.target.value })}
+                  placeholder="https://example.com/thumbnail.jpg"
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
+                />
               </div>
 
               {/* Duration */}
@@ -952,6 +975,8 @@ export default function DrillsManagementPage() {
                   <span className="text-white font-semibold">Featured</span>
                 </label>
               </div>
+                </>
+              )}
             </div>
 
             {/* Actions */}
