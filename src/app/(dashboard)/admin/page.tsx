@@ -31,15 +31,17 @@ export default function AdminDashboard() {
   })
   const [loadingStats, setLoadingStats] = useState(true)
 
-  // Check if user is coach/admin
+  // Check if user is coach/admin (only redirect if we have a profile loaded)
   useEffect(() => {
-    if (!loading && !isCoach && !isAdmin) {
+    if (!loading && profile && !isCoach && !isAdmin) {
+      console.log('Not admin/coach, redirecting to locker. Profile:', profile)
       router.push('/locker')
     }
-  }, [loading, isCoach, isAdmin, router])
+  }, [loading, profile, isCoach, isAdmin, router])
 
   // Load admin stats
   useEffect(() => {
+    console.log('Admin page - Profile:', profile, 'isCoach:', isCoach, 'isAdmin:', isAdmin)
     if (!profile || !isCoach) return
 
     async function loadAdminStats() {
