@@ -172,6 +172,7 @@ export default function DrillsManagementPage() {
         .insert({
           ...formData,
           slug,
+          created_by: profile?.id, // Track who created this drill
         })
 
       if (error) throw error

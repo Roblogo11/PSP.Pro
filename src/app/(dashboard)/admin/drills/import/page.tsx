@@ -21,7 +21,7 @@ interface DrillRow {
 
 export default function BulkDrillImportPage() {
   const router = useRouter()
-  const { isCoach, isAdmin, loading: profileLoading } = useUserRole()
+  const { profile, isCoach, isAdmin, loading: profileLoading } = useUserRole()
   const [importing, setImporting] = useState(false)
   const [results, setResults] = useState<{success: number; failed: number; errors: string[]}>({ success: 0, failed: 0, errors: [] })
   const [showResults, setShowResults] = useState(false)
@@ -88,6 +88,7 @@ export default function BulkDrillImportPage() {
             focus_areas: focusAreasArray,
             published: true,
             featured: false,
+            created_by: profile?.id, // Track who created this drill
           })
 
           if (error) throw error
