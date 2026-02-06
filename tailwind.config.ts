@@ -39,17 +39,17 @@ const config: Config = {
 
         // Accent: Electric Orange (High-Energy CTAs & Highlights)
         orange: {
-          DEFAULT: '#E8421F',
-          50: '#FCE5DF',
-          100: '#F9CCBF',
-          200: '#F49980',
-          300: '#F26B52',
-          400: '#ED5638',
-          500: '#E8421F',
-          600: '#D13814',
-          700: '#B02D11',
-          800: '#8F240E',
-          900: '#6E1B0B',
+          DEFAULT: '#B8301A',
+          50: '#F8DCD8',
+          100: '#F1B9B1',
+          200: '#E5998B',
+          300: '#D4422A',
+          400: '#C6391F',
+          500: '#B8301A',
+          600: '#9C2815',
+          700: '#802112',
+          800: '#64190E',
+          900: '#48120A',
         },
 
         // Accent 2: PSP Blue (Logo Cyan - Tech & Speed)
@@ -107,22 +107,22 @@ const config: Config = {
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
 
         // PSP.Pro Signature Gradients
-        'gradient-athletic': 'linear-gradient(135deg, #050A18 0%, #0F1623 50%, #E8421F 100%)',
-        'gradient-velocity': 'linear-gradient(90deg, #E8421F 0%, #ED5638 50%, #F26B52 100%)',
+        'gradient-athletic': 'linear-gradient(135deg, #050A18 0%, #0F1623 50%, #B8301A 100%)',
+        'gradient-velocity': 'linear-gradient(90deg, #B8301A 0%, #C6391F 50%, #D4422A 100%)',
         'gradient-command': 'linear-gradient(180deg, rgba(5,10,24,0.95) 0%, rgba(15,22,35,0.9) 100%)',
 
         // Subtle grid pattern for dashboard
-        'grid-pattern': "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23E8421F' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+        'grid-pattern': "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B8301A' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
       },
 
       boxShadow: {
         // Glassmorphism & Glow Effects
-        'glass': '0 8px 32px 0 rgba(232, 66, 31, 0.1)',
-        'glass-lg': '0 12px 48px 0 rgba(232, 66, 31, 0.15)',
-        'glow-orange': '0 0 20px rgba(232, 66, 31, 0.4)',
-        'glow-orange-lg': '0 0 40px rgba(232, 66, 31, 0.6)',
-        'inner-glow': 'inset 0 0 20px rgba(232, 66, 31, 0.1)',
-        'command-panel': '0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(232, 66, 31, 0.1)',
+        'glass': '0 8px 32px 0 rgba(184, 48, 26, 0.1)',
+        'glass-lg': '0 12px 48px 0 rgba(184, 48, 26, 0.15)',
+        'glow-orange': '0 0 20px rgba(184, 48, 26, 0.4)',
+        'glow-orange-lg': '0 0 40px rgba(184, 48, 26, 0.6)',
+        'inner-glow': 'inset 0 0 20px rgba(184, 48, 26, 0.1)',
+        'command-panel': '0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(184, 48, 26, 0.1)',
       },
 
       backdropBlur: {
@@ -148,11 +148,11 @@ const config: Config = {
         'pulse-glow': {
           '0%, 100%': {
             opacity: '1',
-            boxShadow: '0 0 20px rgba(232, 66, 31, 0.4)',
+            boxShadow: '0 0 20px rgba(184, 48, 26, 0.4)',
           },
           '50%': {
             opacity: '0.8',
-            boxShadow: '0 0 40px rgba(232, 66, 31, 0.6)',
+            boxShadow: '0 0 40px rgba(184, 48, 26, 0.6)',
           },
         },
         'float': {
@@ -186,11 +186,11 @@ const config: Config = {
         'glow-pulse': {
           '0%, 100%': {
             opacity: '0.8',
-            filter: 'drop-shadow(0 0 8px rgba(232, 66, 31, 0.4))',
+            filter: 'drop-shadow(0 0 8px rgba(184, 48, 26, 0.4))',
           },
           '50%': {
             opacity: '1',
-            filter: 'drop-shadow(0 0 16px rgba(232, 66, 31, 0.8))',
+            filter: 'drop-shadow(0 0 16px rgba(184, 48, 26, 0.8))',
           },
         },
         'velocity-line': {

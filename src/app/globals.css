@@ -13,7 +13,7 @@
 
     /* PSP.Pro Brand Colors */
     --color-navy: #050A18;
-    --color-orange: #E8421F;
+    --color-orange: #B8301A;
     --color-slate: #4A5568;
     --color-white: #F7FAFC;
   }
@@ -160,7 +160,7 @@
 
   /* Gradient Text Effects */
   .text-gradient-orange {
-    background: linear-gradient(90deg, #F26B52 0%, #E8421F 50%, #D13814 100%);
+    background: linear-gradient(90deg, #D4422A 0%, #B8301A 50%, #9C2815 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -189,16 +189,16 @@
 
   /* High-Tech Buttons */
   .btn-primary {
-    background-color: #E8421F;
+    background-color: #B8301A;
     @apply text-white font-semibold px-6 py-3 rounded-xl;
     @apply transition-all duration-300;
     @apply transform hover:scale-105;
-    box-shadow: 0 0 20px rgba(232, 66, 31, 0.4);
+    box-shadow: 0 0 20px rgba(184, 48, 26, 0.4);
   }
 
   .btn-primary:hover {
-    background-color: #D13814;
-    box-shadow: 0 0 40px rgba(232, 66, 31, 0.6);
+    background-color: #9C2815;
+    box-shadow: 0 0 40px rgba(184, 48, 26, 0.6);
   }
 
   .btn-ghost {
