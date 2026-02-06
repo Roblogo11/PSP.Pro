@@ -133,28 +133,46 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* Dashboard CTA Card */}
-          <div className="command-panel max-w-2xl mx-auto p-8 mb-20 border-cyan/20">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-gradient-velocity rounded-xl flex items-center justify-center shadow-glow-orange">
-                <LayoutDashboard className="w-6 h-6 text-white" />
+          {/* Key Action Cards */}
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-20">
+            {/* Book Session */}
+            <Link href="/booking">
+              <div className="command-panel p-6 hover:scale-105 transition-all duration-300 cursor-pointer border-orange/20 hover:border-orange/50 group">
+                <div className="w-12 h-12 bg-gradient-to-br from-orange to-orange-600 rounded-xl flex items-center justify-center shadow-glow-orange mb-4 group-hover:shadow-glow-orange-intense">
+                  <Clock className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Book a Session</h3>
+                <p className="text-slate-400 text-sm">
+                  Schedule 1-on-1 training, group sessions, or video analysis with our coaches
+                </p>
               </div>
-              <div className="text-left">
-                <h3 className="text-xl font-bold text-white">Athletic OS Dashboard</h3>
-                <p className="text-slate-300 text-sm">Track progress • Analyze drills • Book sessions</p>
+            </Link>
+
+            {/* View Pricing */}
+            <Link href="/pricing">
+              <div className="command-panel p-6 hover:scale-105 transition-all duration-300 cursor-pointer border-cyan/20 hover:border-cyan/50 group">
+                <div className="w-12 h-12 bg-gradient-to-br from-cyan to-blue-500 rounded-xl flex items-center justify-center shadow-glow-cyan mb-4">
+                  <Award className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">View Pricing</h3>
+                <p className="text-slate-400 text-sm">
+                  Explore training packages, session rates, and save up to $200 on bundles
+                </p>
               </div>
-            </div>
-            <p className="text-slate-300 mb-6 text-left">
-              Access your personalized training dashboard to view velocity gains, drill history, upcoming sessions, and performance analytics.
-            </p>
-            <div className="flex gap-3">
-              <Link href="/login" className="flex-1">
-                <button className="btn-primary w-full">Login to Dashboard</button>
-              </Link>
-              <Link href="/signup" className="flex-1">
-                <button className="btn-ghost w-full border-orange/30">Create Account</button>
-              </Link>
-            </div>
+            </Link>
+
+            {/* Meet Coaches */}
+            <Link href="/about">
+              <div className="command-panel p-6 hover:scale-105 transition-all duration-300 cursor-pointer border-purple-500/20 hover:border-purple-500/50 group">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center shadow-glow-purple mb-4">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Meet Our Coaches</h3>
+                <p className="text-slate-400 text-sm">
+                  College & pro experience with proven results in velocity and mechanics
+                </p>
+              </div>
+            </Link>
           </div>
 
           {/* Quick Stats */}
