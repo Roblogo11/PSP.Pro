@@ -158,6 +158,55 @@
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
 
+  /* Home Page Specific - Bright Blue UI Elements */
+  .home-page .glass-card,
+  .home-page .glass-card-hover {
+    background: linear-gradient(
+      135deg,
+      rgba(15, 23, 42, 0.9) 0%,
+      rgba(30, 41, 59, 0.85) 50%,
+      rgba(15, 23, 42, 0.9) 100%
+    );
+    border: 1px solid rgba(0, 180, 216, 0.4);
+    box-shadow:
+      0 8px 32px 0 rgba(0, 0, 0, 0.6),
+      inset 0 0 0 1px rgba(0, 180, 216, 0.2),
+      0 0 25px rgba(0, 180, 216, 0.15);
+  }
+
+  .home-page .glass-card-hover:hover {
+    border-color: rgba(0, 180, 216, 0.6);
+    box-shadow:
+      0 8px 32px 0 rgba(0, 0, 0, 0.6),
+      0 0 40px rgba(0, 180, 216, 0.4),
+      0 0 20px rgba(255, 75, 43, 0.2);
+  }
+
+  .home-page .command-panel {
+    background: linear-gradient(
+      135deg,
+      rgba(15, 23, 42, 0.95) 0%,
+      rgba(30, 41, 59, 0.9) 50%,
+      rgba(15, 23, 42, 0.95) 100%
+    );
+    border: 1px solid rgba(0, 180, 216, 0.5);
+    box-shadow:
+      0 8px 32px 0 rgba(0, 0, 0, 0.6),
+      0 0 30px rgba(0, 180, 216, 0.25);
+  }
+
+  .home-page .btn-ghost {
+    background: rgba(0, 180, 216, 0.1);
+    border: 1px solid rgba(0, 180, 216, 0.4);
+    color: #00B4D8;
+  }
+
+  .home-page .btn-ghost:hover {
+    background: rgba(0, 180, 216, 0.2);
+    border-color: rgba(0, 180, 216, 0.6);
+    box-shadow: 0 0 25px rgba(0, 180, 216, 0.3);
+  }
+
   /* Gradient Text Effects */
   .text-gradient-orange {
     background: linear-gradient(90deg, #D4422A 0%, #B8301A 50%, #9C2815 100%);

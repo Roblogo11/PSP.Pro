@@ -22,7 +22,7 @@ import { PLACEHOLDER_IMAGES } from '@/lib/placeholder-images'
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen home-page">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Hero Background Image */}
