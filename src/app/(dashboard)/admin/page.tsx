@@ -35,6 +35,13 @@ export default function AdminDashboard() {
   const [upcomingSessions, setUpcomingSessions] = useState<any[]>([])
   const [loadingSessions, setLoadingSessions] = useState(true)
 
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!loading && !profile) {
+      router.push('/login')
+    }
+  }, [loading, profile, router])
+
   // Check if user is coach/admin (only redirect if we have a profile loaded)
   useEffect(() => {
     if (!loading && profile && !isCoach && !isAdmin) {
@@ -133,7 +140,7 @@ export default function AdminDashboard() {
     loadUpcomingSessions()
   }, [profile, isCoach])
 
-  if (loading || loadingStats) {
+  if (loading || loadingStats || !profile) {
     return (
       <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
         <div className="text-center">
@@ -145,7 +152,7 @@ export default function AdminDashboard() {
   }
 
   if (!isCoach && !isAdmin) {
-    return null // Will redirect
+    return null // Will redirect to /locker
   }
 
   const quickActions = [

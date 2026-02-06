@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Activity, Dumbbell, Target, Flame } from 'lucide-react'
 import { VelocityChart } from '@/components/dashboard/velocity-chart'
@@ -13,27 +15,24 @@ import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useUserStats } from '@/lib/hooks/use-user-stats'
 
 export default function AthleteLockerPage() {
+  const router = useRouter()
   const { profile, loading: profileLoading } = useUserRole()
   const { stats, loading: statsLoading } = useUserStats(profile?.id)
 
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!profileLoading && !profile) {
+      router.push('/login')
+    }
+  }, [profileLoading, profile, router])
+
   // Loading state
-  if (profileLoading || statsLoading) {
+  if (profileLoading || statsLoading || !profile) {
     return (
       <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-slate-400">Loading your dashboard...</p>
-        </div>
-      </div>
-    )
-  }
-
-  // No profile
-  if (!profile) {
-    return (
-      <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-slate-400">Please log in to view your dashboard</p>
         </div>
       </div>
     )
