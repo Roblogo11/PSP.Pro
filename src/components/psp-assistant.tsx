@@ -63,6 +63,42 @@ const KNOWLEDGE_BASE = [
     response: 'Save with our packages:\n\n• 5-Session Pack: $350 (save $25)\n• 10-Session Pack: $675 (save $75) ⭐ Most Popular\n• 20-Session Pack: $1,300 (save $200)\n\nPackages are valid for 90 days.',
     actions: [{ label: 'View Packages', href: '/pricing' }],
   },
+  {
+    keywords: ['dashboard', 'locker', 'my account', 'profile', 'stats', 'progress'],
+    title: 'Your Dashboard',
+    response: 'Your Athletic OS dashboard shows:\n\n• Velocity progress & charts\n• Upcoming sessions\n• Drill completions\n• Achievement badges\n• Performance analytics\n\nEverything updates in real-time! Login to see your stats.',
+    actions: [{ label: 'Go to Dashboard', href: '/locker' }],
+  },
+  {
+    keywords: ['create drill', 'add drill', 'new drill', 'youtube', 'video drill', 'drill library'],
+    title: 'Creating Drills (Coaches)',
+    response: 'Coaches: Adding drills is super easy!\n\n1. Click "Create Drill" or go to Drill Bank\n2. Paste a YouTube URL (that\'s it!)\n3. Add title, category, difficulty\n4. Advanced options are hidden by default\n\n💡 Tip: Use "Bulk Import" to add multiple YouTube videos at once - 180x faster!',
+    actions: [{ label: 'Admin Dashboard', href: '/admin' }],
+  },
+  {
+    keywords: ['schedule', 'availability', 'set hours', 'booking slots', 'time slots', 'when available'],
+    title: 'Setting Availability (Coaches)',
+    response: 'Coaches: Set your availability in minutes!\n\n1. Go to Admin → "Schedule Session"\n2. Pick date, start/end time, location\n3. Set max bookings (for group sessions)\n4. Done! Athletes can now book\n\n💡 The dashboard shows your upcoming sessions widget for quick overview.',
+    actions: [{ label: 'Manage Availability', href: '/admin/availability' }],
+  },
+  {
+    keywords: ['tooltip', 'help', 'question mark', 'what does this mean', 'how to use', 'confused'],
+    title: 'Dashboard Help',
+    response: 'Need help navigating?\n\n• Look for the (?) tooltip icons - hover for explanations\n• Blue info banners show tips and shortcuts\n• "Advanced Options" can be hidden/shown\n• All stats update in real-time\n\nCoaches and athletes see different dashboards customized for their role!',
+    actions: [{ label: 'Dashboard', href: '/locker' }],
+  },
+  {
+    keywords: ['admin', 'coach dashboard', 'control center', 'manage athletes', 'coach view'],
+    title: 'Admin Dashboard (Coaches)',
+    response: 'Your Admin Control Center:\n\n✅ Quick Stats: Athletes, sessions, drills, pending bookings\n✅ Upcoming Sessions widget: See what\'s next\n✅ Quick Actions: Create drill, schedule, add athlete\n✅ Drill Bank: Manage training videos\n✅ Athlete Management: View all athletes\n\nEverything in one place!',
+    actions: [{ label: 'Admin Dashboard', href: '/admin' }],
+  },
+  {
+    keywords: ['bulk import', 'multiple drills', 'many videos', 'import drills', 'fast way'],
+    title: 'Bulk Import Drills',
+    response: 'Add multiple drills at once!\n\n💡 Bulk Import is 180x faster than manual entry\n\nJust:\n1. Go to Drill Bank\n2. Click "Bulk Import"\n3. Paste multiple YouTube URLs (one per line)\n4. Click import - done!\n\nPerfect for building your drill library quickly.',
+    actions: [{ label: 'Drill Bank', href: '/admin/drills' }],
+  },
 ]
 
 function findBestMatch(query: string): any {
@@ -139,10 +175,10 @@ export function PSPAssistant() {
 
   return (
     <>
-      {/* Floating Chat Button */}
+      {/* Floating Chat Button - Top right on mobile, bottom right on desktop */}
       <motion.button
         onClick={handleOpen}
-        className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-orange to-orange-600 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all"
+        className="fixed top-6 sm:top-auto sm:bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-orange to-orange-600 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         initial={{ opacity: 0, y: 20 }}
@@ -166,13 +202,13 @@ export function PSPAssistant() {
               className="fixed inset-0 z-[101] bg-black/50 backdrop-blur-sm"
             />
 
-            {/* Panel */}
+            {/* Panel - Top right on mobile, bottom right on desktop */}
             <motion.div
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="fixed bottom-6 right-6 z-[102] w-[calc(100vw-2rem)] sm:w-[400px] max-h-[600px] rounded-2xl overflow-hidden shadow-2xl command-panel"
+              className="fixed top-20 sm:top-auto sm:bottom-6 right-6 z-[102] w-[calc(100vw-2rem)] sm:w-[400px] max-h-[calc(100vh-8rem)] sm:max-h-[600px] rounded-2xl overflow-hidden shadow-2xl command-panel"
             >
               {/* Header */}
               <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-gradient-to-r from-orange/10 to-cyan/10">
