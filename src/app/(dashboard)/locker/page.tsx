@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { Activity, Dumbbell, Target, Flame } from 'lucide-react'
 import { VelocityChart } from '@/components/dashboard/velocity-chart'
 import { NextSessionCard } from '@/components/dashboard/next-session-card'
@@ -98,9 +99,11 @@ export default function AthleteLockerPage() {
             <h2 className="text-xl font-bold text-white">
               Recent Activity
             </h2>
-            <button className="text-sm text-slate-400 hover:text-orange transition-colors">
-              View All
-            </button>
+            <Link href="/sessions">
+              <button className="text-sm text-slate-400 hover:text-orange transition-colors">
+                View All
+              </button>
+            </Link>
           </div>
           <ActivityFeed maxItems={4} />
         </div>
@@ -122,7 +125,9 @@ export default function AthleteLockerPage() {
               Complete these before your next session
             </p>
           </div>
-          <button className="btn-ghost">View All</button>
+          <Link href="/drills">
+            <button className="btn-ghost">View All</button>
+          </Link>
         </div>
 
         {/* Drill Cards Grid */}

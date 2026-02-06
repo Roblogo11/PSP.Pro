@@ -1,11 +1,19 @@
 'use client'
 
 import { useState } from 'react'
-import { Calendar, Clock, MapPin, Video, CheckCircle2, XCircle, AlertCircle } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { Calendar, Clock, MapPin, Video, CheckCircle2, XCircle, AlertCircle, X } from 'lucide-react'
 import { format } from 'date-fns'
+import { createClient } from '@/lib/supabase/client'
 
 export default function SessionsPage() {
+  const router = useRouter()
   const [filter, setFilter] = useState<'all' | 'upcoming' | 'past'>('all')
+  const [cancelModalOpen, setCancelModalOpen] = useState(false)
+  const [rescheduleModalOpen, setRescheduleModalOpen] = useState(false)
+  const [selectedSession, setSelectedSession] = useState<number | null>(null)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   // Mock sessions data
   const sessions = [
@@ -69,6 +77,44 @@ export default function SessionsPage() {
       default:
         return null
     }
+  }
+
+  const handleCancelSession = async () => {
+    if (!selectedSession) return
+    setIsProcessing(true)
+
+    try {
+      const supabase = createClient()
+
+      // Update session status to cancelled in Supabase
+      const { error } = await supabase
+        .from('sessions')
+        .update({ status: 'cancelled', cancelled_at: new Date().toISOString() })
+        .eq('id', selectedSession)
+
+      if (error) throw error
+
+      // Close modal and refresh
+      setCancelModalOpen(false)
+      setSelectedSession(null)
+
+      // In a real app, you'd refresh the sessions list here
+      // For now, we'll just show a success message
+      alert('Session cancelled successfully. Refund will be processed within 3-5 business days.')
+    } catch (error: any) {
+      console.error('Error cancelling session:', error)
+      alert('Failed to cancel session. Please contact support.')
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  const handleRescheduleSession = () => {
+    if (!selectedSession) return
+
+    // Close modal and redirect to booking page with session ID
+    setRescheduleModalOpen(false)
+    router.push(`/booking?reschedule=${selectedSession}`)
   }
 
   return (
@@ -150,8 +196,24 @@ export default function SessionsPage() {
 
             {session.status === 'upcoming' && (
               <div className="mt-4 pt-4 border-t border-white/5 flex gap-3">
-                <button className="btn-ghost text-sm py-2">Cancel Session</button>
-                <button className="btn-ghost text-sm py-2">Reschedule</button>
+                <button
+                  onClick={() => {
+                    setSelectedSession(session.id)
+                    setCancelModalOpen(true)
+                  }}
+                  className="btn-ghost text-sm py-2 border-red-500/30 hover:border-red-500/50 hover:text-red-400"
+                >
+                  Cancel Session
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedSession(session.id)
+                    setRescheduleModalOpen(true)
+                  }}
+                  className="btn-ghost text-sm py-2 border-cyan/30 hover:border-cyan/50 hover:text-cyan"
+                >
+                  Reschedule
+                </button>
               </div>
             )}
           </div>
@@ -161,7 +223,117 @@ export default function SessionsPage() {
       {filteredSessions.length === 0 && (
         <div className="command-panel text-center py-12">
           <p className="text-slate-400 text-lg mb-4">No sessions found</p>
-          <button className="btn-primary">Book a Session</button>
+          <Link href="/booking">
+            <button className="btn-primary">Book a Session</button>
+          </Link>
+        </div>
+      )}
+
+      {/* Cancel Session Modal */}
+      {cancelModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="glass-card max-w-md w-full p-6 animate-scale-in">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-white">Cancel Session</h2>
+              <button
+                onClick={() => {
+                  setCancelModalOpen(false)
+                  setSelectedSession(null)
+                }}
+                className="text-slate-400 hover:text-white transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="mb-6">
+              <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl mb-4">
+                <p className="text-red-400 text-sm font-semibold mb-2">⚠️ Cancellation Policy</p>
+                <ul className="text-sm text-slate-300 space-y-1">
+                  <li>• Cancellations made 24+ hours in advance: Full refund</li>
+                  <li>• Cancellations within 24 hours: No refund</li>
+                  <li>• Refunds processed within 3-5 business days</li>
+                </ul>
+              </div>
+
+              <p className="text-slate-300 text-sm">
+                Are you sure you want to cancel this session? This action cannot be undone.
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setCancelModalOpen(false)
+                  setSelectedSession(null)
+                }}
+                className="btn-ghost flex-1"
+                disabled={isProcessing}
+              >
+                Keep Session
+              </button>
+              <button
+                onClick={handleCancelSession}
+                className="flex-1 px-6 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isProcessing}
+              >
+                {isProcessing ? 'Cancelling...' : 'Cancel Session'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Reschedule Session Modal */}
+      {rescheduleModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="glass-card max-w-md w-full p-6 animate-scale-in">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-white">Reschedule Session</h2>
+              <button
+                onClick={() => {
+                  setRescheduleModalOpen(false)
+                  setSelectedSession(null)
+                }}
+                className="text-slate-400 hover:text-white transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="mb-6">
+              <div className="p-4 bg-cyan/10 border border-cyan/20 rounded-xl mb-4">
+                <p className="text-cyan text-sm font-semibold mb-2">ℹ️ Rescheduling Info</p>
+                <ul className="text-sm text-slate-300 space-y-1">
+                  <li>• Free rescheduling up to 24 hours before session</li>
+                  <li>• Choose any available slot in the booking calendar</li>
+                  <li>• Your session credit will automatically transfer</li>
+                </ul>
+              </div>
+
+              <p className="text-slate-300 text-sm">
+                You'll be redirected to the booking calendar to select a new time slot.
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setRescheduleModalOpen(false)
+                  setSelectedSession(null)
+                }}
+                className="btn-ghost flex-1"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleRescheduleSession}
+                className="btn-primary flex-1"
+              >
+                Choose New Time
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

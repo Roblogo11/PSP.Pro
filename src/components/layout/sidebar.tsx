@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard,
@@ -16,6 +16,7 @@ import {
   ChevronRight,
   Zap,
 } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
 
 interface NavItem {
   label: string
@@ -35,6 +36,13 @@ const navItems: NavItem[] = [
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push('/')
+  }
 
   return (
     <>
@@ -143,6 +151,7 @@ export function Sidebar() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={handleLogout}
             className={`
               w-full flex items-center gap-3 px-4 py-3 rounded-xl
               bg-white/5 hover:bg-red-500/20 text-slate-300 hover:text-red-400

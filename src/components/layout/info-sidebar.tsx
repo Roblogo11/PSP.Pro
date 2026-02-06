@@ -185,7 +185,7 @@ export function InfoSidebar() {
                   `}
                 >
                   <Icon className="w-5 h-5" />
-                  <span className="text-[10px] font-medium">{item.label.split(' ')[0]}</span>
+                  <span className="text-xs font-medium">{item.label.split(' ')[0]}</span>
                 </motion.div>
               </Link>
             )

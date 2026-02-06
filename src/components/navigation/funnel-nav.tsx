@@ -58,7 +58,7 @@ export function FunnelNav({ className = '' }: FunnelNavProps) {
                     sessionStorage.setItem('shock-nav-history', 'true'); setIsFreshEntry(false)
                     router.push('/')
                   }}
-                  className="group flex items-center gap-2 px-4 py-3 rounded-xl bg-dark-200/80 border border-secondary/10 hover:border-secondary/30 hover:bg-dark-200 transition-all duration-300 min-h-[48px]"
+                  className="group flex items-center gap-2 px-4 py-4 rounded-xl bg-dark-200/80 border border-secondary/10 hover:border-secondary/30 hover:bg-dark-200 transition-all duration-300 min-h-[48px]"
                 >
                   <Home className="w-4 h-4 text-gray-400 group-hover:text-secondary transition-all" />
                   <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">
@@ -73,7 +73,7 @@ export function FunnelNav({ className = '' }: FunnelNavProps) {
                     sessionStorage.setItem('shock-nav-history', 'true'); setIsFreshEntry(false)
                     router.push('/get-started')
                   }}
-                  className="group flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-secondary to-accent hover:from-secondary/90 hover:to-accent/90 shadow-lg shadow-secondary/30 hover:shadow-secondary/50 hover:scale-[1.02] transition-all duration-300 min-h-[48px]"
+                  className="group flex items-center gap-2 px-5 py-4 rounded-xl bg-gradient-to-r from-secondary to-accent hover:from-secondary/90 hover:to-accent/90 shadow-lg shadow-secondary/30 hover:shadow-secondary/50 hover:scale-[1.02] transition-all duration-300 min-h-[48px]"
                 >
                   <Sparkles className="w-4 h-4 text-white" />
                   <span className="text-sm font-semibold text-white">Get Started</span>
@@ -169,7 +169,7 @@ export function FunnelNav({ className = '' }: FunnelNavProps) {
                       sessionStorage.setItem('shock-nav-history', 'true'); setIsFreshEntry(false)
                       router.push('/')
                     }}
-                    className="group flex items-center gap-2 px-4 py-3 rounded-xl bg-dark-200/80 border border-secondary/10 hover:border-secondary/30 hover:bg-dark-200 transition-all duration-300 min-h-[48px]"
+                    className="group flex items-center gap-2 px-4 py-4 rounded-xl bg-dark-200/80 border border-secondary/10 hover:border-secondary/30 hover:bg-dark-200 transition-all duration-300 min-h-[48px]"
                   >
                     <Home className="w-4 h-4 text-gray-400 group-hover:text-secondary transition-all" />
                     <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">
@@ -180,7 +180,7 @@ export function FunnelNav({ className = '' }: FunnelNavProps) {
                   // Has history: Show normal Back button
                   <button
                     onClick={() => handleNavigation(prev.path)}
-                    className="group flex items-center gap-2 px-4 py-3 rounded-xl bg-dark-200/80 border border-secondary/10 hover:border-secondary/30 hover:bg-dark-200 transition-all duration-300 min-h-[48px]"
+                    className="group flex items-center gap-2 px-4 py-4 rounded-xl bg-dark-200/80 border border-secondary/10 hover:border-secondary/30 hover:bg-dark-200 transition-all duration-300 min-h-[48px]"
                   >
                     <ArrowLeft className="w-4 h-4 text-gray-400 group-hover:text-secondary group-hover:-translate-x-0.5 transition-all" />
                     <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors hidden sm:inline">
@@ -204,7 +204,7 @@ export function FunnelNav({ className = '' }: FunnelNavProps) {
               {next ? (
                 <button
                   onClick={() => handleNavigation(next.path)}
-                  className="group flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-secondary to-accent hover:from-secondary/90 hover:to-accent/90 shadow-lg shadow-secondary/30 hover:shadow-secondary/50 hover:scale-[1.02] transition-all duration-300 min-h-[48px]"
+                  className="group flex items-center gap-2 px-5 py-4 rounded-xl bg-gradient-to-r from-secondary to-accent hover:from-secondary/90 hover:to-accent/90 shadow-lg shadow-secondary/30 hover:shadow-secondary/50 hover:scale-[1.02] transition-all duration-300 min-h-[48px]"
                 >
                   <span className="text-sm font-semibold text-white hidden sm:inline">
                     {next.name}
@@ -219,7 +219,7 @@ export function FunnelNav({ className = '' }: FunnelNavProps) {
                     sessionStorage.setItem('shock-nav-history', 'true'); setIsFreshEntry(false)
                     router.push('/contact')
                   }}
-                  className="group flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-accent to-pink-500 hover:from-accent/90 hover:to-pink-500/90 shadow-lg shadow-accent/30 hover:shadow-accent/50 hover:scale-[1.02] transition-all duration-300 min-h-[48px]"
+                  className="group flex items-center gap-2 px-5 py-4 rounded-xl bg-gradient-to-r from-accent to-pink-500 hover:from-accent/90 hover:to-pink-500/90 shadow-lg shadow-accent/30 hover:shadow-accent/50 hover:scale-[1.02] transition-all duration-300 min-h-[48px]"
                 >
                   <Zap className="w-4 h-4 text-white" />
                   <span className="text-sm font-semibold text-white">Let's Talk</span>

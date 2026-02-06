@@ -22,7 +22,7 @@ export default function GetStartedPage() {
   return (
     <div className="flex min-h-screen">
       <InfoSidebar />
-      <main className="flex-1 p-4 md:p-8 pb-24 lg:pb-8">
+      <main className="flex-1 p-4 md:p-8 pb-20 lg:pb-8">
       {/* Page Header */}
       <div className="mb-8 text-center">
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">

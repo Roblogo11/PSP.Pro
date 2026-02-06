@@ -52,7 +52,7 @@ export default function HomePage() {
           </div>
 
           {/* Main Headline */}
-          <h2 className="text-5xl md:text-7xl font-display font-bold mb-6 leading-tight" style={{ color: '#F7FAFC' }}>
+          <h2 className="text-3xl sm:text-5xl md:text-7xl font-display font-bold mb-6 leading-tight" style={{ color: '#F7FAFC' }}>
             Train Like a Pro.
             <br />
             <span className="text-gradient-orange">Perform Like a Champion.</span>
