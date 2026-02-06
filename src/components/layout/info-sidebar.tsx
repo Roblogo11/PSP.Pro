@@ -14,6 +14,7 @@ import {
   ChevronRight,
   Zap,
   Home,
+  Package,
 } from 'lucide-react'
 
 interface NavItem {
@@ -24,6 +25,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: 'About PSP.Pro', href: '/about', icon: Info },
+  { label: 'Pricing', href: '/pricing', icon: Package },
   { label: 'Get Started', href: '/get-started', icon: Rocket },
   { label: 'Blog & Tips', href: '/blog', icon: BookOpen },
   { label: 'Contact Us', href: '/contact', icon: Mail },

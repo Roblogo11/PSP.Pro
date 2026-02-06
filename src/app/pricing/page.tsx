@@ -2,11 +2,13 @@
 
 import Link from 'next/link'
 import { Zap, Users, Video, Activity, Package, CheckCircle, Award } from 'lucide-react'
-import { FunnelNav } from '@/components/navigation/funnel-nav'
+import { InfoSidebar } from '@/components/layout/info-sidebar'
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8 relative">
+    <div className="flex min-h-screen">
+      <InfoSidebar />
+      <main className="flex-1 p-4 md:p-8 pb-24 lg:pb-8">
       {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
@@ -232,9 +234,7 @@ export default function PricingPage() {
           </div>
         </div>
       </div>
-
-      {/* Funnel Navigation */}
-      <FunnelNav />
+      </main>
     </div>
   )
 }
