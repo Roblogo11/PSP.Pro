@@ -70,11 +70,11 @@ export function useUserSessions(userId: string | undefined) {
 
           return {
             id: booking.id,
-            type: booking.service?.name || 'Training Session',
+            type: (booking.service as any as { name: string } | null)?.name || 'Training Session',
             date: sessionDate,
             time: booking.session_time,
-            coach: booking.coach?.full_name || 'Coach',
-            coachPhoto: booking.coach?.avatar_url || null,
+            coach: (booking.coach as any as { full_name: string; avatar_url: string } | null)?.full_name || 'Coach',
+            coachPhoto: (booking.coach as any as { full_name: string; avatar_url: string } | null)?.avatar_url || null,
             location: 'PSP Training Center',
             status: booking.status === 'cancelled' ? 'cancelled' : (isUpcoming ? 'upcoming' : 'completed'),
             hasVideo: false,
@@ -86,11 +86,11 @@ export function useUserSessions(userId: string | undefined) {
         // Add completed sessions with notes
         const transformedCompleted: UserSession[] = (completedSessions || []).map(session => ({
           id: session.id,
-          type: session.service?.name || 'Training Session',
+          type: (session.service as any as { name: string } | null)?.name || 'Training Session',
           date: new Date(session.session_date),
           time: session.session_time,
-          coach: session.coach?.full_name || 'Coach',
-          coachPhoto: session.coach?.avatar_url || null,
+          coach: (session.coach as any as { full_name: string; avatar_url: string } | null)?.full_name || 'Coach',
+          coachPhoto: (session.coach as any as { full_name: string; avatar_url: string } | null)?.avatar_url || null,
           location: 'PSP Training Center',
           status: 'completed' as const,
           hasVideo: !!session.video_url,

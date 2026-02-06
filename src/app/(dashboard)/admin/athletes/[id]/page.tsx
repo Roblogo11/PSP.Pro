@@ -222,12 +222,22 @@ export default function AthleteDetailPage() {
     }
   }
 
-  const getLatestValue = (field: keyof PerformanceMetric) => {
+  type NumericMetricField =
+    | 'throwing_velocity_mph'
+    | 'throwing_velocity_avg_mph'
+    | 'exit_velocity_mph'
+    | 'exit_velocity_avg_mph'
+    | 'bat_speed_mph'
+    | 'sixty_yard_dash_seconds'
+    | 'home_to_first_seconds'
+    | 'overall_performance_score'
+
+  const getLatestValue = (field: NumericMetricField): number | null => {
     if (metrics.length === 0) return null
     return metrics[0][field]
   }
 
-  const getImprovement = (field: keyof PerformanceMetric, lowerIsBetter = false) => {
+  const getImprovement = (field: NumericMetricField, lowerIsBetter = false) => {
     if (metrics.length < 2) return null
     const latest = metrics[0][field] as number | null
     const previous = metrics[1][field] as number | null

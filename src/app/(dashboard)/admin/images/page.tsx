@@ -9,7 +9,7 @@ import { Image as ImageIcon, Info } from 'lucide-react'
 export default function AdminImagesPage() {
   const [uploadStatus, setUploadStatus] = useState<{ [key: string]: boolean }>({})
 
-  const handleUpload = async (file: File, category: string, path: string) => {
+  const handleUpload = async (file: File, category: string, path: string): Promise<void> => {
     const supabase = createClient()
 
     try {
@@ -37,8 +37,6 @@ export default function AdminImagesPage() {
       console.log('Image uploaded successfully:', publicUrl)
 
       setUploadStatus((prev) => ({ ...prev, [path]: true }))
-
-      return publicUrl
     } catch (error) {
       console.error('Upload error:', error)
       throw error

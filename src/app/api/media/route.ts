@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/server'
 import { getAllMedia, updateMediaMetadata, deleteMediaItem, GALLERY_TYPES, type GalleryType } from '@/lib/gallery'
 
 async function isAdmin(): Promise<boolean> {
   try {
-    const supabase = await createServerClient()
+    const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) return false
