@@ -37,8 +37,8 @@ interface MediaStats {
 }
 
 const GALLERY_TYPES = [
-  'photography', 'video', 'drone', 'podcast',
-  'media-production', 'motion-graphics', 'digital-builds', 'website-redesign'
+  'training-drills', 'athlete-progress', 'facility',
+  'session-highlights', 'testimonials', 'equipment', 'events'
 ]
 
 function formatBytes(bytes: number): string {

@@ -2,8 +2,8 @@ import fs from 'fs'
 import path from 'path'
 
 export const GALLERY_TYPES = [
-  'photography', 'video', 'drone', 'podcast',
-  'media-production', 'motion-graphics', 'digital-builds', 'website-redesign'
+  'training-drills', 'athlete-progress', 'facility',
+  'session-highlights', 'testimonials', 'equipment', 'events'
 ] as const
 
 export type GalleryType = typeof GALLERY_TYPES[number]
