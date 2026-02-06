@@ -139,7 +139,7 @@ export default function FAQPage() {
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
           How Can We <span className="text-gradient-orange">Help You?</span>
         </h1>
-        <p className="text-lg text-slate-500 max-w-2xl mx-auto">
+        <p className="text-lg text-cyan-700 dark:text-white max-w-2xl mx-auto">
           Find answers to common questions about training at PSP.Pro
         </p>
       </div>
@@ -147,13 +147,13 @@ export default function FAQPage() {
       {/* Search Bar */}
       <div className="max-w-2xl mx-auto mb-8">
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-700 dark:text-white" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search for answers..."
-            className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-cyan/50 transition-all"
+            className="w-full pl-12 pr-4 py-4 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-cyan/50 transition-all"
           />
         </div>
       </div>
@@ -166,7 +166,7 @@ export default function FAQPage() {
             className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
               selectedCategory === null
                 ? 'bg-orange text-white shadow-lg shadow-orange/30'
-                : 'glass-card-hover text-slate-600'
+                : 'glass-card-hover'
             }`}
           >
             All Questions
@@ -178,7 +178,7 @@ export default function FAQPage() {
               className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                 selectedCategory === category
                   ? 'bg-orange text-white shadow-lg shadow-orange/30'
-                  : 'glass-card-hover text-slate-600'
+                  : 'glass-card-hover'
               }`}
             >
               {category}
@@ -191,23 +191,23 @@ export default function FAQPage() {
       <div className="max-w-4xl mx-auto space-y-4">
         {filteredFAQs.length === 0 ? (
           <div className="command-panel p-12 text-center">
-            <HelpCircle className="w-16 h-16 text-slate-600 mx-auto mb-4" />
+            <HelpCircle className="w-16 h-16 text-cyan-700 dark:text-white mx-auto mb-4" />
             <h3 className="text-xl font-bold text-white mb-2">No Results Found</h3>
-            <p className="text-slate-500">Try a different search term or category</p>
+            <p className="text-cyan-700 dark:text-white">Try a different search term or category</p>
           </div>
         ) : (
           filteredFAQs.map(faq => (
             <div key={faq.id} className="glass-card overflow-hidden">
               <button
                 onClick={() => setOpenId(openId === faq.id ? null : faq.id)}
-                className="w-full p-6 text-left flex items-center justify-between gap-4 hover:bg-white/5 transition-colors"
+                className="w-full p-6 text-left flex items-center justify-between gap-4 hover:bg-cyan-50/50 transition-colors"
               >
                 <div className="flex-1">
                   <span className="text-xs text-cyan font-semibold mb-2 block">{faq.category}</span>
                   <h3 className="text-lg font-bold text-white">{faq.question}</h3>
                 </div>
                 <ChevronDown
-                  className={`w-5 h-5 text-slate-500 transition-transform flex-shrink-0 ${
+                  className={`w-5 h-5 text-cyan-700 dark:text-white transition-transform flex-shrink-0 ${
                     openId === faq.id ? 'rotate-180' : ''
                   }`}
                 />
@@ -222,7 +222,7 @@ export default function FAQPage() {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="px-6 pb-6 pt-2 text-slate-600 leading-relaxed border-t border-white/10">
+                    <div className="px-6 pb-6 pt-2 text-cyan-700 dark:text-white leading-relaxed border-t border-cyan-200/40">
                       {faq.answer}
                     </div>
                   </motion.div>
@@ -237,7 +237,7 @@ export default function FAQPage() {
       <div className="max-w-4xl mx-auto mt-12">
         <div className="command-panel p-8 text-center">
           <h3 className="text-2xl font-bold text-white mb-4">Still Have Questions?</h3>
-          <p className="text-slate-500 mb-6">
+          <p className="text-cyan-700 dark:text-white mb-6">
             Can't find what you're looking for? Our team is here to help!
           </p>
           <a

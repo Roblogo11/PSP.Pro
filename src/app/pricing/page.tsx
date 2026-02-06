@@ -3,18 +3,19 @@
 import Link from 'next/link'
 import { Zap, Users, Video, Activity, Package, CheckCircle, Award } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
+import { FunnelNav } from '@/components/navigation/funnel-nav'
 
 export default function PricingPage() {
   return (
     <div className="flex min-h-screen">
       <InfoSidebar />
-      <main className="flex-1 p-4 md:p-8 pb-20 lg:pb-8">
+      <main className="flex-1 p-4 md:p-8 pb-24">
       {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
           Training <span className="text-gradient-orange">Programs</span>
         </h1>
-        <p className="text-slate-500 text-lg">
+        <p className="text-lg">
           Elite baseball & softball training in Virginia Beach
         </p>
       </div>
@@ -30,7 +31,7 @@ export default function PricingPage() {
           <div key={index} className="command-panel hover:border-orange/30 transition-all">
             <stat.icon className="w-8 h-8 mb-3 mx-auto" style={{ color: stat.color }} />
             <div className="text-2xl font-bold text-white text-center">{stat.value}</div>
-            <div className="text-sm text-slate-500 text-center">{stat.label}</div>
+            <div className="text-sm text-center">{stat.label}</div>
           </div>
         ))}
       </div>
@@ -43,15 +44,15 @@ export default function PricingPage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="p-6 bg-slate-800/30 rounded-xl border border-orange/20 hover:border-orange/40 transition-all">
+          <div className="p-6 bg-cyan-900/20 rounded-xl border border-orange/20 hover:border-orange/40 transition-all">
             <h3 className="text-xl font-bold text-white mb-2">Pitching Session</h3>
             <div className="flex items-baseline gap-2 mb-4">
               <span className="text-4xl font-bold text-orange">$75</span>
-              <span className="text-slate-500">/ 60 minutes</span>
+              <span className="">/ 60 minutes</span>
             </div>
             <ul className="space-y-2 mb-6">
               {['Velocity development', 'Mechanics analysis', 'Command training', 'Video review included'].map((item, i) => (
-                <li key={i} className="flex items-center gap-2 text-slate-600">
+                <li key={i} className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-orange flex-shrink-0" />
                   <span className="text-sm">{item}</span>
                 </li>
@@ -62,15 +63,15 @@ export default function PricingPage() {
             </Link>
           </div>
 
-          <div className="p-6 bg-slate-800/30 rounded-xl border border-cyan/20 hover:border-cyan/40 transition-all">
+          <div className="p-6 bg-cyan-900/20 rounded-xl border border-cyan/20 hover:border-cyan/40 transition-all">
             <h3 className="text-xl font-bold text-white mb-2">Hitting Session</h3>
             <div className="flex items-baseline gap-2 mb-4">
               <span className="text-4xl font-bold text-cyan">$75</span>
-              <span className="text-slate-500">/ 60 minutes</span>
+              <span className="">/ 60 minutes</span>
             </div>
             <ul className="space-y-2 mb-6">
               {['Exit velocity training', 'Swing mechanics', 'Approach development', 'Video analysis included'].map((item, i) => (
-                <li key={i} className="flex items-center gap-2 text-slate-600">
+                <li key={i} className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-cyan flex-shrink-0" />
                   <span className="text-sm">{item}</span>
                 </li>
@@ -90,18 +91,18 @@ export default function PricingPage() {
           <h2 className="text-2xl font-bold text-white">Group Training</h2>
         </div>
 
-        <div className="p-6 bg-slate-800/30 rounded-xl border border-cyan/20">
+        <div className="p-6 bg-cyan-900/20 rounded-xl border border-cyan/20">
           <h3 className="text-2xl font-bold text-white mb-2">Speed & Agility</h3>
           <div className="flex items-baseline gap-2 mb-4">
             <span className="text-5xl font-bold text-cyan">$50</span>
-            <span className="text-slate-500">/ athlete • 90 minutes</span>
+            <span className="">/ athlete • 90 minutes</span>
           </div>
-          <p className="text-slate-500 mb-6">Max 6 athletes per session</p>
+          <p className="mb-6">Max 6 athletes per session</p>
 
           <div className="grid md:grid-cols-2 gap-4 mb-6">
             <ul className="space-y-2">
               {['Sprint mechanics', 'Explosive power', 'Agility drills'].map((item, i) => (
-                <li key={i} className="flex items-center gap-2 text-slate-600">
+                <li key={i} className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-cyan flex-shrink-0" />
                   <span className="text-sm">{item}</span>
                 </li>
@@ -109,7 +110,7 @@ export default function PricingPage() {
             </ul>
             <ul className="space-y-2">
               {['Sport-specific movements', 'Competitive environment', 'Professional coaching'].map((item, i) => (
-                <li key={i} className="flex items-center gap-2 text-slate-600">
+                <li key={i} className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-cyan flex-shrink-0" />
                   <span className="text-sm">{item}</span>
                 </li>
@@ -157,10 +158,10 @@ export default function PricingPage() {
           ].map((pack, index) => (
             <div
               key={index}
-              className={`p-6 bg-slate-800/30 rounded-xl border transition-all ${
+              className={`p-6 bg-cyan-900/20 rounded-xl border transition-all ${
                 pack.featured
                   ? 'border-orange shadow-glow-orange'
-                  : 'border-slate-700 hover:border-orange/30'
+                  : 'border-cyan-700/50 hover:border-orange/30'
               }`}
             >
               {pack.featured && (
@@ -173,11 +174,11 @@ export default function PricingPage() {
               <h3 className="text-xl font-bold text-white mb-2 text-center">{pack.name}</h3>
               <div className="text-center mb-4">
                 <div className="text-4xl font-bold text-orange mb-1">{pack.price}</div>
-                <div className="text-sm text-slate-500 line-through">{pack.regular} value</div>
+                <div className="text-sm line-through">{pack.regular} value</div>
                 <div className="text-cyan font-semibold">Save {pack.save}</div>
               </div>
               <div className="text-center mb-6">
-                <p className="text-slate-500 text-sm">{pack.perSession} per session</p>
+                <p className="text-sm">{pack.perSession} per session</p>
               </div>
               <Link href="/get-started">
                 <button className={pack.featured ? 'btn-primary w-full' : 'btn-ghost w-full'}>
@@ -188,8 +189,8 @@ export default function PricingPage() {
           ))}
         </div>
 
-        <div className="mt-6 p-4 bg-slate-800/30 rounded-xl border border-orange/10">
-          <p className="text-slate-600 text-center">
+        <div className="mt-6 p-4 bg-cyan-900/20 rounded-xl border border-orange/10">
+          <p className="text-center">
             <span className="font-bold text-orange">Package Benefits:</span> Mix pitching & hitting • Transfer to family • Pause for injuries • Satisfaction guaranteed
           </p>
         </div>
@@ -203,14 +204,14 @@ export default function PricingPage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="p-6 bg-slate-800/30 rounded-xl border border-orange/20">
+          <div className="p-6 bg-cyan-900/20 rounded-xl border border-orange/20">
             <Video className="w-10 h-10 text-orange mb-4" />
             <h3 className="text-xl font-bold text-white mb-2">Video Analysis</h3>
             <div className="flex items-baseline gap-2 mb-4">
               <span className="text-3xl font-bold text-orange">$50</span>
-              <span className="text-slate-500">/ 30 minutes</span>
+              <span className="">/ 30 minutes</span>
             </div>
-            <p className="text-slate-500 mb-6">
+            <p className="mb-6">
               In-depth video breakdown of mechanics with actionable feedback and drill recommendations.
             </p>
             <Link href="/get-started">
@@ -218,14 +219,14 @@ export default function PricingPage() {
             </Link>
           </div>
 
-          <div className="p-6 bg-slate-800/30 rounded-xl border border-cyan/20">
+          <div className="p-6 bg-cyan-900/20 rounded-xl border border-cyan/20">
             <Activity className="w-10 h-10 text-cyan mb-4" />
             <h3 className="text-xl font-bold text-white mb-2">Recovery & Mobility</h3>
             <div className="flex items-baseline gap-2 mb-4">
               <span className="text-3xl font-bold text-cyan">$45</span>
-              <span className="text-slate-500">/ 45 minutes</span>
+              <span className="">/ 45 minutes</span>
             </div>
-            <p className="text-slate-500 mb-6">
+            <p className="mb-6">
               Guided recovery focused on mobility, flexibility, and injury prevention for optimal performance.
             </p>
             <Link href="/get-started">
@@ -235,6 +236,8 @@ export default function PricingPage() {
         </div>
       </div>
       </main>
+
+      <FunnelNav />
     </div>
   )
 }

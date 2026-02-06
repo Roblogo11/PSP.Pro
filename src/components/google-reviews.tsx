@@ -139,7 +139,7 @@ export function GoogleReviews() {
           <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
             Match the <span className="text-gradient-orange">Owner's Rating</span>
           </h2>
-          <p className="text-lg text-slate-500 max-w-2xl mx-auto mb-6">
+          <p className="text-lg text-cyan-800 dark:text-white max-w-2xl mx-auto mb-6">
             Read each review and guess what rating they gave us. Can you match all 6?
           </p>
 
@@ -163,14 +163,14 @@ export function GoogleReviews() {
                   <div className="text-3xl font-bold text-white mb-1">
                     {correctGuesses}/{totalRevealed}
                   </div>
-                  <p className="text-sm text-slate-500">Correct Matches</p>
+                  <p className="text-sm text-cyan-800 dark:text-white">Correct Matches</p>
                 </div>
                 <div className="h-12 w-px bg-white/10" />
                 <div className="text-center">
                   <div className="text-3xl font-bold text-cyan mb-1">
                     {totalRevealed}/{GOOGLE_REVIEWS.length}
                   </div>
-                  <p className="text-sm text-slate-500">Revealed</p>
+                  <p className="text-sm text-cyan-800 dark:text-white">Revealed</p>
                 </div>
                 {totalRevealed > 0 && (
                   <>
@@ -191,7 +191,7 @@ export function GoogleReviews() {
           {/* Instructions */}
           {gameStarted && (
             <div className="glass-card p-4 max-w-2xl mx-auto mb-8">
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-cyan-700 dark:text-white">
                 <strong className="text-white">How to Play:</strong> Read each review → Click stars to select your guess → Hit "Reveal" to see if you matched!
               </p>
             </div>
@@ -217,7 +217,7 @@ export function GoogleReviews() {
                       : 'border-orange/40'
                     : userGuess
                       ? 'border-cyan/30'
-                      : 'border-white/10'
+                      : 'border-cyan-200/40'
                 }`}
               >
                 {/* Reviewer Info */}
@@ -227,18 +227,18 @@ export function GoogleReviews() {
                   </div>
                   <div>
                     <h4 className="text-white font-semibold text-sm">{review.name}</h4>
-                    <p className="text-xs text-slate-500">{review.date}</p>
+                    <p className="text-xs text-cyan-800 dark:text-white">{review.date}</p>
                   </div>
                 </div>
 
                 {/* Review Text */}
-                <p className="text-sm text-slate-600 leading-relaxed mb-4 line-clamp-4">
+                <p className="text-sm text-cyan-700 dark:text-white leading-relaxed mb-4 line-clamp-4">
                   {review.text}
                 </p>
 
                 {/* Interactive Stars */}
                 <div className="mb-4">
-                  <p className="text-xs text-slate-500 mb-2">
+                  <p className="text-xs text-cyan-800 dark:text-white mb-2">
                     {isRevealed ? 'Your Guess:' : 'Your guess: Click stars below'}
                   </p>
                   <div
@@ -259,7 +259,7 @@ export function GoogleReviews() {
                           className={`w-6 h-6 ${
                             star <= displayRating
                               ? 'fill-orange text-orange animate-pulse'
-                              : 'text-slate-600 hover:text-orange hover:fill-orange/30'
+                              : 'text-cyan-700 dark:text-white hover:text-orange hover:fill-orange/30'
                           }`}
                         />
                       </button>
@@ -275,7 +275,7 @@ export function GoogleReviews() {
                     className={`w-full py-3 rounded-xl font-semibold transition-all ${
                       userGuess
                         ? 'btn-primary'
-                        : 'bg-slate-800/50 text-slate-500 cursor-not-allowed'
+                        : 'bg-cyan-900/30 text-cyan-700 cursor-not-allowed'
                     }`}
                   >
                     {userGuess ? '✨ Reveal Rating' : 'Select stars first'}
@@ -283,8 +283,8 @@ export function GoogleReviews() {
                 ) : (
                   <div className="space-y-3">
                     {/* Actual Rating */}
-                    <div className="p-3 bg-white/5 rounded-xl">
-                      <p className="text-xs text-slate-500 mb-1">Actual Rating:</p>
+                    <div className="p-3 bg-cyan-50/50 rounded-xl">
+                      <p className="text-xs text-cyan-800 dark:text-white mb-1">Actual Rating:</p>
                       <div className="flex gap-1">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Star
@@ -292,7 +292,7 @@ export function GoogleReviews() {
                             className={`w-5 h-5 ${
                               star <= review.rating
                                 ? 'fill-cyan text-cyan'
-                                : 'fill-slate-600 text-slate-600'
+                                : 'fill-slate-600 text-cyan-700 dark:text-white'
                             }`}
                           />
                         ))}
@@ -333,7 +333,7 @@ export function GoogleReviews() {
           <div className="mt-12 command-panel p-8 text-center border-green-400/30 shadow-glow-cyan animate-scale-in">
             <Trophy className="w-16 h-16 text-green-400 mx-auto mb-4 animate-pulse" />
             <h3 className="text-3xl font-bold text-white mb-2">Perfect Score! 🎉</h3>
-            <p className="text-lg text-slate-600 mb-4">
+            <p className="text-lg text-cyan-700 dark:text-white mb-4">
               You matched all {GOOGLE_REVIEWS.length} ratings! You really know quality training when you see it!
             </p>
             <button
@@ -351,7 +351,7 @@ export function GoogleReviews() {
         <div className="mt-12 text-center">
           <div className="command-panel p-8">
             <h3 className="text-2xl font-bold text-white mb-4">Ready to Leave Your Own Review?</h3>
-            <p className="text-slate-500 mb-6">
+            <p className="text-cyan-800 dark:text-white mb-6">
               These are real reviews from real athletes and parents training at PSP.Pro
             </p>
             <a

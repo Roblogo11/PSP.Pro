@@ -41,7 +41,7 @@ export default function ForgotPasswordPage() {
 
       <div className="relative z-10 w-full max-w-md">
         {/* Back to Login */}
-        <Link href="/login" className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-8">
+        <Link href="/login" className="inline-flex items-center gap-2  hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Login</span>
         </Link>
@@ -57,7 +57,7 @@ export default function ForgotPasswordPage() {
                 <h1 className="text-3xl font-display font-bold text-white mb-2">
                   Forgot Password?
                 </h1>
-                <p className="text-slate-400">
+                <p className="">
                   No worries! Enter your email and we'll send you reset instructions.
                 </p>
               </div>
@@ -65,7 +65,7 @@ export default function ForgotPasswordPage() {
               {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-semibold text-slate-300 mb-2">
+                  <label htmlFor="email" className="block text-sm font-semibold  mb-2">
                     Email Address
                   </label>
                   <input
@@ -75,7 +75,7 @@ export default function ForgotPasswordPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="athlete@example.com"
                     required
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-cyan focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:border-cyan focus:outline-none transition-colors"
                   />
                 </div>
 
@@ -97,7 +97,7 @@ export default function ForgotPasswordPage() {
 
               {/* Footer */}
               <div className="mt-6 text-center">
-                <p className="text-sm text-slate-400">
+                <p className="text-sm ">
                   Remember your password?{' '}
                   <Link href="/login" className="text-cyan hover:text-cyan-400 font-semibold">
                     Sign in
@@ -115,14 +115,14 @@ export default function ForgotPasswordPage() {
                 <h1 className="text-3xl font-display font-bold text-white mb-2">
                   Check Your Email
                 </h1>
-                <p className="text-slate-400 mb-6">
+                <p className=" mb-6">
                   We've sent password reset instructions to:
                 </p>
                 <p className="text-white font-semibold mb-8">
                   {email}
                 </p>
                 <div className="p-4 bg-cyan/10 border border-cyan/20 rounded-xl mb-6">
-                  <p className="text-sm text-slate-300 leading-relaxed">
+                  <p className="text-sm  leading-relaxed">
                     Click the link in the email to reset your password. If you don't see it, check your spam folder.
                   </p>
                 </div>
@@ -146,7 +146,7 @@ export default function ForgotPasswordPage() {
 
         {/* Support */}
         <div className="mt-6 text-center">
-          <p className="text-sm text-slate-400">
+          <p className="text-sm ">
             Need help?{' '}
             <Link href="/contact" className="text-cyan hover:underline">
               Contact Support

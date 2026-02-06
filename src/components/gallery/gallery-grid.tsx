@@ -49,8 +49,8 @@ function ThumbnailImage({ src, alt }: { src: string; alt: string }) {
   if (error) {
     return (
       <div className="w-full h-full flex flex-col items-center justify-center bg-dark-100">
-        <ImageOff className="w-12 h-12 text-gray-600 mb-2" />
-        <span className="text-gray-500 text-xs">Image unavailable</span>
+        <ImageOff className="w-12 h-12 text-gray-600 dark:text-gray-400 mb-2" />
+        <span className="text-gray-700 dark:text-gray-400 text-xs">Image unavailable</span>
       </div>
     )
   }
@@ -96,7 +96,7 @@ export function GalleryGrid({ items, columns = 3 }: GalleryGridProps) {
   if (items.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-400">No media items yet. Upload some to get started!</p>
+        <p className="text-gray-600 dark:text-gray-400">No media items yet. Upload some to get started!</p>
       </div>
     )
   }
@@ -147,8 +147,8 @@ export function GalleryGrid({ items, columns = 3 }: GalleryGridProps) {
 
                 return (
                   <div className="w-full h-full flex flex-col items-center justify-center bg-dark-100">
-                    <Video className="w-12 h-12 text-gray-500 mb-2" />
-                    <span className="text-gray-500 text-xs">External Media</span>
+                    <Video className="w-12 h-12 text-gray-700 dark:text-gray-400 mb-2" />
+                    <span className="text-gray-700 dark:text-gray-400 text-xs">External Media</span>
                   </div>
                 )
               })()

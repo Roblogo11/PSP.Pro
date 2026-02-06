@@ -88,7 +88,7 @@ export function ShockBox() {
           <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
             VIP Workflow Session
           </h3>
-          <p className="text-gray-400 max-w-lg mx-auto">
+          <p className="text-gray-600 dark:text-gray-400 max-w-lg mx-auto">
             Get an inside look at our professional production workflow. Sign with your wallet to
             unlock exclusive partner content.
           </p>
@@ -203,7 +203,7 @@ export function ShockBox() {
 
                         {!isVerifying && (
                           <motion.p
-                            className="mt-4 text-gray-400 text-sm"
+                            className="mt-4 text-gray-600 dark:text-gray-400 text-sm"
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
@@ -287,7 +287,7 @@ export function ShockBox() {
                   <p className="text-white font-semibold">
                     {isUnlocked ? '🔥 Sneak Peek Unlocked!' : 'Exclusive Partner Content'}
                   </p>
-                  <p className="text-gray-400 text-sm">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">
                     {isUnlocked
                       ? 'This is just a teaser — more fire coming soon'
                       : isConnected
@@ -342,7 +342,7 @@ export function ShockBox() {
         </div>
 
         {/* Bottom hint */}
-        <p className="text-center text-gray-500 text-xs mt-4">
+        <p className="text-center text-gray-700 dark:text-gray-400 text-xs mt-4">
           {isConnected ? (
             <>
               Connected: {address?.slice(0, 6)}...{address?.slice(-4)}

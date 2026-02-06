@@ -97,7 +97,7 @@ export function Contact() {
             </div>
 
             {/* Description */}
-            <p className="text-lg text-gray-400 leading-relaxed">
+            <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
               {siteConfig.contact.description}
             </p>
 
@@ -105,15 +105,15 @@ export function Contact() {
             <div className="flex flex-wrap gap-8">
               <div>
                 <div className="text-3xl font-bold text-white">500+</div>
-                <div className="text-sm text-gray-500">Campaigns Launched</div>
+                <div className="text-sm text-gray-700 dark:text-gray-400">Campaigns Launched</div>
               </div>
               <div>
                 <div className="text-3xl font-bold text-white">50M+</div>
-                <div className="text-sm text-gray-500">Impressions Generated</div>
+                <div className="text-sm text-gray-700 dark:text-gray-400">Impressions Generated</div>
               </div>
               <div>
                 <div className="text-3xl font-bold text-white">95%</div>
-                <div className="text-sm text-gray-500">Client Satisfaction</div>
+                <div className="text-sm text-gray-700 dark:text-gray-400">Client Satisfaction</div>
               </div>
             </div>
           </div>
@@ -123,7 +123,7 @@ export function Contact() {
             <div className="p-8 md:p-12 rounded-2xl bg-dark-100 border border-secondary/20 shadow-glow-md">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2">
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
                     Email Address
                   </label>
                   <input
@@ -133,12 +133,12 @@ export function Contact() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder={siteConfig.contact.emailPlaceholder}
                     required
-                    className="w-full px-6 py-4 bg-dark-200 border border-secondary/20 rounded-lg text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
+                    className="w-full px-6 py-4 bg-dark-200 border border-secondary/20 rounded-lg text-white placeholder:text-gray-700 dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="company" className="block text-sm font-medium text-gray-400 mb-2">
+                  <label htmlFor="company" className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
                     Company Name (Optional)
                   </label>
                   <input
@@ -147,12 +147,12 @@ export function Contact() {
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
                     placeholder="Your Company"
-                    className="w-full px-6 py-4 bg-dark-200 border border-secondary/20 rounded-lg text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
+                    className="w-full px-6 py-4 bg-dark-200 border border-secondary/20 rounded-lg text-white placeholder:text-gray-700 dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-400 mb-2">
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
                     Tell us about your project
                   </label>
                   <textarea
@@ -161,7 +161,7 @@ export function Contact() {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="What are your marketing goals?"
-                    className="w-full px-6 py-4 bg-dark-200 border border-secondary/20 rounded-lg text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all resize-none"
+                    className="w-full px-6 py-4 bg-dark-200 border border-secondary/20 rounded-lg text-white placeholder:text-gray-700 dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all resize-none"
                   />
                 </div>
 
@@ -185,7 +185,7 @@ export function Contact() {
                   )}
                 </Button>
 
-                <p className="text-xs text-center text-gray-500">
+                <p className="text-xs text-center text-gray-700 dark:text-gray-400">
                   {status === 'success' ? "We'll get back to you within 24 hours" : status === 'error' ? 'Something went wrong. Try again.' : "We'll get back to you within 24 hours"}
                 </p>
               </form>

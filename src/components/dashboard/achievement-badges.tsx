@@ -90,7 +90,7 @@ const defaultBadges: Badge[] = [
 ]
 
 const rarityStyles = {
-  common: 'border-slate-600',
+  common: 'border-cyan-600/50',
   rare: 'border-blue-500',
   epic: 'border-purple-500',
   legendary: 'border-orange-500 shadow-glow-orange',
@@ -107,7 +107,7 @@ export function AchievementBadges({ badges = defaultBadges }: AchievementBadgesP
           <h3 className="text-xl font-display font-bold text-white">
             Achievements
           </h3>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-cyan-700 dark:text-white mt-1">
             {earnedCount} of {badges.length} earned
           </p>
         </div>
@@ -115,7 +115,7 @@ export function AchievementBadges({ badges = defaultBadges }: AchievementBadgesP
           <div className="text-2xl font-bold text-gradient-orange">
             {Math.round((earnedCount / badges.length) * 100)}%
           </div>
-          <p className="text-xs text-slate-400">Complete</p>
+          <p className="text-xs text-cyan-700 dark:text-white">Complete</p>
         </div>
       </div>
 
@@ -133,7 +133,7 @@ export function AchievementBadges({ badges = defaultBadges }: AchievementBadgesP
               className={`relative p-4 rounded-xl border-2 transition-all duration-300 ${
                 badge.earned
                   ? `${rarityStyles[badge.rarity]} bg-white/10 hover:bg-white/15`
-                  : 'border-white/10 bg-white/5 hover:bg-white/10'
+                  : 'border-cyan-200/40 bg-cyan-50/50 hover:bg-white/10'
               } ${badge.earned ? 'cursor-pointer' : 'cursor-default'}`}
             >
               {/* Icon */}
@@ -141,12 +141,12 @@ export function AchievementBadges({ badges = defaultBadges }: AchievementBadgesP
                 className={`w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center transition-all ${
                   badge.earned
                     ? 'bg-gradient-velocity shadow-glow-orange'
-                    : 'bg-white/5'
+                    : 'bg-cyan-50/50'
                 }`}
               >
                 <Icon
                   className={`w-6 h-6 ${
-                    badge.earned ? 'text-white' : 'text-slate-600'
+                    badge.earned ? 'text-white' : 'text-cyan-700'
                   }`}
                 />
               </div>
@@ -154,7 +154,7 @@ export function AchievementBadges({ badges = defaultBadges }: AchievementBadgesP
               {/* Name */}
               <h4
                 className={`text-sm font-semibold text-center mb-1 ${
-                  badge.earned ? 'text-white' : 'text-slate-500'
+                  badge.earned ? 'text-white' : 'text-cyan-700'
                 }`}
               >
                 {badge.name}
@@ -163,7 +163,7 @@ export function AchievementBadges({ badges = defaultBadges }: AchievementBadgesP
               {/* Description */}
               <p
                 className={`text-xs text-center ${
-                  badge.earned ? 'text-slate-300' : 'text-slate-600'
+                  badge.earned ? 'text-slate-300' : 'text-cyan-700'
                 }`}
               >
                 {badge.description}
@@ -180,7 +180,7 @@ export function AchievementBadges({ badges = defaultBadges }: AchievementBadgesP
                       className="h-full bg-gradient-velocity rounded-full"
                     />
                   </div>
-                  <p className="text-xs text-slate-500 text-center mt-1">
+                  <p className="text-xs text-cyan-800 dark:text-white text-center mt-1">
                     {badge.progress}%
                   </p>
                 </div>

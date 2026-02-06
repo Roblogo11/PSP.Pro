@@ -64,7 +64,7 @@ export function DrillFilter({ onFilterChange }: DrillFilterProps) {
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="flex items-center gap-2 px-4 py-2 text-sm text-slate-400 hover:text-orange transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-sm text-cyan-700 dark:text-white hover:text-orange transition-colors"
             >
               <X className="w-4 h-4" />
               Clear All
@@ -91,7 +91,7 @@ export function DrillFilter({ onFilterChange }: DrillFilterProps) {
           >
             {/* Search */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">
                 Search Drills
               </label>
               <input
@@ -99,13 +99,13 @@ export function DrillFilter({ onFilterChange }: DrillFilterProps) {
                 placeholder="Search by name or tag..."
                 value={filters.search}
                 onChange={(e) => updateFilter('search', e.target.value)}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
               />
             </div>
 
             {/* Category */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-3">
+              <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-3">
                 Category
               </label>
               <div className="flex flex-wrap gap-2">
@@ -118,7 +118,7 @@ export function DrillFilter({ onFilterChange }: DrillFilterProps) {
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                       filters.category === cat.value
                         ? 'bg-orange text-white shadow-glow-orange'
-                        : 'bg-white/5 text-slate-400 hover:bg-white/10 border border-white/10'
+                        : 'bg-cyan-50/50 text-cyan-600 hover:bg-white/10 border border-cyan-200/40'
                     }`}
                   >
                     {cat.label}
@@ -129,7 +129,7 @@ export function DrillFilter({ onFilterChange }: DrillFilterProps) {
 
             {/* Difficulty */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-3">
+              <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-3">
                 Difficulty Level
               </label>
               <div className="flex flex-wrap gap-2">
@@ -142,7 +142,7 @@ export function DrillFilter({ onFilterChange }: DrillFilterProps) {
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                       filters.difficulty === diff.value
                         ? 'bg-orange text-white shadow-glow-orange'
-                        : 'bg-white/5 text-slate-400 hover:bg-white/10 border border-white/10'
+                        : 'bg-cyan-50/50 text-cyan-600 hover:bg-white/10 border border-cyan-200/40'
                     }`}
                   >
                     {diff.label}

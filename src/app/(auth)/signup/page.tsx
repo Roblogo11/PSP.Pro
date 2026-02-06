@@ -10,11 +10,24 @@ export default function SignupPage() {
   const [error, setError] = useState<string | null>(null)
   const [age, setAge] = useState<string>('')
   const [showParentFields, setShowParentFields] = useState(false)
+  const [selectedSports, setSelectedSports] = useState<string[]>(['softball'])
 
   const handleAgeChange = (value: string) => {
     setAge(value)
     const ageNum = parseInt(value, 10)
     setShowParentFields(ageNum > 0 && ageNum < 18)
+  }
+
+  const handleSportToggle = (sport: string) => {
+    setSelectedSports(prev => {
+      if (prev.includes(sport)) {
+        // Don't allow deselecting if it's the last one
+        if (prev.length === 1) return prev
+        return prev.filter(s => s !== sport)
+      } else {
+        return [...prev, sport]
+      }
+    })
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -26,7 +39,6 @@ export default function SignupPage() {
     const email = formData.get('email') as string
     const password = formData.get('password') as string
     const fullName = formData.get('fullName') as string
-    const athleteType = formData.get('athleteType') as string
     const age = formData.get('age') as string
     const parentGuardianName = formData.get('parentGuardianName') as string
     const parentGuardianEmail = formData.get('parentGuardianEmail') as string
@@ -42,7 +54,8 @@ export default function SignupPage() {
         options: {
           data: {
             full_name: fullName,
-            athlete_type: athleteType,
+            sports: selectedSports,
+            athlete_type: selectedSports[0], // Primary sport for backwards compatibility
             age: parseInt(age, 10),
           },
         },
@@ -62,7 +75,8 @@ export default function SignupPage() {
       const profileData: any = {
         id: authData.user.id,
         full_name: fullName,
-        athlete_type: athleteType,
+        sports: selectedSports,
+        athlete_type: selectedSports[0], // Primary sport for backwards compatibility
         age: parseInt(age, 10),
         role: 'athlete',
         updated_at: new Date().toISOString(),
@@ -118,7 +132,7 @@ export default function SignupPage() {
           <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-2">
             Start Your Journey
           </h1>
-          <p className="text-slate-400">
+          <p className="">
             Create your Athletic OS account
           </p>
         </div>
@@ -134,18 +148,18 @@ export default function SignupPage() {
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Full Name Field */}
           <div>
-            <label htmlFor="fullName" className="block text-sm font-medium text-slate-300 mb-2">
+            <label htmlFor="fullName" className="block text-sm font-medium  mb-2">
               Full Name
             </label>
             <div className="relative">
-              <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 " />
               <input
                 id="fullName"
                 name="fullName"
                 type="text"
                 required
                 autoComplete="name"
-                className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                 placeholder="John Smith"
               />
             </div>
@@ -153,18 +167,18 @@ export default function SignupPage() {
 
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium  mb-2">
               Email Address
             </label>
             <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 " />
               <input
                 id="email"
                 name="email"
                 type="email"
                 required
                 autoComplete="email"
-                className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                 placeholder="athlete@example.com"
               />
             </div>
@@ -172,11 +186,11 @@ export default function SignupPage() {
 
           {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
+            <label htmlFor="password" className="block text-sm font-medium  mb-2">
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 " />
               <input
                 id="password"
                 name="password"
@@ -184,52 +198,66 @@ export default function SignupPage() {
                 required
                 autoComplete="new-password"
                 minLength={8}
-                className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                 placeholder="••••••••"
               />
             </div>
-            <p className="mt-1 text-xs text-slate-500">Minimum 8 characters</p>
+            <p className="mt-1 text-xs ">Minimum 8 characters</p>
           </div>
 
-          {/* Athlete Type & Age Row */}
-          <div className="grid grid-cols-2 gap-4">
-            {/* Athlete Type */}
-            <div>
-              <label htmlFor="athleteType" className="block text-sm font-medium text-slate-300 mb-2">
-                Sport
-              </label>
-              <select
-                id="athleteType"
-                name="athleteType"
-                required
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
-              >
-                <option value="softball">Softball</option>
-                <option value="basketball">Basketball</option>
-                <option value="soccer">Soccer</option>
-              </select>
+          {/* Sports Selection (Multi-Select) */}
+          <div>
+            <label className="block text-sm font-medium mb-3">
+              Sports <span className="text-xs text-cyan-700 dark:text-white">(Select all that apply)</span>
+            </label>
+            <div className="space-y-3">
+              {[
+                { value: 'softball', label: 'Softball', emoji: '🥎' },
+                { value: 'basketball', label: 'Basketball', emoji: '🏀' },
+                { value: 'soccer', label: 'Soccer', emoji: '⚽' },
+              ].map((sport) => (
+                <label
+                  key={sport.value}
+                  className={`
+                    flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all
+                    ${selectedSports.includes(sport.value)
+                      ? 'bg-orange/20 border-2 border-orange/50'
+                      : 'bg-cyan-50/50 border border-cyan-200/40 hover:border-orange/30'
+                    }
+                  `}
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedSports.includes(sport.value)}
+                    onChange={() => handleSportToggle(sport.value)}
+                    className="w-5 h-5 rounded border-cyan-200/40 text-orange focus:ring-cyan/50"
+                  />
+                  <span className="text-2xl">{sport.emoji}</span>
+                  <span className="font-medium text-cyan-800 dark:text-white">{sport.label}</span>
+                </label>
+              ))}
             </div>
+          </div>
 
-            {/* Age */}
-            <div>
-              <label htmlFor="age" className="block text-sm font-medium text-slate-300 mb-2">
-                Age
-              </label>
-              <div className="relative">
-                <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                <input
-                  id="age"
-                  name="age"
-                  type="number"
-                  required
-                  min="5"
-                  max="100"
-                  value={age}
-                  onChange={(e) => handleAgeChange(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
-                  placeholder="16"
-                />
-              </div>
+          {/* Age */}
+          <div>
+            <label htmlFor="age" className="block text-sm font-medium  mb-2">
+              Age
+            </label>
+            <div className="relative">
+              <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 " />
+              <input
+                id="age"
+                name="age"
+                type="number"
+                required
+                min="5"
+                max="100"
+                value={age}
+                onChange={(e) => handleAgeChange(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                placeholder="16"
+              />
             </div>
           </div>
 
@@ -243,7 +271,7 @@ export default function SignupPage() {
 
               {/* Parent/Guardian Name */}
               <div>
-                <label htmlFor="parentGuardianName" className="block text-sm font-medium text-slate-300 mb-2">
+                <label htmlFor="parentGuardianName" className="block text-sm font-medium  mb-2">
                   Parent/Guardian Name *
                 </label>
                 <input
@@ -251,14 +279,14 @@ export default function SignupPage() {
                   name="parentGuardianName"
                   type="text"
                   required
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                   placeholder="Jane Smith"
                 />
               </div>
 
               {/* Parent/Guardian Email */}
               <div>
-                <label htmlFor="parentGuardianEmail" className="block text-sm font-medium text-slate-300 mb-2">
+                <label htmlFor="parentGuardianEmail" className="block text-sm font-medium  mb-2">
                   Parent/Guardian Email *
                 </label>
                 <input
@@ -266,14 +294,14 @@ export default function SignupPage() {
                   name="parentGuardianEmail"
                   type="email"
                   required
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                   placeholder="parent@example.com"
                 />
               </div>
 
               {/* Parent/Guardian Phone */}
               <div>
-                <label htmlFor="parentGuardianPhone" className="block text-sm font-medium text-slate-300 mb-2">
+                <label htmlFor="parentGuardianPhone" className="block text-sm font-medium  mb-2">
                   Parent/Guardian Phone *
                 </label>
                 <input
@@ -281,7 +309,7 @@ export default function SignupPage() {
                   name="parentGuardianPhone"
                   type="tel"
                   required
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                   placeholder="(555) 123-4567"
                 />
               </div>
@@ -295,9 +323,9 @@ export default function SignupPage() {
               name="terms"
               type="checkbox"
               required
-              className="mt-1 w-4 h-4 rounded border-white/10 bg-white/5 text-orange focus:ring-orange/50"
+              className="mt-1 w-4 h-4 rounded border-cyan-200/40 bg-cyan-50/50 text-orange focus:ring-cyan/50"
             />
-            <label htmlFor="terms" className="text-sm text-slate-400">
+            <label htmlFor="terms" className="text-sm ">
               I agree to the{' '}
               <Link href="/terms" className="text-orange hover:text-orange-400">
                 Terms of Service
@@ -336,7 +364,7 @@ export default function SignupPage() {
 
         {/* Sign In Link */}
         <div className="text-center">
-          <p className="text-slate-400">
+          <p className="">
             Already have an account?{' '}
             <Link
               href="/login"
@@ -349,10 +377,10 @@ export default function SignupPage() {
       </div>
 
       {/* Bottom Info */}
-      <div className="mt-6 text-center text-sm text-slate-500">
+      <div className="mt-6 text-center text-sm ">
         <p>
           Questions?{' '}
-          <Link href="/contact" className="text-slate-400 hover:text-orange transition-colors">
+          <Link href="/contact" className=" hover:text-orange transition-colors">
             Contact us
           </Link>
         </p>

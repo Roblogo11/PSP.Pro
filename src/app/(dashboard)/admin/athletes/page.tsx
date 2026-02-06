@@ -88,19 +88,19 @@ export default function AthletesManagementPage() {
       try {
         const supabase = createClient()
 
-        // Load all athletes (email is in auth.users, not profiles, so we set it to null)
+        // Load all athletes WITH emails (after migration 020)
         const { data: athletesData, error: athletesError } = await supabase
           .from('profiles')
-          .select('id, full_name, avatar_url, athlete_type, age, role, created_at, updated_at')
+          .select('id, full_name, email, avatar_url, athlete_type, age, role, created_at, updated_at')
           .eq('role', 'athlete')
           .order('full_name')
 
         if (athletesError) throw athletesError
 
-        // Map to include null email (email is stored in auth.users, not accessible client-side)
+        // Email is now in profiles table after migration 020
         const athletesWithSchema = (athletesData || []).map(athlete => ({
           ...athlete,
-          email: null
+          email: athlete.email || null
         }))
 
         setAthletes(athletesWithSchema)
@@ -338,7 +338,7 @@ export default function AthletesManagementPage() {
       <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-400">Loading athletes...</p>
+          <p className="text-cyan-800 dark:text-white">Loading athletes...</p>
         </div>
       </div>
     )
@@ -366,20 +366,17 @@ export default function AthletesManagementPage() {
           <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
             Athlete <span className="text-gradient-orange">Management</span>
           </h1>
-          <p className="text-slate-400 text-lg">
+          <p className="text-cyan-800 dark:text-white text-lg">
             Manage your athletes, track progress, and assign training
           </p>
         </div>
-        <button
-          onClick={() => {
-            resetForm()
-            setCreateModalOpen(true)
-          }}
+        <Link
+          href="/admin/athletes/create"
           className="btn-primary flex items-center gap-2"
         >
           <Plus className="w-5 h-5" />
           Add Athlete
-        </button>
+        </Link>
       </div>
 
       {/* Stats */}
@@ -387,40 +384,40 @@ export default function AthletesManagementPage() {
         <div className="command-panel-active">
           <div className="flex items-center gap-3 mb-2">
             <Users className="w-6 h-6 text-orange" />
-            <span className="text-sm text-slate-400">Total</span>
+            <span className="text-sm text-cyan-800 dark:text-white">Total</span>
           </div>
           <p className="text-3xl font-bold text-white">{athletes.length}</p>
-          <p className="text-sm text-slate-400">Active Athletes</p>
+          <p className="text-sm text-cyan-800 dark:text-white">Active Athletes</p>
         </div>
         <div className="command-panel-active">
           <div className="flex items-center gap-3 mb-2">
             <Dumbbell className="w-6 h-6 text-cyan" />
-            <span className="text-sm text-slate-400">Soccer</span>
+            <span className="text-sm text-cyan-800 dark:text-white">Soccer</span>
           </div>
           <p className="text-3xl font-bold text-white">
             {athletes.filter(a => a.athlete_type === 'soccer').length}
           </p>
-          <p className="text-sm text-slate-400">Soccer Players</p>
+          <p className="text-sm text-cyan-800 dark:text-white">Soccer Players</p>
         </div>
         <div className="command-panel-active">
           <div className="flex items-center gap-3 mb-2">
             <Dumbbell className="w-6 h-6 text-orange" />
-            <span className="text-sm text-slate-400">Basketball</span>
+            <span className="text-sm text-cyan-800 dark:text-white">Basketball</span>
           </div>
           <p className="text-3xl font-bold text-white">
             {athletes.filter(a => a.athlete_type === 'basketball').length}
           </p>
-          <p className="text-sm text-slate-400">Basketball Players</p>
+          <p className="text-sm text-cyan-800 dark:text-white">Basketball Players</p>
         </div>
         <div className="command-panel-active">
           <div className="flex items-center gap-3 mb-2">
             <Dumbbell className="w-6 h-6 text-purple-400" />
-            <span className="text-sm text-slate-400">Softball</span>
+            <span className="text-sm text-cyan-800 dark:text-white">Softball</span>
           </div>
           <p className="text-3xl font-bold text-white">
             {athletes.filter(a => a.athlete_type === 'softball').length}
           </p>
-          <p className="text-sm text-slate-400">Softball Players</p>
+          <p className="text-sm text-cyan-800 dark:text-white">Softball Players</p>
         </div>
       </div>
 
@@ -429,23 +426,23 @@ export default function AthletesManagementPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-800 dark:text-white" />
             <input
               type="text"
               placeholder="Search by name or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
+              className="w-full pl-10 pr-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
             />
           </div>
 
           {/* Type Filter */}
           <div className="relative">
-            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-800 dark:text-white" />
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
+              className="w-full pl-10 pr-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
             >
               <option value="all">All Sports</option>
               <option value="softball">Softball</option>
@@ -494,22 +491,22 @@ export default function AthletesManagementPage() {
               {/* Stats Grid */}
               {stats && (
                 <div className="grid grid-cols-2 gap-3 mb-4">
-                  <div className="bg-slate-800/30 rounded-lg p-3">
-                    <p className="text-xs text-slate-400 mb-1">Sessions</p>
+                  <div className="bg-cyan-900/20 rounded-lg p-3">
+                    <p className="text-xs text-cyan-800 dark:text-white mb-1">Sessions</p>
                     <p className="text-xl font-bold text-white">{stats.total_sessions}</p>
                   </div>
-                  <div className="bg-slate-800/30 rounded-lg p-3">
-                    <p className="text-xs text-slate-400 mb-1">Drills</p>
+                  <div className="bg-cyan-900/20 rounded-lg p-3">
+                    <p className="text-xs text-cyan-800 dark:text-white mb-1">Drills</p>
                     <p className="text-xl font-bold text-white">{stats.drills_completed}</p>
                   </div>
-                  <div className="bg-slate-800/30 rounded-lg p-3">
-                    <p className="text-xs text-slate-400 mb-1">Avg MPH</p>
+                  <div className="bg-cyan-900/20 rounded-lg p-3">
+                    <p className="text-xs text-cyan-800 dark:text-white mb-1">Avg MPH</p>
                     <p className="text-xl font-bold text-gradient-orange">
                       {stats.avg_velocity || '-'}
                     </p>
                   </div>
-                  <div className="bg-slate-800/30 rounded-lg p-3">
-                    <p className="text-xs text-slate-400 mb-1">Max MPH</p>
+                  <div className="bg-cyan-900/20 rounded-lg p-3">
+                    <p className="text-xs text-cyan-800 dark:text-white mb-1">Max MPH</p>
                     <p className="text-xl font-bold text-gradient-orange">
                       {stats.max_velocity || '-'}
                     </p>
@@ -561,8 +558,8 @@ export default function AthletesManagementPage() {
 
       {filteredAthletes.length === 0 && (
         <div className="command-panel text-center py-12">
-          <Users className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-          <p className="text-slate-400 text-lg mb-4">
+          <Users className="w-16 h-16 text-cyan-700 dark:text-white mx-auto mb-4" />
+          <p className="text-cyan-800 dark:text-white text-lg mb-4">
             {searchQuery || typeFilter !== 'all'
               ? 'No athletes match your filters'
               : 'No athletes yet'}
@@ -596,7 +593,7 @@ export default function AthletesManagementPage() {
                   setSelectedAthlete(null)
                   resetForm()
                 }}
-                className="text-slate-400 hover:text-white transition-colors"
+                className="text-cyan-800 dark:text-white hover:text-white transition-colors"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -614,7 +611,7 @@ export default function AthletesManagementPage() {
                     value={formData.full_name}
                     onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
                     placeholder="John Smith"
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
                   />
                 </div>
                 <div>
@@ -627,10 +624,10 @@ export default function AthletesManagementPage() {
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="john@example.com"
                     disabled={editModalOpen}
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50 disabled:opacity-50"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50 disabled:opacity-50"
                   />
                   {editModalOpen && (
-                    <p className="text-xs text-slate-400 mt-1">Email cannot be changed</p>
+                    <p className="text-xs text-cyan-800 dark:text-white mt-1">Email cannot be changed</p>
                   )}
                 </div>
               </div>
@@ -641,7 +638,7 @@ export default function AthletesManagementPage() {
                   <select
                     value={formData.athlete_type}
                     onChange={(e) => setFormData({ ...formData, athlete_type: e.target.value })}
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
                   >
                     <option value="soccer">Soccer</option>
                     <option value="basketball">Basketball</option>
@@ -657,7 +654,7 @@ export default function AthletesManagementPage() {
                     placeholder="16"
                     min="5"
                     max="100"
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
                   />
                 </div>
               </div>
@@ -679,7 +676,7 @@ export default function AthletesManagementPage() {
                       value={formData.parent_guardian_name}
                       onChange={(e) => setFormData({ ...formData, parent_guardian_name: e.target.value })}
                       placeholder="Jane Smith"
-                      className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
+                      className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
                     />
                   </div>
 
@@ -692,7 +689,7 @@ export default function AthletesManagementPage() {
                       value={formData.parent_guardian_email}
                       onChange={(e) => setFormData({ ...formData, parent_guardian_email: e.target.value })}
                       placeholder="parent@example.com"
-                      className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
+                      className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
                     />
                   </div>
 
@@ -705,7 +702,7 @@ export default function AthletesManagementPage() {
                       value={formData.parent_guardian_phone}
                       onChange={(e) => setFormData({ ...formData, parent_guardian_phone: e.target.value })}
                       placeholder="(555) 123-4567"
-                      className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
+                      className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
                     />
                   </div>
                 </div>
@@ -743,7 +740,7 @@ export default function AthletesManagementPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="glass-card max-w-md w-full p-6">
             <h2 className="text-2xl font-bold text-white mb-4">Delete Athlete</h2>
-            <p className="text-slate-300 mb-6">
+            <p className="text-cyan-700 dark:text-white mb-6">
               Are you sure you want to delete <span className="font-bold text-white">{selectedAthlete.full_name}</span>?
               This will permanently delete all their sessions, drills, and progress data. This action cannot be undone.
             </p>
@@ -781,7 +778,7 @@ export default function AthletesManagementPage() {
                   setViewModalOpen(false)
                   setSelectedAthlete(null)
                 }}
-                className="text-slate-400 hover:text-white transition-colors"
+                className="text-cyan-800 dark:text-white hover:text-white transition-colors"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -792,33 +789,33 @@ export default function AthletesManagementPage() {
               {/* Stats */}
               {athleteStats[selectedAthlete.id] && (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="bg-slate-800/30 rounded-xl p-4">
+                  <div className="bg-cyan-900/20 rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <Calendar className="w-5 h-5 text-cyan" />
-                      <span className="text-sm text-slate-400">Sessions</span>
+                      <span className="text-sm text-cyan-800 dark:text-white">Sessions</span>
                     </div>
                     <p className="text-2xl font-bold text-white">{athleteStats[selectedAthlete.id].total_sessions}</p>
                   </div>
-                  <div className="bg-slate-800/30 rounded-xl p-4">
+                  <div className="bg-cyan-900/20 rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <Dumbbell className="w-5 h-5 text-purple-400" />
-                      <span className="text-sm text-slate-400">Drills</span>
+                      <span className="text-sm text-cyan-800 dark:text-white">Drills</span>
                     </div>
                     <p className="text-2xl font-bold text-white">{athleteStats[selectedAthlete.id].drills_completed}</p>
                   </div>
-                  <div className="bg-slate-800/30 rounded-xl p-4">
+                  <div className="bg-cyan-900/20 rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <TrendingUp className="w-5 h-5 text-orange" />
-                      <span className="text-sm text-slate-400">Avg MPH</span>
+                      <span className="text-sm text-cyan-800 dark:text-white">Avg MPH</span>
                     </div>
                     <p className="text-2xl font-bold text-gradient-orange">
                       {athleteStats[selectedAthlete.id].avg_velocity || '-'}
                     </p>
                   </div>
-                  <div className="bg-slate-800/30 rounded-xl p-4">
+                  <div className="bg-cyan-900/20 rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <Award className="w-5 h-5 text-green-400" />
-                      <span className="text-sm text-slate-400">Max MPH</span>
+                      <span className="text-sm text-cyan-800 dark:text-white">Max MPH</span>
                     </div>
                     <p className="text-2xl font-bold text-gradient-orange">
                       {athleteStats[selectedAthlete.id].max_velocity || '-'}

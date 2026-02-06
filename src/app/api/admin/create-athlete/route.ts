@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient as createServerClient } from '@/lib/supabase/server'
 
 // Create a Supabase client with service role for admin operations
 const supabaseAdmin = createClient(
@@ -15,11 +16,38 @@ const supabaseAdmin = createClient(
 
 export async function POST(request: NextRequest) {
   try {
+    // 🔒 SECURITY: Verify the user is an admin/coach
+    const supabase = await createServerClient()
+
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
+
+    if (userError || !user) {
+      return NextResponse.json(
+        { error: 'Unauthorized - must be logged in' },
+        { status: 401 }
+      )
+    }
+
+    // Check if user is admin or coach
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (!profile || (profile.role !== 'admin' && profile.role !== 'coach')) {
+      return NextResponse.json(
+        { error: 'Forbidden - admin or coach access required' },
+        { status: 403 }
+      )
+    }
+
     const body = await request.json()
     const {
       email,
       full_name,
       athlete_type,
+      sports, // Multi-sport array
       age,
       parent_guardian_name,
       parent_guardian_email,
@@ -35,7 +63,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create the auth user with admin client
-    const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
+    const { data: authData, error: createUserError } = await supabaseAdmin.auth.admin.createUser({
       email,
       email_confirm: true,
       user_metadata: {
@@ -43,9 +71,9 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    if (authError) {
-      console.error('Auth error:', authError)
-      return NextResponse.json({ error: authError.message }, { status: 400 })
+    if (createUserError) {
+      console.error('Auth error:', createUserError)
+      return NextResponse.json({ error: createUserError.message }, { status: 400 })
     }
 
     if (!authData.user) {
@@ -57,7 +85,8 @@ export async function POST(request: NextRequest) {
     const profileData: any = {
       id: authData.user.id,
       full_name,
-      athlete_type,
+      sports: sports || (athlete_type ? [athlete_type] : ['softball']), // Support multi-sport or single
+      athlete_type: sports ? sports[0] : athlete_type, // Primary sport for backwards compatibility
       age: age ? parseInt(age) : null,
       role: 'athlete',
     }

@@ -35,7 +35,7 @@ export function Process() {
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
             {siteConfig.process.sectionTitle}
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             {siteConfig.process.sectionSubtitle}
           </p>
         </div>
@@ -81,7 +81,7 @@ export function Process() {
 
         {/* Bottom CTA */}
         <div className="text-center mt-16 pt-8 border-t border-secondary/20">
-          <p className="text-gray-400 mb-4">Ready to start your creative journey?</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">Ready to start your creative journey?</p>
           <Link href="#contact">
             <Button size="lg" className="group">
               Get Started
@@ -135,7 +135,7 @@ function ProcessStep({
                 <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
                   {step.title}
                 </h3>
-                <p className="text-base text-gray-400 leading-relaxed">
+                <p className="text-base text-gray-600 dark:text-gray-400 leading-relaxed">
                   {step.description}
                 </p>
               </div>

@@ -393,7 +393,7 @@ export default function DrillsManagementPage() {
       <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-400">Loading drill management...</p>
+          <p className="text-cyan-800 dark:text-white">Loading drill management...</p>
         </div>
       </div>
     )
@@ -420,12 +420,12 @@ export default function DrillsManagementPage() {
         <div>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
             {isAdmin ? (
-              <>Drill <span className="text-gradient-orange">Bank</span> <span className="text-slate-500 text-2xl">(All)</span></>
+              <>Drill <span className="text-gradient-orange">Bank</span> <span className="text-cyan-800 dark:text-white text-2xl">(All)</span></>
             ) : (
               <>My <span className="text-gradient-orange">Drills</span></>
             )}
           </h1>
-          <p className="text-slate-400 text-lg">
+          <p className="text-cyan-800 dark:text-white text-lg">
             {isAdmin
               ? 'Manage all training drills from all coaches'
               : 'Create and manage your training drills'
@@ -457,34 +457,34 @@ export default function DrillsManagementPage() {
         <div className="command-panel-active">
           <div className="flex items-center gap-3 mb-2">
             <Dumbbell className="w-6 h-6 text-orange" />
-            <span className="text-sm text-slate-400">Total</span>
+            <span className="text-sm text-cyan-800 dark:text-white">Total</span>
           </div>
           <p className="text-3xl font-bold text-white">{drills.length}</p>
-          <p className="text-sm text-slate-400">Drills in Library</p>
+          <p className="text-sm text-cyan-800 dark:text-white">Drills in Library</p>
         </div>
         <div className="command-panel-active">
           <div className="flex items-center gap-3 mb-2">
             <CheckCircle className="w-6 h-6 text-green-400" />
-            <span className="text-sm text-slate-400">Active</span>
+            <span className="text-sm text-cyan-800 dark:text-white">Active</span>
           </div>
           <p className="text-3xl font-bold text-white">{drills.filter(d => d.published).length}</p>
-          <p className="text-sm text-slate-400">Published Drills</p>
+          <p className="text-sm text-cyan-800 dark:text-white">Published Drills</p>
         </div>
         <div className="command-panel-active">
           <div className="flex items-center gap-3 mb-2">
             <Video className="w-6 h-6 text-cyan" />
-            <span className="text-sm text-slate-400">Content</span>
+            <span className="text-sm text-cyan-800 dark:text-white">Content</span>
           </div>
           <p className="text-3xl font-bold text-white">{drills.filter(d => d.video_url).length}</p>
-          <p className="text-sm text-slate-400">With Video</p>
+          <p className="text-sm text-cyan-800 dark:text-white">With Video</p>
         </div>
         <div className="command-panel-active">
           <div className="flex items-center gap-3 mb-2">
             <Users className="w-6 h-6 text-purple-400" />
-            <span className="text-sm text-slate-400">Athletes</span>
+            <span className="text-sm text-cyan-800 dark:text-white">Athletes</span>
           </div>
           <p className="text-3xl font-bold text-white">{athletes.length}</p>
-          <p className="text-sm text-slate-400">Available to Assign</p>
+          <p className="text-sm text-cyan-800 dark:text-white">Available to Assign</p>
         </div>
       </div>
 
@@ -493,23 +493,23 @@ export default function DrillsManagementPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-800 dark:text-white" />
             <input
               type="text"
               placeholder="Search drills by title, description, or tags..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
+              className="w-full pl-10 pr-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
             />
           </div>
 
           {/* Category Filter */}
           <div className="relative">
-            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-800 dark:text-white" />
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
+              className="w-full pl-10 pr-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
             >
               <option value="all">All Categories</option>
               <option value="mechanics">Mechanics</option>
@@ -523,11 +523,11 @@ export default function DrillsManagementPage() {
 
           {/* Difficulty Filter */}
           <div className="relative">
-            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-800 dark:text-white" />
             <select
               value={difficultyFilter}
               onChange={(e) => setDifficultyFilter(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
+              className="w-full pl-10 pr-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
             >
               <option value="all">All Difficulties</option>
               <option value="beginner">Beginner</option>
@@ -548,7 +548,7 @@ export default function DrillsManagementPage() {
                 <div className="flex items-start gap-4 mb-3">
                   {/* Thumbnail */}
                   {drill.thumbnail_url ? (
-                    <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-slate-800 flex-shrink-0">
+                    <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-cyan-900 flex-shrink-0">
                       <img
                         src={drill.thumbnail_url}
                         alt={drill.title}
@@ -556,8 +556,8 @@ export default function DrillsManagementPage() {
                       />
                     </div>
                   ) : (
-                    <div className="w-24 h-24 rounded-xl bg-slate-800/50 border border-white/10 flex items-center justify-center flex-shrink-0">
-                      <Video className="w-8 h-8 text-slate-600" />
+                    <div className="w-24 h-24 rounded-xl bg-cyan-900/30 border border-cyan-200/40 flex items-center justify-center flex-shrink-0">
+                      <Video className="w-8 h-8 text-cyan-700 dark:text-white" />
                     </div>
                   )}
 
@@ -568,7 +568,7 @@ export default function DrillsManagementPage() {
                         {drill.title}
                       </h3>
                       {!drill.published && (
-                        <span className="px-2 py-1 bg-slate-700/50 border border-slate-600/30 rounded-lg text-xs text-slate-400">
+                        <span className="px-2 py-1 bg-cyan-800/30/50 border border-cyan-600/50/30 rounded-lg text-xs text-cyan-800 dark:text-white">
                           Draft
                         </span>
                       )}
@@ -580,7 +580,7 @@ export default function DrillsManagementPage() {
                     </div>
 
                     {drill.description && (
-                      <p className="text-sm text-slate-400 mb-3 line-clamp-2">{drill.description}</p>
+                      <p className="text-sm text-cyan-800 dark:text-white mb-3 line-clamp-2">{drill.description}</p>
                     )}
 
                     <div className="flex flex-wrap items-center gap-3 text-sm">
@@ -592,19 +592,19 @@ export default function DrillsManagementPage() {
                       <span className="px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded-lg text-purple-300 capitalize">
                         {drill.difficulty}
                       </span>
-                      <div className="flex items-center gap-1 text-slate-400">
+                      <div className="flex items-center gap-1 text-cyan-800 dark:text-white">
                         <Clock className="w-4 h-4" />
                         <span>{formatDuration(drill.duration_seconds)}</span>
                       </div>
                       {drill.view_count > 0 && (
-                        <span className="text-slate-400">{drill.view_count} views</span>
+                        <span className="text-cyan-800 dark:text-white">{drill.view_count} views</span>
                       )}
                     </div>
 
                     {drill.tags.length > 0 && (
                       <div className="flex flex-wrap gap-2 mt-3">
                         {drill.tags.map((tag) => (
-                          <span key={tag} className="px-2 py-1 bg-slate-800/50 rounded-lg text-xs text-slate-300">
+                          <span key={tag} className="px-2 py-1 bg-cyan-900/30 rounded-lg text-xs text-cyan-700 dark:text-white">
                             #{tag}
                           </span>
                         ))}
@@ -651,8 +651,8 @@ export default function DrillsManagementPage() {
 
       {filteredDrills.length === 0 && (
         <div className="command-panel text-center py-12">
-          <Dumbbell className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-          <p className="text-slate-400 text-lg mb-4">
+          <Dumbbell className="w-16 h-16 text-cyan-700 dark:text-white mx-auto mb-4" />
+          <p className="text-cyan-800 dark:text-white text-lg mb-4">
             {searchQuery || categoryFilter !== 'all' || difficultyFilter !== 'all'
               ? 'No drills match your filters'
               : 'No drills yet'}
@@ -686,7 +686,7 @@ export default function DrillsManagementPage() {
                   setSelectedDrill(null)
                   resetForm()
                 }}
-                className="text-slate-400 hover:text-white transition-colors"
+                className="text-cyan-800 dark:text-white hover:text-white transition-colors"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -703,7 +703,7 @@ export default function DrillsManagementPage() {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="e.g., Long Toss Progression"
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
                 />
               </div>
 
@@ -718,7 +718,7 @@ export default function DrillsManagementPage() {
                     className={`flex-1 px-4 py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 ${
                       videoSource === 'youtube'
                         ? 'bg-orange text-white shadow-glow-orange'
-                        : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-white border border-white/10'
+                        : 'bg-cyan-900/30 text-cyan-600 hover:bg-cyan-900 hover:text-white border border-cyan-200/40'
                     }`}
                   >
                     <Youtube className="w-5 h-5" />
@@ -729,7 +729,7 @@ export default function DrillsManagementPage() {
                     className={`flex-1 px-4 py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 ${
                       videoSource === 'upload'
                         ? 'bg-orange text-white shadow-glow-orange'
-                        : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-white border border-white/10'
+                        : 'bg-cyan-900/30 text-cyan-600 hover:bg-cyan-900 hover:text-white border border-cyan-200/40'
                     }`}
                   >
                     <Upload className="w-5 h-5" />
@@ -743,14 +743,14 @@ export default function DrillsManagementPage() {
                     value={formData.video_url}
                     onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
                     placeholder="https://youtube.com/watch?v=..."
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
                   />
                 ) : (
                   <div className="border-2 border-dashed border-white/20 rounded-xl p-8 text-center hover:border-orange/50 transition-colors cursor-pointer">
-                    <Upload className="w-12 h-12 text-slate-400 mx-auto mb-3" />
-                    <p className="text-slate-300 mb-1">Click to upload video</p>
-                    <p className="text-sm text-slate-400">MP4, MOV up to 500MB</p>
-                    <p className="text-xs text-slate-500 mt-2">Video upload feature coming soon - Use YouTube URL for now</p>
+                    <Upload className="w-12 h-12 text-cyan-800 dark:text-white mx-auto mb-3" />
+                    <p className="text-cyan-700 dark:text-white mb-1">Click to upload video</p>
+                    <p className="text-sm text-cyan-800 dark:text-white">MP4, MOV up to 500MB</p>
+                    <p className="text-xs text-cyan-800 dark:text-white mt-2">Video upload feature coming soon - Use YouTube URL for now</p>
                   </div>
                 )}
               </div>
@@ -762,7 +762,7 @@ export default function DrillsManagementPage() {
                   <select
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
                   >
                     <option value="mechanics">Mechanics</option>
                     <option value="speed">Speed</option>
@@ -777,7 +777,7 @@ export default function DrillsManagementPage() {
                   <select
                     value={formData.difficulty}
                     onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })}
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
                   >
                     <option value="beginner">Beginner</option>
                     <option value="intermediate">Intermediate</option>
@@ -790,7 +790,7 @@ export default function DrillsManagementPage() {
               <button
                 type="button"
                 onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}
-                className="w-full flex items-center justify-between px-4 py-3 bg-slate-800/30 hover:bg-slate-800/50 border border-white/10 rounded-xl text-white transition-all"
+                className="w-full flex items-center justify-between px-4 py-3 bg-cyan-900/20 hover:bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white transition-all"
               >
                 <div className="flex items-center gap-2">
                   <span className="font-semibold">Advanced Options</span>
@@ -813,7 +813,7 @@ export default function DrillsManagementPage() {
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Brief description of the drill..."
                   rows={3}
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50 resize-none"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50 resize-none"
                 />
               </div>
 
@@ -825,7 +825,7 @@ export default function DrillsManagementPage() {
                   onChange={(e) => setFormData({ ...formData, instructions: e.target.value })}
                   placeholder="Step-by-step instructions..."
                   rows={4}
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50 resize-none"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50 resize-none"
                 />
               </div>
 
@@ -837,7 +837,7 @@ export default function DrillsManagementPage() {
                   value={formData.thumbnail_url}
                   onChange={(e) => setFormData({ ...formData, thumbnail_url: e.target.value })}
                   placeholder="https://example.com/thumbnail.jpg"
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
                 />
               </div>
 
@@ -851,9 +851,9 @@ export default function DrillsManagementPage() {
                   value={formData.duration_seconds}
                   onChange={(e) => setFormData({ ...formData, duration_seconds: parseInt(e.target.value) || 0 })}
                   min="0"
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-orange/50"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50"
                 />
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-cyan-800 dark:text-white mt-1">
                   {formatDuration(formData.duration_seconds)}
                 </p>
               </div>
@@ -868,7 +868,7 @@ export default function DrillsManagementPage() {
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
                     placeholder="Add tag and press Enter"
-                    className="flex-1 px-4 py-2 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
+                    className="flex-1 px-4 py-2 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
                   />
                   <button
                     onClick={addTag}
@@ -881,12 +881,12 @@ export default function DrillsManagementPage() {
                   {formData.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-3 py-1 bg-slate-800 rounded-lg text-sm text-slate-300 flex items-center gap-2"
+                      className="px-3 py-1 bg-cyan-900 rounded-lg text-sm text-cyan-700 dark:text-white flex items-center gap-2"
                     >
                       #{tag}
                       <button
                         onClick={() => removeTag(tag)}
-                        className="text-slate-400 hover:text-white"
+                        className="text-cyan-800 dark:text-white hover:text-white"
                       >
                         <X className="w-3 h-3" />
                       </button>
@@ -905,7 +905,7 @@ export default function DrillsManagementPage() {
                     onChange={(e) => setEquipmentInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addEquipment())}
                     placeholder="Add equipment and press Enter"
-                    className="flex-1 px-4 py-2 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
+                    className="flex-1 px-4 py-2 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
                   />
                   <button
                     onClick={addEquipment}
@@ -918,12 +918,12 @@ export default function DrillsManagementPage() {
                   {formData.equipment_needed.map((item) => (
                     <span
                       key={item}
-                      className="px-3 py-1 bg-slate-800 rounded-lg text-sm text-slate-300 flex items-center gap-2"
+                      className="px-3 py-1 bg-cyan-900 rounded-lg text-sm text-cyan-700 dark:text-white flex items-center gap-2"
                     >
                       {item}
                       <button
                         onClick={() => removeEquipment(item)}
-                        className="text-slate-400 hover:text-white"
+                        className="text-cyan-800 dark:text-white hover:text-white"
                       >
                         <X className="w-3 h-3" />
                       </button>
@@ -942,7 +942,7 @@ export default function DrillsManagementPage() {
                     onChange={(e) => setFocusAreaInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addFocusArea())}
                     placeholder="Add focus area and press Enter"
-                    className="flex-1 px-4 py-2 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
+                    className="flex-1 px-4 py-2 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
                   />
                   <button
                     onClick={addFocusArea}
@@ -955,12 +955,12 @@ export default function DrillsManagementPage() {
                   {formData.focus_areas.map((area) => (
                     <span
                       key={area}
-                      className="px-3 py-1 bg-slate-800 rounded-lg text-sm text-slate-300 flex items-center gap-2"
+                      className="px-3 py-1 bg-cyan-900 rounded-lg text-sm text-cyan-700 dark:text-white flex items-center gap-2"
                     >
                       {area}
                       <button
                         onClick={() => removeFocusArea(area)}
-                        className="text-slate-400 hover:text-white"
+                        className="text-cyan-800 dark:text-white hover:text-white"
                       >
                         <X className="w-3 h-3" />
                       </button>
@@ -976,7 +976,7 @@ export default function DrillsManagementPage() {
                     type="checkbox"
                     checked={formData.published}
                     onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
-                    className="w-5 h-5 rounded border-white/20 bg-slate-800/50 text-orange focus:ring-orange focus:ring-offset-0"
+                    className="w-5 h-5 rounded border-white/20 bg-cyan-900/30 text-orange focus:ring-cyan focus:ring-offset-0"
                   />
                   <span className="text-white font-semibold">Published</span>
                 </label>
@@ -985,7 +985,7 @@ export default function DrillsManagementPage() {
                     type="checkbox"
                     checked={formData.featured}
                     onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                    className="w-5 h-5 rounded border-white/20 bg-slate-800/50 text-orange focus:ring-orange focus:ring-offset-0"
+                    className="w-5 h-5 rounded border-white/20 bg-cyan-900/30 text-orange focus:ring-cyan focus:ring-offset-0"
                   />
                   <span className="text-white font-semibold">Featured</span>
                 </label>
@@ -1025,7 +1025,7 @@ export default function DrillsManagementPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="glass-card max-w-md w-full p-6">
             <h2 className="text-2xl font-bold text-white mb-4">Delete Drill</h2>
-            <p className="text-slate-300 mb-6">
+            <p className="text-cyan-700 dark:text-white mb-6">
               Are you sure you want to delete <span className="font-bold text-white">{selectedDrill.title}</span>?
               This action cannot be undone.
             </p>
@@ -1068,7 +1068,7 @@ export default function DrillsManagementPage() {
                   setAssignmentNotes('')
                   setAssignmentDueDate('')
                 }}
-                className="text-slate-400 hover:text-white transition-colors"
+                className="text-cyan-800 dark:text-white hover:text-white transition-colors"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -1080,11 +1080,11 @@ export default function DrillsManagementPage() {
                 <label className="block text-sm font-semibold text-white mb-3">
                   Select Athletes <span className="text-red-400">*</span>
                 </label>
-                <div className="max-h-64 overflow-y-auto space-y-2 border border-white/10 rounded-xl p-4 bg-slate-800/30">
+                <div className="max-h-64 overflow-y-auto space-y-2 border border-cyan-200/40 rounded-xl p-4 bg-cyan-900/20">
                   {athletes.map((athlete) => (
                     <label
                       key={athlete.id}
-                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800/50 cursor-pointer transition-colors"
+                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-cyan-900/30 cursor-pointer transition-colors"
                     >
                       <input
                         type="checkbox"
@@ -1096,7 +1096,7 @@ export default function DrillsManagementPage() {
                             setSelectedAthletes(selectedAthletes.filter(id => id !== athlete.id))
                           }
                         }}
-                        className="w-5 h-5 rounded border-white/20 bg-slate-800/50 text-orange focus:ring-orange focus:ring-offset-0"
+                        className="w-5 h-5 rounded border-white/20 bg-cyan-900/30 text-orange focus:ring-cyan focus:ring-offset-0"
                       />
                       <div className="flex items-center gap-3">
                         {athlete.avatar_url ? (
@@ -1115,7 +1115,7 @@ export default function DrillsManagementPage() {
                     </label>
                   ))}
                 </div>
-                <p className="text-xs text-slate-400 mt-2">
+                <p className="text-xs text-cyan-800 dark:text-white mt-2">
                   {selectedAthletes.length} athlete{selectedAthletes.length !== 1 ? 's' : ''} selected
                 </p>
               </div>
@@ -1126,7 +1126,7 @@ export default function DrillsManagementPage() {
                 <select
                   value={assignmentPriority}
                   onChange={(e) => setAssignmentPriority(e.target.value as 'low' | 'medium' | 'high')}
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -1141,7 +1141,7 @@ export default function DrillsManagementPage() {
                   type="date"
                   value={assignmentDueDate}
                   onChange={(e) => setAssignmentDueDate(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-orange/50"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50"
                 />
               </div>
 
@@ -1153,7 +1153,7 @@ export default function DrillsManagementPage() {
                   onChange={(e) => setAssignmentNotes(e.target.value)}
                   placeholder="Add any special instructions or notes for the athletes..."
                   rows={4}
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50 resize-none"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50 resize-none"
                 />
               </div>
             </div>

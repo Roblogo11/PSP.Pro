@@ -221,9 +221,9 @@ export function Gallery() {
                   {filteredItems[lightboxIndex].title}
                 </h3>
                 {filteredItems[lightboxIndex].description && (
-                  <p className="text-slate-400">{filteredItems[lightboxIndex].description}</p>
+                  <p className="text-cyan-700 dark:text-white">{filteredItems[lightboxIndex].description}</p>
                 )}
-                <p className="text-sm text-slate-500 mt-2">
+                <p className="text-sm text-cyan-800 dark:text-white mt-2">
                   {lightboxIndex + 1} / {filteredItems.length}
                 </p>
               </div>

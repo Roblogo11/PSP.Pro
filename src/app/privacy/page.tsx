@@ -7,7 +7,7 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-screen p-4 md:p-8 pb-24">
       {/* Back Button */}
-      <Link href="/" className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-8">
+      <Link href="/" className="inline-flex items-center gap-2 text-cyan-700 dark:text-white hover:text-white transition-colors mb-8">
         <ArrowLeft className="w-4 h-4" />
         <span>Back to Home</span>
       </Link>
@@ -20,7 +20,7 @@ export default function PrivacyPage() {
             Privacy Policy
           </h1>
         </div>
-        <p className="text-slate-400 text-lg">
+        <p className="text-cyan-700 dark:text-white text-lg">
           Last Updated: February 5, 2026
         </p>
       </div>
@@ -29,34 +29,34 @@ export default function PrivacyPage() {
       <div className="max-w-4xl mx-auto glass-card p-8 space-y-8">
         <section>
           <h2 className="text-2xl font-bold text-white mb-4">1. Introduction</h2>
-          <p className="text-slate-300 leading-relaxed">
+          <p className="text-cyan-700 dark:text-white leading-relaxed">
             Welcome to PSP.Pro (Proper Sports Performance). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our Athletic OS platform and training services.
           </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-bold text-white mb-4">2. Information We Collect</h2>
-          <p className="text-slate-300 leading-relaxed mb-4">
+          <p className="text-cyan-700 dark:text-white leading-relaxed mb-4">
             We collect personal information that you voluntarily provide to us when you:
           </p>
-          <ul className="list-disc list-inside text-slate-300 space-y-2 ml-4">
+          <ul className="list-disc list-inside text-cyan-700 dark:text-white space-y-2 ml-4">
             <li>Register for an account</li>
             <li>Book training sessions</li>
             <li>Use our Athletic OS dashboard</li>
             <li>Contact us with inquiries</li>
             <li>Subscribe to our newsletter or communications</li>
           </ul>
-          <p className="text-slate-300 leading-relaxed mt-4">
+          <p className="text-cyan-700 dark:text-white leading-relaxed mt-4">
             This information may include: name, email address, phone number, date of birth, athletic position, training goals, performance metrics (velocity data, drill completion), payment information, and other information you choose to provide.
           </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-bold text-white mb-4">3. How We Use Your Information</h2>
-          <p className="text-slate-300 leading-relaxed mb-4">
+          <p className="text-cyan-700 dark:text-white leading-relaxed mb-4">
             We use the information we collect to:
           </p>
-          <ul className="list-disc list-inside text-slate-300 space-y-2 ml-4">
+          <ul className="list-disc list-inside text-cyan-700 dark:text-white space-y-2 ml-4">
             <li>Provide and manage your training services and Athletic OS access</li>
             <li>Process your bookings and payments</li>
             <li>Track your athletic performance and progress</li>
@@ -69,17 +69,17 @@ export default function PrivacyPage() {
 
         <section>
           <h2 className="text-2xl font-bold text-white mb-4">4. Data Storage and Security</h2>
-          <p className="text-slate-300 leading-relaxed">
+          <p className="text-cyan-700 dark:text-white leading-relaxed">
             We implement appropriate technical and organizational security measures to protect your personal information. Your data is stored securely using industry-standard encryption. However, no method of transmission over the Internet is 100% secure, and we cannot guarantee absolute security.
           </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-bold text-white mb-4">5. Sharing Your Information</h2>
-          <p className="text-slate-300 leading-relaxed mb-4">
+          <p className="text-cyan-700 dark:text-white leading-relaxed mb-4">
             We do not sell your personal information. We may share your information with:
           </p>
-          <ul className="list-disc list-inside text-slate-300 space-y-2 ml-4">
+          <ul className="list-disc list-inside text-cyan-700 dark:text-white space-y-2 ml-4">
             <li>Your assigned coaches and trainers (to provide your training services)</li>
             <li>Service providers (payment processors, email services, analytics)</li>
             <li>Legal authorities (when required by law)</li>
@@ -88,17 +88,17 @@ export default function PrivacyPage() {
 
         <section>
           <h2 className="text-2xl font-bold text-white mb-4">6. Your Privacy Rights</h2>
-          <p className="text-slate-300 leading-relaxed mb-4">
+          <p className="text-cyan-700 dark:text-white leading-relaxed mb-4">
             You have the right to:
           </p>
-          <ul className="list-disc list-inside text-slate-300 space-y-2 ml-4">
+          <ul className="list-disc list-inside text-cyan-700 dark:text-white space-y-2 ml-4">
             <li>Access your personal information</li>
             <li>Correct inaccurate information</li>
             <li>Request deletion of your information</li>
             <li>Opt-out of marketing communications</li>
             <li>Export your performance data</li>
           </ul>
-          <p className="text-slate-300 leading-relaxed mt-4">
+          <p className="text-cyan-700 dark:text-white leading-relaxed mt-4">
             To exercise these rights, contact us at{' '}
             <a href="mailto:privacy@propersports.pro" className="text-cyan hover:underline">
               privacy@propersports.pro
@@ -108,31 +108,31 @@ export default function PrivacyPage() {
 
         <section>
           <h2 className="text-2xl font-bold text-white mb-4">7. Cookies and Tracking</h2>
-          <p className="text-slate-300 leading-relaxed">
+          <p className="text-cyan-700 dark:text-white leading-relaxed">
             We use cookies and similar tracking technologies to track activity on our platform and store certain information. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent.
           </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-bold text-white mb-4">8. Children's Privacy</h2>
-          <p className="text-slate-300 leading-relaxed">
+          <p className="text-cyan-700 dark:text-white leading-relaxed">
             Our services are used by athletes of all ages, including minors. If you are under 18, you must have parental or guardian consent to use our services. We do not knowingly collect information from children under 13 without parental consent.
           </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-bold text-white mb-4">9. Changes to This Policy</h2>
-          <p className="text-slate-300 leading-relaxed">
+          <p className="text-cyan-700 dark:text-white leading-relaxed">
             We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.
           </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-bold text-white mb-4">10. Contact Us</h2>
-          <p className="text-slate-300 leading-relaxed">
+          <p className="text-cyan-700 dark:text-white leading-relaxed">
             If you have questions about this Privacy Policy, please contact us:
           </p>
-          <div className="mt-4 space-y-2 text-slate-300">
+          <div className="mt-4 space-y-2 text-cyan-700 dark:text-white">
             <p>
               <strong className="text-white">Email:</strong>{' '}
               <a href="mailto:privacy@propersports.pro" className="text-cyan hover:underline">
@@ -149,7 +149,7 @@ export default function PrivacyPage() {
         </section>
 
         {/* Footer Links */}
-        <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row gap-4 justify-between">
+        <div className="pt-8 border-t border-cyan-200/40 flex flex-col sm:flex-row gap-4 justify-between">
           <Link href="/terms" className="text-cyan hover:underline">
             View Terms of Service →
           </Link>

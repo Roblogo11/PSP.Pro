@@ -34,7 +34,7 @@ export default async function AuthLayout({
           </div>
           <div>
             <h1 className="text-xl font-display font-bold text-white">PSP.Pro</h1>
-            <p className="text-xs text-slate-400">Athletic OS</p>
+            <p className="text-xs text-cyan-800 dark:text-white">Athletic OS</p>
           </div>
         </Link>
       </header>
@@ -45,7 +45,7 @@ export default async function AuthLayout({
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 px-6 py-6 text-center text-sm text-slate-400">
+      <footer className="relative z-10 px-6 py-6 text-center text-sm text-cyan-800 dark:text-white">
         <p>
           © {new Date().getFullYear()} Proper Sports Performance. Based in Virginia Beach, VA.
         </p>

@@ -105,13 +105,13 @@ export function ImageUpload({
       {/* Header */}
       <div className="mb-4">
         <h3 className="text-lg font-bold text-white mb-1">{category}</h3>
-        <div className="flex items-center gap-4 text-sm text-slate-400">
+        <div className="flex items-center gap-4 text-sm text-cyan-700 dark:text-white">
           <span>Aspect Ratio: {aspectRatio}</span>
           <span>•</span>
           <span>Dimensions: {dimensions}</span>
         </div>
         {description && (
-          <p className="text-sm text-slate-400 mt-2">{description}</p>
+          <p className="text-sm text-cyan-700 dark:text-white mt-2">{description}</p>
         )}
       </div>
 
@@ -122,7 +122,7 @@ export function ImageUpload({
             ? 'border-cyan bg-cyan/10'
             : preview
               ? 'border-green-400/30 bg-green-400/5'
-              : 'border-slate-700 hover:border-slate-600'
+              : 'border-cyan-700/50 hover:border-cyan-600/50'
         }`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -176,7 +176,7 @@ export function ImageUpload({
             <p className="text-white font-semibold mb-2">
               Drop image here or click to upload
             </p>
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-cyan-700 dark:text-white">
               PNG, JPG, WebP up to 5MB
             </p>
           </div>

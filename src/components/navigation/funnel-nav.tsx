@@ -77,8 +77,8 @@ export function FunnelNav({ className = '' }: FunnelNavProps) {
                     }}
                     className="group flex items-center gap-2 px-4 py-4 rounded-xl bg-dark-200/80 border border-secondary/10 hover:border-secondary/30 hover:bg-dark-200 transition-all duration-300 min-h-[48px]"
                   >
-                    <Home className="w-4 h-4 text-gray-400 group-hover:text-secondary transition-all" />
-                    <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">
+                    <Home className="w-4 h-4 text-gray-600 dark:text-gray-400 group-hover:text-secondary transition-all" />
+                    <span className="text-sm font-medium text-gray-600 dark:text-gray-300 group-hover:text-white transition-colors">
                       Home
                     </span>
                   </button>
@@ -142,16 +142,22 @@ export function FunnelNav({ className = '' }: FunnelNavProps) {
                       {isHome ? (
                         <button
                           onClick={() => handleNavigation('/')}
-                          className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all duration-300 cursor-pointer hover:bg-secondary/20 hover:scale-105 hover:shadow-lg hover:shadow-secondary/30 ${
+                          className={`group relative flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all duration-300 cursor-pointer hover:scale-110 ${
                             isActive
-                              ? 'bg-secondary/20 text-secondary'
-                              : isCompleted
-                                ? 'text-secondary/60 hover:text-secondary'
-                                : 'text-gray-500 hover:text-secondary'
+                              ? 'bg-gradient-to-r from-secondary/30 to-accent/30 text-white border border-secondary/40 shadow-lg shadow-secondary/30'
+                              : 'bg-secondary/15 text-secondary border border-secondary/20 hover:bg-secondary/25 hover:border-secondary/40 hover:shadow-lg hover:shadow-secondary/20'
                           }`}
                         >
-                          <StepIcon className={`w-3.5 h-3.5 transition-transform group-hover:scale-110 ${isActive ? 'animate-pulse' : ''}`} />
-                          <span className="text-xs font-medium">{label}</span>
+                          {/* Glow effect */}
+                          <div className="absolute inset-0 rounded-full bg-secondary/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity -z-10" />
+                          <StepIcon className={`w-4 h-4 transition-transform group-hover:scale-110 ${isActive ? 'animate-pulse' : ''}`} />
+                          <span className="text-xs font-semibold">{label}</span>
+                          {/* Tooltip on hover */}
+                          <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                            <div className="bg-dark-200 border border-secondary/30 px-3 py-1.5 rounded-lg shadow-xl">
+                              <p className="text-xs font-medium text-white">Back to Home</p>
+                            </div>
+                          </div>
                         </button>
                       ) : (
                         <div
@@ -199,7 +205,7 @@ export function FunnelNav({ className = '' }: FunnelNavProps) {
 
             {/* Mobile Progress Bar */}
             <div className="md:hidden mb-2">
-              <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+              <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400 mb-1">
                 <span>Step {currentIndex + 1} of 5</span>
                 <span className="text-secondary">
                   {pathname === '/about' ? 'About' : STEP_LABELS[STEP_TO_FUNNEL_INDEX.indexOf(currentIndex)]}

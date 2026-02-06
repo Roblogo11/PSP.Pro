@@ -18,7 +18,7 @@ export function FAQ() {
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
             {siteConfig.faq.sectionTitle}
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             {siteConfig.faq.sectionSubtitle}
           </p>
         </div>
@@ -71,7 +71,7 @@ function FAQItem({
             isOpen ? 'max-h-96 mt-4' : 'max-h-0'
           }`}
         >
-          <p className="text-gray-400 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
             {faq.answer}
           </p>
         </div>

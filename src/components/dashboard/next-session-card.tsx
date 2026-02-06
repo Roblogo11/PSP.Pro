@@ -52,7 +52,7 @@ export function NextSessionCard({
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-xl font-bold text-white mb-1">Next Session</h3>
-          <p className="text-sm text-slate-400">{type}</p>
+          <p className="text-sm text-cyan-700 dark:text-white">{type}</p>
         </div>
         <div className="w-12 h-12 bg-orange/20 rounded-xl flex items-center justify-center">
           <Calendar className="w-6 h-6 text-orange" />
@@ -77,7 +77,7 @@ export function NextSessionCard({
             <div className="text-2xl md:text-3xl font-bold text-gradient-orange mb-1">
               {String(item.value).padStart(2, '0')}
             </div>
-            <div className="text-xs text-slate-400 uppercase tracking-wider">
+            <div className="text-xs text-cyan-700 dark:text-white uppercase tracking-wider">
               {item.label}
             </div>
           </motion.div>
@@ -88,7 +88,7 @@ export function NextSessionCard({
       <div className="space-y-3">
         <div className="flex items-center gap-3 text-sm">
           <Clock className="w-4 h-4 text-orange" />
-          <span className="text-slate-300">
+          <span className="text-cyan-700 dark:text-white">
             {sessionDate.toLocaleDateString('en-US', {
               weekday: 'long',
               month: 'long',
@@ -100,7 +100,7 @@ export function NextSessionCard({
         </div>
         <div className="flex items-center gap-3 text-sm">
           <MapPin className="w-4 h-4 text-orange" />
-          <span className="text-slate-300">{location}</span>
+          <span className="text-cyan-700 dark:text-white">{location}</span>
         </div>
       </div>
 

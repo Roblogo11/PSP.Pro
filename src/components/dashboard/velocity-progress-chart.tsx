@@ -52,29 +52,29 @@ export function VelocityProgressChart({
             <LineChart className="w-5 h-5 text-cyan" />
             Velocity Progress
           </h3>
-          <p className="text-sm text-slate-400">Track your throwing velocity over time</p>
+          <p className="text-sm text-cyan-700 dark:text-white">Track your throwing velocity over time</p>
         </div>
         <div className="text-right">
           <div className="flex items-center gap-2 mb-1">
             <TrendingUp className="w-4 h-4 text-green-400" />
             <span className="text-2xl font-bold text-green-400">+{improvement} MPH</span>
           </div>
-          <p className="text-xs text-slate-400">Total Improvement</p>
+          <p className="text-xs text-cyan-700 dark:text-white">Total Improvement</p>
         </div>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-          <p className="text-xs text-slate-400 mb-1">Current</p>
+        <div className="p-4 rounded-xl bg-cyan-50/50 border border-cyan-200/40">
+          <p className="text-xs text-cyan-700 dark:text-white mb-1">Current</p>
           <p className="text-2xl font-bold text-cyan">{currentVelocity} MPH</p>
         </div>
-        <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-          <p className="text-xs text-slate-400 mb-1">Goal</p>
+        <div className="p-4 rounded-xl bg-cyan-50/50 border border-cyan-200/40">
+          <p className="text-xs text-cyan-700 dark:text-white mb-1">Goal</p>
           <p className="text-2xl font-bold text-orange">{goalVelocity} MPH</p>
         </div>
-        <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-          <p className="text-xs text-slate-400 mb-1">Progress</p>
+        <div className="p-4 rounded-xl bg-cyan-50/50 border border-cyan-200/40">
+          <p className="text-xs text-cyan-700 dark:text-white mb-1">Progress</p>
           <p className="text-2xl font-bold text-white">{percentToGoal}%</p>
         </div>
       </div>
@@ -89,7 +89,7 @@ export function VelocityProgressChart({
               className="absolute w-full border-t border-white/5"
               style={{ top: `${percent}%` }}
             >
-              <span className="absolute -left-10 -translate-y-1/2 text-xs text-slate-500">
+              <span className="absolute -left-10 -translate-y-1/2 text-xs text-cyan-800 dark:text-white">
                 {Math.round(maxValue - (range * percent) / 100)}
               </span>
             </div>
@@ -157,7 +157,7 @@ export function VelocityProgressChart({
       </div>
 
       {/* X-Axis Labels */}
-      <div className="flex justify-between text-xs text-slate-400 px-2">
+      <div className="flex justify-between text-xs text-cyan-700 dark:text-white px-2">
         {data.map((point, i) => {
           if (i % 2 === 0 || i === data.length - 1) {
             return <span key={i}>{point.date}</span>
@@ -170,16 +170,16 @@ export function VelocityProgressChart({
       <div className="mt-6 flex items-center justify-center gap-6 text-sm">
         <div className="flex items-center gap-2">
           <div className="w-4 h-1 bg-gradient-to-r from-cyan to-orange rounded" />
-          <span className="text-slate-400">Velocity</span>
+          <span className="text-cyan-700 dark:text-white">Velocity</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-1 border-t-2 border-dashed border-orange" />
-          <span className="text-slate-400">Goal</span>
+          <span className="text-cyan-700 dark:text-white">Goal</span>
         </div>
       </div>
 
       {/* Last Updated */}
-      <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-500">
+      <div className="mt-4 pt-4 border-t border-cyan-200/40 flex items-center justify-between text-xs text-cyan-800 dark:text-white">
         <div className="flex items-center gap-1">
           <Calendar className="w-3 h-3" />
           <span>Last updated: Today</span>

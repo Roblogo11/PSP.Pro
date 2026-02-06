@@ -94,8 +94,8 @@ export function Calendar({ selectedDate, onSelectDate, availableDates = [], minD
               selected
                 ? 'bg-gradient-to-br from-orange via-orange-500 to-orange-600 text-white shadow-2xl shadow-orange/50 scale-110 ring-2 ring-orange/30'
                 : available
-                ? 'bg-white/5 border border-white/10 text-white hover:bg-gradient-to-br hover:from-orange/20 hover:to-cyan/10 hover:border-cyan/30 hover:shadow-lg'
-                : 'text-slate-700 bg-white/[0.02]'
+                ? 'bg-cyan-50/50 border border-cyan-200/40 text-white hover:bg-gradient-to-br hover:from-orange/20 hover:to-cyan/10 hover:border-cyan/30 hover:shadow-lg'
+                : 'text-cyan-800 bg-white/[0.02]'
             }
             ${today && !selected ? 'ring-2 ring-cyan shadow-lg shadow-cyan/30' : ''}
           `}
@@ -120,9 +120,9 @@ export function Calendar({ selectedDate, onSelectDate, availableDates = [], minD
   }
 
   return (
-    <div className="glass-card p-6 border-2 border-white/10">
+    <div className="glass-card p-6 border-2 border-cyan-200/40">
       {/* Header with gradient */}
-      <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
+      <div className="flex items-center justify-between mb-6 pb-4 border-b border-cyan-200/40">
         <button
           onClick={goToPreviousMonth}
           className="p-2 hover:bg-gradient-to-r hover:from-orange/20 hover:to-orange/10 rounded-xl transition-all hover:scale-110"
@@ -157,14 +157,14 @@ export function Calendar({ selectedDate, onSelectDate, availableDates = [], minD
       <div className="grid grid-cols-7 gap-3">{renderDays()}</div>
 
       {/* Legend with icons */}
-      <div className="mt-6 pt-6 border-t border-white/10 flex items-center justify-center gap-6 text-sm">
+      <div className="mt-6 pt-6 border-t border-cyan-200/40 flex items-center justify-center gap-6 text-sm">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-cyan animate-pulse" />
-          <span className="text-slate-300 font-medium">Available</span>
+          <span className="text-cyan-700 dark:text-white font-medium">Available</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded-lg bg-gradient-to-br from-orange to-orange-600 shadow-glow-orange" />
-          <span className="text-slate-300 font-medium">Selected</span>
+          <span className="text-cyan-700 dark:text-white font-medium">Selected</span>
         </div>
       </div>
     </div>

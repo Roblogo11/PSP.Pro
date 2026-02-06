@@ -112,7 +112,7 @@ export function GalleryShowcase() {
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white">
             Gallery Showcase
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             Dive into our portfolio of creative excellence. Browse through our galleries to see real projects and discover what we can create for you.
           </p>
         </div>
@@ -121,14 +121,14 @@ export function GalleryShowcase() {
         <div className="flex justify-end gap-2 mb-4 pr-2">
           <button
             onClick={() => scroll('left')}
-            className="p-2 rounded-full bg-dark-100/80 border border-secondary/20 text-gray-400 hover:text-white hover:border-secondary/50 transition-all"
+            className="p-2 rounded-full bg-dark-100/80 border border-secondary/20 text-gray-600 dark:text-gray-400 hover:text-white hover:border-secondary/50 transition-all"
             aria-label="Scroll left"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={() => scroll('right')}
-            className="p-2 rounded-full bg-dark-100/80 border border-secondary/20 text-gray-400 hover:text-white hover:border-secondary/50 transition-all"
+            className="p-2 rounded-full bg-dark-100/80 border border-secondary/20 text-gray-600 dark:text-gray-400 hover:text-white hover:border-secondary/50 transition-all"
             aria-label="Scroll right"
           >
             <ChevronRight className="w-5 h-5" />
@@ -159,7 +159,7 @@ export function GalleryShowcase() {
                 </h3>
 
                 {/* Description */}
-                <p className="text-gray-400 text-sm leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
                   {card.description}
                 </p>
 
@@ -183,7 +183,7 @@ export function GalleryShowcase() {
 
         {/* Bottom CTA */}
         <div className="text-center mt-8">
-          <p className="text-gray-400 text-sm">
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
             Want to learn more about our process and pricing?{' '}
             <Link href="/pricing" className="text-secondary hover:text-accent transition-colors font-semibold underline">
               View our pricing packages

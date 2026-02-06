@@ -115,16 +115,16 @@ export function CommandPalette() {
                   value={search}
                   onValueChange={setSearch}
                   placeholder="Search pages..."
-                  className="flex-1 py-4 bg-transparent text-white placeholder:text-gray-500 outline-none text-lg"
+                  className="flex-1 py-4 bg-transparent text-white placeholder:text-gray-700 dark:text-gray-400 outline-none text-lg"
                 />
-                <kbd className="px-2 py-1 text-xs text-gray-500 bg-dark-200 rounded border border-secondary/10">
+                <kbd className="px-2 py-1 text-xs text-gray-700 dark:text-gray-400 bg-dark-200 rounded border border-secondary/10">
                   ESC
                 </kbd>
               </div>
 
               {/* Results */}
               <Command.List className="max-h-80 overflow-y-auto p-2">
-                <Command.Empty className="py-8 text-center text-gray-500">
+                <Command.Empty className="py-8 text-center text-gray-700 dark:text-gray-400">
                   No results found.
                 </Command.Empty>
 
@@ -143,12 +143,12 @@ export function CommandPalette() {
                         key={route.path}
                         value={`${route.name} ${route.keywords.join(' ')}`}
                         onSelect={() => handleSelect(route.path)}
-                        className="flex items-center gap-3 px-3 py-3 rounded-lg cursor-pointer text-gray-300 data-[selected=true]:bg-secondary/20 data-[selected=true]:text-white transition-colors"
+                        className="flex items-center gap-3 px-3 py-3 rounded-lg cursor-pointer text-gray-600 dark:text-gray-300 data-[selected=true]:bg-secondary/20 data-[selected=true]:text-white transition-colors"
                       >
                         <Icon className="w-5 h-5 text-secondary" />
                         <span className="font-medium">{route.name}</span>
                         {route.path === '/' && (
-                          <span className="ml-auto text-xs text-gray-500">Start</span>
+                          <span className="ml-auto text-xs text-gray-700 dark:text-gray-400">Start</span>
                         )}
                       </Command.Item>
                     )
@@ -176,7 +176,7 @@ export function CommandPalette() {
                             key={route.path}
                             value={`${route.name} ${route.keywords.join(' ')}`}
                             onSelect={() => handleSelect(route.path)}
-                            className="flex items-center gap-3 px-3 py-3 rounded-lg cursor-pointer text-gray-300 data-[selected=true]:bg-accent/20 data-[selected=true]:text-white transition-colors"
+                            className="flex items-center gap-3 px-3 py-3 rounded-lg cursor-pointer text-gray-600 dark:text-gray-300 data-[selected=true]:bg-accent/20 data-[selected=true]:text-white transition-colors"
                           >
                             <Icon className="w-5 h-5 text-accent/80" />
                             <span className="font-medium">{route.name}</span>
@@ -189,7 +189,7 @@ export function CommandPalette() {
               </Command.List>
 
               {/* Footer */}
-              <div className="flex items-center justify-between px-4 py-3 border-t border-secondary/10 text-xs text-gray-500">
+              <div className="flex items-center justify-between px-4 py-3 border-t border-secondary/10 text-xs text-gray-700 dark:text-gray-400">
                 <div className="flex items-center gap-4">
                   <span className="flex items-center gap-1">
                     <kbd className="px-1.5 py-0.5 bg-dark-200 rounded">↑</kbd>

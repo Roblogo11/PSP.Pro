@@ -76,12 +76,12 @@ export function AchievementBadge({
           className={`w-20 h-20 mx-auto rounded-full flex items-center justify-center ${
             isComplete || unlocked
               ? `bg-gradient-to-br ${styles.bg} ${styles.glow}`
-              : 'bg-slate-800/50'
+              : 'bg-cyan-900/30'
           }`}
         >
           <Icon
             className={`w-10 h-10 ${
-              isComplete || unlocked ? 'text-white' : 'text-slate-600'
+              isComplete || unlocked ? 'text-white' : 'text-cyan-700'
             }`}
           />
         </div>
@@ -114,14 +114,14 @@ export function AchievementBadge({
       {/* Title */}
       <h3
         className={`text-lg font-bold text-center mb-2 ${
-          isComplete || unlocked ? styles.text : 'text-slate-400'
+          isComplete || unlocked ? styles.text : 'text-cyan-600'
         }`}
       >
         {title}
       </h3>
 
       {/* Description */}
-      <p className="text-sm text-slate-400 text-center mb-4">{description}</p>
+      <p className="text-sm text-cyan-700 dark:text-white text-center mb-4">{description}</p>
 
       {/* Progress Bar */}
       {!unlocked && (
@@ -134,7 +134,7 @@ export function AchievementBadge({
               className={`h-full ${styles.progressBar} rounded-full`}
             />
           </div>
-          <p className="text-xs text-center text-slate-400">
+          <p className="text-xs text-center text-cyan-700 dark:text-white">
             {progress} / {maxProgress}
           </p>
         </div>
@@ -145,7 +145,7 @@ export function AchievementBadge({
         <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[1px] flex items-center justify-center">
           <div className="text-center">
             <svg
-              className="w-8 h-8 text-slate-600 mx-auto mb-2"
+              className="w-8 h-8 text-cyan-700 dark:text-white mx-auto mb-2"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -157,7 +157,7 @@ export function AchievementBadge({
                 d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
               />
             </svg>
-            <p className="text-xs text-slate-600 font-semibold">Locked</p>
+            <p className="text-xs text-cyan-700 dark:text-white font-semibold">Locked</p>
           </div>
         </div>
       )}

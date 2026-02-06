@@ -32,7 +32,7 @@ export function ServiceSelector({ services, selectedServiceId, onSelectService }
       case 'package':
         return 'bg-purple-500/10 text-purple-400 border-purple-500/20'
       default:
-        return 'bg-slate-500/10 text-slate-400 border-slate-500/20'
+        return 'bg-cyan-600/10 text-cyan-600 border-cyan-600/20'
     }
   }
 
@@ -40,7 +40,7 @@ export function ServiceSelector({ services, selectedServiceId, onSelectService }
     <div className="space-y-4">
       <div className="mb-6">
         <h3 className="text-xl font-bold text-white mb-2">Select a Service</h3>
-        <p className="text-sm text-slate-400">Choose the training session that fits your goals</p>
+        <p className="text-sm text-cyan-700 dark:text-white">Choose the training session that fits your goals</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -56,7 +56,7 @@ export function ServiceSelector({ services, selectedServiceId, onSelectService }
                 ${
                   isSelected
                     ? 'border-orange bg-orange/5 shadow-lg shadow-orange/20 scale-[1.02]'
-                    : 'border-white/10 bg-white/5 hover:border-orange/50 hover:bg-orange/5'
+                    : 'border-cyan-200/40 bg-cyan-50/50 hover:border-orange/50 hover:bg-orange/5'
                 }
               `}
             >
@@ -64,7 +64,7 @@ export function ServiceSelector({ services, selectedServiceId, onSelectService }
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
                   <h4 className="text-lg font-bold text-white mb-1">{service.name}</h4>
-                  <p className="text-sm text-slate-400 line-clamp-2">{service.description}</p>
+                  <p className="text-sm text-cyan-700 dark:text-white line-clamp-2">{service.description}</p>
                 </div>
                 <span
                   className={`px-2 py-1 rounded-lg text-xs font-semibold uppercase border ${getCategoryColor(
@@ -76,7 +76,7 @@ export function ServiceSelector({ services, selectedServiceId, onSelectService }
               </div>
 
               {/* Details */}
-              <div className="flex items-center gap-4 text-sm text-slate-300">
+              <div className="flex items-center gap-4 text-sm text-cyan-700 dark:text-white">
                 <div className="flex items-center gap-1.5">
                   <Clock className="w-4 h-4 text-cyan" />
                   <span>{service.duration_minutes} min</span>

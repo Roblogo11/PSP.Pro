@@ -99,7 +99,7 @@ export function FunnelBridge({ variant }: FunnelBridgeProps) {
               >
                 <Icon className={`w-5 h-5 text-${content.glowColor}`} />
               </div>
-              <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                 {content.eyebrow}
               </span>
             </div>
@@ -108,7 +108,7 @@ export function FunnelBridge({ variant }: FunnelBridgeProps) {
             <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">{content.headline}</h3>
 
             {/* Subtext */}
-            <p className="text-lg text-gray-300 mb-8 max-w-2xl leading-relaxed">{content.subtext}</p>
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl leading-relaxed">{content.subtext}</p>
 
             {/* CTA Button */}
             <button
@@ -128,7 +128,7 @@ export function FunnelBridge({ variant }: FunnelBridgeProps) {
         </div>
 
         {/* Progress hint */}
-        <p className="text-center text-gray-500 text-sm mt-6">
+        <p className="text-center text-gray-700 dark:text-gray-400 text-sm mt-6">
           {variant === 'home-to-video' && 'Step 1 → Step 2'}
           {variant === 'video-to-shockkit' && 'Step 2 → Step 3'}
           {variant === 'shockkit-to-website' && 'Step 3 → Step 4'}

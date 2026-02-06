@@ -72,7 +72,7 @@ export function Hero() {
           </div>
 
           {/* Location Badge */}
-          <p className="text-sm text-gray-400 animate-fade-in" style={{ animationDelay: '600ms' }}>
+          <p className="text-sm text-gray-600 dark:text-gray-400 animate-fade-in" style={{ animationDelay: '600ms' }}>
             Serving Norfolk, Virginia Beach & Chesapeake
           </p>
         </div>

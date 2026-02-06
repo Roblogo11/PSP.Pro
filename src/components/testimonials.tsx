@@ -101,7 +101,7 @@ export function Testimonials() {
           <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
             What Athletes Are <span className="text-gradient-orange">Saying</span>
           </h2>
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+          <p className="text-lg text-cyan-700 dark:text-white max-w-2xl mx-auto">
             Real results from real athletes training at PSP.Pro
           </p>
         </div>
@@ -139,7 +139,7 @@ export function Testimonials() {
 
             {/* Stats (if available) */}
             {current.stats && (
-              <div className="mb-8 p-6 rounded-xl bg-white/5 border border-white/10">
+              <div className="mb-8 p-6 rounded-xl bg-cyan-50/50 border border-cyan-200/40">
                 <div className="flex items-center justify-center gap-2 mb-4">
                   <TrendingUp className="w-5 h-5 text-green-400" />
                   <span className="text-sm font-semibold text-green-400 uppercase tracking-wide">
@@ -148,7 +148,7 @@ export function Testimonials() {
                 </div>
                 <div className="grid grid-cols-3 gap-4 text-center">
                   <div>
-                    <p className="text-sm text-slate-400 mb-1">Before</p>
+                    <p className="text-sm text-cyan-700 dark:text-white mb-1">Before</p>
                     <p className="text-2xl font-bold text-white">{current.stats.before}</p>
                   </div>
                   <div>
@@ -156,7 +156,7 @@ export function Testimonials() {
                     <p className="text-2xl font-bold text-orange">{current.stats.improvement}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-slate-400 mb-1">After</p>
+                    <p className="text-sm text-cyan-700 dark:text-white mb-1">After</p>
                     <p className="text-2xl font-bold text-cyan">{current.stats.after}</p>
                   </div>
                 </div>
@@ -166,8 +166,8 @@ export function Testimonials() {
             {/* Author */}
             <div className="text-center">
               <p className="text-lg font-bold text-white mb-1">{current.name}</p>
-              <p className="text-sm text-slate-400">{current.role}</p>
-              <p className="text-xs text-slate-500 mt-1">{current.sport}</p>
+              <p className="text-sm text-cyan-700 dark:text-white">{current.role}</p>
+              <p className="text-xs text-cyan-800 dark:text-white mt-1">{current.sport}</p>
             </div>
 
             {/* Dots */}
@@ -198,10 +198,10 @@ export function Testimonials() {
                   <Star key={i} className="w-4 h-4 fill-orange text-orange" />
                 ))}
               </div>
-              <p className="text-sm text-slate-300 mb-4 line-clamp-3">"{testimonial.quote}"</p>
-              <div className="pt-3 border-t border-white/10">
+              <p className="text-sm text-cyan-700 dark:text-white mb-4 line-clamp-3">"{testimonial.quote}"</p>
+              <div className="pt-3 border-t border-cyan-200/40">
                 <p className="text-sm font-bold text-white">{testimonial.name}</p>
-                <p className="text-xs text-slate-500">{testimonial.role}</p>
+                <p className="text-xs text-cyan-800 dark:text-white">{testimonial.role}</p>
               </div>
             </div>
           ))}

@@ -228,29 +228,29 @@ export function PSPAssistant() {
               className="fixed top-20 sm:top-auto sm:bottom-6 right-6 z-[102] w-[calc(100vw-2rem)] sm:w-[400px] max-h-[calc(100vh-8rem)] sm:max-h-[600px] rounded-2xl overflow-hidden shadow-2xl command-panel"
             >
               {/* Header */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-gradient-to-r from-orange/10 to-cyan/10">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-cyan-200/40 bg-gradient-to-r from-orange/10 to-cyan/10">
                 <div className="flex items-center gap-2">
                   <MessageSquare className="w-5 h-5 text-orange" />
                   <span className="font-bold text-white">PSP.Pro Assistant</span>
                 </div>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-1 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
+                  className="p-1 rounded-lg hover:bg-white/10 transition-colors text-cyan-700 dark:text-white hover:text-white"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               {/* Quick Actions */}
-              <div className="px-4 py-3 border-b border-white/5 bg-white/5">
-                <p className="text-xs text-slate-400 mb-2">Quick Links</p>
+              <div className="px-4 py-3 border-b border-white/5 bg-cyan-50/50">
+                <p className="text-xs text-cyan-700 dark:text-white mb-2">Quick Links</p>
                 <div className="flex flex-wrap gap-2">
                   {QUICK_ACTIONS.map((action, i) => (
                     <Link
                       key={i}
                       href={action.href}
                       onClick={() => setIsOpen(false)}
-                      className="px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 hover:bg-orange/20 text-slate-300 hover:text-orange transition-colors border border-white/10 hover:border-orange/50"
+                      className="px-3 py-1.5 rounded-full text-xs font-medium bg-cyan-50/50 hover:bg-orange/20 text-cyan-700 dark:text-white hover:text-orange transition-colors border border-cyan-200/40 hover:border-orange/50"
                     >
                       {action.label}
                     </Link>
@@ -270,7 +270,7 @@ export function PSPAssistant() {
                       </div>
                     ) : (
                       <div className="flex flex-col gap-2">
-                        <div className="max-w-[85%] px-3 py-2 rounded-2xl rounded-tl-sm bg-white/10 text-slate-200 text-sm whitespace-pre-line">
+                        <div className="max-w-[85%] px-3 py-2 rounded-2xl rounded-tl-sm bg-white/10 text-cyan-700 dark:text-white text-sm whitespace-pre-line">
                           {msg.module?.title && (
                             <div className="font-bold text-white mb-1 text-sm">
                               {msg.module.title}
@@ -301,7 +301,7 @@ export function PSPAssistant() {
               </div>
 
               {/* Input */}
-              <form onSubmit={handleSubmit} className="px-4 py-3 border-t border-white/10 bg-white/5">
+              <form onSubmit={handleSubmit} className="px-4 py-3 border-t border-cyan-200/40 bg-cyan-50/50">
                 <div className="flex gap-2">
                   <input
                     ref={inputRef}
@@ -309,7 +309,7 @@ export function PSPAssistant() {
                     value={input}
                     onChange={e => setInput(e.target.value)}
                     placeholder="Ask about training, pricing..."
-                    className="flex-1 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50"
+                    className="flex-1 px-4 py-2 rounded-xl bg-cyan-50/50 border border-cyan-200/40 text-white placeholder:text-cyan-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50"
                   />
                   <button
                     type="submit"
@@ -318,7 +318,7 @@ export function PSPAssistant() {
                     <Send className="w-4 h-4" />
                   </button>
                 </div>
-                <p className="text-[10px] text-slate-500 mt-2 text-center">
+                <p className="text-[10px] text-cyan-800 dark:text-white mt-2 text-center">
                   Instant answers • 100% helpful • No AI fluff
                 </p>
               </form>

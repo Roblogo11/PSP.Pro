@@ -270,7 +270,7 @@ export default function AthleteDetailPage() {
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <Icon className="w-4 h-4 text-orange" />
-          <span className="text-sm text-slate-400">{label}</span>
+          <span className="text-sm text-cyan-800 dark:text-white">{label}</span>
         </div>
         {improvement && (
           <div
@@ -305,7 +305,7 @@ export default function AthleteDetailPage() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <p className="text-slate-400">Athlete not found</p>
+          <p className="text-cyan-800 dark:text-white">Athlete not found</p>
           <Link href="/admin/athletes" className="text-orange hover:text-orange-400 mt-4 inline-block">
             Back to Athletes
           </Link>
@@ -320,7 +320,7 @@ export default function AthleteDetailPage() {
       <div className="mb-8">
         <Link
           href="/admin/athletes"
-          className="inline-flex items-center gap-2 text-slate-400 hover:text-orange transition-colors mb-4"
+          className="inline-flex items-center gap-2 text-cyan-800 dark:text-white hover:text-orange transition-colors mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Athletes
@@ -331,7 +331,7 @@ export default function AthleteDetailPage() {
             <h1 className="text-3xl font-display font-bold text-white mb-2">
               {athlete.full_name}
             </h1>
-            <div className="flex items-center gap-4 text-slate-400">
+            <div className="flex items-center gap-4 text-cyan-800 dark:text-white">
               <span>{athlete.athlete_type || 'Athlete'}</span>
               {athlete.age && <span>Age: {athlete.age}</span>}
               {athlete.email && <span>{athlete.email}</span>}
@@ -391,7 +391,7 @@ export default function AthleteDetailPage() {
               <h2 className="text-2xl font-bold text-white">Add Performance Data</h2>
               <button
                 onClick={() => setShowAddMetricForm(false)}
-                className="text-slate-400 hover:text-white"
+                className="text-cyan-800 dark:text-white hover:text-white"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -400,7 +400,7 @@ export default function AthleteDetailPage() {
             <form onSubmit={handleSaveMetric} className="space-y-6">
               {/* Test Date */}
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">
                   Test Date
                 </label>
                 <input
@@ -408,7 +408,7 @@ export default function AthleteDetailPage() {
                   value={metricForm.test_date}
                   onChange={(e) => setMetricForm({ ...metricForm, test_date: e.target.value })}
                   required
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 />
               </div>
 
@@ -417,35 +417,35 @@ export default function AthleteDetailPage() {
                 <h3 className="text-lg font-semibold text-white mb-3">Throwing</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm text-slate-400 mb-2">Max Velocity (mph)</label>
+                    <label className="block text-sm text-cyan-800 dark:text-white mb-2">Max Velocity (mph)</label>
                     <input
                       type="number"
                       step="0.1"
                       value={metricForm.throwing_velocity_mph}
                       onChange={(e) => setMetricForm({ ...metricForm, throwing_velocity_mph: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="75.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-slate-400 mb-2">Avg Velocity (mph)</label>
+                    <label className="block text-sm text-cyan-800 dark:text-white mb-2">Avg Velocity (mph)</label>
                     <input
                       type="number"
                       step="0.1"
                       value={metricForm.throwing_velocity_avg_mph}
                       onChange={(e) => setMetricForm({ ...metricForm, throwing_velocity_avg_mph: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="73.2"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-slate-400 mb-2">Accuracy (%)</label>
+                    <label className="block text-sm text-cyan-800 dark:text-white mb-2">Accuracy (%)</label>
                     <input
                       type="number"
                       step="0.1"
                       value={metricForm.throwing_accuracy_percentage}
                       onChange={(e) => setMetricForm({ ...metricForm, throwing_accuracy_percentage: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="85"
                     />
                   </div>
@@ -457,35 +457,35 @@ export default function AthleteDetailPage() {
                 <h3 className="text-lg font-semibold text-white mb-3">Batting</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm text-slate-400 mb-2">Max Exit Velocity (mph)</label>
+                    <label className="block text-sm text-cyan-800 dark:text-white mb-2">Max Exit Velocity (mph)</label>
                     <input
                       type="number"
                       step="0.1"
                       value={metricForm.exit_velocity_mph}
                       onChange={(e) => setMetricForm({ ...metricForm, exit_velocity_mph: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="88.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-slate-400 mb-2">Avg Exit Velocity (mph)</label>
+                    <label className="block text-sm text-cyan-800 dark:text-white mb-2">Avg Exit Velocity (mph)</label>
                     <input
                       type="number"
                       step="0.1"
                       value={metricForm.exit_velocity_avg_mph}
                       onChange={(e) => setMetricForm({ ...metricForm, exit_velocity_avg_mph: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="82.0"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-slate-400 mb-2">Bat Speed (mph)</label>
+                    <label className="block text-sm text-cyan-800 dark:text-white mb-2">Bat Speed (mph)</label>
                     <input
                       type="number"
                       step="0.1"
                       value={metricForm.bat_speed_mph}
                       onChange={(e) => setMetricForm({ ...metricForm, bat_speed_mph: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="65.0"
                     />
                   </div>
@@ -497,35 +497,35 @@ export default function AthleteDetailPage() {
                 <h3 className="text-lg font-semibold text-white mb-3">Speed & Agility</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm text-slate-400 mb-2">60-Yard Dash (sec)</label>
+                    <label className="block text-sm text-cyan-800 dark:text-white mb-2">60-Yard Dash (sec)</label>
                     <input
                       type="number"
                       step="0.01"
                       value={metricForm.sixty_yard_dash_seconds}
                       onChange={(e) => setMetricForm({ ...metricForm, sixty_yard_dash_seconds: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="7.15"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-slate-400 mb-2">Home to 1st (sec)</label>
+                    <label className="block text-sm text-cyan-800 dark:text-white mb-2">Home to 1st (sec)</label>
                     <input
                       type="number"
                       step="0.01"
                       value={metricForm.home_to_first_seconds}
                       onChange={(e) => setMetricForm({ ...metricForm, home_to_first_seconds: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="4.25"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-slate-400 mb-2">10-Yard Split (sec)</label>
+                    <label className="block text-sm text-cyan-800 dark:text-white mb-2">10-Yard Split (sec)</label>
                     <input
                       type="number"
                       step="0.01"
                       value={metricForm.ten_yard_split_seconds}
                       onChange={(e) => setMetricForm({ ...metricForm, ten_yard_split_seconds: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="1.65"
                     />
                   </div>
@@ -537,24 +537,24 @@ export default function AthleteDetailPage() {
                 <h3 className="text-lg font-semibold text-white mb-3">Power</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm text-slate-400 mb-2">Vertical Jump (inches)</label>
+                    <label className="block text-sm text-cyan-800 dark:text-white mb-2">Vertical Jump (inches)</label>
                     <input
                       type="number"
                       step="0.1"
                       value={metricForm.vertical_jump_inches}
                       onChange={(e) => setMetricForm({ ...metricForm, vertical_jump_inches: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="28.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-slate-400 mb-2">Broad Jump (inches)</label>
+                    <label className="block text-sm text-cyan-800 dark:text-white mb-2">Broad Jump (inches)</label>
                     <input
                       type="number"
                       step="0.1"
                       value={metricForm.broad_jump_inches}
                       onChange={(e) => setMetricForm({ ...metricForm, broad_jump_inches: e.target.value })}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="95.0"
                     />
                   </div>
@@ -563,7 +563,7 @@ export default function AthleteDetailPage() {
 
               {/* Overall Score */}
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">
                   Overall Performance Score (0-100)
                 </label>
                 <input
@@ -572,21 +572,21 @@ export default function AthleteDetailPage() {
                   max="100"
                   value={metricForm.overall_performance_score}
                   onChange={(e) => setMetricForm({ ...metricForm, overall_performance_score: e.target.value })}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                   placeholder="85"
                 />
               </div>
 
               {/* Notes */}
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">
                   Notes
                 </label>
                 <textarea
                   value={metricForm.notes}
                   onChange={(e) => setMetricForm({ ...metricForm, notes: e.target.value })}
                   rows={3}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                   placeholder="Additional observations..."
                 />
               </div>
@@ -604,7 +604,7 @@ export default function AthleteDetailPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddMetricForm(false)}
-                  className="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium transition-colors"
+                  className="px-6 py-3 rounded-xl bg-cyan-50/50 hover:bg-white/10 text-white font-medium transition-colors"
                 >
                   Cancel
                 </button>
@@ -619,8 +619,8 @@ export default function AthleteDetailPage() {
         <h2 className="text-xl font-semibold text-white mb-4">Performance History</h2>
         {metrics.length === 0 ? (
           <div className="glass-card p-8 text-center">
-            <Target className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-            <p className="text-slate-400 mb-4">No performance data yet</p>
+            <Target className="w-12 h-12 text-cyan-700 dark:text-white mx-auto mb-4" />
+            <p className="text-cyan-800 dark:text-white mb-4">No performance data yet</p>
             <button
               onClick={() => setShowAddMetricForm(true)}
               className="btn-primary inline-flex items-center gap-2"
@@ -642,13 +642,13 @@ export default function AthleteDetailPage() {
                         day: 'numeric',
                       })}
                     </p>
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-cyan-800 dark:text-white">
                       Recorded {new Date(metric.created_at).toLocaleDateString()}
                     </p>
                   </div>
                   <button
                     onClick={() => handleDeleteMetric(metric.id)}
-                    className="text-slate-400 hover:text-red-400 transition-colors"
+                    className="text-cyan-800 dark:text-white hover:text-red-400 transition-colors"
                   >
                     <Trash2 className="w-5 h-5" />
                   </button>
@@ -657,33 +657,33 @@ export default function AthleteDetailPage() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                   {metric.throwing_velocity_mph && (
                     <div>
-                      <p className="text-sm text-slate-400">Throwing Velocity</p>
+                      <p className="text-sm text-cyan-800 dark:text-white">Throwing Velocity</p>
                       <p className="text-xl font-bold text-white">{metric.throwing_velocity_mph} mph</p>
                     </div>
                   )}
                   {metric.exit_velocity_mph && (
                     <div>
-                      <p className="text-sm text-slate-400">Exit Velocity</p>
+                      <p className="text-sm text-cyan-800 dark:text-white">Exit Velocity</p>
                       <p className="text-xl font-bold text-white">{metric.exit_velocity_mph} mph</p>
                     </div>
                   )}
                   {metric.sixty_yard_dash_seconds && (
                     <div>
-                      <p className="text-sm text-slate-400">60-Yard Dash</p>
+                      <p className="text-sm text-cyan-800 dark:text-white">60-Yard Dash</p>
                       <p className="text-xl font-bold text-white">{metric.sixty_yard_dash_seconds}s</p>
                     </div>
                   )}
                   {metric.overall_performance_score && (
                     <div>
-                      <p className="text-sm text-slate-400">Overall Score</p>
+                      <p className="text-sm text-cyan-800 dark:text-white">Overall Score</p>
                       <p className="text-xl font-bold text-white">{metric.overall_performance_score}/100</p>
                     </div>
                   )}
                 </div>
 
                 {metric.notes && (
-                  <div className="pt-4 border-t border-white/10">
-                    <p className="text-sm text-slate-300">{metric.notes}</p>
+                  <div className="pt-4 border-t border-cyan-200/40">
+                    <p className="text-sm text-cyan-700 dark:text-white">{metric.notes}</p>
                   </div>
                 )}
               </div>

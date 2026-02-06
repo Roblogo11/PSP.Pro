@@ -27,7 +27,7 @@ export default function SessionsPage() {
       <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-400">Loading your sessions...</p>
+          <p className="text-cyan-700 dark:text-white">Loading your sessions...</p>
         </div>
       </div>
     )
@@ -103,7 +103,7 @@ export default function SessionsPage() {
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
           Training <span className="text-gradient-orange">Sessions</span>
         </h1>
-        <p className="text-slate-400 text-lg">
+        <p className="text-cyan-700 dark:text-white text-lg">
           View and manage your training schedule
         </p>
       </div>
@@ -117,7 +117,7 @@ export default function SessionsPage() {
             className={`px-6 py-3 rounded-xl font-semibold transition-all whitespace-nowrap ${
               filter === filterType
                 ? 'bg-orange text-white shadow-glow-orange'
-                : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-white'
+                : 'bg-cyan-900/30 text-cyan-700 dark:text-white hover:bg-cyan-900 hover:text-white'
             }`}
           >
             {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
@@ -158,7 +158,7 @@ export default function SessionsPage() {
                     </h3>
                     {getStatusIcon(session.status)}
                   </div>
-                  <p className="text-sm text-slate-400">{session.coach}</p>
+                  <p className="text-sm text-cyan-700 dark:text-white">{session.coach}</p>
                 </div>
               </div>
               {session.hasVideo && (
@@ -170,15 +170,15 @@ export default function SessionsPage() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-4 mb-4">
-              <div className="flex items-center gap-3 text-slate-300">
+              <div className="flex items-center gap-3 text-cyan-700 dark:text-white">
                 <Calendar className="w-5 h-5 text-orange" />
                 <span>{format(session.date, 'MMM dd, yyyy')}</span>
               </div>
-              <div className="flex items-center gap-3 text-slate-300">
+              <div className="flex items-center gap-3 text-cyan-700 dark:text-white">
                 <Clock className="w-5 h-5 text-orange" />
                 <span>{session.time}</span>
               </div>
-              <div className="flex items-center gap-3 text-slate-300">
+              <div className="flex items-center gap-3 text-cyan-700 dark:text-white">
                 <MapPin className="w-5 h-5 text-orange" />
                 <span>{session.location}</span>
               </div>
@@ -186,7 +186,7 @@ export default function SessionsPage() {
 
             {session.notes && (
               <div className="mt-4 pt-4 border-t border-white/5">
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-cyan-700 dark:text-white">
                   <span className="font-semibold text-white">Notes:</span> {session.notes}
                 </p>
               </div>
@@ -194,7 +194,7 @@ export default function SessionsPage() {
 
             {session.peakVelocity && (
               <div className="mt-4 pt-4 border-t border-white/5">
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-cyan-700 dark:text-white">
                   <span className="font-semibold text-white">Peak Velocity:</span>{' '}
                   <span className="text-gradient-orange font-bold">{session.peakVelocity} mph</span>
                 </p>
@@ -229,7 +229,7 @@ export default function SessionsPage() {
 
       {filteredSessions.length === 0 && (
         <div className="command-panel text-center py-12">
-          <p className="text-slate-400 text-lg mb-4">No sessions found</p>
+          <p className="text-cyan-700 dark:text-white text-lg mb-4">No sessions found</p>
           <Link href="/booking">
             <button className="btn-primary">Book a Session</button>
           </Link>
@@ -247,7 +247,7 @@ export default function SessionsPage() {
                   setCancelModalOpen(false)
                   setSelectedSession(null)
                 }}
-                className="text-slate-400 hover:text-white transition-colors"
+                className="text-cyan-700 dark:text-white hover:text-white transition-colors"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -256,14 +256,14 @@ export default function SessionsPage() {
             <div className="mb-6">
               <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl mb-4">
                 <p className="text-red-400 text-sm font-semibold mb-2">⚠️ Cancellation Policy</p>
-                <ul className="text-sm text-slate-300 space-y-1">
+                <ul className="text-sm text-cyan-700 dark:text-white space-y-1">
                   <li>• Cancellations made 24+ hours in advance: Full refund</li>
                   <li>• Cancellations within 24 hours: No refund</li>
                   <li>• Refunds processed within 3-5 business days</li>
                 </ul>
               </div>
 
-              <p className="text-slate-300 text-sm">
+              <p className="text-cyan-700 dark:text-white text-sm">
                 Are you sure you want to cancel this session? This action cannot be undone.
               </p>
             </div>
@@ -302,7 +302,7 @@ export default function SessionsPage() {
                   setRescheduleModalOpen(false)
                   setSelectedSession(null)
                 }}
-                className="text-slate-400 hover:text-white transition-colors"
+                className="text-cyan-700 dark:text-white hover:text-white transition-colors"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -311,14 +311,14 @@ export default function SessionsPage() {
             <div className="mb-6">
               <div className="p-4 bg-cyan/10 border border-cyan/20 rounded-xl mb-4">
                 <p className="text-cyan text-sm font-semibold mb-2">ℹ️ Rescheduling Info</p>
-                <ul className="text-sm text-slate-300 space-y-1">
+                <ul className="text-sm text-cyan-700 dark:text-white space-y-1">
                   <li>• Free rescheduling up to 24 hours before session</li>
                   <li>• Choose any available slot in the booking calendar</li>
                   <li>• Your session credit will automatically transfer</li>
                 </ul>
               </div>
 
-              <p className="text-slate-300 text-sm">
+              <p className="text-cyan-700 dark:text-white text-sm">
                 You'll be redirected to the booking calendar to select a new time slot.
               </p>
             </div>

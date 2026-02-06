@@ -146,7 +146,7 @@ export function ActionButton({
               <h3 className="text-lg font-semibold text-white mb-2">
                 {permission.canDoDirectly ? 'Confirm Deletion' : 'Request Deletion'}
               </h3>
-              <p className="text-slate-400 text-sm mb-3">
+              <p className="text-cyan-700 dark:text-white text-sm mb-3">
                 {permission.canDoDirectly
                   ? 'Are you sure you want to delete this? This action cannot be undone.'
                   : `This action requires master admin approval. ${permission.reason || ''}`}
@@ -190,7 +190,7 @@ export function ActionButton({
             <button
               onClick={() => setShowConfirm(false)}
               disabled={loading}
-              className="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white transition-colors"
+              className="px-4 py-2 rounded-lg bg-cyan-50/50 hover:bg-white/10 text-white transition-colors"
             >
               Cancel
             </button>

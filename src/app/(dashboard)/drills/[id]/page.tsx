@@ -134,7 +134,7 @@ export default function DrillDetailPage() {
       {/* Back Button */}
       <button
         onClick={() => router.back()}
-        className="flex items-center gap-2 text-slate-400 hover:text-orange transition-colors mb-6"
+        className="flex items-center gap-2 text-cyan-800 dark:text-white hover:text-orange transition-colors mb-6"
       >
         <ArrowLeft className="w-5 h-5" />
         Back to Drill Bank
@@ -145,7 +145,7 @@ export default function DrillDetailPage() {
         <div className="lg:col-span-2 space-y-6">
           {/* Video Player */}
           <div className="glass-card overflow-hidden">
-            <div className="relative aspect-video bg-slate-800 flex items-center justify-center">
+            <div className="relative aspect-video bg-cyan-900 flex items-center justify-center">
               {drill.video_url ? (
                 <iframe
                   src={drill.video_url}
@@ -156,7 +156,7 @@ export default function DrillDetailPage() {
               ) : (
                 <div className="flex flex-col items-center gap-4">
                   <Play className="w-20 h-20 text-orange/50" />
-                  <p className="text-slate-400">Video coming soon</p>
+                  <p className="text-cyan-800 dark:text-white">Video coming soon</p>
                 </div>
               )}
             </div>
@@ -169,7 +169,7 @@ export default function DrillDetailPage() {
                 <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
                   {drill.title}
                 </h1>
-                <p className="text-lg text-slate-300">{drill.description}</p>
+                <p className="text-lg text-cyan-700 dark:text-white">{drill.description}</p>
               </div>
 
               {!isCompleted ? (
@@ -202,7 +202,7 @@ export default function DrillDetailPage() {
               >
                 {drill.difficulty}
               </span>
-              <span className="px-3 py-2 bg-white/5 text-slate-300 text-sm font-medium rounded-lg border border-white/10 flex items-center gap-2">
+              <span className="px-3 py-2 bg-cyan-50/50 text-cyan-700 dark:text-white text-sm font-medium rounded-lg border border-cyan-200/40 flex items-center gap-2">
                 <Clock className="w-4 h-4" />
                 {formatDuration(drill.duration)}
               </span>
@@ -231,13 +231,13 @@ export default function DrillDetailPage() {
             </h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400">Duration</span>
+                <span className="text-cyan-800 dark:text-white">Duration</span>
                 <span className="text-white font-semibold">
                   {formatDuration(drill.duration)}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-slate-400">Your Completions</span>
+                <span className="text-cyan-800 dark:text-white">Your Completions</span>
                 <span className="text-white font-semibold">{completionCount}</span>
               </div>
             </div>
@@ -254,7 +254,7 @@ export default function DrillDetailPage() {
                 {drill.tags.map((tag, idx) => (
                   <span
                     key={idx}
-                    className="px-3 py-1 bg-white/5 text-slate-300 text-sm rounded-lg border border-white/10"
+                    className="px-3 py-1 bg-cyan-50/50 text-cyan-700 dark:text-white text-sm rounded-lg border border-cyan-200/40"
                   >
                     {tag}
                   </span>

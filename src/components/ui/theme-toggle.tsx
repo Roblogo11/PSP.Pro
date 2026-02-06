@@ -9,7 +9,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="relative inline-flex items-center h-10 w-20 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:ring-offset-2 focus:ring-offset-slate-900 dark:focus:ring-offset-slate-900"
+      className="relative inline-flex items-center h-10 w-20 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:ring-offset-2 focus:ring-offset-slate-900 dark:focus:ring-offset-slate-900"
       style={{
         background: theme === 'dark'
           ? 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)'

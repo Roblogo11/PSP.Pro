@@ -138,7 +138,7 @@ Rotational Power Training,Medicine ball exercises for core rotation,https://yout
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
           Bulk Drill <span className="text-gradient-orange">Import</span>
         </h1>
-        <p className="text-slate-400 text-lg">
+        <p className="text-cyan-800 dark:text-white text-lg">
           Import multiple drills at once from a CSV file with YouTube links
         </p>
       </div>
@@ -146,7 +146,7 @@ Rotational Power Training,Medicine ball exercises for core rotation,https://yout
       {/* Instructions */}
       <div className="command-panel mb-6">
         <h2 className="text-xl font-bold text-white mb-4">How to Import Drills</h2>
-        <ol className="space-y-3 text-slate-300">
+        <ol className="space-y-3 text-cyan-700 dark:text-white">
           <li className="flex gap-3">
             <span className="flex-shrink-0 w-6 h-6 rounded-full bg-orange/20 border border-orange/40 flex items-center justify-center text-orange text-sm font-bold">1</span>
             <span>Download the CSV template below</span>
@@ -167,7 +167,7 @@ Rotational Power Training,Medicine ball exercises for core rotation,https://yout
 
         <div className="mt-6 p-4 bg-cyan/10 border border-cyan/20 rounded-xl">
           <p className="text-cyan text-sm font-semibold mb-2">💡 Pro Tip: YouTube Video Protection</p>
-          <p className="text-slate-300 text-sm">
+          <p className="text-cyan-700 dark:text-white text-sm">
             YouTube videos are automatically protected - they can't be downloaded by viewers,
             are streamed securely, and you maintain full control through your YouTube channel.
           </p>
@@ -184,7 +184,7 @@ Rotational Power Training,Medicine ball exercises for core rotation,https://yout
             </div>
             <div>
               <h3 className="text-lg font-bold text-white">Download Template</h3>
-              <p className="text-sm text-slate-400">Get the CSV format with examples</p>
+              <p className="text-sm text-cyan-800 dark:text-white">Get the CSV format with examples</p>
             </div>
           </div>
           <button onClick={downloadTemplate} className="btn-primary w-full">
@@ -201,7 +201,7 @@ Rotational Power Training,Medicine ball exercises for core rotation,https://yout
             </div>
             <div>
               <h3 className="text-lg font-bold text-white">Upload Drills</h3>
-              <p className="text-sm text-slate-400">Import your completed CSV file</p>
+              <p className="text-sm text-cyan-800 dark:text-white">Import your completed CSV file</p>
             </div>
           </div>
           <label className="block">
@@ -226,67 +226,67 @@ Rotational Power Training,Medicine ball exercises for core rotation,https://yout
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-white/10">
-                <th className="text-left py-3 px-4 text-sm font-semibold text-slate-400">Field</th>
-                <th className="text-left py-3 px-4 text-sm font-semibold text-slate-400">Required</th>
-                <th className="text-left py-3 px-4 text-sm font-semibold text-slate-400">Format</th>
-                <th className="text-left py-3 px-4 text-sm font-semibold text-slate-400">Example</th>
+              <tr className="border-b border-cyan-200/40">
+                <th className="text-left py-3 px-4 text-sm font-semibold text-cyan-800 dark:text-white">Field</th>
+                <th className="text-left py-3 px-4 text-sm font-semibold text-cyan-800 dark:text-white">Required</th>
+                <th className="text-left py-3 px-4 text-sm font-semibold text-cyan-800 dark:text-white">Format</th>
+                <th className="text-left py-3 px-4 text-sm font-semibold text-cyan-800 dark:text-white">Example</th>
               </tr>
             </thead>
             <tbody>
               <tr className="border-b border-white/5">
                 <td className="py-3 px-4 text-white font-mono text-sm">title</td>
                 <td className="py-3 px-4"><span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">Required</span></td>
-                <td className="py-3 px-4 text-slate-300 text-sm">Text</td>
-                <td className="py-3 px-4 text-slate-400 text-sm">Long Toss Progression</td>
+                <td className="py-3 px-4 text-cyan-700 dark:text-white text-sm">Text</td>
+                <td className="py-3 px-4 text-cyan-800 dark:text-white text-sm">Long Toss Progression</td>
               </tr>
               <tr className="border-b border-white/5">
                 <td className="py-3 px-4 text-white font-mono text-sm">description</td>
-                <td className="py-3 px-4"><span className="px-2 py-1 bg-slate-700/50 text-slate-400 rounded text-xs">Optional</span></td>
-                <td className="py-3 px-4 text-slate-300 text-sm">Text</td>
-                <td className="py-3 px-4 text-slate-400 text-sm">Build arm strength and velocity</td>
+                <td className="py-3 px-4"><span className="px-2 py-1 bg-cyan-800/30/50 text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
+                <td className="py-3 px-4 text-cyan-700 dark:text-white text-sm">Text</td>
+                <td className="py-3 px-4 text-cyan-800 dark:text-white text-sm">Build arm strength and velocity</td>
               </tr>
               <tr className="border-b border-white/5">
                 <td className="py-3 px-4 text-white font-mono text-sm">youtube_url</td>
                 <td className="py-3 px-4"><span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">Required</span></td>
-                <td className="py-3 px-4 text-slate-300 text-sm">URL</td>
-                <td className="py-3 px-4 text-slate-400 text-sm">https://youtube.com/watch?v=abc123</td>
+                <td className="py-3 px-4 text-cyan-700 dark:text-white text-sm">URL</td>
+                <td className="py-3 px-4 text-cyan-800 dark:text-white text-sm">https://youtube.com/watch?v=abc123</td>
               </tr>
               <tr className="border-b border-white/5">
                 <td className="py-3 px-4 text-white font-mono text-sm">category</td>
                 <td className="py-3 px-4"><span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">Required</span></td>
-                <td className="py-3 px-4 text-slate-300 text-sm">mechanics | speed | power | recovery | warmup | conditioning</td>
-                <td className="py-3 px-4 text-slate-400 text-sm">mechanics</td>
+                <td className="py-3 px-4 text-cyan-700 dark:text-white text-sm">mechanics | speed | power | recovery | warmup | conditioning</td>
+                <td className="py-3 px-4 text-cyan-800 dark:text-white text-sm">mechanics</td>
               </tr>
               <tr className="border-b border-white/5">
                 <td className="py-3 px-4 text-white font-mono text-sm">difficulty</td>
-                <td className="py-3 px-4"><span className="px-2 py-1 bg-slate-700/50 text-slate-400 rounded text-xs">Optional</span></td>
-                <td className="py-3 px-4 text-slate-300 text-sm">beginner | intermediate | advanced</td>
-                <td className="py-3 px-4 text-slate-400 text-sm">intermediate</td>
+                <td className="py-3 px-4"><span className="px-2 py-1 bg-cyan-800/30/50 text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
+                <td className="py-3 px-4 text-cyan-700 dark:text-white text-sm">beginner | intermediate | advanced</td>
+                <td className="py-3 px-4 text-cyan-800 dark:text-white text-sm">intermediate</td>
               </tr>
               <tr className="border-b border-white/5">
                 <td className="py-3 px-4 text-white font-mono text-sm">duration_minutes</td>
-                <td className="py-3 px-4"><span className="px-2 py-1 bg-slate-700/50 text-slate-400 rounded text-xs">Optional</span></td>
-                <td className="py-3 px-4 text-slate-300 text-sm">Number</td>
-                <td className="py-3 px-4 text-slate-400 text-sm">15</td>
+                <td className="py-3 px-4"><span className="px-2 py-1 bg-cyan-800/30/50 text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
+                <td className="py-3 px-4 text-cyan-700 dark:text-white text-sm">Number</td>
+                <td className="py-3 px-4 text-cyan-800 dark:text-white text-sm">15</td>
               </tr>
               <tr className="border-b border-white/5">
                 <td className="py-3 px-4 text-white font-mono text-sm">tags</td>
-                <td className="py-3 px-4"><span className="px-2 py-1 bg-slate-700/50 text-slate-400 rounded text-xs">Optional</span></td>
-                <td className="py-3 px-4 text-slate-300 text-sm">Semicolon separated</td>
-                <td className="py-3 px-4 text-slate-400 text-sm">throwing;arm-strength;velocity</td>
+                <td className="py-3 px-4"><span className="px-2 py-1 bg-cyan-800/30/50 text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
+                <td className="py-3 px-4 text-cyan-700 dark:text-white text-sm">Semicolon separated</td>
+                <td className="py-3 px-4 text-cyan-800 dark:text-white text-sm">throwing;arm-strength;velocity</td>
               </tr>
               <tr className="border-b border-white/5">
                 <td className="py-3 px-4 text-white font-mono text-sm">equipment</td>
-                <td className="py-3 px-4"><span className="px-2 py-1 bg-slate-700/50 text-slate-400 rounded text-xs">Optional</span></td>
-                <td className="py-3 px-4 text-slate-300 text-sm">Semicolon separated</td>
-                <td className="py-3 px-4 text-slate-400 text-sm">baseball;partner</td>
+                <td className="py-3 px-4"><span className="px-2 py-1 bg-cyan-800/30/50 text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
+                <td className="py-3 px-4 text-cyan-700 dark:text-white text-sm">Semicolon separated</td>
+                <td className="py-3 px-4 text-cyan-800 dark:text-white text-sm">baseball;partner</td>
               </tr>
               <tr>
                 <td className="py-3 px-4 text-white font-mono text-sm">focus_areas</td>
-                <td className="py-3 px-4"><span className="px-2 py-1 bg-slate-700/50 text-slate-400 rounded text-xs">Optional</span></td>
-                <td className="py-3 px-4 text-slate-300 text-sm">Semicolon separated</td>
-                <td className="py-3 px-4 text-slate-400 text-sm">arm;shoulder;mechanics</td>
+                <td className="py-3 px-4"><span className="px-2 py-1 bg-cyan-800/30/50 text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
+                <td className="py-3 px-4 text-cyan-700 dark:text-white text-sm">Semicolon separated</td>
+                <td className="py-3 px-4 text-cyan-800 dark:text-white text-sm">arm;shoulder;mechanics</td>
               </tr>
             </tbody>
           </table>
@@ -304,7 +304,7 @@ Rotational Power Training,Medicine ball exercises for core rotation,https://yout
                 <CheckCircle className="w-6 h-6 text-green-400" />
                 <span className="text-2xl font-bold text-green-400">{results.success}</span>
               </div>
-              <p className="text-slate-300 text-sm">Drills imported successfully</p>
+              <p className="text-cyan-700 dark:text-white text-sm">Drills imported successfully</p>
             </div>
 
             <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
@@ -312,7 +312,7 @@ Rotational Power Training,Medicine ball exercises for core rotation,https://yout
                 <XCircle className="w-6 h-6 text-red-400" />
                 <span className="text-2xl font-bold text-red-400">{results.failed}</span>
               </div>
-              <p className="text-slate-300 text-sm">Failed to import</p>
+              <p className="text-cyan-700 dark:text-white text-sm">Failed to import</p>
             </div>
           </div>
 
@@ -324,7 +324,7 @@ Rotational Power Training,Medicine ball exercises for core rotation,https://yout
               </div>
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {results.errors.map((error, i) => (
-                  <p key={i} className="text-sm text-slate-300 font-mono">{error}</p>
+                  <p key={i} className="text-sm text-cyan-700 dark:text-white font-mono">{error}</p>
                 ))}
               </div>
             </div>

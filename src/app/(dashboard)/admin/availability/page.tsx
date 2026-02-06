@@ -23,10 +23,19 @@ export default function AvailabilityManagementPage() {
   })
 
   useEffect(() => {
-    fetchUser()
-    fetchServices()
-    fetchSlots()
+    const init = async () => {
+      await fetchUser()
+      await fetchServices()
+    }
+    init()
   }, [])
+
+  // Fetch slots when user is loaded
+  useEffect(() => {
+    if (user) {
+      fetchSlots()
+    }
+  }, [user])
 
   const fetchUser = async () => {
     const {
@@ -48,6 +57,12 @@ export default function AvailabilityManagementPage() {
   const fetchSlots = async () => {
     setLoading(true)
 
+    if (!user) {
+      setLoading(false)
+      return
+    }
+
+    // SECURITY FIX: Only fetch current user's slots
     const { data } = await supabase
       .from('available_slots')
       .select(`
@@ -55,6 +70,7 @@ export default function AvailabilityManagementPage() {
         service:service_id (name),
         coach:coach_id (full_name)
       `)
+      .eq('coach_id', user.id)
       .gte('slot_date', new Date().toISOString().split('T')[0])
       .order('slot_date', { ascending: true })
       .order('start_time', { ascending: true })
@@ -95,7 +111,14 @@ export default function AvailabilityManagementPage() {
   }
 
   const deleteSlot = async (slotId: string) => {
-    const { error } = await supabase.from('available_slots').delete().eq('id', slotId)
+    if (!user) return
+
+    // SECURITY FIX: Only allow deleting your own slots
+    const { error } = await supabase
+      .from('available_slots')
+      .delete()
+      .eq('id', slotId)
+      .eq('coach_id', user.id)
 
     if (!error) {
       fetchSlots()
@@ -127,7 +150,7 @@ export default function AvailabilityManagementPage() {
           <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
             Availability Management
           </h1>
-          <p className="text-slate-400 text-lg">Create and manage your available time slots</p>
+          <p className="text-cyan-800 dark:text-white text-lg">Create and manage your available time slots</p>
         </div>
         <button onClick={() => setShowForm(!showForm)} className="btn-primary flex items-center gap-2">
           <Plus className="w-5 h-5" />
@@ -142,13 +165,13 @@ export default function AvailabilityManagementPage() {
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Service */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">
                 Service (Optional)
               </label>
               <select
                 value={formData.serviceId}
                 onChange={e => setFormData({ ...formData, serviceId: e.target.value })}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
               >
                 <option value="">Any Service</option>
                 {services.map(service => (
@@ -161,57 +184,57 @@ export default function AvailabilityManagementPage() {
 
             {/* Date */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Date *</label>
+              <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Date *</label>
               <input
                 type="date"
                 required
                 value={formData.slotDate}
                 onChange={e => setFormData({ ...formData, slotDate: e.target.value })}
                 min={new Date().toISOString().split('T')[0]}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
               />
             </div>
 
             {/* Start Time */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Start Time *</label>
+              <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Start Time *</label>
               <input
                 type="time"
                 required
                 value={formData.startTime}
                 onChange={e => setFormData({ ...formData, startTime: e.target.value })}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
               />
             </div>
 
             {/* End Time */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">End Time *</label>
+              <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">End Time *</label>
               <input
                 type="time"
                 required
                 value={formData.endTime}
                 onChange={e => setFormData({ ...formData, endTime: e.target.value })}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
               />
             </div>
 
             {/* Location */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Location *</label>
+              <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Location *</label>
               <input
                 type="text"
                 required
                 value={formData.location}
                 onChange={e => setFormData({ ...formData, location: e.target.value })}
                 placeholder="e.g., PSP Training Facility"
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
               />
             </div>
 
             {/* Max Bookings */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Max Bookings *</label>
+              <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Max Bookings *</label>
               <input
                 type="number"
                 required
@@ -219,7 +242,7 @@ export default function AvailabilityManagementPage() {
                 max="20"
                 value={formData.maxBookings}
                 onChange={e => setFormData({ ...formData, maxBookings: parseInt(e.target.value) })}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-orange/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
               />
             </div>
 
@@ -245,13 +268,13 @@ export default function AvailabilityManagementPage() {
         {loading ? (
           <div className="p-12 text-center">
             <Loader2 className="w-8 h-8 text-orange mx-auto mb-4 animate-spin" />
-            <p className="text-slate-400">Loading time slots...</p>
+            <p className="text-cyan-800 dark:text-white">Loading time slots...</p>
           </div>
         ) : slots.length === 0 ? (
           <div className="p-12 text-center">
-            <Calendar className="w-16 h-16 text-slate-600 mx-auto mb-4" />
+            <Calendar className="w-16 h-16 text-cyan-700 dark:text-white mx-auto mb-4" />
             <h3 className="text-xl font-bold text-white mb-2">No Time Slots Yet</h3>
-            <p className="text-slate-400 mb-4">
+            <p className="text-cyan-800 dark:text-white mb-4">
               Create your first time slot to start accepting bookings.
             </p>
             <button onClick={() => setShowForm(true)} className="btn-primary inline-flex items-center gap-2">
@@ -262,7 +285,7 @@ export default function AvailabilityManagementPage() {
         ) : (
           <div className="divide-y divide-white/10">
             {slots.map(slot => (
-              <div key={slot.id} className="p-4 hover:bg-white/5 transition-colors">
+              <div key={slot.id} className="p-4 hover:bg-cyan-50/50 transition-colors">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-4">
                     {/* Date */}
@@ -270,7 +293,7 @@ export default function AvailabilityManagementPage() {
                       <Calendar className="w-5 h-5 text-cyan mt-0.5" />
                       <div>
                         <p className="text-sm font-semibold text-white">{formatDate(slot.slot_date)}</p>
-                        <p className="text-xs text-slate-400">
+                        <p className="text-xs text-cyan-800 dark:text-white">
                           {formatTime(slot.start_time)} - {formatTime(slot.end_time)}
                         </p>
                       </div>
@@ -278,22 +301,22 @@ export default function AvailabilityManagementPage() {
 
                     {/* Service */}
                     <div>
-                      <p className="text-xs text-slate-400 mb-1">Service</p>
+                      <p className="text-xs text-cyan-800 dark:text-white mb-1">Service</p>
                       <p className="text-sm text-white">{slot.service?.name || 'Any Service'}</p>
                     </div>
 
                     {/* Location */}
                     <div className="flex items-start gap-2">
-                      <MapPin className="w-4 h-4 text-slate-400 mt-0.5" />
+                      <MapPin className="w-4 h-4 text-cyan-800 dark:text-white mt-0.5" />
                       <div>
-                        <p className="text-xs text-slate-400 mb-1">Location</p>
+                        <p className="text-xs text-cyan-800 dark:text-white mb-1">Location</p>
                         <p className="text-sm text-white">{slot.location}</p>
                       </div>
                     </div>
 
                     {/* Bookings */}
                     <div>
-                      <p className="text-xs text-slate-400 mb-1">Bookings</p>
+                      <p className="text-xs text-cyan-800 dark:text-white mb-1">Bookings</p>
                       <p className="text-sm font-semibold text-white">
                         {slot.current_bookings} / {slot.max_bookings}
                       </p>
@@ -313,7 +336,7 @@ export default function AvailabilityManagementPage() {
                     className="p-2 hover:bg-red-500/20 rounded-lg transition-colors group"
                     title="Delete slot"
                   >
-                    <Trash2 className="w-5 h-5 text-slate-400 group-hover:text-red-400" />
+                    <Trash2 className="w-5 h-5 text-cyan-800 dark:text-white group-hover:text-red-400" />
                   </button>
                 </div>
               </div>

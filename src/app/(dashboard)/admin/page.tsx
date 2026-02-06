@@ -167,7 +167,7 @@ export default function AdminDashboard() {
       <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-400">Loading admin dashboard...</p>
+          <p className="text-cyan-700 dark:text-white">Loading admin dashboard...</p>
         </div>
       </div>
     )
@@ -266,7 +266,7 @@ export default function AdminDashboard() {
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
           Admin <span className="text-gradient-orange">Control Center</span>
         </h1>
-        <p className="text-slate-400 text-lg mb-4">
+        <p className="text-cyan-700 dark:text-white text-lg mb-4">
           Manage your athletes, drills, and content from one place
         </p>
 
@@ -285,36 +285,36 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between mb-2">
             <Users className="w-8 h-8 text-orange" />
             <div className="flex items-center gap-2">
-              <span className="text-sm text-slate-400">Total</span>
+              <span className="text-sm text-cyan-700 dark:text-white">Total</span>
               <Tooltip content="Total number of athletes in your system. Click 'Athletes' in the sidebar to manage them or add new ones." />
             </div>
           </div>
           <p className="text-3xl font-bold text-white mb-1">{stats.totalAthletes}</p>
-          <p className="text-sm text-slate-400">Active Athletes</p>
+          <p className="text-sm text-cyan-700 dark:text-white">Active Athletes</p>
         </div>
 
         <div className="command-panel-active">
           <div className="flex items-center justify-between mb-2">
             <Calendar className="w-8 h-8 text-cyan" />
             <div className="flex items-center gap-2">
-              <span className="text-sm text-slate-400">Upcoming</span>
+              <span className="text-sm text-cyan-700 dark:text-white">Upcoming</span>
               <Tooltip content="Shows confirmed and pending sessions scheduled in the future. Go to 'Bookings' to manage them." />
             </div>
           </div>
           <p className="text-3xl font-bold text-white mb-1">{stats.activeSessions}</p>
-          <p className="text-sm text-slate-400">Scheduled Sessions</p>
+          <p className="text-sm text-cyan-700 dark:text-white">Scheduled Sessions</p>
         </div>
 
         <div className="command-panel-active">
           <div className="flex items-center justify-between mb-2">
             <Dumbbell className="w-8 h-8 text-green-400" />
             <div className="flex items-center gap-2">
-              <span className="text-sm text-slate-400">Library</span>
+              <span className="text-sm text-cyan-700 dark:text-white">Library</span>
               <Tooltip content="Total drills in your library. Use 'Bulk Import' to add multiple YouTube videos at once (180x faster than manual entry!)" />
             </div>
           </div>
           <p className="text-3xl font-bold text-white mb-1">{stats.totalDrills}</p>
-          <p className="text-sm text-slate-400">Training Drills</p>
+          <p className="text-sm text-cyan-700 dark:text-white">Training Drills</p>
         </div>
 
         <div className="command-panel-active">
@@ -326,13 +326,13 @@ export default function AdminDashboard() {
                   {stats.pendingBookings} Pending
                 </span>
               ) : (
-                <span className="text-sm text-slate-400">None</span>
+                <span className="text-sm text-cyan-700 dark:text-white">None</span>
               )}
               <Tooltip content="Bookings waiting for your approval. Click to review and confirm or cancel them." />
             </div>
           </div>
           <p className="text-3xl font-bold text-white mb-1">{stats.pendingBookings}</p>
-          <p className="text-sm text-slate-400">Pending Bookings</p>
+          <p className="text-sm text-cyan-700 dark:text-white">Pending Bookings</p>
         </div>
       </div>
 
@@ -353,15 +353,15 @@ export default function AdminDashboard() {
           <div className="command-panel">
             <div className="text-center py-8">
               <div className="w-8 h-8 border-3 border-cyan border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-              <p className="text-sm text-slate-400">Loading sessions...</p>
+              <p className="text-sm text-cyan-700 dark:text-white">Loading sessions...</p>
             </div>
           </div>
         ) : upcomingSessions.length === 0 ? (
           <div className="command-panel">
             <div className="text-center py-8">
-              <Calendar className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-              <p className="text-slate-400 mb-2">No upcoming sessions scheduled</p>
-              <p className="text-sm text-slate-500">Set your availability to start booking sessions</p>
+              <Calendar className="w-12 h-12 text-cyan-700 dark:text-white mx-auto mb-3" />
+              <p className="text-cyan-700 dark:text-white mb-2">No upcoming sessions scheduled</p>
+              <p className="text-sm text-cyan-700 dark:text-white">Set your availability to start booking sessions</p>
               <Link href="/admin/availability" className="btn-primary mt-4 inline-flex items-center gap-2">
                 <Plus className="w-4 h-4" />
                 Set Availability
@@ -394,7 +394,7 @@ export default function AdminDashboard() {
                           <h3 className="font-bold text-white group-hover:text-cyan transition-colors">
                             {session.athlete?.full_name || 'Unknown Athlete'}
                           </h3>
-                          <p className="text-sm text-slate-400">
+                          <p className="text-sm text-cyan-700 dark:text-white">
                             {session.service?.name || 'Training Session'}
                           </p>
                         </div>
@@ -405,7 +405,7 @@ export default function AdminDashboard() {
                         {session.status}
                       </span>
                     </div>
-                    <div className="flex items-center gap-4 text-sm text-slate-400">
+                    <div className="flex items-center gap-4 text-sm text-cyan-700 dark:text-white">
                       <div className="flex items-center gap-1">
                         <Clock className="w-4 h-4" />
                         {formattedDate}
@@ -442,7 +442,7 @@ export default function AdminDashboard() {
                   <h3 className="text-lg font-bold text-white mb-1 group-hover:text-orange transition-colors">
                     {action.title}
                   </h3>
-                  <p className="text-sm text-slate-400">{action.description}</p>
+                  <p className="text-sm text-cyan-700 dark:text-white">{action.description}</p>
                 </div>
               </Link>
             )
@@ -466,14 +466,14 @@ export default function AdminDashboard() {
                     >
                       <Icon className="w-6 h-6" style={{ color: section.color }} />
                     </div>
-                    <span className="text-xs text-slate-400 bg-slate-800/50 px-2 py-1 rounded-lg">
+                    <span className="text-xs text-cyan-700 dark:text-white bg-cyan-900/30 px-2 py-1 rounded-lg">
                       {section.stat}
                     </span>
                   </div>
                   <h3 className="text-xl font-bold text-white mb-2 group-hover:text-orange transition-colors">
                     {section.title}
                   </h3>
-                  <p className="text-sm text-slate-400">{section.description}</p>
+                  <p className="text-sm text-cyan-700 dark:text-white">{section.description}</p>
                 </div>
               </Link>
             )
@@ -486,14 +486,14 @@ export default function AdminDashboard() {
         <div className="command-panel">
           <h2 className="text-xl font-bold text-white mb-4">Recent Activity</h2>
           <div className="space-y-3">
-            <div className="flex items-center gap-3 p-3 bg-slate-800/30 rounded-xl">
+            <div className="flex items-center gap-3 p-3 bg-cyan-900/20 rounded-xl">
               <CheckCircle className="w-5 h-5 text-green-400" />
-              <p className="text-sm text-slate-300">
+              <p className="text-sm text-cyan-700 dark:text-white">
                 System ready for athlete management and drill creation
               </p>
             </div>
             <div className="text-center py-4">
-              <p className="text-sm text-slate-400">Activity feed will populate as you use the platform</p>
+              <p className="text-sm text-cyan-700 dark:text-white">Activity feed will populate as you use the platform</p>
             </div>
           </div>
         </div>

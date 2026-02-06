@@ -186,7 +186,7 @@ export default function BookingPage() {
             Book a Session
           </h1>
         </div>
-        <p className="text-slate-400 text-lg">
+        <p className="text-cyan-800 dark:text-white text-lg">
           Schedule your next training session in just a few clicks
         </p>
       </div>
@@ -222,14 +222,14 @@ export default function BookingPage() {
                         ? 'bg-green-500 text-white'
                         : isActive
                         ? 'bg-orange text-white'
-                        : 'bg-white/10 text-slate-500'
+                        : 'bg-white/10 text-cyan-700'
                     }`}
                 >
                   {isCompleted ? <CheckCircle2 className="w-5 h-5" /> : index + 1}
                 </div>
                 <span
                   className={`font-semibold whitespace-nowrap ${
-                    isActive ? 'text-white' : isCompleted ? 'text-green-400' : 'text-slate-500'
+                    isActive ? 'text-white' : isCompleted ? 'text-green-400' : 'text-cyan-700'
                   }`}
                 >
                   {step.label}
@@ -281,27 +281,27 @@ export default function BookingPage() {
               <h3 className="text-2xl font-bold text-white mb-6">Confirm Your Booking</h3>
 
               <div className="space-y-4 mb-6">
-                <div className="p-4 rounded-lg bg-white/5 border border-white/10">
-                  <p className="text-sm text-slate-400 mb-1">Service</p>
+                <div className="p-4 rounded-lg bg-cyan-50/50 border border-cyan-200/40">
+                  <p className="text-sm text-cyan-800 dark:text-white mb-1">Service</p>
                   <p className="text-lg font-bold text-white">{selectedService.name}</p>
-                  <p className="text-sm text-slate-300">{selectedService.duration_minutes} minutes</p>
+                  <p className="text-sm text-cyan-700 dark:text-white">{selectedService.duration_minutes} minutes</p>
                 </div>
 
-                <div className="p-4 rounded-lg bg-white/5 border border-white/10">
-                  <p className="text-sm text-slate-400 mb-1">Date & Time</p>
+                <div className="p-4 rounded-lg bg-cyan-50/50 border border-cyan-200/40">
+                  <p className="text-sm text-cyan-800 dark:text-white mb-1">Date & Time</p>
                   <p className="text-lg font-bold text-white">{formatDate(selectedDate)}</p>
-                  <p className="text-sm text-slate-300">
+                  <p className="text-sm text-cyan-700 dark:text-white">
                     {formatTime(selectedSlot.start_time)} - {formatTime(selectedSlot.end_time)}
                   </p>
                 </div>
 
-                <div className="p-4 rounded-lg bg-white/5 border border-white/10">
-                  <p className="text-sm text-slate-400 mb-1">Coach</p>
+                <div className="p-4 rounded-lg bg-cyan-50/50 border border-cyan-200/40">
+                  <p className="text-sm text-cyan-800 dark:text-white mb-1">Coach</p>
                   <p className="text-lg font-bold text-white">{selectedSlot.coach_name}</p>
                 </div>
 
-                <div className="p-4 rounded-lg bg-white/5 border border-white/10">
-                  <p className="text-sm text-slate-400 mb-1">Location</p>
+                <div className="p-4 rounded-lg bg-cyan-50/50 border border-cyan-200/40">
+                  <p className="text-sm text-cyan-800 dark:text-white mb-1">Location</p>
                   <p className="text-lg font-bold text-white">{selectedSlot.location}</p>
                 </div>
 
@@ -331,7 +331,7 @@ export default function BookingPage() {
                 )}
               </button>
 
-              <p className="text-xs text-slate-400 text-center mt-4">
+              <p className="text-xs text-cyan-800 dark:text-white text-center mt-4">
                 You'll be redirected to Stripe to complete your payment securely
               </p>
             </div>
@@ -346,40 +346,40 @@ export default function BookingPage() {
             <div className="space-y-4">
               {selectedService ? (
                 <div>
-                  <p className="text-xs text-slate-400 mb-1">Service</p>
+                  <p className="text-xs text-cyan-800 dark:text-white mb-1">Service</p>
                   <p className="text-sm font-semibold text-white">{selectedService.name}</p>
-                  <p className="text-xs text-slate-300 mt-1">
+                  <p className="text-xs text-cyan-700 dark:text-white mt-1">
                     ${(selectedService.price_cents / 100).toFixed(2)} • {selectedService.duration_minutes} min
                   </p>
                 </div>
               ) : (
-                <div className="p-3 rounded-lg bg-white/5 border border-dashed border-white/20">
-                  <p className="text-xs text-slate-500">No service selected</p>
+                <div className="p-3 rounded-lg bg-cyan-50/50 border border-dashed border-white/20">
+                  <p className="text-xs text-cyan-800 dark:text-white">No service selected</p>
                 </div>
               )}
 
               {selectedDate ? (
                 <div>
-                  <p className="text-xs text-slate-400 mb-1">Date</p>
+                  <p className="text-xs text-cyan-800 dark:text-white mb-1">Date</p>
                   <p className="text-sm font-semibold text-white">{formatDate(selectedDate)}</p>
                 </div>
               ) : (
-                <div className="p-3 rounded-lg bg-white/5 border border-dashed border-white/20">
-                  <p className="text-xs text-slate-500">No date selected</p>
+                <div className="p-3 rounded-lg bg-cyan-50/50 border border-dashed border-white/20">
+                  <p className="text-xs text-cyan-800 dark:text-white">No date selected</p>
                 </div>
               )}
 
               {selectedSlot ? (
                 <div>
-                  <p className="text-xs text-slate-400 mb-1">Time</p>
+                  <p className="text-xs text-cyan-800 dark:text-white mb-1">Time</p>
                   <p className="text-sm font-semibold text-white">
                     {formatTime(selectedSlot.start_time)} - {formatTime(selectedSlot.end_time)}
                   </p>
-                  <p className="text-xs text-slate-300 mt-1">{selectedSlot.coach_name}</p>
+                  <p className="text-xs text-cyan-700 dark:text-white mt-1">{selectedSlot.coach_name}</p>
                 </div>
               ) : (
-                <div className="p-3 rounded-lg bg-white/5 border border-dashed border-white/20">
-                  <p className="text-xs text-slate-500">No time selected</p>
+                <div className="p-3 rounded-lg bg-cyan-50/50 border border-dashed border-white/20">
+                  <p className="text-xs text-cyan-800 dark:text-white">No time selected</p>
                 </div>
               )}
             </div>

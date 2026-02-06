@@ -50,7 +50,7 @@ export default function AdminImagesPage() {
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-3">
           Image <span className="text-gradient-orange">Management</span>
         </h1>
-        <p className="text-lg text-slate-400">
+        <p className="text-lg text-cyan-800 dark:text-white">
           Replace placeholder images with high-quality team photography
         </p>
       </div>
@@ -63,7 +63,7 @@ export default function AdminImagesPage() {
           </div>
           <div>
             <h3 className="text-lg font-bold text-white mb-2">Image Guidelines</h3>
-            <ul className="text-sm text-slate-300 space-y-2">
+            <ul className="text-sm text-cyan-700 dark:text-white space-y-2">
               <li>• Upload images matching the exact aspect ratio for best results</li>
               <li>• Use high-resolution images (at least 2x the display dimensions)</li>
               <li>• File size should be under 5MB - compress if needed</li>
@@ -82,9 +82,9 @@ export default function AdminImagesPage() {
         </h3>
         <div className="grid md:grid-cols-2 gap-4">
           {Object.entries(IMAGE_SPECS).map(([name, spec]) => (
-            <div key={name} className="p-4 bg-white/5 rounded-xl">
+            <div key={name} className="p-4 bg-cyan-50/50 rounded-xl">
               <p className="text-sm font-semibold text-white mb-1">{name}</p>
-              <p className="text-xs text-slate-400">{spec}</p>
+              <p className="text-xs text-cyan-800 dark:text-white">{spec}</p>
             </div>
           ))}
         </div>

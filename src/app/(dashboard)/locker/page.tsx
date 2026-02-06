@@ -32,7 +32,7 @@ export default function AthleteLockerPage() {
       <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-400">Loading your dashboard...</p>
+          <p className="text-cyan-700 dark:text-white">Loading your dashboard...</p>
         </div>
       </div>
     )
@@ -47,7 +47,7 @@ export default function AthleteLockerPage() {
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
           Welcome back, <span className="text-gradient-orange">{firstName}</span>
         </h1>
-        <p className="text-slate-400 text-lg">
+        <p className="text-cyan-700 dark:text-white text-lg">
           Let&apos;s make today count. Here&apos;s your performance overview.
         </p>
       </div>
@@ -95,7 +95,7 @@ export default function AthleteLockerPage() {
           <NextSessionCard sessionDate={stats.nextSession} />
         ) : (
           <div className="command-panel col-span-full lg:col-span-2 flex flex-col items-center justify-center py-12">
-            <p className="text-slate-400 mb-4">No upcoming sessions</p>
+            <p className="text-cyan-700 dark:text-white mb-4">No upcoming sessions</p>
             <Link href="/booking">
               <button className="btn-primary">Book a Session</button>
             </Link>
@@ -134,7 +134,7 @@ export default function AthleteLockerPage() {
               Recent Activity
             </h2>
             <Link href="/sessions">
-              <button className="text-sm text-slate-400 hover:text-orange transition-colors">
+              <button className="text-sm text-cyan-700 dark:text-white hover:text-orange transition-colors">
                 View All
               </button>
             </Link>
@@ -160,7 +160,7 @@ export default function AthleteLockerPage() {
             <h2 className="text-2xl font-bold text-white mb-1">
               Assigned Drills
             </h2>
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-cyan-700 dark:text-white">
               Complete these before your next session
             </p>
           </div>
@@ -199,7 +199,7 @@ export default function AthleteLockerPage() {
               className="glass-card-hover group cursor-pointer overflow-hidden"
             >
               {/* Thumbnail */}
-              <div className="relative h-48 bg-slate-800 overflow-hidden">
+              <div className="relative h-48 bg-cyan-900 overflow-hidden">
                 <img
                   src={drill.thumbnail}
                   alt={drill.title}
@@ -216,7 +216,7 @@ export default function AthleteLockerPage() {
                 <h3 className="text-lg font-bold text-white mb-2 group-hover:text-orange transition-colors">
                   {drill.title}
                 </h3>
-                <div className="flex items-center justify-between text-sm text-slate-400">
+                <div className="flex items-center justify-between text-sm text-cyan-700 dark:text-white">
                   <span>{drill.duration}</span>
                   <button className="text-orange hover:text-orange-400 font-medium">
                     Start →

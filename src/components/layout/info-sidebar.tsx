@@ -44,10 +44,10 @@ export function InfoSidebar() {
         initial={false}
         animate={{ width: collapsed ? 80 : 280 }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
-        className="hidden lg:flex flex-col fixed left-0 top-0 h-screen glass-card border-r border-white/10 z-50"
+        className="hidden lg:flex flex-col fixed left-0 top-0 h-screen glass-card border-r border-cyan-200/40 z-50"
       >
-        {/* Logo & Brand */}
-        <div className="flex items-center justify-between p-6 border-b border-white/10">
+        {/* Logo & Brand - Clickable to Home */}
+        <Link href="/" className="flex items-center justify-between p-6 border-b border-cyan-200/40 hover:bg-cyan-50/50 transition-colors cursor-pointer group">
           <AnimatePresence mode="wait">
             {!collapsed && (
               <motion.div
@@ -57,14 +57,14 @@ export function InfoSidebar() {
                 transition={{ duration: 0.2 }}
                 className="flex items-center gap-3"
               >
-                <div className="w-10 h-10 bg-gradient-velocity rounded-xl flex items-center justify-center shadow-glow-orange">
-                  <Info className="w-6 h-6 text-white" />
+                <div className="w-10 h-10 bg-gradient-to-br from-orange to-cyan rounded-xl flex items-center justify-center shadow-glow-orange group-hover:shadow-glow-orange-intense transition-shadow">
+                  <Zap className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="font-display text-lg font-bold text-white">
-                    PSP.Pro Info
+                  <h1 className="font-display text-lg font-bold text-white group-hover:text-orange transition-colors">
+                    PSP.Pro
                   </h1>
-                  <p className="text-xs text-slate-500">Learn More</p>
+                  <p className="text-xs text-cyan-700 dark:text-white group-hover:text-cyan transition-colors">Athletic OS</p>
                 </div>
               </motion.div>
             )}
@@ -75,12 +75,12 @@ export function InfoSidebar() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.2, delay: 0.1 }}
-              className="w-10 h-10 bg-gradient-velocity rounded-xl flex items-center justify-center shadow-glow-orange mx-auto"
+              className="w-10 h-10 bg-gradient-to-br from-orange to-cyan rounded-xl flex items-center justify-center shadow-glow-orange mx-auto group-hover:shadow-glow-orange-intense transition-shadow"
             >
-              <Info className="w-6 h-6 text-white" />
+              <Zap className="w-6 h-6 text-white" />
             </motion.div>
           )}
-        </div>
+        </Link>
 
         {/* Navigation Items */}
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
@@ -99,7 +99,7 @@ export function InfoSidebar() {
                     ${
                       isActive
                         ? 'bg-orange/20 border border-orange/50 text-white shadow-glow-orange'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                        : 'text-slate-300 hover:bg-cyan-50/50 hover:text-white'
                     }
                   `}
                 >
@@ -124,12 +124,12 @@ export function InfoSidebar() {
         </nav>
 
         {/* Collapse Toggle & Back Home */}
-        <div className="p-4 border-t border-white/10 space-y-2">
+        <div className="p-4 border-t border-cyan-200/40 space-y-2">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setCollapsed(!collapsed)}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-600 hover:text-white transition-all duration-200"
+            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-cyan-50/50 hover:bg-white/10 text-cyan-700 dark:text-white hover:text-white transition-all duration-200"
           >
             {collapsed ? (
               <ChevronRight className="w-5 h-5" />
@@ -147,7 +147,7 @@ export function InfoSidebar() {
               whileTap={{ scale: 0.95 }}
               className={`
                 w-full flex items-center gap-3 px-4 py-3 rounded-xl
-                bg-white/5 hover:bg-cyan/20 text-slate-300 hover:text-cyan
+                bg-cyan-50/50 hover:bg-cyan/20 text-slate-300 hover:text-cyan
                 border border-transparent hover:border-cyan/50
                 transition-all duration-200
                 ${collapsed ? 'justify-center' : ''}
@@ -164,7 +164,7 @@ export function InfoSidebar() {
       <motion.nav
         initial={{ y: 100 }}
         animate={{ y: 0 }}
-        className="lg:hidden fixed bottom-0 left-0 right-0 glass-card border-t border-white/10 z-50 mobile-safe"
+        className="lg:hidden fixed bottom-0 left-0 right-0 glass-card border-t border-cyan-200/40 z-50 mobile-safe"
       >
         <div className="flex items-center justify-around p-2">
           {navItems.map((item) => {
@@ -180,7 +180,7 @@ export function InfoSidebar() {
                     ${
                       isActive
                         ? 'bg-orange/20 text-orange'
-                        : 'text-slate-400 hover:text-white'
+                        : 'text-cyan-700 dark:text-white hover:text-white'
                     }
                   `}
                 >

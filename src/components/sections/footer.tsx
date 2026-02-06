@@ -35,7 +35,7 @@ export function Footer() {
                 <h3 className="text-2xl font-bold text-white">
                   {siteConfig.footer.tagline}
                 </h3>
-                <p className="text-gray-400">
+                <p className="text-gray-600 dark:text-gray-400">
                   {siteConfig.footer.description}
                 </p>
               </div>
@@ -50,7 +50,7 @@ export function Footer() {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-3 rounded-lg bg-dark-100 text-gray-400 hover:text-secondary hover:bg-dark-200 border border-secondary/10 hover:border-secondary/30 transition-all"
+                      className="p-3 rounded-lg bg-dark-100 text-gray-600 dark:text-gray-400 hover:text-secondary hover:bg-dark-200 border border-secondary/10 hover:border-secondary/30 transition-all"
                       aria-label={social.name}
                     >
                       <Icon className="w-5 h-5" />
@@ -71,7 +71,7 @@ export function Footer() {
                     <li key={link.name}>
                       <a
                         href={link.href}
-                        className="text-gray-400 hover:text-secondary transition-colors"
+                        className="text-gray-600 dark:text-gray-400 hover:text-secondary transition-colors"
                       >
                         {link.name}
                       </a>
@@ -102,7 +102,7 @@ export function Footer() {
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
                 Shock Media Productions
               </h3>
-              <p className="text-gray-400">Norfolk, VA | Serving Hampton Roads & Beyond</p>
+              <p className="text-gray-600 dark:text-gray-400">Norfolk, VA | Serving Hampton Roads & Beyond</p>
             </div>
 
             <div className="flex justify-center w-full">
@@ -125,14 +125,14 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="py-8 border-t border-secondary/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-700 dark:text-gray-400">
               {siteConfig.footer.copyright}
             </p>
             <div className="flex gap-6">
-              <a href="/privacy" className="text-sm text-gray-500 hover:text-secondary transition-colors">
+              <a href="/privacy" className="text-sm text-gray-700 dark:text-gray-400 hover:text-secondary transition-colors">
                 Privacy Policy
               </a>
-              <a href="/terms" className="text-sm text-gray-500 hover:text-secondary transition-colors">
+              <a href="/terms" className="text-sm text-gray-700 dark:text-gray-400 hover:text-secondary transition-colors">
                 Terms of Service
               </a>
             </div>

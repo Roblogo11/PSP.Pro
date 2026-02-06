@@ -70,7 +70,8 @@ export function useUserRole() {
     profile,
     loading,
     isAthlete: profile?.role === 'athlete',
-    isCoach: profile?.role === 'coach' || profile?.role === 'admin',
-    isAdmin: profile?.role === 'admin',
+    isCoach: profile?.role === 'coach' || profile?.role === 'admin' || profile?.role === 'master_admin',
+    isAdmin: profile?.role === 'admin' || profile?.role === 'master_admin',
+    isMasterAdmin: profile?.role === 'master_admin',
   }
 }

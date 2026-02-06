@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Mail, Phone, MapPin, Send, Loader2, MessageSquare } from 'lucide-react'
 import { GoogleReviews } from '@/components/google-reviews'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
+import { FunnelNav } from '@/components/navigation/funnel-nav'
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -39,7 +40,7 @@ export default function ContactPage() {
             <MessageSquare className="w-10 h-10 text-green-400" />
           </div>
           <h1 className="text-3xl font-bold text-white mb-4">Message Sent!</h1>
-          <p className="text-slate-500 mb-6">
+          <p className="mb-6">
             Thanks for reaching out! We'll get back to you within 24 hours.
           </p>
           <button
@@ -56,13 +57,13 @@ export default function ContactPage() {
   return (
     <div className="flex min-h-screen">
       <InfoSidebar />
-      <main className="flex-1 p-4 md:p-8 pb-24 lg:pb-8">
+      <main className="flex-1 p-4 md:p-8 pb-24">
       {/* Header */}
       <div className="max-w-6xl mx-auto mb-12">
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
           Get in <span className="text-gradient-orange">Touch</span>
         </h1>
-        <p className="text-lg text-slate-500 max-w-2xl">
+        <p className="text-lg max-w-2xl">
           Ready to elevate your game? Have questions about our training programs? We're here to help you reach your athletic potential.
         </p>
       </div>
@@ -76,7 +77,7 @@ export default function ContactPage() {
               <MapPin className="w-6 h-6 text-cyan" />
             </div>
             <h3 className="text-lg font-bold text-white mb-2">Training Facility</h3>
-            <p className="text-slate-500">
+            <p>
               Virginia Beach, VA<br />
               Hampton Roads / 757 Area
             </p>
@@ -90,7 +91,7 @@ export default function ContactPage() {
             <h3 className="text-lg font-bold text-white mb-2">Email Us</h3>
             <a
               href="mailto:info@propersports.pro"
-              className="text-slate-500 hover:text-orange transition-colors"
+              className="hover:text-orange transition-colors"
             >
               info@propersports.pro
             </a>
@@ -104,7 +105,7 @@ export default function ContactPage() {
             <h3 className="text-lg font-bold text-white mb-2">Call or Text</h3>
             <a
               href="tel:+17571234567"
-              className="text-slate-500 hover:text-orange transition-colors"
+              className="hover:text-orange transition-colors"
             >
               (757) 123-4567
             </a>
@@ -115,15 +116,15 @@ export default function ContactPage() {
             <h3 className="text-lg font-bold text-white mb-4">Training Hours</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-slate-500">Monday - Friday</span>
+                <span>Monday - Friday</span>
                 <span className="text-white font-semibold">3PM - 9PM</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Saturday</span>
+                <span>Saturday</span>
                 <span className="text-white font-semibold">9AM - 5PM</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Sunday</span>
+                <span>Sunday</span>
                 <span className="text-white font-semibold">Closed</span>
               </div>
             </div>
@@ -138,7 +139,7 @@ export default function ContactPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Name */}
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-slate-600 mb-2">
+                <label htmlFor="name" className="block text-sm font-medium mb-2">
                   Full Name *
                 </label>
                 <input
@@ -148,7 +149,7 @@ export default function ContactPage() {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                   placeholder="John Smith"
                 />
               </div>
@@ -156,7 +157,7 @@ export default function ContactPage() {
               {/* Email & Phone */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-slate-600 mb-2">
+                  <label htmlFor="email" className="block text-sm font-medium mb-2">
                     Email Address *
                   </label>
                   <input
@@ -166,13 +167,13 @@ export default function ContactPage() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
+                    className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                     placeholder="athlete@example.com"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-slate-600 mb-2">
+                  <label htmlFor="phone" className="block text-sm font-medium mb-2">
                     Phone Number
                   </label>
                   <input
@@ -181,7 +182,7 @@ export default function ContactPage() {
                     type="tel"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
+                    className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                     placeholder="(757) 123-4567"
                   />
                 </div>
@@ -189,7 +190,7 @@ export default function ContactPage() {
 
               {/* Interest */}
               <div>
-                <label htmlFor="interest" className="block text-sm font-medium text-slate-600 mb-2">
+                <label htmlFor="interest" className="block text-sm font-medium mb-2">
                   I'm Interested In *
                 </label>
                 <select
@@ -198,7 +199,7 @@ export default function ContactPage() {
                   required
                   value={formData.interest}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                 >
                   <option value="training">1-on-1 Training Sessions</option>
                   <option value="group">Group Training</option>
@@ -210,7 +211,7 @@ export default function ContactPage() {
 
               {/* Message */}
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-slate-600 mb-2">
+                <label htmlFor="message" className="block text-sm font-medium mb-2">
                   Message *
                 </label>
                 <textarea
@@ -220,7 +221,7 @@ export default function ContactPage() {
                   rows={6}
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all resize-none"
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all resize-none"
                   placeholder="Tell us about your goals, experience level, and what you're looking to achieve..."
                 />
               </div>
@@ -244,7 +245,7 @@ export default function ContactPage() {
                 )}
               </button>
 
-              <p className="text-xs text-slate-500 text-center">
+              <p className="text-xs text-center">
                 We typically respond within 24 hours during business days
               </p>
             </form>
@@ -276,6 +277,8 @@ export default function ContactPage() {
         </div>
       </div>
       </main>
+
+      <FunnelNav />
     </div>
   )
 }

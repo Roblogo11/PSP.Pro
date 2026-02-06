@@ -99,7 +99,7 @@ export default function BlogPage() {
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
           PSP.Pro <span className="text-gradient-orange">Training Blog</span>
         </h1>
-        <p className="text-lg text-slate-500 max-w-2xl mx-auto">
+        <p className="text-lg text-cyan-800 dark:text-white max-w-2xl mx-auto">
           Expert insights, training tips, and strategies to help you reach peak athletic performance
         </p>
       </div>
@@ -123,8 +123,8 @@ export default function BlogPage() {
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 group-hover:text-orange transition-colors">
                 {BLOG_POSTS[0].title}
               </h2>
-              <p className="text-slate-600 mb-6 text-lg">{BLOG_POSTS[0].excerpt}</p>
-              <div className="flex items-center gap-4 text-sm text-slate-500 mb-6">
+              <p className="text-cyan-700 dark:text-white mb-6 text-lg">{BLOG_POSTS[0].excerpt}</p>
+              <div className="flex items-center gap-4 text-sm text-cyan-800 dark:text-white mb-6">
                 <div className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
                   <span>{formatDate(BLOG_POSTS[0].date)}</span>
@@ -171,9 +171,9 @@ export default function BlogPage() {
                 <h3 className="text-xl font-bold text-white mb-3 group-hover:text-orange transition-colors">
                   {post.title}
                 </h3>
-                <p className="text-sm text-slate-500 mb-4 line-clamp-2">{post.excerpt}</p>
+                <p className="text-sm text-cyan-800 dark:text-white mb-4 line-clamp-2">{post.excerpt}</p>
 
-                <div className="flex items-center justify-between text-xs text-slate-500">
+                <div className="flex items-center justify-between text-xs text-cyan-800 dark:text-white">
                   <div className="flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
                     <span>{formatDate(post.date)}</span>
@@ -195,20 +195,20 @@ export default function BlogPage() {
           <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
             Get Training Tips Delivered Weekly
           </h3>
-          <p className="text-slate-500 mb-6 max-w-2xl mx-auto">
+          <p className="text-cyan-800 dark:text-white mb-6 max-w-2xl mx-auto">
             Join our newsletter to receive expert training advice, performance tips, and exclusive offers straight to your inbox.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
             <input
               type="email"
               placeholder="Your email address"
-              className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-cyan/50"
+              className="flex-1 px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-cyan/50"
             />
             <button className="btn-primary whitespace-nowrap">
               Subscribe
             </button>
           </div>
-          <p className="text-xs text-slate-500 mt-4">
+          <p className="text-xs text-cyan-800 dark:text-white mt-4">
             No spam. Unsubscribe anytime. We respect your privacy.
           </p>
         </div>

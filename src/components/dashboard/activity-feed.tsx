@@ -88,7 +88,7 @@ export function ActivityFeed({ activities = defaultActivities, maxItems = 5 }: A
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
-            className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 group"
+            className="flex items-start gap-4 p-4 rounded-xl bg-cyan-50/50 border border-cyan-200/40 hover:bg-white/10 transition-all duration-300 group"
           >
             {/* Icon */}
             <div
@@ -111,11 +111,11 @@ export function ActivityFeed({ activities = defaultActivities, maxItems = 5 }: A
                 {activity.title}
               </h4>
               {activity.description && (
-                <p className="text-xs text-slate-400 mb-2">
+                <p className="text-xs text-cyan-700 dark:text-white mb-2">
                   {activity.description}
                 </p>
               )}
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-cyan-800 dark:text-white">
                 {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
               </p>
             </div>
@@ -125,8 +125,8 @@ export function ActivityFeed({ activities = defaultActivities, maxItems = 5 }: A
 
       {displayActivities.length === 0 && (
         <div className="text-center py-8">
-          <p className="text-slate-400">No recent activity</p>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-cyan-700 dark:text-white">No recent activity</p>
+          <p className="text-sm text-cyan-800 dark:text-white mt-1">
             Complete drills and record velocities to see your activity here
           </p>
         </div>

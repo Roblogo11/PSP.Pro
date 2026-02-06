@@ -37,7 +37,7 @@ export function TimeSlotPicker({ timeSlots, selectedSlotId, onSelectSlot, loadin
     return (
       <div className="glass-card p-8 text-center">
         <div className="inline-block w-8 h-8 border-4 border-orange/30 border-t-orange rounded-full animate-spin mb-4" />
-        <p className="text-slate-400">Loading available time slots...</p>
+        <p className="text-cyan-700 dark:text-white">Loading available time slots...</p>
       </div>
     )
   }
@@ -45,9 +45,9 @@ export function TimeSlotPicker({ timeSlots, selectedSlotId, onSelectSlot, loadin
   if (timeSlots.length === 0) {
     return (
       <div className="glass-card p-8 text-center">
-        <Clock className="w-12 h-12 text-slate-600 mx-auto mb-4" />
+        <Clock className="w-12 h-12 text-cyan-700 dark:text-white mx-auto mb-4" />
         <h4 className="text-lg font-bold text-white mb-2">No Available Slots</h4>
-        <p className="text-slate-400">
+        <p className="text-cyan-700 dark:text-white">
           No time slots available for this date. Please select a different date.
         </p>
       </div>
@@ -58,7 +58,7 @@ export function TimeSlotPicker({ timeSlots, selectedSlotId, onSelectSlot, loadin
     <div className="space-y-4">
       <div className="mb-6">
         <h3 className="text-xl font-bold text-white mb-2">Select a Time</h3>
-        <p className="text-sm text-slate-400">Choose an available time slot for your session</p>
+        <p className="text-sm text-cyan-700 dark:text-white">Choose an available time slot for your session</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -76,10 +76,10 @@ export function TimeSlotPicker({ timeSlots, selectedSlotId, onSelectSlot, loadin
                 text-left p-4 rounded-xl border-2 transition-all duration-200
                 ${
                   !slot.is_available
-                    ? 'opacity-40 cursor-not-allowed border-white/10 bg-white/5'
+                    ? 'opacity-40 cursor-not-allowed border-cyan-200/40 bg-cyan-50/50'
                     : isSelected
                     ? 'border-orange bg-orange/5 shadow-lg shadow-orange/20 scale-[1.02]'
-                    : 'border-white/10 bg-white/5 hover:border-cyan/50 hover:bg-cyan/5'
+                    : 'border-cyan-200/40 bg-cyan-50/50 hover:border-cyan/50 hover:bg-cyan/5'
                 }
               `}
             >
@@ -92,23 +92,23 @@ export function TimeSlotPicker({ timeSlots, selectedSlotId, onSelectSlot, loadin
               </div>
 
               {/* Coach */}
-              <div className="flex items-center gap-2 mb-2 text-sm text-slate-300">
-                <User className="w-3.5 h-3.5 text-slate-400" />
+              <div className="flex items-center gap-2 mb-2 text-sm text-cyan-700 dark:text-white">
+                <User className="w-3.5 h-3.5 text-cyan-700 dark:text-white" />
                 <span>{slot.coach_name}</span>
               </div>
 
               {/* Location */}
-              <div className="flex items-center gap-2 mb-3 text-sm text-slate-300">
-                <MapPin className="w-3.5 h-3.5 text-slate-400" />
+              <div className="flex items-center gap-2 mb-3 text-sm text-cyan-700 dark:text-white">
+                <MapPin className="w-3.5 h-3.5 text-cyan-700 dark:text-white" />
                 <span className="line-clamp-1">{slot.location}</span>
               </div>
 
               {/* Spots Remaining */}
               {slot.max_bookings > 1 && slot.is_available && (
-                <div className="pt-2 border-t border-white/10">
+                <div className="pt-2 border-t border-cyan-200/40">
                   <span
                     className={`text-xs font-semibold ${
-                      isLimited ? 'text-orange' : 'text-slate-400'
+                      isLimited ? 'text-orange' : 'text-cyan-600'
                     }`}
                   >
                     {spotsRemaining} {spotsRemaining === 1 ? 'spot' : 'spots'} left
@@ -128,8 +128,8 @@ export function TimeSlotPicker({ timeSlots, selectedSlotId, onSelectSlot, loadin
 
               {/* Unavailable Label */}
               {!slot.is_available && (
-                <div className="mt-2 pt-2 border-t border-white/10">
-                  <span className="text-xs text-slate-500 font-semibold">Fully Booked</span>
+                <div className="mt-2 pt-2 border-t border-cyan-200/40">
+                  <span className="text-xs text-cyan-800 dark:text-white font-semibold">Fully Booked</span>
                 </div>
               )}
             </button>

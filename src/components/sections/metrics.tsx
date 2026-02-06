@@ -16,7 +16,7 @@ export function Metrics() {
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
             {siteConfig.metrics.sectionTitle}
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             {siteConfig.metrics.sectionSubtitle}
           </p>
         </div>
@@ -61,7 +61,7 @@ function MetricCard({
         </h3>
 
         {/* Description */}
-        <p className="text-sm text-gray-400 leading-relaxed">
+        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
           {stat.description}
         </p>
 

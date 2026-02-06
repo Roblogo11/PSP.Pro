@@ -74,7 +74,7 @@ export default function LoginPage() {
           <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-2">
             Welcome Back
           </h1>
-          <p className="text-slate-400">
+          <p>
             Sign in to access your Athletic OS
           </p>
         </div>
@@ -90,18 +90,18 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium mb-2">
               Email Address
             </label>
             <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-700" />
               <input
                 id="email"
                 name="email"
                 type="email"
                 required
                 autoComplete="email"
-                className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                 placeholder="athlete@example.com"
               />
             </div>
@@ -109,18 +109,18 @@ export default function LoginPage() {
 
           {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
+            <label htmlFor="password" className="block text-sm font-medium mb-2">
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-700" />
               <input
                 id="password"
                 name="password"
                 type="password"
                 required
                 autoComplete="current-password"
-                className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                 placeholder="••••••••"
               />
             </div>
@@ -130,7 +130,7 @@ export default function LoginPage() {
           <div className="flex items-center justify-end">
             <Link
               href="/forgot-password"
-              className="text-sm text-slate-400 hover:text-orange transition-colors"
+              className="text-sm hover:text-orange transition-colors"
             >
               Forgot password?
             </Link>
@@ -163,7 +163,7 @@ export default function LoginPage() {
 
         {/* Sign Up Link */}
         <div className="text-center">
-          <p className="text-slate-400">
+          <p>
             Don't have an account?{' '}
             <Link
               href="/signup"
@@ -176,10 +176,10 @@ export default function LoginPage() {
       </div>
 
       {/* Bottom Info */}
-      <div className="mt-6 text-center text-sm text-slate-500">
+      <div className="mt-6 text-center text-sm">
         <p>
           Need help?{' '}
-          <Link href="/contact" className="text-slate-400 hover:text-orange transition-colors">
+          <Link href="/contact" className="hover:text-orange transition-colors">
             Contact support
           </Link>
         </p>

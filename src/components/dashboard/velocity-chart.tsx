@@ -44,7 +44,7 @@ const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
       <div className="glass-card p-3">
-        <p className="text-sm text-slate-300 mb-1">{payload[0].payload.date}</p>
+        <p className="text-sm text-cyan-700 dark:text-white mb-1">{payload[0].payload.date}</p>
         <p className="text-lg font-bold text-gradient-orange">
           {payload[0].value} mph
         </p>
@@ -82,7 +82,7 @@ export function VelocityChart({
       <div className="flex items-start justify-between mb-6">
         <div>
           <h3 className="text-xl font-bold text-white mb-1">{title}</h3>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-cyan-700 dark:text-white">
             {velocityData && velocityData.length > 0 ? `Last ${velocityData.length} sessions` : 'Sample data'}
           </p>
         </div>
@@ -98,9 +98,9 @@ export function VelocityChart({
       <div className="mb-6">
         <div className="text-5xl font-bold text-gradient-velocity mb-2">
           {latestVelocity}
-          <span className="text-2xl text-slate-400 ml-2">mph</span>
+          <span className="text-2xl text-cyan-700 dark:text-white ml-2">mph</span>
         </div>
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-cyan-700 dark:text-white">
           +{improvement} mph from your first session
         </p>
       </div>

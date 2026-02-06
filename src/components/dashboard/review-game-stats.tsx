@@ -41,10 +41,10 @@ export function ReviewGameStats() {
               <h3 className="text-lg font-bold text-white group-hover:text-orange transition-colors">
                 Review Rating Game
               </h3>
-              <p className="text-sm text-slate-400">Not played yet</p>
+              <p className="text-sm text-cyan-700 dark:text-white">Not played yet</p>
             </div>
           </div>
-          <p className="text-sm text-slate-300 mb-4">
+          <p className="text-sm text-cyan-700 dark:text-white mb-4">
             Test your skills! Can you match the owner&apos;s rating for each review?
           </p>
           <div className="flex items-center gap-2 text-cyan font-semibold">
@@ -67,7 +67,7 @@ export function ReviewGameStats() {
           </div>
           <div>
             <h3 className="text-lg font-bold text-white">Review Rating Game</h3>
-            <p className="text-sm text-slate-400">Your performance stats</p>
+            <p className="text-sm text-cyan-700 dark:text-white">Your performance stats</p>
           </div>
         </div>
 
@@ -82,7 +82,7 @@ export function ReviewGameStats() {
         <div className="flex items-center gap-3">
           <span className="text-3xl">{rank.icon}</span>
           <div>
-            <p className="text-xs text-slate-400 mb-1">Your Rank</p>
+            <p className="text-xs text-cyan-700 dark:text-white mb-1">Your Rank</p>
             <p className="text-xl font-bold" style={{ color: rank.color }}>
               {rank.rank}
             </p>
@@ -91,34 +91,34 @@ export function ReviewGameStats() {
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-4">
-        <div className="p-4 bg-white/5 rounded-xl">
+        <div className="p-4 bg-cyan-50/50 rounded-xl">
           <div className="flex items-center gap-2 mb-2">
             <Target className="w-4 h-4 text-cyan" />
-            <p className="text-xs text-slate-400">Accuracy</p>
+            <p className="text-xs text-cyan-700 dark:text-white">Accuracy</p>
           </div>
           <p className="text-2xl font-bold text-white">{score.accuracy}%</p>
         </div>
 
-        <div className="p-4 bg-white/5 rounded-xl">
+        <div className="p-4 bg-cyan-50/50 rounded-xl">
           <div className="flex items-center gap-2 mb-2">
             <Trophy className="w-4 h-4 text-green-400" />
-            <p className="text-xs text-slate-400">Perfect Games</p>
+            <p className="text-xs text-cyan-700 dark:text-white">Perfect Games</p>
           </div>
           <p className="text-2xl font-bold text-white">{score.perfectGames}</p>
         </div>
 
-        <div className="p-4 bg-white/5 rounded-xl">
+        <div className="p-4 bg-cyan-50/50 rounded-xl">
           <div className="flex items-center gap-2 mb-2">
             <TrendingUp className="w-4 h-4 text-orange" />
-            <p className="text-xs text-slate-400">Best Streak</p>
+            <p className="text-xs text-cyan-700 dark:text-white">Best Streak</p>
           </div>
           <p className="text-2xl font-bold text-white">{score.bestStreak}/6</p>
         </div>
 
-        <div className="p-4 bg-white/5 rounded-xl">
+        <div className="p-4 bg-cyan-50/50 rounded-xl">
           <div className="flex items-center gap-2 mb-2">
             <Star className="w-4 h-4 text-purple-400" />
-            <p className="text-xs text-slate-400">Total Correct</p>
+            <p className="text-xs text-cyan-700 dark:text-white">Total Correct</p>
           </div>
           <p className="text-2xl font-bold text-white">
             {score.correctGuesses}/{score.totalAttempts}

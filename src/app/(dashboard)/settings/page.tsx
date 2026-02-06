@@ -133,7 +133,7 @@ export default function SettingsPage() {
       <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-400">Loading settings...</p>
+          <p className="text-cyan-800 dark:text-white">Loading settings...</p>
         </div>
       </div>
     )
@@ -142,7 +142,7 @@ export default function SettingsPage() {
   if (!profile) {
     return (
       <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
-        <p className="text-slate-400">Please log in to access settings</p>
+        <p className="text-cyan-800 dark:text-white">Please log in to access settings</p>
       </div>
     )
   }
@@ -161,7 +161,7 @@ export default function SettingsPage() {
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
           Account <span className="text-gradient-orange">Settings</span>
         </h1>
-        <p className="text-slate-400 text-lg">Manage your account preferences and settings</p>
+        <p className="text-cyan-800 dark:text-white text-lg">Manage your account preferences and settings</p>
       </div>
 
       {/* Success Message */}
@@ -185,7 +185,7 @@ export default function SettingsPage() {
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                     activeTab === tab.id
                       ? 'bg-orange text-white shadow-glow-orange'
-                      : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+                      : 'text-cyan-600 hover:bg-cyan-900/30 hover:text-white'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
@@ -204,19 +204,19 @@ export default function SettingsPage() {
 
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-300 mb-2">
+                  <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2">
                     Full Name
                   </label>
                   <input
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-300 mb-2 flex items-center gap-2">
+                  <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2 flex items-center gap-2">
                     <Mail className="w-4 h-4" />
                     Email Address
                   </label>
@@ -224,15 +224,15 @@ export default function SettingsPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
                   />
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-xs text-cyan-800 dark:text-white mt-1">
                     Changing your email will require verification
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-300 mb-2 flex items-center gap-2">
+                  <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2 flex items-center gap-2">
                     <Phone className="w-4 h-4" />
                     Phone Number
                   </label>
@@ -241,12 +241,12 @@ export default function SettingsPage() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="(555) 123-4567"
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-300 mb-2 flex items-center gap-2">
+                  <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2 flex items-center gap-2">
                     <MapPin className="w-4 h-4" />
                     Location
                   </label>
@@ -255,7 +255,7 @@ export default function SettingsPage() {
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     placeholder="City, State"
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
                   />
                 </div>
 
@@ -305,10 +305,10 @@ export default function SettingsPage() {
                     desc: 'Messages and feedback from your coach',
                   },
                 ].map((item) => (
-                  <div key={item.key} className="flex items-center justify-between p-4 bg-slate-800/30 rounded-xl">
+                  <div key={item.key} className="flex items-center justify-between p-4 bg-cyan-900/20 rounded-xl">
                     <div>
                       <h3 className="font-semibold text-white mb-1">{item.label}</h3>
-                      <p className="text-sm text-slate-400">{item.desc}</p>
+                      <p className="text-sm text-cyan-800 dark:text-white">{item.desc}</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
@@ -319,7 +319,7 @@ export default function SettingsPage() {
                         }
                         className="sr-only peer"
                       />
-                      <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-orange rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange"></div>
+                      <div className="w-11 h-6 bg-cyan-800/30 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange"></div>
                     </label>
                   </div>
                 ))}

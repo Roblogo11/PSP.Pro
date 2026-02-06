@@ -39,7 +39,7 @@ export default function NotFound() {
           <h2 className="text-3xl md:text-4xl font-display font-bold text-white">
             Off Course, Athlete
           </h2>
-          <p className="text-slate-400 text-lg max-w-md mx-auto leading-relaxed">
+          <p className="text-cyan-800 dark:text-white text-lg max-w-md mx-auto leading-relaxed">
             This page isn&apos;t in your training program. Let&apos;s get you back on track.
           </p>
         </div>
@@ -70,7 +70,7 @@ export default function NotFound() {
         </div>
 
         {/* Tagline */}
-        <p className="text-sm text-slate-500 pt-8 tracking-wider uppercase">
+        <p className="text-sm text-cyan-800 dark:text-white pt-8 tracking-wider uppercase">
           Progression Over Perfection
         </p>
       </div>

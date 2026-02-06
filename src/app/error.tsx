@@ -39,7 +39,7 @@ export default function Error({
           {isWeb3Error ? 'Wallet Connection Issue' : 'Something went wrong'}
         </h1>
 
-        <p className="text-gray-400 mb-8 text-lg">
+        <p className="text-gray-700 dark:text-gray-400 mb-8 text-lg">
           {isWeb3Error
             ? "There was an issue connecting to your wallet. Don't worry — you can continue browsing our services without a wallet connection."
             : "We encountered an unexpected error. Please try again, or feel free to contact us if the issue persists."}
@@ -48,10 +48,10 @@ export default function Error({
         {/* Error Details (collapsible in production) */}
         {process.env.NODE_ENV === 'development' && (
           <details className="mb-8 text-left">
-            <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-400">
+            <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400">
               Error details
             </summary>
-            <pre className="mt-2 p-4 bg-dark-200 rounded-lg text-xs text-gray-400 overflow-x-auto">
+            <pre className="mt-2 p-4 bg-dark-200 rounded-lg text-xs text-gray-700 dark:text-gray-400 overflow-x-auto">
               {error.message}
               {error.digest && `\n\nDigest: ${error.digest}`}
             </pre>
@@ -78,7 +78,7 @@ export default function Error({
 
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 px-6 py-3 text-gray-400 hover:text-white font-medium rounded-lg transition-colors duration-200 min-h-[44px]"
+            className="inline-flex items-center gap-2 px-6 py-3 text-gray-700 dark:text-gray-400 hover:text-white font-medium rounded-lg transition-colors duration-200 min-h-[44px]"
           >
             <Mail className="w-5 h-5" />
             Contact Us
@@ -86,7 +86,7 @@ export default function Error({
         </div>
 
         {/* Reassurance */}
-        <p className="mt-12 text-sm text-gray-500">
+        <p className="mt-12 text-sm text-gray-700 dark:text-gray-400">
           Your training continues. You can explore our{' '}
           <Link href="/drills" className="text-secondary hover:underline">
             training drills

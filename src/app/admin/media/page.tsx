@@ -265,7 +265,7 @@ export default function MediaDashboard() {
       <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
         <div className="text-center">
           <Loader2 className="w-12 h-12 text-orange animate-spin mx-auto mb-4" />
-          <p className="text-slate-400">
+          <p className="text-cyan-700 dark:text-white">
             {authLoading ? 'Loading...' : 'Checking access permissions...'}
           </p>
         </div>
@@ -280,12 +280,12 @@ export default function MediaDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-white">Media Hot Route</h1>
-            <p className="text-gray-400 mt-1">Manage all media across galleries</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">Manage all media across galleries</p>
           </div>
           <div className="flex items-center gap-3">
             <a
               href="/admin"
-              className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-medium py-2 px-4 rounded-lg transition border border-white/10"
+              className="flex items-center gap-2 bg-cyan-900 hover:bg-cyan-800/30 text-white font-medium py-2 px-4 rounded-lg transition border border-cyan-200/40"
             >
               <Home className="w-4 h-4" />
               Admin Dashboard
@@ -325,7 +325,7 @@ export default function MediaDashboard() {
             {/* Search */}
             <div className="flex-1 min-w-[200px]">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400" />
                 <input
                   type="text"
                   placeholder="Search by title, description, filename..."
@@ -378,7 +378,7 @@ export default function MediaDashboard() {
             </select>
           </div>
 
-          <div className="mt-3 text-sm text-gray-400">
+          <div className="mt-3 text-sm text-gray-500 dark:text-gray-400">
             Showing {filteredItems.length} of {items.length} items
           </div>
         </div>
@@ -394,11 +394,11 @@ export default function MediaDashboard() {
         {/* Media Table */}
         {loading ? (
           <div className="text-center py-12">
-            <p className="text-gray-400">Loading media...</p>
+            <p className="text-gray-500 dark:text-gray-400">Loading media...</p>
           </div>
         ) : filteredItems.length === 0 ? (
           <div className="text-center py-12 bg-gray-800 rounded-lg">
-            <p className="text-gray-400">No media items found</p>
+            <p className="text-gray-500 dark:text-gray-400">No media items found</p>
           </div>
         ) : (
           <div className="bg-gray-800 rounded-lg overflow-hidden">
@@ -406,14 +406,14 @@ export default function MediaDashboard() {
               <table className="w-full">
                 <thead className="bg-gray-700">
                   <tr>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-300">Preview</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-300">Title / Filename</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-300">Gallery</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-300">Category</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-300">Type</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-300">Size</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-300">Date</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-300">Actions</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Preview</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Title / Filename</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Gallery</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Category</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Type</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Size</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Date</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-700">
@@ -440,7 +440,7 @@ export default function MediaDashboard() {
                                     }}
                                   />
                                   <div className="fallback-icon hidden w-full h-full items-center justify-center absolute inset-0">
-                                    {item.type === 'url' ? <Link2 className="w-6 h-6 text-gray-400" /> : <Video className="w-6 h-6 text-gray-400" />}
+                                    {item.type === 'url' ? <Link2 className="w-6 h-6 text-gray-500 dark:text-gray-400" /> : <Video className="w-6 h-6 text-gray-500 dark:text-gray-400" />}
                                   </div>
                                   {/* Play icon overlay for videos */}
                                   {(item.type === 'url' && getYouTubeId(item.url)) && (
@@ -456,7 +456,7 @@ export default function MediaDashboard() {
                             // Fallback for items without thumbnails
                             return (
                               <div className="w-full h-full flex items-center justify-center">
-                                {item.type === 'url' ? <Link2 className="w-6 h-6 text-gray-400" /> : <Video className="w-6 h-6 text-gray-400" />}
+                                {item.type === 'url' ? <Link2 className="w-6 h-6 text-gray-500 dark:text-gray-400" /> : <Video className="w-6 h-6 text-gray-500 dark:text-gray-400" />}
                               </div>
                             )
                           })()}
@@ -471,7 +471,7 @@ export default function MediaDashboard() {
                               {item.title || item.filename}
                             </p>
                             {item.title && (
-                              <p className="text-gray-500 text-xs truncate max-w-[200px]">
+                              <p className="text-gray-500 dark:text-gray-400 text-xs truncate max-w-[200px]">
                                 {item.filename}
                               </p>
                             )}
@@ -484,29 +484,29 @@ export default function MediaDashboard() {
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded">
+                        <span className="px-2 py-1 bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded">
                           {item.category}
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-1 text-gray-400">
+                        <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
                           {item.type === 'image' && <ImageIcon className="w-4 h-4" />}
                           {item.type === 'video' && <Video className="w-4 h-4" />}
                           {item.type === 'url' && <Link2 className="w-4 h-4" />}
                           <span className="text-xs capitalize">{item.type}</span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-gray-400 text-sm">
+                      <td className="px-4 py-3 text-gray-500 dark:text-gray-400 text-sm">
                         {item.fileSize ? formatBytes(item.fileSize) : '-'}
                       </td>
-                      <td className="px-4 py-3 text-gray-400 text-sm">
+                      <td className="px-4 py-3 text-gray-500 dark:text-gray-400 text-sm">
                         {formatDate(item.uploadDate)}
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => handleEdit(item)}
-                            className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded transition"
+                            className="p-2 text-gray-500 dark:text-gray-400 hover:text-white hover:bg-gray-700 rounded transition"
                             title="Edit"
                           >
                             <Edit2 className="w-4 h-4" />
@@ -515,14 +515,14 @@ export default function MediaDashboard() {
                             href={item.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded transition"
+                            className="p-2 text-gray-500 dark:text-gray-400 hover:text-white hover:bg-gray-700 rounded transition"
                             title="View"
                           >
                             <ExternalLink className="w-4 h-4" />
                           </a>
                           <button
                             onClick={() => setDeletingItem(item)}
-                            className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded transition"
+                            className="p-2 text-gray-500 dark:text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded transition"
                             title="Delete"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -549,13 +549,13 @@ export default function MediaDashboard() {
                   : rawStats || { count: 0, size: 0 }
                 return (
                   <div key={type} className="bg-gray-700 rounded-lg p-4">
-                    <p className="text-gray-400 text-sm capitalize">
+                    <p className="text-gray-500 dark:text-gray-400 text-sm capitalize">
                       {type.replace(/-/g, ' ')}
                     </p>
                     <p className="text-white font-medium mt-1">
                       {typeStats.count} items
                     </p>
-                    <p className="text-gray-500 text-xs">
+                    <p className="text-gray-500 dark:text-gray-400 text-xs">
                       {formatBytes(typeStats.size)}
                     </p>
                   </div>
@@ -575,7 +575,7 @@ export default function MediaDashboard() {
                 <h2 className="text-xl font-bold text-white">Edit Media</h2>
                 <button
                   onClick={() => setEditingItem(null)}
-                  className="text-gray-400 hover:text-white"
+                  className="text-gray-500 dark:text-gray-400 hover:text-white"
                 >
                   <X className="w-6 h-6" />
                 </button>
@@ -584,7 +584,7 @@ export default function MediaDashboard() {
               <div className="space-y-4">
                 {/* Title */}
                 <div>
-                  <label className="text-sm font-medium text-gray-300 mb-2 block">Title</label>
+                  <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 block">Title</label>
                   <input
                     type="text"
                     value={editForm.title}
@@ -595,7 +595,7 @@ export default function MediaDashboard() {
 
                 {/* Description */}
                 <div>
-                  <label className="text-sm font-medium text-gray-300 mb-2 block">Description</label>
+                  <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 block">Description</label>
                   <textarea
                     value={editForm.description}
                     onChange={(e) => setEditForm(prev => ({ ...prev, description: e.target.value }))}
@@ -613,14 +613,14 @@ export default function MediaDashboard() {
                     onChange={(e) => setEditForm(prev => ({ ...prev, featured: e.target.checked }))}
                     className="w-5 h-5 rounded border-gray-600 bg-gray-700 text-blue-600 focus:ring-blue-500"
                   />
-                  <label htmlFor="featured" className="text-gray-300">Featured Item</label>
+                  <label htmlFor="featured" className="text-gray-600 dark:text-gray-300">Featured Item</label>
                 </div>
 
                 {/* External URL (CDN Migration) */}
                 <div>
-                  <label className="text-sm font-medium text-gray-300 mb-2 block">
+                  <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 block">
                     External URL (CDN)
-                    <span className="text-gray-500 font-normal ml-2">- Replace local with hosted URL</span>
+                    <span className="text-gray-500 dark:text-gray-400 font-normal ml-2">- Replace local with hosted URL</span>
                   </label>
                   <input
                     type="url"
@@ -633,9 +633,9 @@ export default function MediaDashboard() {
 
                 {/* Multi-Gallery Tags */}
                 <div>
-                  <label className="text-sm font-medium text-gray-300 mb-2 block">
+                  <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 block">
                     Show in Galleries
-                    <span className="text-gray-500 font-normal ml-2">- Item appears in all selected</span>
+                    <span className="text-gray-500 dark:text-gray-400 font-normal ml-2">- Item appears in all selected</span>
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {GALLERY_TYPES.map(gallery => (
@@ -645,7 +645,7 @@ export default function MediaDashboard() {
                         className={`px-3 py-1 rounded text-sm transition ${
                           editForm.galleries.includes(gallery)
                             ? 'bg-blue-600 text-white'
-                            : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+                            : 'bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-600'
                         }`}
                       >
                         {gallery.replace(/-/g, ' ')}
@@ -679,7 +679,7 @@ export default function MediaDashboard() {
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
           <div className="bg-gray-800 rounded-lg max-w-md w-full p-6">
             <h2 className="text-xl font-bold text-white mb-4">Delete Media?</h2>
-            <p className="text-gray-400 mb-2">
+            <p className="text-gray-500 dark:text-gray-400 mb-2">
               Are you sure you want to delete this item?
             </p>
             <p className="text-white font-medium mb-4 break-all">
@@ -716,7 +716,7 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
       <div className="flex items-center gap-3">
         <div className="text-blue-400">{icon}</div>
         <div>
-          <p className="text-gray-400 text-sm">{label}</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">{label}</p>
           <p className="text-white font-bold text-xl">{value}</p>
         </div>
       </div>

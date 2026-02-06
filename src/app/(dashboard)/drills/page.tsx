@@ -103,7 +103,7 @@ export default function DrillsPage() {
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-3">
           Drill Bank
         </h1>
-        <p className="text-lg text-slate-400">
+        <p className="text-lg text-cyan-700 dark:text-white">
           Master your craft with our premium training video library
         </p>
       </div>
@@ -116,7 +116,7 @@ export default function DrillsPage() {
               <Trophy className="w-6 h-6 text-orange" />
             </div>
             <div>
-              <p className="text-sm text-slate-400">Total Drills</p>
+              <p className="text-sm text-cyan-700 dark:text-white">Total Drills</p>
               <p className="text-2xl font-bold text-white">{drills.length}</p>
             </div>
           </div>
@@ -128,7 +128,7 @@ export default function DrillsPage() {
               <Award className="w-6 h-6 text-green-400" />
             </div>
             <div>
-              <p className="text-sm text-slate-400">Completed</p>
+              <p className="text-sm text-cyan-700 dark:text-white">Completed</p>
               <p className="text-2xl font-bold text-white">{stats.completed}</p>
             </div>
           </div>
@@ -140,7 +140,7 @@ export default function DrillsPage() {
               <TrendingUp className="w-6 h-6 text-blue-400" />
             </div>
             <div>
-              <p className="text-sm text-slate-400">Progress</p>
+              <p className="text-sm text-cyan-700 dark:text-white">Progress</p>
               <p className="text-2xl font-bold text-white">
                 {drills.length > 0
                   ? Math.round((stats.completed / drills.length) * 100)
@@ -156,7 +156,7 @@ export default function DrillsPage() {
               <Clock className="w-6 h-6 text-purple-400" />
             </div>
             <div>
-              <p className="text-sm text-slate-400">Hours Trained</p>
+              <p className="text-sm text-cyan-700 dark:text-white">Hours Trained</p>
               <p className="text-2xl font-bold text-white">{stats.hoursSpent}</p>
             </div>
           </div>
@@ -168,7 +168,7 @@ export default function DrillsPage() {
 
       {/* Results Count */}
       <div className="mb-6">
-        <p className="text-slate-400">
+        <p className="text-cyan-700 dark:text-white">
           Showing <span className="text-white font-semibold">{filteredDrills.length}</span> of{' '}
           <span className="text-white font-semibold">{drills.length}</span> drills
         </p>

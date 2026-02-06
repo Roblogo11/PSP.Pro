@@ -50,7 +50,7 @@ export function DrillCard({
       <Link href={`/drills/${id}`}>
         <div className="glass-card-hover overflow-hidden h-full flex flex-col">
           {/* Thumbnail */}
-          <div className="relative aspect-video bg-slate-800 overflow-hidden">
+          <div className="relative aspect-video bg-cyan-900 overflow-hidden">
             {thumbnailUrl ? (
               <Image
                 src={thumbnailUrl}
@@ -106,7 +106,7 @@ export function DrillCard({
 
             {/* Description */}
             {description && (
-              <p className="text-sm text-slate-400 mb-4 line-clamp-2 flex-1">
+              <p className="text-sm text-cyan-700 dark:text-white mb-4 line-clamp-2 flex-1">
                 {description}
               </p>
             )}
@@ -117,14 +117,14 @@ export function DrillCard({
                 {tags.slice(0, 3).map((tag, idx) => (
                   <span
                     key={idx}
-                    className="inline-flex items-center gap-1 px-2 py-1 bg-white/5 text-slate-400 text-xs rounded-md"
+                    className="inline-flex items-center gap-1 px-2 py-1 bg-cyan-50/50 text-cyan-700 dark:text-white text-xs rounded-md"
                   >
                     <Tag className="w-3 h-3" />
                     {tag}
                   </span>
                 ))}
                 {tags.length > 3 && (
-                  <span className="inline-flex items-center px-2 py-1 bg-white/5 text-slate-400 text-xs rounded-md">
+                  <span className="inline-flex items-center px-2 py-1 bg-cyan-50/50 text-cyan-700 dark:text-white text-xs rounded-md">
                     +{tags.length - 3}
                   </span>
                 )}

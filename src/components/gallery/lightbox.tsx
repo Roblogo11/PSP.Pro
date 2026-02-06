@@ -69,7 +69,7 @@ export function Lightbox({
       {/* Close button */}
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 text-white hover:text-gray-300 transition z-50"
+        className="absolute top-4 right-4 text-white hover:text-gray-600 dark:text-gray-300 transition z-50"
         aria-label="Close"
       >
         <X size={32} />
@@ -79,7 +79,7 @@ export function Lightbox({
       {totalItems > 1 && (
         <button
           onClick={onPrevious}
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition z-50"
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-600 dark:text-gray-300 transition z-50"
           aria-label="Previous"
         >
           <ChevronLeft size={48} />
@@ -90,7 +90,7 @@ export function Lightbox({
       {totalItems > 1 && (
         <button
           onClick={onNext}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition z-50"
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-600 dark:text-gray-300 transition z-50"
           aria-label="Next"
         >
           <ChevronRight size={48} />
@@ -189,9 +189,9 @@ export function Lightbox({
             <h2 className="text-white text-lg sm:text-2xl font-bold mb-1 sm:mb-2 truncate">{item.title}</h2>
           )}
           {item.description && (
-            <p className="text-gray-300 text-sm sm:text-base mb-1 sm:mb-2 line-clamp-2">{item.description}</p>
+            <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base mb-1 sm:mb-2 line-clamp-2">{item.description}</p>
           )}
-          <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-400">
+          <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
             <span className="capitalize">{item.category.replace(/-/g, ' ')}</span>
             <span>•</span>
             <span>{currentIndex} / {totalItems}</span>

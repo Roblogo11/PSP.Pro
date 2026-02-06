@@ -158,7 +158,7 @@ export default function RequestsPage() {
         <h1 className="text-3xl font-display font-bold text-white mb-2">
           Action Requests
         </h1>
-        <p className="text-slate-400">
+        <p className="text-cyan-800 dark:text-white">
           Review and approve deletion requests from coaches
         </p>
       </div>
@@ -172,7 +172,7 @@ export default function RequestsPage() {
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               activeTab === tab
                 ? 'bg-orange text-white'
-                : 'bg-white/5 text-slate-400 hover:bg-white/10'
+                : 'bg-cyan-50/50 text-cyan-600 hover:bg-white/10'
             }`}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -183,8 +183,8 @@ export default function RequestsPage() {
       {/* Requests List */}
       {requests.length === 0 ? (
         <div className="glass-card p-12 text-center">
-          <FileText className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-          <p className="text-slate-400">No {activeTab} requests</p>
+          <FileText className="w-12 h-12 text-cyan-700 dark:text-white mx-auto mb-4" />
+          <p className="text-cyan-800 dark:text-white">No {activeTab} requests</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -199,7 +199,7 @@ export default function RequestsPage() {
                     {getStatusBadge(request.status)}
                   </div>
 
-                  <div className="space-y-2 text-sm text-slate-400">
+                  <div className="space-y-2 text-sm text-cyan-800 dark:text-white">
                     <div className="flex items-center gap-2">
                       <User className="w-4 h-4" />
                       <span>
@@ -228,16 +228,16 @@ export default function RequestsPage() {
                     )}
 
                     {request.metadata && Object.keys(request.metadata).length > 0 && (
-                      <div className="mt-3 p-3 rounded-lg bg-white/5 border border-white/10">
-                        <p className="text-xs text-slate-500 mb-1">Additional Info:</p>
-                        <pre className="text-xs text-slate-400">
+                      <div className="mt-3 p-3 rounded-lg bg-cyan-50/50 border border-cyan-200/40">
+                        <p className="text-xs text-cyan-800 dark:text-white mb-1">Additional Info:</p>
+                        <pre className="text-xs text-cyan-800 dark:text-white">
                           {JSON.stringify(request.metadata, null, 2)}
                         </pre>
                       </div>
                     )}
 
                     {request.reviewed_at && request.reviewer && (
-                      <div className="mt-3 pt-3 border-t border-white/10">
+                      <div className="mt-3 pt-3 border-t border-cyan-200/40">
                         <p className="text-xs">
                           Reviewed by <span className="text-white">{request.reviewer.full_name}</span> on{' '}
                           {new Date(request.reviewed_at).toLocaleDateString()}

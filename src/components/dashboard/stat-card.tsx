@@ -33,7 +33,7 @@ export function StatCard({
           <p className="stat-label mb-2">{title}</p>
           <h3 className="stat-value mb-1">{value}</h3>
           {subtitle && (
-            <p className="text-sm text-slate-400">{subtitle}</p>
+            <p className="text-sm text-cyan-700 dark:text-white">{subtitle}</p>
           )}
         </div>
 
@@ -52,7 +52,7 @@ export function StatCard({
             >
               {trend.positive ? '↑' : '↓'} {Math.abs(trend.value)}%
             </span>
-            <span className="text-xs text-slate-400">vs last week</span>
+            <span className="text-xs text-cyan-700 dark:text-white">vs last week</span>
           </div>
         </div>
       )}

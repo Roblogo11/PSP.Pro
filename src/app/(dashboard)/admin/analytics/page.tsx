@@ -193,7 +193,7 @@ export default function AnalyticsPage() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange mx-auto mb-4"></div>
-          <p className="text-slate-400">Loading analytics...</p>
+          <p className="text-cyan-800 dark:text-white">Loading analytics...</p>
         </div>
       </div>
     )
@@ -203,8 +203,8 @@ export default function AnalyticsPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <BarChart3 className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-          <p className="text-slate-400">No analytics data available</p>
+          <BarChart3 className="w-12 h-12 text-cyan-700 dark:text-white mx-auto mb-4" />
+          <p className="text-cyan-800 dark:text-white">No analytics data available</p>
         </div>
       </div>
     )
@@ -250,7 +250,7 @@ export default function AnalyticsPage() {
         {typeof value === 'number' ? value.toLocaleString() : value}
         {suffix}
       </h3>
-      <p className="text-sm text-slate-400">{title}</p>
+      <p className="text-sm text-cyan-800 dark:text-white">{title}</p>
     </div>
   )
 
@@ -261,7 +261,7 @@ export default function AnalyticsPage() {
         <h1 className="text-3xl font-display font-bold text-white mb-2">
           Analytics Dashboard
         </h1>
-        <p className="text-slate-400">
+        <p className="text-cyan-800 dark:text-white">
           Track your performance and insights
         </p>
       </div>
@@ -275,7 +275,7 @@ export default function AnalyticsPage() {
             className={`px-4 py-2 rounded-xl font-medium transition-all ${
               timeRange === range
                 ? 'bg-orange text-white'
-                : 'bg-white/5 text-slate-400 hover:bg-white/10'
+                : 'bg-cyan-50/50 text-cyan-600 hover:bg-white/10'
             }`}
           >
             {range === '7d' && 'Last 7 Days'}
@@ -347,20 +347,20 @@ export default function AnalyticsPage() {
         </div>
 
         {analytics.recentBookings.length === 0 ? (
-          <p className="text-slate-400 text-center py-8">No recent bookings</p>
+          <p className="text-cyan-800 dark:text-white text-center py-8">No recent bookings</p>
         ) : (
           <div className="space-y-3">
             {analytics.recentBookings.map((booking: any) => (
               <div
                 key={booking.id}
-                className="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+                className="p-4 rounded-xl bg-cyan-50/50 border border-cyan-200/40 hover:bg-white/10 transition-colors"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <p className="text-white font-medium mb-1">
                       {booking.athlete?.full_name || 'Unknown Athlete'}
                     </p>
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-cyan-800 dark:text-white">
                       {booking.service?.name || 'Training Session'} •{' '}
                       {new Date(booking.booking_date).toLocaleDateString()}
                     </p>

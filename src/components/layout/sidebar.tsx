@@ -20,6 +20,7 @@ import {
   Video,
   BarChart3,
   Shield,
+  DollarSign,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
@@ -40,12 +41,13 @@ const athleteNavItems: NavItem[] = [
   { label: 'Progress', href: '/progress', icon: TrendingUp, color: 'text-green-400' },
   { label: 'Achievements', href: '/achievements', icon: Trophy, color: 'text-yellow-400' },
   { label: 'Booking', href: '/booking', icon: Clock, color: 'text-blue-400' },
-  { label: 'Settings', href: '/settings', icon: Settings, color: 'text-slate-400' },
+  { label: 'Settings', href: '/settings', icon: Settings, color: 'text-cyan-600' },
 ]
 
 const adminNavItems: NavItem[] = [
   { label: 'Admin Control', href: '/admin', icon: Shield, color: 'text-red-400' },
   { label: 'Athletes', href: '/admin/athletes', icon: Users, color: 'text-cyan-400' },
+  { label: 'Services', href: '/admin/services', icon: DollarSign, color: 'text-green-400' },
   { label: 'Drills', href: '/admin/drills', icon: Dumbbell, color: 'text-purple-400' },
   { label: 'Bookings', href: '/admin/bookings', icon: Calendar, color: 'text-blue-400' },
   { label: 'Media Library', href: '/admin/media', icon: Video, color: 'text-pink-400' },
@@ -74,42 +76,44 @@ export function Sidebar() {
         initial={false}
         animate={{ width: collapsed ? 80 : 280 }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
-        className="hidden lg:flex flex-col fixed left-0 top-0 h-screen glass-card border-r border-white/10 z-50"
+        className="hidden lg:flex flex-col fixed left-0 top-0 h-screen glass-card border-r border-cyan-200/40 z-50"
       >
         {/* Logo & Brand */}
-        <div className="flex items-center justify-between p-6 border-b border-white/10">
-          <AnimatePresence mode="wait">
-            {!collapsed && (
+        <div className="flex items-center justify-between p-6 border-b border-cyan-200/40">
+          <Link href="/" className="w-full">
+            <AnimatePresence mode="wait">
+              {!collapsed && (
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex items-center gap-3 cursor-pointer group"
+                >
+                  <div className="w-10 h-10 bg-gradient-velocity rounded-xl flex items-center justify-center shadow-glow-orange group-hover:scale-105 transition-transform">
+                    <Zap className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="font-display text-lg font-bold text-white group-hover:text-orange transition-colors">
+                      PSP.Pro
+                    </h1>
+                    <p className="text-xs text-cyan-700 dark:text-white">Athletic OS</p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {collapsed && (
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.2 }}
-                className="flex items-center gap-3"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.2, delay: 0.1 }}
+                className="w-10 h-10 bg-gradient-velocity rounded-xl flex items-center justify-center shadow-glow-orange mx-auto hover:scale-105 transition-transform cursor-pointer"
               >
-                <div className="w-10 h-10 bg-gradient-velocity rounded-xl flex items-center justify-center shadow-glow-orange">
-                  <Zap className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="font-display text-lg font-bold text-white">
-                    PSP.Pro
-                  </h1>
-                  <p className="text-xs text-slate-400">Athletic OS</p>
-                </div>
+                <Zap className="w-6 h-6 text-white" />
               </motion.div>
             )}
-          </AnimatePresence>
-
-          {collapsed && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.2, delay: 0.1 }}
-              className="w-10 h-10 bg-gradient-velocity rounded-xl flex items-center justify-center shadow-glow-orange mx-auto"
-            >
-              <Zap className="w-6 h-6 text-white" />
-            </motion.div>
-          )}
+          </Link>
         </div>
 
         {/* Navigation Items */}
@@ -130,7 +134,7 @@ export function Sidebar() {
                     ${
                       isActive
                         ? 'bg-orange/20 border border-orange/50 text-white shadow-glow-orange'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                        : 'text-cyan-700 dark:text-white hover:bg-cyan-50/50 hover:text-white'
                     }
                   `}
                 >
@@ -166,7 +170,7 @@ export function Sidebar() {
                       exit={{ opacity: 0, x: -10 }}
                       className="px-4 py-2"
                     >
-                      <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      <p className="text-xs font-bold text-cyan-800 dark:text-white uppercase tracking-wider">
                         Admin Tools
                       </p>
                     </motion.div>
@@ -193,7 +197,7 @@ export function Sidebar() {
                         ${
                           isActive
                             ? 'bg-cyan/20 border border-cyan/50 text-white shadow-glow-cyan'
-                            : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                            : 'text-cyan-700 dark:text-white hover:bg-cyan-50/50 hover:text-white'
                         }
                       `}
                     >
@@ -220,7 +224,7 @@ export function Sidebar() {
         </nav>
 
         {/* Theme Toggle, Collapse & Logout */}
-        <div className="p-4 border-t border-white/10 space-y-2">
+        <div className="p-4 border-t border-cyan-200/40 space-y-2">
           {/* Theme Toggle */}
           <div className={`flex items-center ${collapsed ? 'justify-center' : 'justify-between'} px-2 py-2 rounded-lg bg-gradient-to-r from-cyan/10 to-orange/10 border border-cyan/20`}>
             {!collapsed && (
@@ -267,7 +271,7 @@ export function Sidebar() {
       <motion.nav
         initial={{ y: 100 }}
         animate={{ y: 0 }}
-        className="lg:hidden fixed bottom-0 left-0 right-0 glass-card border-t border-white/10 z-50 mobile-safe"
+        className="lg:hidden fixed bottom-0 left-0 right-0 glass-card border-t border-cyan-200/40 z-50 mobile-safe"
       >
         <div className="flex items-center justify-around p-2">
           {navItems.slice(0, 5).map((item) => {
@@ -283,7 +287,7 @@ export function Sidebar() {
                     ${
                       isActive
                         ? 'bg-orange/20 text-orange'
-                        : 'text-slate-400 hover:text-white'
+                        : 'text-cyan-700 dark:text-white hover:text-white'
                     }
                   `}
                 >

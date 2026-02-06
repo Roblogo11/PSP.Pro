@@ -88,7 +88,7 @@ export default function ResetPasswordPage() {
                 <h1 className="text-3xl font-display font-bold text-white mb-2">
                   Reset Password
                 </h1>
-                <p className="text-slate-400">
+                <p className="">
                   Choose a new password for your account
                 </p>
               </div>
@@ -97,7 +97,7 @@ export default function ResetPasswordPage() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* New Password */}
                   <div>
-                    <label htmlFor="password" className="block text-sm font-semibold text-slate-300 mb-2">
+                    <label htmlFor="password" className="block text-sm font-semibold  mb-2">
                       New Password
                     </label>
                     <div className="relative">
@@ -108,24 +108,24 @@ export default function ResetPasswordPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter new password"
                         required
-                        className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-orange focus:outline-none transition-colors pr-12"
+                        className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:border-orange focus:outline-none transition-colors pr-12"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                        className="absolute right-3 top-1/2 -translate-y-1/2  hover:text-white transition-colors"
                       >
                         {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                       </button>
                     </div>
-                    <p className="text-xs text-slate-400 mt-2">
+                    <p className="text-xs  mt-2">
                       Must be at least 8 characters
                     </p>
                   </div>
 
                   {/* Confirm Password */}
                   <div>
-                    <label htmlFor="confirmPassword" className="block text-sm font-semibold text-slate-300 mb-2">
+                    <label htmlFor="confirmPassword" className="block text-sm font-semibold  mb-2">
                       Confirm Password
                     </label>
                     <div className="relative">
@@ -136,12 +136,12 @@ export default function ResetPasswordPage() {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="Confirm new password"
                         required
-                        className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-orange focus:outline-none transition-colors pr-12"
+                        className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:border-orange focus:outline-none transition-colors pr-12"
                       />
                       <button
                         type="button"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                        className="absolute right-3 top-1/2 -translate-y-1/2  hover:text-white transition-colors"
                       >
                         {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                       </button>
@@ -179,7 +179,7 @@ export default function ResetPasswordPage() {
 
               {/* Footer */}
               <div className="mt-6 text-center">
-                <p className="text-sm text-slate-400">
+                <p className="text-sm ">
                   Remember your password?{' '}
                   <Link href="/login" className="text-cyan hover:text-cyan-400 font-semibold">
                     Sign in
@@ -197,10 +197,10 @@ export default function ResetPasswordPage() {
                 <h1 className="text-3xl font-display font-bold text-white mb-2">
                   Password Reset!
                 </h1>
-                <p className="text-slate-400 mb-6">
+                <p className=" mb-6">
                   Your password has been successfully reset.
                 </p>
-                <p className="text-sm text-slate-400 mb-6">
+                <p className="text-sm  mb-6">
                   Redirecting to login...
                 </p>
                 <Link href="/login">
@@ -215,7 +215,7 @@ export default function ResetPasswordPage() {
 
         {/* Support */}
         <div className="mt-6 text-center">
-          <p className="text-sm text-slate-400">
+          <p className="text-sm ">
             Need help?{' '}
             <Link href="/contact" className="text-cyan hover:underline">
               Contact Support

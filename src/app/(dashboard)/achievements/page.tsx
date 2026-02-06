@@ -127,7 +127,7 @@ export default function AchievementsPage() {
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-3">
           Your <span className="text-gradient-orange">Achievements</span>
         </h1>
-        <p className="text-lg text-slate-400">
+        <p className="text-lg text-cyan-700 dark:text-white">
           Track your progress and unlock rewards
         </p>
       </div>
@@ -143,7 +143,7 @@ export default function AchievementsPage() {
               <p className="text-3xl font-bold text-white mb-1">
                 {unlockedCount}/{achievements.length}
               </p>
-              <p className="text-sm text-slate-400">Achievements Unlocked</p>
+              <p className="text-sm text-cyan-700 dark:text-white">Achievements Unlocked</p>
             </div>
           </div>
         </div>
@@ -155,7 +155,7 @@ export default function AchievementsPage() {
             </div>
             <div>
               <p className="text-3xl font-bold text-white mb-1">{totalPoints}</p>
-              <p className="text-sm text-slate-400">Total Points Earned</p>
+              <p className="text-sm text-cyan-700 dark:text-white">Total Points Earned</p>
             </div>
           </div>
         </div>
@@ -169,7 +169,7 @@ export default function AchievementsPage() {
               <p className="text-3xl font-bold text-white mb-1">
                 {Math.round((unlockedCount / achievements.length) * 100)}%
               </p>
-              <p className="text-sm text-slate-400">Completion Rate</p>
+              <p className="text-sm text-cyan-700 dark:text-white">Completion Rate</p>
             </div>
           </div>
         </div>
@@ -196,7 +196,7 @@ export default function AchievementsPage() {
         <div className="mt-12 command-panel p-8 text-center border-cyan/20">
           <Zap className="w-12 h-12 text-cyan mx-auto mb-4" />
           <h3 className="text-2xl font-bold text-white mb-2">Keep Pushing!</h3>
-          <p className="text-slate-400 max-w-2xl mx-auto">
+          <p className="text-cyan-700 dark:text-white max-w-2xl mx-auto">
             You're making great progress! Complete drills, maintain your training streak, and
             improve your velocity to unlock more achievements.
           </p>

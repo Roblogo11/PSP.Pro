@@ -27,7 +27,7 @@ export default function BookingSuccessPage() {
       <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-12 h-12 text-orange mx-auto mb-4 animate-spin" />
-          <p className="text-slate-400">Confirming your booking...</p>
+          <p className="text-cyan-800 dark:text-white">Confirming your booking...</p>
         </div>
       </div>
     )
@@ -41,7 +41,7 @@ export default function BookingSuccessPage() {
             <span className="text-3xl">❌</span>
           </div>
           <h1 className="text-2xl font-bold text-white mb-2">Booking Failed</h1>
-          <p className="text-slate-400 mb-6">{error}</p>
+          <p className="text-cyan-800 dark:text-white mb-6">{error}</p>
           <Link href="/booking" className="btn-primary inline-flex items-center gap-2">
             <span>Try Again</span>
             <ArrowRight className="w-4 h-4" />
@@ -66,14 +66,14 @@ export default function BookingSuccessPage() {
           <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-3">
             Booking Confirmed! 🎉
           </h1>
-          <p className="text-lg text-slate-300 mb-8">
+          <p className="text-lg text-cyan-700 dark:text-white mb-8">
             Your training session has been successfully booked and paid for.
           </p>
 
           {/* What's Next */}
-          <div className="bg-white/5 border border-white/10 rounded-xl p-6 mb-8 text-left">
+          <div className="bg-cyan-50/50 border border-cyan-200/40 rounded-xl p-6 mb-8 text-left">
             <h2 className="text-lg font-bold text-white mb-4">What happens next?</h2>
-            <ul className="space-y-3 text-sm text-slate-300">
+            <ul className="space-y-3 text-sm text-cyan-700 dark:text-white">
               <li className="flex items-start gap-3">
                 <span className="w-6 h-6 bg-orange/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                   <span className="text-orange font-bold text-xs">1</span>
@@ -121,7 +121,7 @@ export default function BookingSuccessPage() {
 
           {/* Session ID */}
           {sessionId && (
-            <p className="text-xs text-slate-500 mt-6">
+            <p className="text-xs text-cyan-800 dark:text-white mt-6">
               Confirmation ID: <span className="font-mono">{sessionId.slice(0, 20)}...</span>
             </p>
           )}
@@ -129,7 +129,7 @@ export default function BookingSuccessPage() {
 
         {/* Support Card */}
         <div className="glass-card p-6 text-center">
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-cyan-800 dark:text-white">
             Need to make changes or have questions?{' '}
             <Link href="/contact" className="text-orange hover:text-orange-400 font-semibold">
               Contact us

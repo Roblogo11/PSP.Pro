@@ -43,7 +43,7 @@ export function Features() {
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
             {siteConfig.features.sectionTitle}
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             {siteConfig.features.sectionSubtitle}
           </p>
         </div>
@@ -89,7 +89,7 @@ export function Features() {
                   <h3 className="text-3xl md:text-4xl font-bold text-white mb-3">
                     Even More Services
                   </h3>
-                  <p className="text-lg text-gray-400">
+                  <p className="text-lg text-gray-600 dark:text-gray-400">
                     Specialized web services to help your business grow
                   </p>
                 </div>
@@ -166,7 +166,7 @@ function FeatureCard({
           <h3 className="text-2xl font-bold text-white group-hover:text-secondary transition-colors">
             {feature.title}
           </h3>
-          <p className="text-gray-400 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
             {feature.description}
           </p>
         </div>

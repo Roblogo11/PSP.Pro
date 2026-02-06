@@ -25,7 +25,7 @@ export function Tooltip({ content, position = 'top', className = '' }: TooltipPr
         type="button"
         onMouseEnter={() => setShow(true)}
         onMouseLeave={() => setShow(false)}
-        className="text-slate-400 hover:text-orange transition-colors"
+        className="text-cyan-700 dark:text-white hover:text-orange transition-colors"
         aria-label="Help"
       >
         <HelpCircle className="w-4 h-4" />
@@ -33,7 +33,7 @@ export function Tooltip({ content, position = 'top', className = '' }: TooltipPr
 
       {show && (
         <div
-          className={`absolute z-50 ${positionClasses[position]} w-64 px-3 py-2 text-sm text-white bg-slate-800 border border-slate-700 rounded-lg shadow-xl pointer-events-none`}
+          className={`absolute z-50 ${positionClasses[position]} w-64 px-3 py-2 text-sm text-white bg-cyan-900 border border-cyan-700/50 rounded-lg shadow-xl pointer-events-none`}
         >
           <div className="relative">
             {content}
@@ -65,7 +65,7 @@ export function InfoBanner({ title, description, icon, color = 'blue' }: InfoBan
         {icon && <div className="mt-0.5">{icon}</div>}
         <div className="flex-1">
           <h4 className="font-semibold mb-1">{title}</h4>
-          <p className="text-sm text-slate-300">{description}</p>
+          <p className="text-sm text-cyan-700 dark:text-white">{description}</p>
         </div>
       </div>
     </div>

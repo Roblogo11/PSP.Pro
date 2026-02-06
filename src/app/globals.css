@@ -68,21 +68,23 @@
     font-weight: 700;
   }
 
-  /* Big headers with peachy-cyan gradient in light mode */
+  /* Big headers with darker peachy-cyan gradient in light mode for better contrast */
   :not(.dark) h1,
   :not(.dark) h2 {
-    background: linear-gradient(135deg, #0891b2 0%, #06b6d4 30%, #fb923c 70%, #f97316 100%);
+    background: linear-gradient(135deg, #0e7490 0%, #0891b2 30%, #ea580c 70%, #dc2626 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 2px 20px rgba(8, 145, 178, 0.15);
+    color: #0e7490; /* Fallback for browsers that don't support background-clip */
+    text-shadow: 0 2px 20px rgba(8, 145, 178, 0.2);
   }
 
   :not(.dark) h3 {
-    background: linear-gradient(90deg, #0891b2 0%, #fb923c 100%);
+    background: linear-gradient(90deg, #0e7490 0%, #ea580c 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    color: #0e7490; /* Fallback for browsers that don't support background-clip */
   }
 
   /* Dark mode headers keep white with subtle cyan glow */
@@ -92,168 +94,53 @@
     text-shadow: 0 0 30px rgba(0, 180, 216, 0.2);
   }
 
-  /* Text colors adapt to theme */
-  .dark p, .dark span, .dark small, .dark li, .dark label, .dark div {
-    @apply text-slate-50;
+  /* Text colors adapt to theme - REMOVED broad element selectors to allow utility classes to work */
+  /* Base text colors are now handled by body and explicit utility classes */
+
+  /* REMOVED aggressive !important rules - Let Tailwind utility classes control colors */
+  /* Only apply base colors to elements WITHOUT utility classes */
+
+  .dark li:not([class*="text-"]) {
+    color: rgb(226 232 240); /* slate-200 - bright for dark mode */
   }
 
-  :not(.dark) p, :not(.dark) span, :not(.dark) small, :not(.dark) li, :not(.dark) label, :not(.dark) div {
-    @apply text-slate-900;
+  :not(.dark) li:not([class*="text-"]) {
+    color: rgb(51 65 85); /* slate-700 - dark for light mode */
   }
 
-  /* Override inline styles on list items - CRITICAL for pricing cards */
-  :not(.dark) li[style*="color"],
-  :not(.dark) li {
-    color: rgb(51 65 85) !important; /* slate-700 - dark for light mode */
-  }
-
-  .dark li[style*="color"],
-  .dark li {
-    color: rgb(226 232 240) !important; /* slate-200 - bright for dark mode */
-  }
-
-  /* Ensure small text elements switch properly - aggressive rules for nested elements */
-  :not(.dark) small,
-  :not(.dark) .text-sm,
-  :not(.dark) .text-xs,
-  :not(.dark) * .text-sm,
-  :not(.dark) * .text-xs,
-  :not(.dark) div .text-sm,
-  :not(.dark) div .text-xs,
-  :not(.dark) span .text-sm,
-  :not(.dark) span .text-xs,
-  :not(.dark) p .text-sm,
-  :not(.dark) p .text-xs,
-  :not(.dark) button .text-sm,
-  :not(.dark) button .text-xs,
-  :not(.dark) a .text-sm,
-  :not(.dark) a .text-xs {
-    color: rgb(71 85 105) !important; /* slate-600 - darker for readability */
-  }
-
-  .dark small,
-  .dark .text-sm,
-  .dark .text-xs,
-  .dark * .text-sm,
-  .dark * .text-xs,
-  .dark div .text-sm,
-  .dark div .text-xs,
-  .dark span .text-sm,
-  .dark span .text-xs,
-  .dark p .text-sm,
-  .dark p .text-xs,
-  .dark button .text-sm,
-  .dark button .text-xs,
-  .dark a .text-sm,
-  .dark a .text-xs {
-    color: rgb(226 232 240) !important; /* slate-200 - bright for dark mode */
-  }
-
-  /* Inside glass cards in light mode, darker text on colorful gradient */
-  :not(.dark) .glass-card p,
-  :not(.dark) .glass-card span,
-  :not(.dark) .glass-card small,
-  :not(.dark) .glass-card li,
-  :not(.dark) .glass-card label,
-  :not(.dark) .glass-card div {
+  /* REMOVED all !important overrides on text utilities */
+  /* Let Tailwind's utility classes and dark: variants work naturally */
+  /* Only apply to glass cards for consistent card styling */
+  :not(.dark) .glass-card:not([class*="text-"]) p:not([class*="text-"]),
+  :not(.dark) .glass-card:not([class*="text-"]) span:not([class*="text-"]),
+  :not(.dark) .glass-card:not([class*="text-"]) small:not([class*="text-"]) {
     @apply text-slate-800;
   }
 
-  /* Override text utilities - DARK MODE ONLY - brighter for dark navy background */
-  .dark .text-slate-400,
-  .dark * .text-slate-400 {
-    color: rgb(241 245 249) !important; /* Very bright - slate-100 */
+  /* CLEAN APPROACH: Single utility class for body text */
+  .body-text {
+    color: rgb(51 65 85); /* slate-700 - dark text for light mode */
   }
 
-  .dark .text-slate-500,
-  .dark * .text-slate-500 {
-    color: rgb(226 232 240) !important; /* Bright - slate-200 */
+  .dark .body-text {
+    color: white !important;
   }
 
-  .dark .text-slate-300,
-  .dark * .text-slate-300 {
-    color: rgb(248 250 252) !important; /* Near white - slate-50 */
+  /* Auto-apply to common text elements - FIXED to allow text-sm, text-lg, etc. */
+  .dark p,
+  .dark span:not([class*="text-orange"]):not([class*="text-cyan"]):not([class*="text-gradient"]):not([class*="text-white"]):not([class*="text-slate"]),
+  .dark li,
+  .dark small,
+  .dark label {
+    color: white !important;
   }
 
-  .dark .text-slate-600,
-  .dark * .text-slate-600 {
-    color: rgb(203 213 225) !important; /* Medium bright - slate-300 */
-  }
-
-  /* Light mode text utilities - proper dark text - aggressive nesting support */
-  :not(.dark) .text-slate-400,
-  :not(.dark) * .text-slate-400 {
-    color: rgb(148 163 184) !important; /* Actual slate-400 */
-  }
-
-  :not(.dark) .text-slate-500,
-  :not(.dark) * .text-slate-500 {
-    color: rgb(100 116 139) !important; /* Actual slate-500 */
-  }
-
-  :not(.dark) .text-slate-300,
-  :not(.dark) * .text-slate-300 {
-    color: rgb(203 213 225) !important; /* Actual slate-300 */
-  }
-
-  :not(.dark) .text-slate-600,
-  :not(.dark) * .text-slate-600 {
-    color: rgb(71 85 105) !important; /* Actual slate-600 */
-  }
-
-  :not(.dark) .text-white,
-  :not(.dark) * .text-white {
-    color: rgb(30 41 59) !important; /* Dark text in light mode */
-  }
-
-  /* Additional text color utilities for light mode */
-  :not(.dark) .text-slate-50 {
-    color: rgb(15 23 42) !important; /* Very dark in light mode */
-  }
-
-  :not(.dark) .text-slate-100 {
-    color: rgb(30 41 59) !important; /* Dark in light mode */
-  }
-
-  :not(.dark) .text-slate-200 {
-    color: rgb(51 65 85) !important;
-  }
-
-  :not(.dark) .text-slate-700 {
-    color: rgb(51 65 85) !important;
-  }
-
-  :not(.dark) .text-slate-800 {
-    color: rgb(30 41 59) !important;
-  }
-
-  :not(.dark) .text-slate-900 {
-    color: rgb(15 23 42) !important;
-  }
-
-  /* Muted text utilities */
-  :not(.dark) .text-muted,
-  :not(.dark) .text-muted-foreground {
-    color: rgb(100 116 139) !important; /* slate-500 */
-  }
-
-  /* Button text in light mode - ensure readability */
-  :not(.dark) button {
-    color: rgb(30 41 59) !important; /* Dark text by default */
-  }
-
-  :not(.dark) button.text-white,
-  :not(.dark) button .text-white {
-    color: rgb(255 255 255) !important; /* Keep white for colored buttons */
-  }
-
-  /* Link text in light mode */
-  :not(.dark) a {
-    color: rgb(184 48 26) !important; /* Brand orange */
-  }
-
-  :not(.dark) a:hover {
-    color: rgb(212 66 42) !important; /* Lighter orange on hover */
+  html:not(.dark) p,
+  html:not(.dark) span:not([class*="text-orange"]):not([class*="text-cyan"]):not([class*="text-gradient"]):not([class*="text-white"]):not([class*="text-slate"]),
+  html:not(.dark) li,
+  html:not(.dark) small,
+  html:not(.dark) label {
+    color: rgb(51 65 85) !important; /* slate-700 - dark text for light mode */
   }
 
   /* Custom Scrollbar - Dark Navy Style */
@@ -308,20 +195,20 @@
       0 0 15px rgba(251, 146, 60, 0.08);
   }
 
-  /* Light Mode Glass Card - Matches dark theme consistency */
+  /* Light Mode Glass Card - Cyan tinted instead of gray */
   html:not(.dark) .glass-card {
     background: linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.90) 0%,
-      rgba(255, 250, 245, 0.85) 50%,
-      rgba(255, 255, 255, 0.90) 100%
+      rgba(236, 254, 255, 0.90) 0%,
+      rgba(207, 250, 254, 0.85) 50%,
+      rgba(224, 242, 254, 0.90) 100%
     ) !important;
-    border: 1px solid rgba(184, 48, 26, 0.15) !important;
+    border: 1px solid rgba(0, 180, 216, 0.25) !important;
     box-shadow:
-      0 8px 32px 0 rgba(0, 0, 0, 0.10),
-      inset 0 0 0 1px rgba(251, 146, 60, 0.1),
-      0 0 20px rgba(184, 48, 26, 0.08),
-      0 0 10px rgba(0, 180, 216, 0.05) !important;
+      0 8px 32px 0 rgba(0, 180, 216, 0.12),
+      inset 0 0 0 1px rgba(0, 180, 216, 0.15),
+      0 0 20px rgba(0, 180, 216, 0.10),
+      0 0 10px rgba(0, 180, 216, 0.08) !important;
   }
 
   /* Light mode text colors - dark text on glassmorphic cards */
@@ -741,67 +628,7 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
 }
 
-/* Comprehensive Gray Text Utilities - Light Mode - with nested element support */
-:not(.dark) .text-gray-100,
-:not(.dark) * .text-gray-100 {
-  color: rgb(243, 244, 246) !important; /* Keep light in light mode for backgrounds */
-}
-
-:not(.dark) .text-gray-200,
-:not(.dark) * .text-gray-200 {
-  color: rgb(229, 231, 235) !important;
-}
-
-:not(.dark) .text-gray-300,
-:not(.dark) * .text-gray-300 {
-  color: rgb(71, 85, 105) !important; /* Darker for readability */
-}
-
-:not(.dark) .text-gray-400,
-:not(.dark) * .text-gray-400 {
-  color: rgb(100, 116, 139) !important; /* Medium dark */
-}
-
-:not(.dark) .text-gray-500,
-:not(.dark) * .text-gray-500 {
-  color: rgb(100, 116, 139) !important;
-}
-
-:not(.dark) .text-gray-600,
-:not(.dark) * .text-gray-600 {
-  color: rgb(75, 85, 99) !important; /* Darker */
-}
-
-:not(.dark) .text-gray-700,
-:not(.dark) * .text-gray-700 {
-  color: rgb(55, 65, 81) !important;
-}
-
-:not(.dark) .text-gray-800,
-:not(.dark) * .text-gray-800 {
-  color: rgb(31, 41, 55) !important;
-}
-
-:not(.dark) .text-gray-900,
-:not(.dark) * .text-gray-900 {
-  color: rgb(17, 24, 39) !important; /* Very dark */
-}
-
-/* Hover states for gray text */
-:not(.dark) .group:hover .text-gray-400,
-:not(.dark) .group:hover * .text-gray-400 {
-  color: rgb(184, 48, 26) !important; /* Orange accent on hover */
-}
-
-:not(.dark) .group:hover .text-gray-300,
-:not(.dark) .group:hover * .text-gray-300 {
-  color: rgb(30, 41, 59) !important; /* Dark slate on hover */
-}
-
-/* Background utilities for light mode */
-:not(.dark) .bg-dark-300 {
-  background: rgba(203, 213, 225, 0.5) !important;
-}
+/* REMOVED all gray text utility overrides - Let Tailwind handle colors naturally */
 
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {

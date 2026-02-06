@@ -83,9 +83,9 @@ export default function AdminBookingsPage() {
       case 'completed':
         return 'bg-cyan/10 text-cyan border-cyan/20'
       case 'no-show':
-        return 'bg-slate-500/10 text-slate-400 border-slate-500/20'
+        return 'bg-cyan-600/10 text-cyan-600 border-cyan-600/20'
       default:
-        return 'bg-slate-500/10 text-slate-400 border-slate-500/20'
+        return 'bg-cyan-600/10 text-cyan-600 border-cyan-600/20'
     }
   }
 
@@ -110,7 +110,7 @@ export default function AdminBookingsPage() {
       case 'refunded':
         return 'text-red-400'
       default:
-        return 'text-slate-400'
+        return 'text-cyan-600'
     }
   }
 
@@ -121,7 +121,7 @@ export default function AdminBookingsPage() {
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
           Booking Management
         </h1>
-        <p className="text-slate-400 text-lg">
+        <p className="text-cyan-800 dark:text-white text-lg">
           View and manage all training session bookings
         </p>
       </div>
@@ -151,23 +151,23 @@ export default function AdminBookingsPage() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div className="glass-card p-4">
-          <p className="text-sm text-slate-400 mb-1">Total Bookings</p>
+          <p className="text-sm text-cyan-800 dark:text-white mb-1">Total Bookings</p>
           <p className="text-2xl font-bold text-white">{bookings.length}</p>
         </div>
         <div className="glass-card p-4">
-          <p className="text-sm text-slate-400 mb-1">Confirmed</p>
+          <p className="text-sm text-cyan-800 dark:text-white mb-1">Confirmed</p>
           <p className="text-2xl font-bold text-green-400">
             {bookings.filter(b => b.status === 'confirmed').length}
           </p>
         </div>
         <div className="glass-card p-4">
-          <p className="text-sm text-slate-400 mb-1">Pending</p>
+          <p className="text-sm text-cyan-800 dark:text-white mb-1">Pending</p>
           <p className="text-2xl font-bold text-orange">
             {bookings.filter(b => b.status === 'pending').length}
           </p>
         </div>
         <div className="glass-card p-4">
-          <p className="text-sm text-slate-400 mb-1">Revenue</p>
+          <p className="text-sm text-cyan-800 dark:text-white mb-1">Revenue</p>
           <p className="text-2xl font-bold text-cyan">
             ${(bookings
               .filter(b => b.payment_status === 'paid')
@@ -181,32 +181,32 @@ export default function AdminBookingsPage() {
         {loading ? (
           <div className="p-12 text-center">
             <div className="inline-block w-8 h-8 border-4 border-orange/30 border-t-orange rounded-full animate-spin mb-4" />
-            <p className="text-slate-400">Loading bookings...</p>
+            <p className="text-cyan-800 dark:text-white">Loading bookings...</p>
           </div>
         ) : bookings.length === 0 ? (
           <div className="p-12 text-center">
-            <Calendar className="w-16 h-16 text-slate-600 mx-auto mb-4" />
+            <Calendar className="w-16 h-16 text-cyan-700 dark:text-white mx-auto mb-4" />
             <h3 className="text-xl font-bold text-white mb-2">No Bookings Found</h3>
-            <p className="text-slate-400">No bookings match your current filter.</p>
+            <p className="text-cyan-800 dark:text-white">No bookings match your current filter.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-white/10">
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-slate-400">Athlete</th>
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-slate-400">Service</th>
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-slate-400">Date & Time</th>
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-slate-400">Coach</th>
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-slate-400">Location</th>
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-slate-400">Amount</th>
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-slate-400">Status</th>
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-slate-400">Actions</th>
+                <tr className="border-b border-cyan-200/40">
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-cyan-800 dark:text-white">Athlete</th>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-cyan-800 dark:text-white">Service</th>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-cyan-800 dark:text-white">Date & Time</th>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-cyan-800 dark:text-white">Coach</th>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-cyan-800 dark:text-white">Location</th>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-cyan-800 dark:text-white">Amount</th>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-cyan-800 dark:text-white">Status</th>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-cyan-800 dark:text-white">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {bookings.map(booking => (
-                  <tr key={booking.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                  <tr key={booking.id} className="border-b border-white/5 hover:bg-cyan-50/50 transition-colors">
                     <td className="py-4 px-4">
                       <div>
                         <p className="text-sm font-semibold text-white">{booking.athlete?.full_name}</p>
@@ -214,14 +214,14 @@ export default function AdminBookingsPage() {
                     </td>
                     <td className="py-4 px-4">
                       <p className="text-sm text-white">{booking.service?.name}</p>
-                      <p className="text-xs text-slate-400">{booking.duration_minutes} min</p>
+                      <p className="text-xs text-cyan-800 dark:text-white">{booking.duration_minutes} min</p>
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex items-start gap-2">
-                        <Calendar className="w-4 h-4 text-slate-400 mt-0.5" />
+                        <Calendar className="w-4 h-4 text-cyan-800 dark:text-white mt-0.5" />
                         <div>
                           <p className="text-sm text-white">{formatDate(booking.booking_date)}</p>
-                          <p className="text-xs text-slate-400">
+                          <p className="text-xs text-cyan-800 dark:text-white">
                             {formatTime(booking.start_time)} - {formatTime(booking.end_time)}
                           </p>
                         </div>
@@ -229,13 +229,13 @@ export default function AdminBookingsPage() {
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-2">
-                        <User className="w-4 h-4 text-slate-400" />
+                        <User className="w-4 h-4 text-cyan-800 dark:text-white" />
                         <p className="text-sm text-white">{booking.coach?.full_name}</p>
                       </div>
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-slate-400" />
+                        <MapPin className="w-4 h-4 text-cyan-800 dark:text-white" />
                         <p className="text-sm text-white">{booking.location || 'TBD'}</p>
                       </div>
                     </td>
@@ -243,7 +243,7 @@ export default function AdminBookingsPage() {
                       <p className={`text-sm font-semibold ${getPaymentStatusColor(booking.payment_status)}`}>
                         ${(booking.amount_cents / 100).toFixed(2)}
                       </p>
-                      <p className="text-xs text-slate-400 capitalize">{booking.payment_status}</p>
+                      <p className="text-xs text-cyan-800 dark:text-white capitalize">{booking.payment_status}</p>
                     </td>
                     <td className="py-4 px-4">
                       <span

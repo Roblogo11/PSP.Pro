@@ -101,7 +101,7 @@ export default function ProgressPage() {
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
           Your <span className="text-gradient-orange">Progress</span>
         </h1>
-        <p className="text-slate-400 text-lg">
+        <p className="text-cyan-700 dark:text-white text-lg">
           Track your athletic development and achievements
         </p>
       </div>
@@ -134,7 +134,7 @@ export default function ProgressPage() {
                   </span>
                 </div>
               </div>
-              <p className="text-sm text-slate-400 mb-1">{stat.label}</p>
+              <p className="text-sm text-cyan-700 dark:text-white mb-1">{stat.label}</p>
               <h3 className="text-3xl font-bold text-white">{stat.value}</h3>
             </div>
           )
@@ -151,17 +151,17 @@ export default function ProgressPage() {
         <h2 className="text-2xl font-bold text-white mb-6">Active Goals</h2>
         <div className="space-y-4">
           {goals.map((goal) => (
-            <div key={goal.id} className="p-4 bg-slate-800/30 rounded-xl">
+            <div key={goal.id} className="p-4 bg-cyan-900/20 rounded-xl">
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <h3 className="text-lg font-bold text-white">{goal.title}</h3>
-                  <p className="text-sm text-slate-400">
+                  <p className="text-sm text-cyan-700 dark:text-white">
                     {goal.current} / {goal.target} · {goal.deadline}
                   </p>
                 </div>
                 <span className="text-2xl font-bold text-orange">{goal.progress}%</span>
               </div>
-              <div className="w-full bg-slate-700/50 rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-cyan-800/30/50 rounded-full h-3 overflow-hidden">
                 <div
                   className="h-full bg-gradient-velocity transition-all duration-500"
                   style={{ width: `${goal.progress}%` }}
@@ -188,7 +188,7 @@ export default function ProgressPage() {
                   className={`absolute left-0 w-8 h-8 rounded-full border-2 flex items-center justify-center ${
                     milestone.achieved
                       ? 'bg-orange border-orange shadow-glow-orange'
-                      : 'bg-slate-800 border-slate-600'
+                      : 'bg-cyan-900 border-cyan-600/50'
                   }`}
                 >
                   {milestone.achieved && <Award className="w-4 h-4 text-white" />}
@@ -197,7 +197,7 @@ export default function ProgressPage() {
                 {/* Content */}
                 <div className={`flex-1 ${milestone.achieved ? '' : 'opacity-50'}`}>
                   <h3 className="text-lg font-bold text-white mb-1">{milestone.title}</h3>
-                  <div className="flex items-center gap-4 text-sm text-slate-400">
+                  <div className="flex items-center gap-4 text-sm text-cyan-700 dark:text-white">
                     <span>{milestone.date}</span>
                     <span className="text-orange font-semibold">{milestone.value}</span>
                   </div>
