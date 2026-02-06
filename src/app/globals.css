@@ -49,22 +49,26 @@
     font-weight: 700;
   }
 
-  /* Bright text for better readability on the blue background */
+  /* Bright text for better readability on dark navy background */
   p, span, small, li, label, div {
-    @apply text-slate-100;
+    @apply text-slate-50;
   }
 
-  /* Override dark text utilities to be much lighter */
+  /* Override dark text utilities to be much brighter for dark navy */
   .text-slate-400 {
-    color: rgb(226 232 240) !important; /* Much lighter - near white */
+    color: rgb(241 245 249) !important; /* Very bright - slate-100 */
   }
 
   .text-slate-500 {
-    color: rgb(203 213 225) !important; /* Lighter gray */
+    color: rgb(226 232 240) !important; /* Bright - slate-200 */
   }
 
   .text-slate-300 {
-    color: rgb(241 245 249) !important; /* Very light - almost white */
+    color: rgb(248 250 252) !important; /* Near white - slate-50 */
+  }
+
+  .text-slate-600 {
+    color: rgb(203 213 225) !important; /* Medium bright - slate-300 */
   }
 
   /* Custom Scrollbar - Dark Navy Style */
@@ -275,7 +279,7 @@
   }
 
   .stat-label {
-    @apply text-sm md:text-base text-slate-400 uppercase tracking-wider;
+    @apply text-sm md:text-base text-slate-300 uppercase tracking-wider;
   }
 
   /* Loading States */

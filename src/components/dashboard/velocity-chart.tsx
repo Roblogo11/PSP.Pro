@@ -19,12 +19,17 @@ interface VelocityDataPoint {
   velocity: number
 }
 
+interface RawVelocityData {
+  date: Date
+  value: number
+}
+
 interface VelocityChartProps {
-  data?: VelocityDataPoint[]
+  velocityData?: RawVelocityData[]
   title?: string
 }
 
-// Sample data for demo - Replace with real data from Supabase
+// Sample data for demo - used only if no real data provided
 const defaultData: VelocityDataPoint[] = [
   { date: 'Jan 15', velocity: 62 },
   { date: 'Jan 22', velocity: 64 },
@@ -50,13 +55,21 @@ const CustomTooltip = ({ active, payload }: any) => {
 }
 
 export function VelocityChart({
-  data = defaultData,
+  velocityData,
   title = 'Velocity Progress',
 }: VelocityChartProps) {
+  // Transform real data to chart format
+  const data: VelocityDataPoint[] = velocityData && velocityData.length > 0
+    ? velocityData.map(d => ({
+        date: new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        velocity: d.value,
+      }))
+    : defaultData
+
   const latestVelocity = data[data.length - 1]?.velocity || 0
   const firstVelocity = data[0]?.velocity || 0
   const improvement = latestVelocity - firstVelocity
-  const improvementPercent = ((improvement / firstVelocity) * 100).toFixed(1)
+  const improvementPercent = firstVelocity > 0 ? ((improvement / firstVelocity) * 100).toFixed(1) : '0.0'
 
   return (
     <motion.div
@@ -69,7 +82,9 @@ export function VelocityChart({
       <div className="flex items-start justify-between mb-6">
         <div>
           <h3 className="text-xl font-bold text-white mb-1">{title}</h3>
-          <p className="text-sm text-slate-400">Last 7 sessions</p>
+          <p className="text-sm text-slate-400">
+            {velocityData && velocityData.length > 0 ? `Last ${velocityData.length} sessions` : 'Sample data'}
+          </p>
         </div>
         <div className="flex items-center gap-2 px-3 py-2 bg-green-500/20 border border-green-500/30 rounded-lg">
           <TrendingUp className="w-4 h-4 text-green-400" />

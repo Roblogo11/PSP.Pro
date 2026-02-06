@@ -59,7 +59,7 @@ export default function HomePage() {
                 filter: 'drop-shadow(0 0 20px rgba(0, 180, 216, 0.4)) brightness(0) invert(1)',
               }}
             />
-            <p className="text-sm mt-2" style={{ color: '#4A5568' }}>Athletic OS</p>
+            <p className="text-sm mt-2" style={{ color: '#CBD5E1' }}>Athletic OS</p>
           </div>
 
           {/* Tagline */}
@@ -105,7 +105,7 @@ export default function HomePage() {
               </div>
               <div className="text-left">
                 <h3 className="text-xl font-bold text-white">Athletic OS Dashboard</h3>
-                <p className="text-slate-400 text-sm">Track progress • Analyze drills • Book sessions</p>
+                <p className="text-slate-300 text-sm">Track progress • Analyze drills • Book sessions</p>
               </div>
             </div>
             <p className="text-slate-300 mb-6 text-left">
@@ -132,7 +132,7 @@ export default function HomePage() {
               <div key={index} className="glass-card p-6 hover:scale-105 transition-transform duration-300">
                 <stat.icon className="w-8 h-8 mx-auto mb-3" style={{ color: stat.color }} />
                 <div className="text-3xl font-bold mb-1" style={{ color: '#F7FAFC' }}>{stat.value}</div>
-                <div className="text-sm" style={{ color: '#4A5568' }}>{stat.label}</div>
+                <div className="text-sm" style={{ color: '#E2E8F0' }}>{stat.label}</div>
               </div>
             ))}
           </div>
@@ -149,7 +149,7 @@ export default function HomePage() {
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-4" style={{ color: '#F7FAFC' }}>
               Your Athletic Command Center
             </h2>
-            <p className="text-xl max-w-2xl mx-auto" style={{ color: '#4A5568' }}>
+            <p className="text-xl max-w-2xl mx-auto" style={{ color: '#E2E8F0' }}>
               Everything you need to track progress, improve mechanics, and increase velocity.
             </p>
           </div>
@@ -203,7 +203,7 @@ export default function HomePage() {
                   <h3 className="text-2xl font-display font-bold mb-4" style={{ color: '#F7FAFC' }}>
                     {feature.title}
                   </h3>
-                  <p style={{ color: '#4A5568' }} className="leading-relaxed">
+                  <p style={{ color: '#E2E8F0' }} className="leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
@@ -220,7 +220,7 @@ export default function HomePage() {
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-4" style={{ color: '#F7FAFC' }}>
               Training Programs
             </h2>
-            <p className="text-xl max-w-2xl mx-auto" style={{ color: '#4A5568' }}>
+            <p className="text-xl max-w-2xl mx-auto" style={{ color: '#E2E8F0' }}>
               Choose the program that fits your goals and schedule.
             </p>
           </div>
@@ -282,7 +282,7 @@ export default function HomePage() {
                 </h3>
                 <div className="mb-6">
                   <span className="text-5xl font-bold text-gradient-orange">{program.price}</span>
-                  <span style={{ color: '#4A5568' }}>{program.period}</span>
+                  <span style={{ color: '#CBD5E1' }}>{program.period}</span>
                 </div>
                 <ul className="space-y-4 mb-8">
                   {program.features.map((feature, idx) => (
@@ -314,7 +314,7 @@ export default function HomePage() {
             <p className="text-xl mb-8 max-w-2xl mx-auto" style={{ color: '#CBD5E1' }}>
               Proudly serving athletes in Virginia Beach, Norfolk, Chesapeake, and Hampton Roads.
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center" style={{ color: '#4A5568' }}>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center" style={{ color: '#E2E8F0' }}>
               <div className="flex items-center gap-2">
                 <Clock className="w-5 h-5" style={{ color: '#B8301A' }} />
                 <span>Mon-Fri: 3PM - 9PM</span>
@@ -355,13 +355,13 @@ export default function HomePage() {
                 <Zap className="w-6 h-6" style={{ color: '#B8301A' }} />
                 <span className="font-display font-bold text-lg" style={{ color: '#F7FAFC' }}>PSP.Pro</span>
               </div>
-              <p className="text-sm" style={{ color: '#4A5568' }}>
+              <p className="text-sm" style={{ color: '#CBD5E1' }}>
                 Progression Over Perfection
               </p>
             </div>
             <div>
               <h4 className="font-semibold mb-4" style={{ color: '#F7FAFC' }}>Platform</h4>
-              <ul className="space-y-2 text-sm" style={{ color: '#4A5568' }}>
+              <ul className="space-y-2 text-sm" style={{ color: '#CBD5E1' }}>
                 <li><Link href="/locker" className="hover:text-orange transition-colors">Dashboard</Link></li>
                 <li><Link href="/drills" className="hover:text-orange transition-colors">Drill Bank</Link></li>
                 <li><Link href="/login" className="hover:text-orange transition-colors">Login</Link></li>
@@ -370,21 +370,21 @@ export default function HomePage() {
             </div>
             <div>
               <h4 className="font-semibold mb-4" style={{ color: '#F7FAFC' }}>Company</h4>
-              <ul className="space-y-2 text-sm" style={{ color: '#4A5568' }}>
+              <ul className="space-y-2 text-sm" style={{ color: '#CBD5E1' }}>
                 <li><Link href="/about" className="hover:text-orange transition-colors">About</Link></li>
                 <li><Link href="/contact" className="hover:text-orange transition-colors">Contact</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4" style={{ color: '#F7FAFC' }}>Contact</h4>
-              <ul className="space-y-2 text-sm" style={{ color: '#4A5568' }}>
+              <ul className="space-y-2 text-sm" style={{ color: '#CBD5E1' }}>
                 <li>Virginia Beach, VA</li>
                 <li>info@propersports.pro</li>
                 <li>(757) 555-0100</li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-white/10 pt-8 text-center text-sm" style={{ color: '#4A5568' }}>
+          <div className="border-t border-white/10 pt-8 text-center text-sm" style={{ color: '#CBD5E1' }}>
             <p>&copy; {new Date().getFullYear()} Proper Sports Performance. All rights reserved.</p>
           </div>
         </div>

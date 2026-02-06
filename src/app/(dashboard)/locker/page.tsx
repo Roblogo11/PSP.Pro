@@ -9,53 +9,78 @@ import { ProgressRing } from '@/components/dashboard/progress-ring'
 import { ActivityFeed } from '@/components/dashboard/activity-feed'
 import { AchievementBadges } from '@/components/dashboard/achievement-badges'
 import { ReviewGameStats } from '@/components/dashboard/review-game-stats'
-
-// Mock data - Replace with real Supabase queries
-const upcomingSession = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) // 2 days from now
+import { useUserRole } from '@/lib/hooks/use-user-role'
+import { useUserStats } from '@/lib/hooks/use-user-stats'
 
 export default function AthleteLockerPage() {
+  const { profile, loading: profileLoading } = useUserRole()
+  const { stats, loading: statsLoading } = useUserStats(profile?.id)
+
+  // Loading state
+  if (profileLoading || statsLoading) {
+    return (
+      <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-400">Loading your dashboard...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // No profile
+  if (!profile) {
+    return (
+      <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-slate-400">Please log in to view your dashboard</p>
+        </div>
+      </div>
+    )
+  }
+
+  const firstName = profile.full_name?.split(' ')[0] || 'Athlete'
+
   return (
     <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8 relative">
       {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
-          Welcome back, <span className="text-gradient-orange">Athlete</span>
+          Welcome back, <span className="text-gradient-orange">{firstName}</span>
         </h1>
         <p className="text-slate-400 text-lg">
-          Let's make today count. Here's your performance overview.
+          Let&apos;s make today count. Here&apos;s your performance overview.
         </p>
       </div>
 
       {/* Bento Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 mb-6">
-        {/* Quick Stats - Top Row */}
+        {/* Quick Stats - Top Row - NOW WITH REAL DATA */}
         <StatCard
           title="Total Sessions"
-          value="24"
+          value={stats?.totalSessions.toString() || '0'}
           subtitle="This season"
           icon={Activity}
-          trend={{ value: 12, positive: true }}
           className="lg:col-span-1"
         />
         <StatCard
           title="Avg Velocity"
-          value="68 mph"
-          subtitle="Last 7 sessions"
+          value={stats?.avgVelocity ? `${stats.avgVelocity} mph` : 'No data'}
+          subtitle="Last 10 sessions"
           icon={Target}
-          trend={{ value: 5.2, positive: true }}
           className="lg:col-span-1"
         />
         <StatCard
           title="Drills Completed"
-          value="156"
+          value={stats?.totalDrills.toString() || '0'}
           subtitle="All time"
           icon={Dumbbell}
           className="lg:col-span-1"
         />
         <StatCard
           title="Current Streak"
-          value="7 days"
-          subtitle="Keep it going!"
+          value={stats?.currentStreak ? `${stats.currentStreak} day${stats.currentStreak !== 1 ? 's' : ''}` : '0 days'}
+          subtitle={stats?.currentStreak ? 'Keep it going!' : 'Start your streak!'}
           icon={Flame}
           className="lg:col-span-2"
         />
@@ -63,11 +88,20 @@ export default function AthleteLockerPage() {
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 md:gap-6 mb-6">
-        {/* Velocity Chart - Takes 3 columns on desktop */}
-        <VelocityChart />
+        {/* Velocity Chart - Takes 3 columns on desktop - NOW WITH REAL DATA */}
+        <VelocityChart velocityData={stats?.recentVelocities || []} />
 
-        {/* Next Session Card - Takes 2 columns on desktop */}
-        <NextSessionCard sessionDate={upcomingSession} />
+        {/* Next Session Card - Takes 2 columns on desktop - NOW WITH REAL DATA */}
+        {stats?.nextSession ? (
+          <NextSessionCard sessionDate={stats.nextSession} />
+        ) : (
+          <div className="command-panel col-span-full lg:col-span-2 flex flex-col items-center justify-center py-12">
+            <p className="text-slate-400 mb-4">No upcoming sessions</p>
+            <Link href="/booking">
+              <button className="btn-primary">Book a Session</button>
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Progress & Activity Grid */}

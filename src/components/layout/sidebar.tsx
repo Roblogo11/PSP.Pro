@@ -16,8 +16,13 @@ import {
   ChevronRight,
   Zap,
   Trophy,
+  Users,
+  Video,
+  BarChart3,
+  Shield,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { useUserRole } from '@/lib/hooks/use-user-role'
 
 interface NavItem {
   label: string
@@ -25,7 +30,7 @@ interface NavItem {
   icon: React.ElementType
 }
 
-const navItems: NavItem[] = [
+const athleteNavItems: NavItem[] = [
   { label: 'Athlete Locker', href: '/locker', icon: LayoutDashboard },
   { label: 'Drill Bank', href: '/drills', icon: Dumbbell },
   { label: 'Sessions', href: '/sessions', icon: Calendar },
@@ -35,16 +40,29 @@ const navItems: NavItem[] = [
   { label: 'Settings', href: '/settings', icon: Settings },
 ]
 
+const adminNavItems: NavItem[] = [
+  { label: 'Admin Control', href: '/admin', icon: Shield },
+  { label: 'Athletes', href: '/admin/athletes', icon: Users },
+  { label: 'Drills', href: '/admin/drills', icon: Dumbbell },
+  { label: 'Bookings', href: '/admin/bookings', icon: Calendar },
+  { label: 'Media Library', href: '/admin/media', icon: Video },
+  { label: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
+]
+
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
+  const { isCoach, isAdmin, loading } = useUserRole()
 
   const handleLogout = async () => {
     const supabase = createClient()
     await supabase.auth.signOut()
     router.push('/')
   }
+
+  // Determine which nav items to show
+  const navItems = isCoach || isAdmin ? [...athleteNavItems, ...adminNavItems] : athleteNavItems
 
   return (
     <>
@@ -93,7 +111,8 @@ export function Sidebar() {
 
         {/* Navigation Items */}
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-          {navItems.map((item) => {
+          {/* Athlete Navigation */}
+          {athleteNavItems.map((item) => {
             const isActive = pathname === item.href
             const Icon = item.icon
 
@@ -130,6 +149,71 @@ export function Sidebar() {
               </Link>
             )
           })}
+
+          {/* Admin Navigation (Coaches Only) */}
+          {(isCoach || isAdmin) && (
+            <>
+              {/* Separator */}
+              <div className="py-2">
+                <AnimatePresence>
+                  {!collapsed && (
+                    <motion.div
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      className="px-4 py-2"
+                    >
+                      <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                        Admin Tools
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                {collapsed && (
+                  <div className="h-px bg-white/10 mx-2" />
+                )}
+              </div>
+
+              {/* Admin Nav Items */}
+              {adminNavItems.map((item) => {
+                const isActive = pathname === item.href
+                const Icon = item.icon
+
+                return (
+                  <Link key={item.href} href={item.href}>
+                    <motion.div
+                      whileHover={{ x: 4 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`
+                        flex items-center gap-3 px-4 py-3 rounded-xl
+                        transition-all duration-200 cursor-pointer
+                        ${
+                          isActive
+                            ? 'bg-cyan/20 border border-cyan/50 text-white shadow-glow-cyan'
+                            : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                        }
+                      `}
+                    >
+                      <Icon className={`w-5 h-5 ${collapsed ? 'mx-auto' : ''}`} />
+                      <AnimatePresence>
+                        {!collapsed && (
+                          <motion.span
+                            initial={{ opacity: 0, width: 0 }}
+                            animate={{ opacity: 1, width: 'auto' }}
+                            exit={{ opacity: 0, width: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="font-medium whitespace-nowrap overflow-hidden"
+                          >
+                            {item.label}
+                          </motion.span>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  </Link>
+                )
+              })}
+            </>
+          )}
         </nav>
 
         {/* Collapse Toggle & Logout */}

@@ -243,7 +243,7 @@ export function GoogleReviews() {
                           className={`w-6 h-6 ${
                             star <= displayRating
                               ? 'fill-orange text-orange animate-pulse'
-                              : 'text-slate-600 hover:text-orange/50'
+                              : 'text-slate-600 hover:text-orange hover:fill-orange/30'
                           }`}
                         />
                       </button>

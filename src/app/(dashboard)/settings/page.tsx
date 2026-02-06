@@ -1,12 +1,151 @@
 'use client'
 
-import { useState } from 'react'
-import { User, Bell, Lock, CreditCard, Mail, Phone, MapPin, Save } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { User, Bell, Lock, CreditCard, Mail, Phone, MapPin, Save, Check } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
+import { useUserRole } from '@/lib/hooks/use-user-role'
 
 export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'security' | 'billing'>(
-    'profile'
-  )
+  const { profile, loading: profileLoading } = useUserRole()
+  const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'security' | 'billing'>('profile')
+  const [saving, setSaving] = useState(false)
+  const [saveSuccess, setSaveSuccess] = useState(false)
+
+  // Profile form state
+  const [fullName, setFullName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [location, setLocation] = useState('')
+
+  // Notification preferences
+  const [notifications, setNotifications] = useState({
+    sessionReminders: true,
+    progressUpdates: true,
+    newDrills: true,
+    achievements: true,
+    coachMessages: true,
+  })
+
+  // Load user data
+  useEffect(() => {
+    if (profile) {
+      setFullName(profile.full_name || '')
+      setEmail(profile.email || '')
+      // Load additional fields from database
+      loadUserDetails()
+    }
+  }, [profile])
+
+  const loadUserDetails = async () => {
+    if (!profile) return
+
+    try {
+      const supabase = createClient()
+      const { data } = await supabase
+        .from('profiles')
+        .select('phone, location, notification_preferences')
+        .eq('id', profile.id)
+        .single()
+
+      if (data) {
+        setPhone(data.phone || '')
+        setLocation(data.location || '')
+        if (data.notification_preferences) {
+          setNotifications(data.notification_preferences)
+        }
+      }
+    } catch (error) {
+      console.error('Error loading user details:', error)
+    }
+  }
+
+  const handleSaveProfile = async () => {
+    if (!profile) return
+
+    setSaving(true)
+    setSaveSuccess(false)
+
+    try {
+      const supabase = createClient()
+
+      // Update profile
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          full_name: fullName,
+          phone: phone,
+          location: location,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', profile.id)
+
+      if (error) throw error
+
+      // Update email if changed (requires separate auth update)
+      if (email !== profile.email) {
+        const { error: emailError } = await supabase.auth.updateUser({
+          email: email,
+        })
+        if (emailError) throw emailError
+      }
+
+      setSaveSuccess(true)
+      setTimeout(() => setSaveSuccess(false), 3000)
+    } catch (error: any) {
+      console.error('Error saving profile:', error)
+      alert('Failed to save changes: ' + error.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleSaveNotifications = async () => {
+    if (!profile) return
+
+    setSaving(true)
+    setSaveSuccess(false)
+
+    try {
+      const supabase = createClient()
+
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          notification_preferences: notifications,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', profile.id)
+
+      if (error) throw error
+
+      setSaveSuccess(true)
+      setTimeout(() => setSaveSuccess(false), 3000)
+    } catch (error: any) {
+      console.error('Error saving notifications:', error)
+      alert('Failed to save notification preferences')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (profileLoading) {
+    return (
+      <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-400">Loading settings...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!profile) {
+    return (
+      <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
+        <p className="text-slate-400">Please log in to access settings</p>
+      </div>
+    )
+  }
 
   const tabs = [
     { id: 'profile', label: 'Profile', icon: User },
@@ -24,6 +163,14 @@ export default function SettingsPage() {
         </h1>
         <p className="text-slate-400 text-lg">Manage your account preferences and settings</p>
       </div>
+
+      {/* Success Message */}
+      {saveSuccess && (
+        <div className="mb-6 p-4 bg-green-500/20 border border-green-500/30 rounded-xl flex items-center gap-3 animate-fade-in">
+          <Check className="w-5 h-5 text-green-400" />
+          <p className="text-green-400 font-semibold">Changes saved successfully!</p>
+        </div>
+      )}
 
       <div className="grid lg:grid-cols-4 gap-6">
         {/* Tabs Sidebar */}
@@ -56,27 +203,16 @@ export default function SettingsPage() {
               <h2 className="text-2xl font-bold text-white mb-6">Profile Information</h2>
 
               <div className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-300 mb-2">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      defaultValue="John"
-                      className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-300 mb-2">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      defaultValue="Athlete"
-                      className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
-                    />
-                  </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-300 mb-2">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
+                  />
                 </div>
 
                 <div>
@@ -86,9 +222,13 @@ export default function SettingsPage() {
                   </label>
                   <input
                     type="email"
-                    defaultValue="athlete@psppro.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
                   />
+                  <p className="text-xs text-slate-500 mt-1">
+                    Changing your email will require verification
+                  </p>
                 </div>
 
                 <div>
@@ -98,7 +238,9 @@ export default function SettingsPage() {
                   </label>
                   <input
                     type="tel"
-                    defaultValue="(555) 123-4567"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="(555) 123-4567"
                     className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
                   />
                 </div>
@@ -110,15 +252,21 @@ export default function SettingsPage() {
                   </label>
                   <input
                     type="text"
-                    defaultValue="Los Angeles, CA"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    placeholder="City, State"
                     className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
                   />
                 </div>
 
                 <div className="pt-4">
-                  <button className="btn-primary">
-                    <Save className="w-5 h-5 mr-2" />
-                    Save Changes
+                  <button
+                    onClick={handleSaveProfile}
+                    disabled={saving}
+                    className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  >
+                    <Save className="w-5 h-5" />
+                    {saving ? 'Saving...' : 'Save Changes'}
                   </button>
                 </div>
               </div>
@@ -131,23 +279,61 @@ export default function SettingsPage() {
 
               <div className="space-y-6">
                 {[
-                  { label: 'Session Reminders', desc: 'Get notified before your training sessions' },
-                  { label: 'Progress Updates', desc: 'Weekly summaries of your athletic progress' },
-                  { label: 'New Drills', desc: 'Notifications when new drills are assigned' },
-                  { label: 'Achievement Unlocked', desc: 'Celebrate when you hit milestones' },
-                  { label: 'Coach Messages', desc: 'Messages and feedback from your coach' },
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 bg-slate-800/30 rounded-xl">
+                  {
+                    key: 'sessionReminders',
+                    label: 'Session Reminders',
+                    desc: 'Get notified before your training sessions',
+                  },
+                  {
+                    key: 'progressUpdates',
+                    label: 'Progress Updates',
+                    desc: 'Weekly summaries of your athletic progress',
+                  },
+                  {
+                    key: 'newDrills',
+                    label: 'New Drills',
+                    desc: 'Notifications when new drills are assigned',
+                  },
+                  {
+                    key: 'achievements',
+                    label: 'Achievement Unlocked',
+                    desc: 'Celebrate when you hit milestones',
+                  },
+                  {
+                    key: 'coachMessages',
+                    label: 'Coach Messages',
+                    desc: 'Messages and feedback from your coach',
+                  },
+                ].map((item) => (
+                  <div key={item.key} className="flex items-center justify-between p-4 bg-slate-800/30 rounded-xl">
                     <div>
                       <h3 className="font-semibold text-white mb-1">{item.label}</h3>
                       <p className="text-sm text-slate-400">{item.desc}</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" defaultChecked className="sr-only peer" />
+                      <input
+                        type="checkbox"
+                        checked={notifications[item.key as keyof typeof notifications]}
+                        onChange={(e) =>
+                          setNotifications({ ...notifications, [item.key]: e.target.checked })
+                        }
+                        className="sr-only peer"
+                      />
                       <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-orange rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange"></div>
                     </label>
                   </div>
                 ))}
+
+                <div className="pt-4">
+                  <button
+                    onClick={handleSaveNotifications}
+                    disabled={saving}
+                    className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  >
+                    <Save className="w-5 h-5" />
+                    {saving ? 'Saving...' : 'Save Preferences'}
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -155,48 +341,11 @@ export default function SettingsPage() {
           {activeTab === 'security' && (
             <div className="command-panel">
               <h2 className="text-2xl font-bold text-white mb-6">Security Settings</h2>
-
               <div className="space-y-6">
-                <div>
-                  <h3 className="font-semibold text-white mb-4">Change Password</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-slate-300 mb-2">
-                        Current Password
-                      </label>
-                      <input
-                        type="password"
-                        className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-slate-300 mb-2">
-                        New Password
-                      </label>
-                      <input
-                        type="password"
-                        className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-slate-300 mb-2">
-                        Confirm New Password
-                      </label>
-                      <input
-                        type="password"
-                        className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
-                      />
-                    </div>
-                    <button className="btn-primary">Update Password</button>
-                  </div>
-                </div>
-
-                <div className="pt-6 border-t border-white/10">
-                  <h3 className="font-semibold text-white mb-4">Two-Factor Authentication</h3>
-                  <p className="text-slate-400 mb-4">
-                    Add an extra layer of security to your account
+                <div className="p-4 bg-cyan/10 border border-cyan/20 rounded-xl">
+                  <p className="text-cyan text-sm">
+                    Password reset and advanced security features coming soon!
                   </p>
-                  <button className="btn-secondary">Enable 2FA</button>
                 </div>
               </div>
             </div>
@@ -205,54 +354,11 @@ export default function SettingsPage() {
           {activeTab === 'billing' && (
             <div className="command-panel">
               <h2 className="text-2xl font-bold text-white mb-6">Billing & Subscription</h2>
-
               <div className="space-y-6">
-                <div className="p-6 bg-gradient-to-br from-orange/10 to-cyan/10 border border-orange/20 rounded-2xl">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-white mb-1">Pro Athlete Plan</h3>
-                      <p className="text-slate-400">Unlimited sessions & drills</p>
-                    </div>
-                    <span className="text-3xl font-bold text-orange">$199/mo</span>
-                  </div>
-                  <button className="btn-ghost w-full">Manage Subscription</button>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-white mb-4">Payment Method</h3>
-                  <div className="p-4 bg-slate-800/30 rounded-xl flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-8 bg-gradient-to-r from-orange to-cyan rounded flex items-center justify-center">
-                        <CreditCard className="w-6 h-6 text-white" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-white">•••• •••• •••• 4242</p>
-                        <p className="text-sm text-slate-400">Expires 12/25</p>
-                      </div>
-                    </div>
-                    <button className="btn-ghost text-sm">Update</button>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-white mb-4">Billing History</h3>
-                  <div className="space-y-2">
-                    {['Jan 2026', 'Dec 2025', 'Nov 2025'].map((month) => (
-                      <div
-                        key={month}
-                        className="flex items-center justify-between p-4 bg-slate-800/30 rounded-xl"
-                      >
-                        <div>
-                          <p className="font-semibold text-white">{month}</p>
-                          <p className="text-sm text-slate-400">Pro Athlete Plan</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold text-white">$199.00</p>
-                          <button className="text-sm text-cyan hover:underline">Download</button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                <div className="p-4 bg-cyan/10 border border-cyan/20 rounded-xl">
+                  <p className="text-cyan text-sm">
+                    Subscription management coming soon! Contact support for billing questions.
+                  </p>
                 </div>
               </div>
             </div>

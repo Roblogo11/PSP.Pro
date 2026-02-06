@@ -8,69 +8,37 @@ import { Calendar, Clock, MapPin, Video, CheckCircle2, XCircle, AlertCircle, X }
 import { format } from 'date-fns'
 import { createClient } from '@/lib/supabase/client'
 import { PLACEHOLDER_IMAGES } from '@/lib/placeholder-images'
+import { useUserRole } from '@/lib/hooks/use-user-role'
+import { useUserSessions } from '@/lib/hooks/use-user-sessions'
 
 export default function SessionsPage() {
   const router = useRouter()
+  const { profile, loading: profileLoading } = useUserRole()
+  const { sessions, upcomingSessions, pastSessions, loading: sessionsLoading } = useUserSessions(profile?.id)
   const [filter, setFilter] = useState<'all' | 'upcoming' | 'past'>('all')
   const [cancelModalOpen, setCancelModalOpen] = useState(false)
   const [rescheduleModalOpen, setRescheduleModalOpen] = useState(false)
-  const [selectedSession, setSelectedSession] = useState<number | null>(null)
+  const [selectedSession, setSelectedSession] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
 
-  // Mock sessions data with coach photos
-  const sessions = [
-    {
-      id: 1,
-      type: 'Velocity Training',
-      date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-      time: '4:00 PM - 5:00 PM',
-      coach: 'Coach Mike',
-      coachPhoto: PLACEHOLDER_IMAGES.coaches.mike,
-      location: 'PSP Training Center',
-      status: 'upcoming',
-      hasVideo: false,
-    },
-    {
-      id: 2,
-      type: 'Hitting Mechanics',
-      date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      time: '3:00 PM - 4:00 PM',
-      coach: 'Coach Sarah',
-      coachPhoto: PLACEHOLDER_IMAGES.coaches.sarah,
-      location: 'PSP Training Center',
-      status: 'upcoming',
-      hasVideo: false,
-    },
-    {
-      id: 3,
-      type: 'Pitching Session',
-      date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-      time: '5:00 PM - 6:00 PM',
-      coach: 'Coach Mike',
-      coachPhoto: PLACEHOLDER_IMAGES.coaches.mike,
-      location: 'PSP Training Center',
-      status: 'completed',
-      hasVideo: true,
-      notes: 'Great velocity gains! Peak: 72 mph (+3 from last session)',
-    },
-    {
-      id: 4,
-      type: 'Movement Assessment',
-      date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-      time: '2:00 PM - 3:00 PM',
-      coach: 'Coach Sarah',
-      coachPhoto: PLACEHOLDER_IMAGES.coaches.sarah,
-      location: 'PSP Training Center',
-      status: 'completed',
-      hasVideo: true,
-      notes: 'Mobility improvements noted. Continue hip flexibility work.',
-    },
-  ]
+  // Loading state
+  if (profileLoading || sessionsLoading) {
+    return (
+      <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-400">Loading your sessions...</p>
+        </div>
+      </div>
+    )
+  }
 
-  const filteredSessions = sessions.filter((session) => {
-    if (filter === 'all') return true
-    return session.status === filter || (filter === 'past' && session.status === 'completed')
-  })
+  // Filter sessions based on selected filter - NOW WITH REAL DATA
+  const filteredSessions = filter === 'all'
+    ? sessions
+    : filter === 'upcoming'
+    ? upcomingSessions
+    : pastSessions
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -92,10 +60,13 @@ export default function SessionsPage() {
     try {
       const supabase = createClient()
 
-      // Update session status to cancelled in Supabase
+      // Update booking status to cancelled
       const { error } = await supabase
-        .from('sessions')
-        .update({ status: 'cancelled', cancelled_at: new Date().toISOString() })
+        .from('bookings')
+        .update({
+          status: 'cancelled',
+          updated_at: new Date().toISOString()
+        })
         .eq('id', selectedSession)
 
       if (error) throw error
@@ -104,9 +75,11 @@ export default function SessionsPage() {
       setCancelModalOpen(false)
       setSelectedSession(null)
 
-      // In a real app, you'd refresh the sessions list here
-      // For now, we'll just show a success message
+      // Page will auto-refresh via the hook
       alert('Session cancelled successfully. Refund will be processed within 3-5 business days.')
+
+      // Force page reload to show updated data
+      window.location.reload()
     } catch (error: any) {
       console.error('Error cancelling session:', error)
       alert('Failed to cancel session. Please contact support.')
@@ -162,14 +135,20 @@ export default function SessionsPage() {
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-start gap-4">
                 {/* Coach Photo */}
-                <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-orange/30">
-                  <Image
-                    src={session.coachPhoto}
-                    alt={session.coach}
-                    fill
-                    sizes="48px"
-                    className="object-cover"
-                  />
+                <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-orange/30 bg-gradient-to-br from-cyan to-orange">
+                  {session.coachPhoto ? (
+                    <Image
+                      src={session.coachPhoto}
+                      alt={session.coach}
+                      fill
+                      sizes="48px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-white font-bold text-lg">
+                      {session.coach.charAt(0)}
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex-1">
@@ -209,6 +188,15 @@ export default function SessionsPage() {
               <div className="mt-4 pt-4 border-t border-white/5">
                 <p className="text-sm text-slate-400">
                   <span className="font-semibold text-white">Notes:</span> {session.notes}
+                </p>
+              </div>
+            )}
+
+            {session.peakVelocity && (
+              <div className="mt-4 pt-4 border-t border-white/5">
+                <p className="text-sm text-slate-400">
+                  <span className="font-semibold text-white">Peak Velocity:</span>{' '}
+                  <span className="text-gradient-orange font-bold">{session.peakVelocity} mph</span>
                 </p>
               </div>
             )}
