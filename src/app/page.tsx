@@ -135,15 +135,20 @@ export default function HomePage() {
 
           {/* Key Action Cards */}
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-20">
-            {/* Book Session */}
-            <Link href="/booking">
+            {/* Book Session - Role-aware link */}
+            <Link href={(isCoach || isAdmin) ? '/admin' : '/booking'}>
               <div className="command-panel p-6 hover:scale-105 transition-all duration-300 cursor-pointer border-orange/20 hover:border-orange/50 group">
                 <div className="w-12 h-12 bg-gradient-to-br from-orange to-orange-600 rounded-xl flex items-center justify-center shadow-glow-orange mb-4 group-hover:shadow-glow-orange-intense">
                   <Clock className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Book a Session</h3>
+                <h3 className="text-xl font-bold text-white mb-2">
+                  {(isCoach || isAdmin) ? 'Manage Bookings' : 'Book a Session'}
+                </h3>
                 <p className="text-slate-400 text-sm">
-                  Schedule 1-on-1 training, group sessions, or video analysis with our coaches
+                  {(isCoach || isAdmin)
+                    ? 'View and manage all training sessions and athlete bookings'
+                    : 'Schedule 1-on-1 training, group sessions, or video analysis with our coaches'
+                  }
                 </p>
               </div>
             </Link>
