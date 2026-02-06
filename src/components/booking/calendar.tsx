@@ -87,22 +87,30 @@ export function Calendar({ selectedDate, onSelectDate, availableDates = [], minD
           onClick={() => available && onSelectDate(date)}
           disabled={!available}
           className={`
-            aspect-square rounded-xl flex items-center justify-center text-sm font-medium
-            transition-all duration-200 relative
-            ${available ? 'cursor-pointer hover:scale-105' : 'cursor-not-allowed opacity-30'}
+            aspect-square rounded-xl flex items-center justify-center text-base font-bold
+            transition-all duration-300 relative group
+            ${available ? 'cursor-pointer hover:scale-110 hover:-translate-y-1' : 'cursor-not-allowed opacity-20'}
             ${
               selected
-                ? 'bg-orange text-white shadow-lg shadow-orange/30 scale-105'
+                ? 'bg-gradient-to-br from-orange via-orange-500 to-orange-600 text-white shadow-2xl shadow-orange/50 scale-110 ring-2 ring-orange/30'
                 : available
-                ? 'glass-card-hover text-white hover:border-orange/50'
-                : 'text-slate-600'
+                ? 'bg-white/5 border border-white/10 text-white hover:bg-gradient-to-br hover:from-orange/20 hover:to-cyan/10 hover:border-cyan/30 hover:shadow-lg'
+                : 'text-slate-700 bg-white/[0.02]'
             }
-            ${today && !selected ? 'ring-2 ring-cyan/50' : ''}
+            ${today && !selected ? 'ring-2 ring-cyan shadow-lg shadow-cyan/30' : ''}
           `}
         >
           {day}
+          {/* Available indicator - pulsing dot */}
           {available && !selected && (
-            <div className="absolute bottom-1 w-1 h-1 rounded-full bg-cyan" />
+            <div className="absolute -bottom-1 flex gap-0.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-cyan group-hover:bg-orange transition-colors" />
+              <div className="w-1 h-1 rounded-full bg-cyan/50 group-hover:bg-orange/50 transition-colors" />
+            </div>
+          )}
+          {/* Today badge */}
+          {today && !selected && (
+            <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-cyan animate-pulse" />
           )}
         </button>
       )
@@ -112,51 +120,51 @@ export function Calendar({ selectedDate, onSelectDate, availableDates = [], minD
   }
 
   return (
-    <div className="glass-card p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+    <div className="glass-card p-6 border-2 border-white/10">
+      {/* Header with gradient */}
+      <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
         <button
           onClick={goToPreviousMonth}
-          className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+          className="p-2 hover:bg-gradient-to-r hover:from-orange/20 hover:to-orange/10 rounded-xl transition-all hover:scale-110"
           aria-label="Previous month"
         >
-          <ChevronLeft className="w-5 h-5 text-white" />
+          <ChevronLeft className="w-6 h-6 text-orange" />
         </button>
 
-        <h3 className="text-lg font-bold text-white">
+        <h3 className="text-xl font-display font-bold bg-gradient-to-r from-white via-white to-slate-300 bg-clip-text text-transparent">
           {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
         </h3>
 
         <button
           onClick={goToNextMonth}
-          className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+          className="p-2 hover:bg-gradient-to-r hover:from-orange/20 hover:to-orange/10 rounded-xl transition-all hover:scale-110"
           aria-label="Next month"
         >
-          <ChevronRight className="w-5 h-5 text-white" />
+          <ChevronRight className="w-6 h-6 text-orange" />
         </button>
       </div>
 
-      {/* Day headers */}
-      <div className="grid grid-cols-7 gap-2 mb-2">
+      {/* Day headers with better styling */}
+      <div className="grid grid-cols-7 gap-3 mb-3">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-          <div key={day} className="text-center text-xs font-medium text-slate-400 py-2">
+          <div key={day} className="text-center text-xs font-bold text-cyan uppercase tracking-wider py-2">
             {day}
           </div>
         ))}
       </div>
 
-      {/* Calendar days */}
-      <div className="grid grid-cols-7 gap-2">{renderDays()}</div>
+      {/* Calendar days with better spacing */}
+      <div className="grid grid-cols-7 gap-3">{renderDays()}</div>
 
-      {/* Legend */}
-      <div className="mt-6 flex items-center gap-4 text-xs text-slate-400">
+      {/* Legend with icons */}
+      <div className="mt-6 pt-6 border-t border-white/10 flex items-center justify-center gap-6 text-sm">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-cyan" />
-          <span>Available</span>
+          <div className="w-2 h-2 rounded-full bg-cyan animate-pulse" />
+          <span className="text-slate-300 font-medium">Available</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-orange" />
-          <span>Selected</span>
+          <div className="w-4 h-4 rounded-lg bg-gradient-to-br from-orange to-orange-600 shadow-glow-orange" />
+          <span className="text-slate-300 font-medium">Selected</span>
         </div>
       </div>
     </div>

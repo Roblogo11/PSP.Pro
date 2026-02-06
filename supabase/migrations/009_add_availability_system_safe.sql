@@ -1,69 +1,25 @@
 -- ========================================
--- Availability System for Coach Scheduling
+-- Availability System (SAFE VERSION)
 -- ========================================
--- Allows coaches to set their available time slots
--- Athletes book from these available slots
+-- Adds missing pieces to existing available_slots table
 -- ========================================
 
--- ========================================
--- AVAILABLE SLOTS TABLE
--- ========================================
-CREATE TABLE public.available_slots (
-  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-
-  -- Coach & Date
-  coach_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
-  slot_date DATE NOT NULL,
-
-  -- Time
-  start_time TIME NOT NULL,
-  end_time TIME NOT NULL,
-
-  -- Availability
-  is_available BOOLEAN DEFAULT TRUE,
-  max_bookings INTEGER DEFAULT 1 CHECK (max_bookings > 0),
-  current_bookings INTEGER DEFAULT 0 CHECK (current_bookings >= 0),
-
-  -- Location
-  location TEXT DEFAULT 'PSP Training Facility',
-
-  -- Repeating (for recurring availability)
-  is_recurring BOOLEAN DEFAULT FALSE,
-  recurrence_pattern TEXT, -- 'weekly', 'daily', etc.
-  recurrence_end_date DATE,
-
-  -- Metadata
-  notes TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()) NOT NULL,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()) NOT NULL,
-
-  -- Constraints
-  CONSTRAINT valid_time_range CHECK (end_time > start_time),
-  CONSTRAINT valid_bookings CHECK (current_bookings <= max_bookings),
-  CONSTRAINT valid_coach CHECK (
-    coach_id IN (SELECT id FROM profiles WHERE role IN ('coach', 'admin'))
-  )
-);
-
--- Indexes
-CREATE INDEX idx_available_slots_coach ON public.available_slots(coach_id);
-CREATE INDEX idx_available_slots_date ON public.available_slots(slot_date);
-CREATE INDEX idx_available_slots_available ON public.available_slots(is_available, slot_date)
+-- Table already exists, just ensure indexes exist
+CREATE INDEX IF NOT EXISTS idx_available_slots_coach ON public.available_slots(coach_id);
+CREATE INDEX IF NOT EXISTS idx_available_slots_date ON public.available_slots(slot_date);
+CREATE INDEX IF NOT EXISTS idx_available_slots_available ON public.available_slots(is_available, slot_date)
   WHERE is_available = TRUE;
 
 -- ========================================
--- UPDATE BOOKINGS TO LINK TO SLOTS
+-- UPDATE BOOKINGS TO LINK TO SLOTS (if not already linked)
 -- ========================================
--- Add optional link to available_slot
-ALTER TABLE public.bookings
-  ADD COLUMN slot_id UUID REFERENCES public.available_slots(id) ON DELETE SET NULL;
+-- Bookings already has slot_id from schema inspection
 
-CREATE INDEX idx_bookings_slot ON public.bookings(slot_id);
+CREATE INDEX IF NOT EXISTS idx_bookings_slot ON public.bookings(slot_id);
 
 -- ========================================
 -- TRIGGER: Update slot booking count
 -- ========================================
--- When a booking is created/cancelled, update the slot's current_bookings
 CREATE OR REPLACE FUNCTION update_slot_booking_count()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -121,6 +77,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Drop trigger if exists and recreate
+DROP TRIGGER IF EXISTS trigger_update_slot_booking_count ON public.bookings;
+
 CREATE TRIGGER trigger_update_slot_booking_count
   AFTER INSERT OR UPDATE OR DELETE ON public.bookings
   FOR EACH ROW
@@ -132,21 +91,25 @@ CREATE TRIGGER trigger_update_slot_booking_count
 ALTER TABLE public.available_slots ENABLE ROW LEVEL SECURITY;
 
 -- Anyone can view available slots
+DROP POLICY IF EXISTS "Anyone can view available slots" ON public.available_slots;
 CREATE POLICY "Anyone can view available slots"
   ON public.available_slots FOR SELECT
   USING (is_available = TRUE AND slot_date >= CURRENT_DATE);
 
 -- Coaches can view their own slots (including unavailable)
+DROP POLICY IF EXISTS "Coaches can view own slots" ON public.available_slots;
 CREATE POLICY "Coaches can view own slots"
   ON public.available_slots FOR SELECT
   USING (coach_id = auth.uid());
 
 -- Admins can view all slots
+DROP POLICY IF EXISTS "Admins can view all slots" ON public.available_slots;
 CREATE POLICY "Admins can view all slots"
   ON public.available_slots FOR SELECT
   USING (auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin'));
 
 -- Coaches can manage their own slots
+DROP POLICY IF EXISTS "Coaches can manage own slots" ON public.available_slots;
 CREATE POLICY "Coaches can manage own slots"
   ON public.available_slots FOR ALL
   USING (
@@ -155,6 +118,7 @@ CREATE POLICY "Coaches can manage own slots"
   );
 
 -- Admins can manage all slots
+DROP POLICY IF EXISTS "Admins can manage all slots" ON public.available_slots;
 CREATE POLICY "Admins can manage all slots"
   ON public.available_slots FOR ALL
   USING (auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin'));
@@ -162,7 +126,6 @@ CREATE POLICY "Admins can manage all slots"
 -- ========================================
 -- HELPER FUNCTION: Generate Weekly Slots
 -- ========================================
--- Coaches can call this to quickly create slots for a week
 CREATE OR REPLACE FUNCTION generate_weekly_slots(
   p_coach_id UUID,
   p_start_date DATE,
@@ -221,8 +184,9 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- ========================================
--- COMMENTS
+-- SUCCESS
 -- ========================================
-COMMENT ON TABLE public.available_slots IS 'Coach availability slots for booking';
-COMMENT ON FUNCTION generate_weekly_slots IS 'Helper to bulk-create recurring slots for a coach';
-COMMENT ON TRIGGER trigger_update_slot_booking_count ON public.bookings IS 'Automatically updates slot booking counts';
+DO $$
+BEGIN
+  RAISE NOTICE '✅ Availability system ready! Triggers, policies, and helper function configured.';
+END $$;
