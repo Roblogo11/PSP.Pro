@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Star, ExternalLink, Trophy, Target, RotateCcw } from 'lucide-react'
+import { updateReviewGameScore } from '@/lib/review-game-storage'
 
 interface GoogleReview {
   id: number
@@ -61,6 +62,7 @@ export function GoogleReviews() {
   const [userGuesses, setUserGuesses] = useState<{ [key: number]: number }>({})
   const [revealedReviews, setRevealedReviews] = useState<{ [key: number]: boolean }>({})
   const [hoveredStars, setHoveredStars] = useState<{ [key: number]: number | null }>({})
+  const [scoreSaved, setScoreSaved] = useState(false)
 
   const handleStarClick = (reviewId: number, rating: number) => {
     if (revealedReviews[reviewId]) return // Can't change after reveal
@@ -93,7 +95,16 @@ export function GoogleReviews() {
     setUserGuesses({})
     setRevealedReviews({})
     setHoveredStars({})
+    setScoreSaved(false)
   }
+
+  // Save score when game is complete
+  useEffect(() => {
+    if (totalRevealed === GOOGLE_REVIEWS.length && !scoreSaved) {
+      updateReviewGameScore(correctGuesses, totalRevealed)
+      setScoreSaved(true)
+    }
+  }, [totalRevealed, correctGuesses, scoreSaved])
 
   // Calculate score
   const totalGuessed = Object.keys(userGuesses).length

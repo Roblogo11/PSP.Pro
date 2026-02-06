@@ -8,6 +8,7 @@ import { StatCard } from '@/components/dashboard/stat-card'
 import { ProgressRing } from '@/components/dashboard/progress-ring'
 import { ActivityFeed } from '@/components/dashboard/activity-feed'
 import { AchievementBadges } from '@/components/dashboard/achievement-badges'
+import { ReviewGameStats } from '@/components/dashboard/review-game-stats'
 
 // Mock data - Replace with real Supabase queries
 const upcomingSession = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) // 2 days from now
@@ -112,6 +113,11 @@ export default function AthleteLockerPage() {
       {/* Achievement Badges Section */}
       <div className="command-panel mb-6">
         <AchievementBadges />
+      </div>
+
+      {/* Review Game Stats */}
+      <div className="mb-6">
+        <ReviewGameStats />
       </div>
 
       {/* Assigned Drills Section */}
