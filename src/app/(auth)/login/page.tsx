@@ -30,7 +30,19 @@ export default function LoginPage() {
       if (signInError) throw signInError
 
       if (data.user) {
-        router.push('/locker')
+        // Fetch user profile to determine role
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', data.user.id)
+          .single()
+
+        // Redirect based on role
+        if (profile?.role === 'admin' || profile?.role === 'coach') {
+          router.push('/admin')
+        } else {
+          router.push('/locker')
+        }
         router.refresh()
       }
     } catch (err: any) {
