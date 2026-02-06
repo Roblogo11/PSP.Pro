@@ -59,6 +59,7 @@ const GOOGLE_REVIEWS: GoogleReview[] = [
 ]
 
 export function GoogleReviews() {
+  const [gameStarted, setGameStarted] = useState(false)
   const [userGuesses, setUserGuesses] = useState<{ [key: number]: number }>({})
   const [revealedReviews, setRevealedReviews] = useState<{ [key: number]: boolean }>({})
   const [hoveredStars, setHoveredStars] = useState<{ [key: number]: number | null }>({})
@@ -138,26 +139,38 @@ export function GoogleReviews() {
           <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
             Match the <span className="text-gradient-orange">Owner's Rating</span>
           </h2>
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto mb-6">
+          <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto mb-6">
             Read each review and guess what rating they gave us. Can you match all 6?
           </p>
 
+          {/* Click to Play Button */}
+          {!gameStarted && (
+            <button
+              onClick={() => setGameStarted(true)}
+              className="btn-primary inline-flex items-center gap-3 text-lg px-8 py-4 animate-pulse hover:animate-none"
+            >
+              <Trophy className="w-6 h-6" />
+              <span>Click to Play</span>
+              <Star className="w-6 h-6 fill-orange" />
+            </button>
+          )}
+
           {/* Score Tracker */}
-          {totalGuessed > 0 && (
+          {gameStarted && totalGuessed > 0 && (
             <div className="command-panel inline-block p-6 mb-6">
               <div className="flex items-center gap-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-white mb-1">
                     {correctGuesses}/{totalRevealed}
                   </div>
-                  <p className="text-sm text-slate-400">Correct Matches</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">Correct Matches</p>
                 </div>
                 <div className="h-12 w-px bg-white/10" />
                 <div className="text-center">
                   <div className="text-3xl font-bold text-cyan mb-1">
                     {totalRevealed}/{GOOGLE_REVIEWS.length}
                   </div>
-                  <p className="text-sm text-slate-400">Revealed</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">Revealed</p>
                 </div>
                 {totalRevealed > 0 && (
                   <>
@@ -176,14 +189,17 @@ export function GoogleReviews() {
           )}
 
           {/* Instructions */}
-          <div className="glass-card p-4 max-w-2xl mx-auto mb-8">
-            <p className="text-sm text-slate-300">
-              <strong className="text-white">How to Play:</strong> Read each review → Click stars to select your guess → Hit "Reveal" to see if you matched!
-            </p>
-          </div>
+          {gameStarted && (
+            <div className="glass-card p-4 max-w-2xl mx-auto mb-8">
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                <strong className="text-white">How to Play:</strong> Read each review → Click stars to select your guess → Hit "Reveal" to see if you matched!
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Review Cards */}
+        {gameStarted && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {GOOGLE_REVIEWS.map((review) => {
             const isRevealed = revealedReviews[review.id]
@@ -211,18 +227,18 @@ export function GoogleReviews() {
                   </div>
                   <div>
                     <h4 className="text-white font-semibold text-sm">{review.name}</h4>
-                    <p className="text-xs text-slate-400">{review.date}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{review.date}</p>
                   </div>
                 </div>
 
                 {/* Review Text */}
-                <p className="text-sm text-slate-300 leading-relaxed mb-4 line-clamp-4">
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4 line-clamp-4">
                   {review.text}
                 </p>
 
                 {/* Interactive Stars */}
                 <div className="mb-4">
-                  <p className="text-xs text-slate-400 mb-2">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
                     {isRevealed ? 'Your Guess:' : 'Your guess: Click stars below'}
                   </p>
                   <div
@@ -268,7 +284,7 @@ export function GoogleReviews() {
                   <div className="space-y-3">
                     {/* Actual Rating */}
                     <div className="p-3 bg-white/5 rounded-xl">
-                      <p className="text-xs text-slate-400 mb-1">Actual Rating:</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Actual Rating:</p>
                       <div className="flex gap-1">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Star
@@ -310,13 +326,14 @@ export function GoogleReviews() {
             )
           })}
         </div>
+        )}
 
         {/* Perfect Score Celebration */}
-        {correctGuesses === GOOGLE_REVIEWS.length && totalRevealed === GOOGLE_REVIEWS.length && (
+        {gameStarted && correctGuesses === GOOGLE_REVIEWS.length && totalRevealed === GOOGLE_REVIEWS.length && (
           <div className="mt-12 command-panel p-8 text-center border-green-400/30 shadow-glow-cyan animate-scale-in">
             <Trophy className="w-16 h-16 text-green-400 mx-auto mb-4 animate-pulse" />
             <h3 className="text-3xl font-bold text-white mb-2">Perfect Score! 🎉</h3>
-            <p className="text-lg text-slate-300 mb-4">
+            <p className="text-lg text-slate-600 dark:text-slate-300 mb-4">
               You matched all {GOOGLE_REVIEWS.length} ratings! You really know quality training when you see it!
             </p>
             <button
@@ -330,35 +347,27 @@ export function GoogleReviews() {
         )}
 
         {/* Bottom CTA */}
+        {gameStarted && (
         <div className="mt-12 text-center">
           <div className="command-panel p-8">
-            <h3 className="text-2xl font-bold text-white mb-4">See All Our Reviews</h3>
-            <p className="text-slate-400 mb-6">
+            <h3 className="text-2xl font-bold text-white mb-4">Ready to Leave Your Own Review?</h3>
+            <p className="text-slate-500 dark:text-slate-400 mb-6">
               These are real reviews from real athletes and parents training at PSP.Pro
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="https://www.google.com/maps/place/ProPer+Sports+Performance+LLC/@36.7951297,-76.6938487,10z/data=!3m1!4b1!4m6!3m5!1s0xa7b9ac5c0e36dc21:0x91c996d6f9dfaa64!8m2!3d36.7955845!4d-76.3642165!16s%2Fg%2F11v05ftwvx?entry=ttu&g_ep=EgoyMDI2MDIwMS4wIKXMDSoKLDEwMDc5MjA2OUgBUAM%3D"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary inline-flex items-center gap-2"
-              >
-                <Star className="w-5 h-5" />
-                <span>View on Google</span>
-                <ExternalLink className="w-4 h-4" />
-              </a>
-              <a
-                href="https://www.google.com/maps/place/ProPer+Sports+Performance+LLC/@36.7951297,-76.6938487,10z/data=!3m1!4b1!4m6!3m5!1s0xa7b9ac5c0e36dc21:0x91c996d6f9dfaa64!8m2!3d36.7955845!4d-76.3642165!16s%2Fg%2F11v05ftwvx?entry=ttu&g_ep=EgoyMDI2MDIwMS4wIKXMDSoKLDEwMDc5MjA2OUgBUAM%3D"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-ghost inline-flex items-center gap-2"
-              >
-                <span>Leave a Review</span>
-                <ExternalLink className="w-4 h-4" />
-              </a>
-            </div>
+            <a
+              href="https://www.google.com/maps/place/ProPer+Sports+Performance+LLC/@36.7951297,-76.6938487,10z/data=!3m1!4b1!4m6!3m5!1s0xa7b9ac5c0e36dc21:0x91c996d6f9dfaa64!8m2!3d36.7955845!4d-76.3642165!16s%2Fg%2F11v05ftwvx?entry=ttu&g_ep=EgoyMDI2MDIwMS4wIKXMDSoKLDEwMDc5MjA2OUgBUAM%3D"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setGameStarted(false)}
+              className="btn-primary inline-flex items-center gap-2"
+            >
+              <Star className="w-5 h-5" />
+              <span>View & Leave a Review on Google</span>
+              <ExternalLink className="w-4 h-4" />
+            </a>
           </div>
         </div>
+        )}
       </div>
     </section>
   )

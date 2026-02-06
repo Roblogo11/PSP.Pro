@@ -24,11 +24,11 @@ export default function ThankYouPage() {
             Thank You!
           </h1>
 
-          <p className="text-xl text-slate-300 mb-6">
+          <p className="text-xl text-slate-600 dark:text-slate-300 mb-6">
             We've received your message and we're excited to help you reach your athletic goals!
           </p>
 
-          <p className="text-slate-400 mb-8">
+          <p className="text-slate-500 dark:text-slate-400 mb-8">
             Our team will review your request and get back to you within 24 hours.
           </p>
 
@@ -50,7 +50,7 @@ export default function ThankYouPage() {
                   <span className="text-cyan font-bold">1</span>
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">We Review</h3>
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
                   Our team reviews your request and prepares a personalized response.
                 </p>
               </div>
@@ -60,7 +60,7 @@ export default function ThankYouPage() {
                   <span className="text-orange font-bold">2</span>
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">We Reach Out</h3>
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
                   Expect a reply within 24 hours with next steps and scheduling options.
                 </p>
               </div>
@@ -70,7 +70,7 @@ export default function ThankYouPage() {
                   <span className="text-green-400 font-bold">3</span>
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">We Train</h3>
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
                   Start your journey to peak athletic performance with personalized training.
                 </p>
               </div>
@@ -88,7 +88,7 @@ export default function ThankYouPage() {
             <h3 className="text-lg font-bold text-white mb-2 group-hover:text-cyan transition-colors">
               Book a Session
             </h3>
-            <p className="text-sm text-slate-400 mb-3">
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">
               Schedule your first training session
             </p>
             <div className="inline-flex items-center gap-2 text-cyan text-sm font-semibold">
@@ -105,7 +105,7 @@ export default function ThankYouPage() {
             <h3 className="text-lg font-bold text-white mb-2 group-hover:text-orange transition-colors">
               Your Dashboard
             </h3>
-            <p className="text-sm text-slate-400 mb-3">
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">
               Track your progress and performance
             </p>
             <div className="inline-flex items-center gap-2 text-orange text-sm font-semibold">

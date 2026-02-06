@@ -64,7 +64,7 @@ export function InfoSidebar() {
                   <h1 className="font-display text-lg font-bold text-white">
                     PSP.Pro Info
                   </h1>
-                  <p className="text-xs text-slate-400">Learn More</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Learn More</p>
                 </div>
               </motion.div>
             )}
@@ -129,7 +129,7 @@ export function InfoSidebar() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setCollapsed(!collapsed)}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-all duration-200"
+            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-600 dark:text-slate-300 hover:text-white transition-all duration-200"
           >
             {collapsed ? (
               <ChevronRight className="w-5 h-5" />

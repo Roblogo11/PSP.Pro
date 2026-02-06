@@ -139,7 +139,7 @@ export default function FAQPage() {
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
           How Can We <span className="text-gradient-orange">Help You?</span>
         </h1>
-        <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+        <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
           Find answers to common questions about training at PSP.Pro
         </p>
       </div>
@@ -147,7 +147,7 @@ export default function FAQPage() {
       {/* Search Bar */}
       <div className="max-w-2xl mx-auto mb-8">
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 dark:text-slate-400" />
           <input
             type="text"
             value={searchQuery}
@@ -166,7 +166,7 @@ export default function FAQPage() {
             className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
               selectedCategory === null
                 ? 'bg-orange text-white shadow-lg shadow-orange/30'
-                : 'glass-card-hover text-slate-300'
+                : 'glass-card-hover text-slate-600 dark:text-slate-300'
             }`}
           >
             All Questions
@@ -178,7 +178,7 @@ export default function FAQPage() {
               className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                 selectedCategory === category
                   ? 'bg-orange text-white shadow-lg shadow-orange/30'
-                  : 'glass-card-hover text-slate-300'
+                  : 'glass-card-hover text-slate-600 dark:text-slate-300'
               }`}
             >
               {category}
@@ -193,7 +193,7 @@ export default function FAQPage() {
           <div className="command-panel p-12 text-center">
             <HelpCircle className="w-16 h-16 text-slate-600 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-white mb-2">No Results Found</h3>
-            <p className="text-slate-400">Try a different search term or category</p>
+            <p className="text-slate-500 dark:text-slate-400">Try a different search term or category</p>
           </div>
         ) : (
           filteredFAQs.map(faq => (
@@ -207,7 +207,7 @@ export default function FAQPage() {
                   <h3 className="text-lg font-bold text-white">{faq.question}</h3>
                 </div>
                 <ChevronDown
-                  className={`w-5 h-5 text-slate-400 transition-transform flex-shrink-0 ${
+                  className={`w-5 h-5 text-slate-500 dark:text-slate-400 transition-transform flex-shrink-0 ${
                     openId === faq.id ? 'rotate-180' : ''
                   }`}
                 />
@@ -222,7 +222,7 @@ export default function FAQPage() {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="px-6 pb-6 pt-2 text-slate-300 leading-relaxed border-t border-white/10">
+                    <div className="px-6 pb-6 pt-2 text-slate-600 dark:text-slate-300 leading-relaxed border-t border-white/10">
                       {faq.answer}
                     </div>
                   </motion.div>
@@ -237,7 +237,7 @@ export default function FAQPage() {
       <div className="max-w-4xl mx-auto mt-12">
         <div className="command-panel p-8 text-center">
           <h3 className="text-2xl font-bold text-white mb-4">Still Have Questions?</h3>
-          <p className="text-slate-400 mb-6">
+          <p className="text-slate-500 dark:text-slate-400 mb-6">
             Can't find what you're looking for? Our team is here to help!
           </p>
           <a

@@ -46,7 +46,7 @@ export default function HomePage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-400">Loading...</p>
+          <p className="text-slate-500 dark:text-slate-400">Loading...</p>
         </div>
       </div>
     )
@@ -144,7 +144,7 @@ export default function HomePage() {
                 <h3 className="text-xl font-bold text-white mb-2">
                   {(isCoach || isAdmin) ? 'Manage Bookings' : 'Book a Session'}
                 </h3>
-                <p className="text-slate-400 text-sm">
+                <p className="text-slate-500 dark:text-slate-400 text-sm">
                   {(isCoach || isAdmin)
                     ? 'View and manage all training sessions and athlete bookings'
                     : 'Schedule 1-on-1 training, group sessions, or video analysis with our coaches'
@@ -160,7 +160,7 @@ export default function HomePage() {
                   <Award className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">View Pricing</h3>
-                <p className="text-slate-400 text-sm">
+                <p className="text-slate-500 dark:text-slate-400 text-sm">
                   Explore training packages, session rates, and save up to $200 on bundles
                 </p>
               </div>
@@ -173,7 +173,7 @@ export default function HomePage() {
                   <Users className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Meet Our Coaches</h3>
-                <p className="text-slate-400 text-sm">
+                <p className="text-slate-500 dark:text-slate-400 text-sm">
                   College & pro experience with proven results in velocity and mechanics
                 </p>
               </div>
