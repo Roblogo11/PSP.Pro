@@ -28,7 +28,7 @@ export default function GetStartedPage() {
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
           Get <span className="text-gradient-orange">Started</span>
         </h1>
-        <p className="text-slate-500 dark:text-slate-400 text-lg">
+        <p className="text-slate-500 text-lg">
           Start your athletic journey with PSP.Pro
         </p>
       </div>
@@ -36,10 +36,10 @@ export default function GetStartedPage() {
       {/* Welcome Section */}
       <div className="command-panel mb-6 text-center">
         <h2 className="text-3xl font-bold text-white mb-4">Welcome to PSP.Pro! 🎯</h2>
-        <p className="text-slate-600 dark:text-slate-300 text-lg mb-4 max-w-2xl mx-auto">
+        <p className="text-slate-600 text-lg mb-4 max-w-2xl mx-auto">
           Ready to take your baseball or softball game to the next level? Let's get you set up for success.
         </p>
-        <p className="text-slate-500 dark:text-slate-400">
+        <p className="text-slate-500">
           Complete this form to schedule your first training session at our Virginia Beach facility.
         </p>
       </div>
@@ -53,7 +53,7 @@ export default function GetStartedPage() {
 
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-2">
+            <label className="block text-sm font-semibold text-slate-600 mb-2">
               First Name *
             </label>
             <input
@@ -66,7 +66,7 @@ export default function GetStartedPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-2">
+            <label className="block text-sm font-semibold text-slate-600 mb-2">
               Last Name *
             </label>
             <input
@@ -79,7 +79,7 @@ export default function GetStartedPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-2 flex items-center gap-2">
+            <label className="block text-sm font-semibold text-slate-600 mb-2 flex items-center gap-2">
               <Mail className="w-4 h-4" />
               Email Address *
             </label>
@@ -93,7 +93,7 @@ export default function GetStartedPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-2 flex items-center gap-2">
+            <label className="block text-sm font-semibold text-slate-600 mb-2 flex items-center gap-2">
               <Phone className="w-4 h-4" />
               Phone Number *
             </label>
@@ -107,7 +107,7 @@ export default function GetStartedPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-2">
+            <label className="block text-sm font-semibold text-slate-600 mb-2">
               Age *
             </label>
             <input
@@ -120,7 +120,7 @@ export default function GetStartedPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-2">
+            <label className="block text-sm font-semibold text-slate-600 mb-2">
               Primary Position *
             </label>
             <select
@@ -146,7 +146,7 @@ export default function GetStartedPage() {
         </div>
 
         <div className="mb-6">
-          <label className="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-2">
+          <label className="block text-sm font-semibold text-slate-600 mb-2">
             Experience Level *
           </label>
           <select
@@ -163,7 +163,7 @@ export default function GetStartedPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-4">
+          <label className="block text-sm font-semibold text-slate-600 mb-4">
             What are your training goals? (Select all that apply)
           </label>
           <div className="grid md:grid-cols-2 gap-3">
@@ -191,7 +191,7 @@ export default function GetStartedPage() {
                   }}
                   className="w-5 h-5 rounded border-slate-600 bg-slate-800 text-orange focus:ring-orange"
                 />
-                <span className="text-slate-600 dark:text-slate-300">{goal}</span>
+                <span className="text-slate-600">{goal}</span>
               </label>
             ))}
           </div>
@@ -206,7 +206,7 @@ export default function GetStartedPage() {
         </div>
 
         <div className="mb-6">
-          <label className="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-2">
+          <label className="block text-sm font-semibold text-slate-600 mb-2">
             Preferred Training Days *
           </label>
           <select
@@ -224,7 +224,7 @@ export default function GetStartedPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-2">
+          <label className="block text-sm font-semibold text-slate-600 mb-2">
             Additional Information
           </label>
           <textarea
@@ -244,7 +244,7 @@ export default function GetStartedPage() {
           <h2 className="text-2xl font-bold text-white">Ready to Start?</h2>
         </div>
 
-        <p className="text-slate-600 dark:text-slate-300 mb-8 max-w-2xl mx-auto">
+        <p className="text-slate-600 mb-8 max-w-2xl mx-auto">
           Our team will review your information and reach out within 24 hours to schedule your first session. We'll discuss your goals and create a personalized training plan.
         </p>
 
@@ -260,7 +260,7 @@ export default function GetStartedPage() {
           </button>
         </div>
 
-        <p className="text-slate-500 dark:text-slate-400 text-sm mt-6">
+        <p className="text-slate-500 text-sm mt-6">
           <MapPin className="w-4 h-4 inline mr-1" />
           Training Location: Virginia Beach, VA
         </p>

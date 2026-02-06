@@ -196,7 +196,7 @@ export default function AdminDashboard() {
       title: 'Add Athlete',
       description: 'Invite new athlete',
       icon: Users,
-      href: '/admin/athletes/new',
+      href: '/admin/athletes',
       color: '#10B981',
     },
     {

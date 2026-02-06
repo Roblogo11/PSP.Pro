@@ -34,9 +34,9 @@ const KNOWLEDGE_BASE = [
     actions: [{ label: 'Contact Us', href: '/contact' }],
   },
   {
-    keywords: ['sport', 'baseball', 'softball', 'what sports'],
+    keywords: ['sport', 'soccer', 'basketball', 'softball', 'what sports'],
     title: 'Sports We Train',
-    response: 'We specialize in:\n\n• Baseball (all positions)\n• Softball (all positions)\n• Pitching mechanics\n• Hitting development\n• Speed & agility\n• Athletic performance',
+    response: 'We specialize in:\n\n• Soccer (all positions)\n• Basketball (all positions)\n• Softball (all positions)\n• Technical skills development\n• Speed & agility\n• Athletic performance',
     actions: [{ label: 'Learn More', href: '/about' }],
   },
   {

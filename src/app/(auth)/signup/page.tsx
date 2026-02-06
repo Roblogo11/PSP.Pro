@@ -2,14 +2,20 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Mail, Lock, User, Calendar, Loader2, ArrowRight } from 'lucide-react'
 
 export default function SignupPage() {
-  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [age, setAge] = useState<string>('')
+  const [showParentFields, setShowParentFields] = useState(false)
+
+  const handleAgeChange = (value: string) => {
+    setAge(value)
+    const ageNum = parseInt(value, 10)
+    setShowParentFields(ageNum > 0 && ageNum < 18)
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -22,6 +28,9 @@ export default function SignupPage() {
     const fullName = formData.get('fullName') as string
     const athleteType = formData.get('athleteType') as string
     const age = formData.get('age') as string
+    const parentGuardianName = formData.get('parentGuardianName') as string
+    const parentGuardianEmail = formData.get('parentGuardianEmail') as string
+    const parentGuardianPhone = formData.get('parentGuardianPhone') as string
 
     try {
       const supabase = createClient()
@@ -33,33 +42,69 @@ export default function SignupPage() {
         options: {
           data: {
             full_name: fullName,
+            athlete_type: athleteType,
+            age: parseInt(age, 10),
           },
         },
       })
 
       if (signUpError) throw signUpError
 
-      // 2. Create profile (this should be handled by a trigger in production)
-      if (authData.user) {
-        const { error: profileError } = await supabase.from('profiles').insert({
-          id: authData.user.id,
-          full_name: fullName,
-          athlete_type: athleteType,
-          age: parseInt(age, 10),
+      if (!authData.user) {
+        throw new Error('Signup failed - no user data returned')
+      }
+
+      // 2. Wait for auth state to propagate
+      await new Promise(resolve => setTimeout(resolve, 500))
+
+      // 3. Create/update profile with additional fields
+      // Note: If trigger exists, this will update. If not, it will insert.
+      const profileData: any = {
+        id: authData.user.id,
+        full_name: fullName,
+        athlete_type: athleteType,
+        age: parseInt(age, 10),
+        role: 'athlete',
+        updated_at: new Date().toISOString(),
+      }
+
+      // Add parent/guardian info if athlete is under 18
+      if (parseInt(age, 10) < 18) {
+        if (parentGuardianName) profileData.parent_guardian_name = parentGuardianName
+        if (parentGuardianEmail) profileData.parent_guardian_email = parentGuardianEmail
+        if (parentGuardianPhone) profileData.parent_guardian_phone = parentGuardianPhone
+      }
+
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert(profileData, {
+          onConflict: 'id'
         })
 
-        if (profileError) {
-          console.error('Profile creation error:', profileError)
-          // Don't throw - the user is created, profile can be added later
-        }
-
-        // Redirect to dashboard
-        router.push('/locker')
-        router.refresh()
+      if (profileError) {
+        console.error('Profile creation error:', profileError)
+        throw new Error(`Failed to create profile: ${profileError.message}`)
       }
+
+      // 4. Verify profile was created successfully
+      const { data: profile, error: profileFetchError } = await supabase
+        .from('profiles')
+        .select('id, full_name, role')
+        .eq('id', authData.user.id)
+        .single()
+
+      if (profileFetchError || !profile) {
+        console.error('Profile verification error:', profileFetchError)
+        throw new Error('Account created but profile verification failed. Please contact support.')
+      }
+
+      // 5. Success! Use window.location for hard navigation (ensures auth state is fresh)
+      window.location.href = '/locker'
+      // Don't set loading to false - we're navigating away
+      return
     } catch (err: any) {
+      console.error('Signup error:', err)
       setError(err.message || 'Failed to create account. Please try again.')
-    } finally {
       setLoading(false)
     }
   }
@@ -159,9 +204,9 @@ export default function SignupPage() {
                 required
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
               >
-                <option value="baseball">Baseball</option>
                 <option value="softball">Softball</option>
-                <option value="other">Other</option>
+                <option value="basketball">Basketball</option>
+                <option value="soccer">Soccer</option>
               </select>
             </div>
 
@@ -179,12 +224,69 @@ export default function SignupPage() {
                   required
                   min="5"
                   max="100"
+                  value={age}
+                  onChange={(e) => handleAgeChange(e.target.value)}
                   className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
                   placeholder="16"
                 />
               </div>
             </div>
           </div>
+
+          {/* Parent/Guardian Information (only if under 18) */}
+          {showParentFields && (
+            <div className="space-y-4 p-4 rounded-xl bg-orange/5 border border-orange/20">
+              <div className="flex items-center gap-2 mb-2">
+                <User className="w-4 h-4 text-orange" />
+                <h3 className="text-sm font-semibold text-orange">Parent/Guardian Information</h3>
+              </div>
+
+              {/* Parent/Guardian Name */}
+              <div>
+                <label htmlFor="parentGuardianName" className="block text-sm font-medium text-slate-300 mb-2">
+                  Parent/Guardian Name *
+                </label>
+                <input
+                  id="parentGuardianName"
+                  name="parentGuardianName"
+                  type="text"
+                  required
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
+                  placeholder="Jane Smith"
+                />
+              </div>
+
+              {/* Parent/Guardian Email */}
+              <div>
+                <label htmlFor="parentGuardianEmail" className="block text-sm font-medium text-slate-300 mb-2">
+                  Parent/Guardian Email *
+                </label>
+                <input
+                  id="parentGuardianEmail"
+                  name="parentGuardianEmail"
+                  type="email"
+                  required
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
+                  placeholder="parent@example.com"
+                />
+              </div>
+
+              {/* Parent/Guardian Phone */}
+              <div>
+                <label htmlFor="parentGuardianPhone" className="block text-sm font-medium text-slate-300 mb-2">
+                  Parent/Guardian Phone *
+                </label>
+                <input
+                  id="parentGuardianPhone"
+                  name="parentGuardianPhone"
+                  type="tel"
+                  required
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange/50 transition-all"
+                  placeholder="(555) 123-4567"
+                />
+              </div>
+            </div>
+          )}
 
           {/* Terms Checkbox */}
           <div className="flex items-start gap-3">

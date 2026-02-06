@@ -1,10 +1,10 @@
+/* Import Fonts - Must be at the top */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Import Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap');
 
 @layer base {
   :root {
@@ -29,12 +29,17 @@
   }
 
   body {
-    @apply text-white antialiased;
-    /* Dark Navy Background with subtle cyan accents */
     font-family: var(--font-inter);
     font-feature-settings: 'cv11', 'ss01';
     font-variation-settings: 'opsz' 32;
-    /* Layer all gradients together - order matters! Top to bottom */
+    @apply antialiased transition-colors duration-300;
+  }
+
+  /* Dark Mode (Default) */
+  .dark body {
+    @apply text-white;
+    color: white !important;
+    /* Dark Navy Background with subtle cyan accents */
     background-image:
       radial-gradient(circle at 20% 50%, rgba(0, 180, 216, 0.08) 0%, transparent 50%),
       radial-gradient(circle at 80% 80%, rgba(0, 180, 216, 0.06) 0%, transparent 50%),
@@ -44,31 +49,211 @@
     background-attachment: fixed;
   }
 
+  /* Light Mode - Soft peachy background with subtle patterns */
+  html:not(.dark) body {
+    @apply text-slate-900;
+    color: rgb(15 23 42) !important; /* Dark text - slate-900 */
+    /* Soft peachy background with subtle cyan accents - matches dark theme balance */
+    background-image:
+      radial-gradient(circle at 20% 50%, rgba(251, 146, 60, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(0, 180, 216, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 50% 0%, rgba(252, 165, 95, 0.05) 0%, transparent 40%),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FB923C' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
+      linear-gradient(135deg, #FFF5F0 0%, #FFEEE5 25%, #FFE8DC 50%, #FFEEE5 75%, #FFF5F0 100%);
+    background-attachment: fixed;
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     font-weight: 700;
   }
 
-  /* Bright text for better readability on dark navy background */
-  p, span, small, li, label, div {
+  /* Big headers with peachy-cyan gradient in light mode */
+  :not(.dark) h1,
+  :not(.dark) h2 {
+    background: linear-gradient(135deg, #0891b2 0%, #06b6d4 30%, #fb923c 70%, #f97316 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 20px rgba(8, 145, 178, 0.15);
+  }
+
+  :not(.dark) h3 {
+    background: linear-gradient(90deg, #0891b2 0%, #fb923c 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Dark mode headers keep white with subtle cyan glow */
+  .dark h1,
+  .dark h2 {
+    color: white;
+    text-shadow: 0 0 30px rgba(0, 180, 216, 0.2);
+  }
+
+  /* Text colors adapt to theme */
+  .dark p, .dark span, .dark small, .dark li, .dark label, .dark div {
     @apply text-slate-50;
   }
 
-  /* Override dark text utilities to be much brighter for dark navy */
-  .text-slate-400 {
+  :not(.dark) p, :not(.dark) span, :not(.dark) small, :not(.dark) li, :not(.dark) label, :not(.dark) div {
+    @apply text-slate-900;
+  }
+
+  /* Override inline styles on list items - CRITICAL for pricing cards */
+  :not(.dark) li[style*="color"],
+  :not(.dark) li {
+    color: rgb(51 65 85) !important; /* slate-700 - dark for light mode */
+  }
+
+  .dark li[style*="color"],
+  .dark li {
+    color: rgb(226 232 240) !important; /* slate-200 - bright for dark mode */
+  }
+
+  /* Ensure small text elements switch properly - aggressive rules for nested elements */
+  :not(.dark) small,
+  :not(.dark) .text-sm,
+  :not(.dark) .text-xs,
+  :not(.dark) * .text-sm,
+  :not(.dark) * .text-xs,
+  :not(.dark) div .text-sm,
+  :not(.dark) div .text-xs,
+  :not(.dark) span .text-sm,
+  :not(.dark) span .text-xs,
+  :not(.dark) p .text-sm,
+  :not(.dark) p .text-xs,
+  :not(.dark) button .text-sm,
+  :not(.dark) button .text-xs,
+  :not(.dark) a .text-sm,
+  :not(.dark) a .text-xs {
+    color: rgb(71 85 105) !important; /* slate-600 - darker for readability */
+  }
+
+  .dark small,
+  .dark .text-sm,
+  .dark .text-xs,
+  .dark * .text-sm,
+  .dark * .text-xs,
+  .dark div .text-sm,
+  .dark div .text-xs,
+  .dark span .text-sm,
+  .dark span .text-xs,
+  .dark p .text-sm,
+  .dark p .text-xs,
+  .dark button .text-sm,
+  .dark button .text-xs,
+  .dark a .text-sm,
+  .dark a .text-xs {
+    color: rgb(226 232 240) !important; /* slate-200 - bright for dark mode */
+  }
+
+  /* Inside glass cards in light mode, darker text on colorful gradient */
+  :not(.dark) .glass-card p,
+  :not(.dark) .glass-card span,
+  :not(.dark) .glass-card small,
+  :not(.dark) .glass-card li,
+  :not(.dark) .glass-card label,
+  :not(.dark) .glass-card div {
+    @apply text-slate-800;
+  }
+
+  /* Override text utilities - DARK MODE ONLY - brighter for dark navy background */
+  .dark .text-slate-400,
+  .dark * .text-slate-400 {
     color: rgb(241 245 249) !important; /* Very bright - slate-100 */
   }
 
-  .text-slate-500 {
+  .dark .text-slate-500,
+  .dark * .text-slate-500 {
     color: rgb(226 232 240) !important; /* Bright - slate-200 */
   }
 
-  .text-slate-300 {
+  .dark .text-slate-300,
+  .dark * .text-slate-300 {
     color: rgb(248 250 252) !important; /* Near white - slate-50 */
   }
 
-  .text-slate-600 {
+  .dark .text-slate-600,
+  .dark * .text-slate-600 {
     color: rgb(203 213 225) !important; /* Medium bright - slate-300 */
+  }
+
+  /* Light mode text utilities - proper dark text - aggressive nesting support */
+  :not(.dark) .text-slate-400,
+  :not(.dark) * .text-slate-400 {
+    color: rgb(148 163 184) !important; /* Actual slate-400 */
+  }
+
+  :not(.dark) .text-slate-500,
+  :not(.dark) * .text-slate-500 {
+    color: rgb(100 116 139) !important; /* Actual slate-500 */
+  }
+
+  :not(.dark) .text-slate-300,
+  :not(.dark) * .text-slate-300 {
+    color: rgb(203 213 225) !important; /* Actual slate-300 */
+  }
+
+  :not(.dark) .text-slate-600,
+  :not(.dark) * .text-slate-600 {
+    color: rgb(71 85 105) !important; /* Actual slate-600 */
+  }
+
+  :not(.dark) .text-white,
+  :not(.dark) * .text-white {
+    color: rgb(30 41 59) !important; /* Dark text in light mode */
+  }
+
+  /* Additional text color utilities for light mode */
+  :not(.dark) .text-slate-50 {
+    color: rgb(15 23 42) !important; /* Very dark in light mode */
+  }
+
+  :not(.dark) .text-slate-100 {
+    color: rgb(30 41 59) !important; /* Dark in light mode */
+  }
+
+  :not(.dark) .text-slate-200 {
+    color: rgb(51 65 85) !important;
+  }
+
+  :not(.dark) .text-slate-700 {
+    color: rgb(51 65 85) !important;
+  }
+
+  :not(.dark) .text-slate-800 {
+    color: rgb(30 41 59) !important;
+  }
+
+  :not(.dark) .text-slate-900 {
+    color: rgb(15 23 42) !important;
+  }
+
+  /* Muted text utilities */
+  :not(.dark) .text-muted,
+  :not(.dark) .text-muted-foreground {
+    color: rgb(100 116 139) !important; /* slate-500 */
+  }
+
+  /* Button text in light mode - ensure readability */
+  :not(.dark) button {
+    color: rgb(30 41 59) !important; /* Dark text by default */
+  }
+
+  :not(.dark) button.text-white,
+  :not(.dark) button .text-white {
+    color: rgb(255 255 255) !important; /* Keep white for colored buttons */
+  }
+
+  /* Link text in light mode */
+  :not(.dark) a {
+    color: rgb(184 48 26) !important; /* Brand orange */
+  }
+
+  :not(.dark) a:hover {
+    color: rgb(212 66 42) !important; /* Lighter orange on hover */
   }
 
   /* Custom Scrollbar - Dark Navy Style */
@@ -100,22 +285,57 @@
 }
 
 @layer components {
-  /* Glassmorphism Card - Dark Navy with subtle cyan accent */
+  /* Glassmorphism Card - Adapts to theme */
   .glass-card {
-    @apply rounded-2xl;
+    @apply rounded-2xl transition-all duration-300;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* Dark Mode Glass Card - More cyan glow */
+  .dark .glass-card {
     background: linear-gradient(
       135deg,
       rgba(15, 23, 42, 0.85) 0%,
       rgba(30, 41, 59, 0.75) 50%,
       rgba(15, 23, 42, 0.85) 100%
     );
-    border: 1px solid rgba(0, 180, 216, 0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 180, 216, 0.30);
     box-shadow:
       0 8px 32px 0 rgba(0, 0, 0, 0.6),
-      inset 0 0 0 1px rgba(0, 180, 216, 0.1),
-      0 0 20px rgba(0, 180, 216, 0.05);
+      inset 0 0 0 1px rgba(0, 180, 216, 0.2),
+      0 0 30px rgba(0, 180, 216, 0.15),
+      0 0 15px rgba(251, 146, 60, 0.08);
+  }
+
+  /* Light Mode Glass Card - Matches dark theme consistency */
+  html:not(.dark) .glass-card {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.90) 0%,
+      rgba(255, 250, 245, 0.85) 50%,
+      rgba(255, 255, 255, 0.90) 100%
+    ) !important;
+    border: 1px solid rgba(184, 48, 26, 0.15) !important;
+    box-shadow:
+      0 8px 32px 0 rgba(0, 0, 0, 0.10),
+      inset 0 0 0 1px rgba(251, 146, 60, 0.1),
+      0 0 20px rgba(184, 48, 26, 0.08),
+      0 0 10px rgba(0, 180, 216, 0.05) !important;
+  }
+
+  /* Light mode text colors - dark text on glassmorphic cards */
+  html:not(.dark) .glass-card {
+    color: #334155 !important; /* slate-700 */
+  }
+
+  html:not(.dark) .glass-card h1,
+  html:not(.dark) .glass-card h2,
+  html:not(.dark) .glass-card h3,
+  html:not(.dark) .glass-card h4,
+  html:not(.dark) .glass-card h5,
+  html:not(.dark) .glass-card h6 {
+    color: #1e293b !important; /* slate-800 */
   }
 
   .glass-card-hover {
@@ -242,26 +462,49 @@
 
   /* High-Tech Buttons */
   .btn-primary {
-    background-color: #B8301A;
     @apply text-white font-semibold px-6 py-3 rounded-xl;
     @apply transition-all duration-300;
     @apply transform hover:scale-105;
+  }
+
+  .dark .btn-primary {
+    background-color: #B8301A;
     box-shadow: 0 0 20px rgba(184, 48, 26, 0.4);
   }
 
-  .btn-primary:hover {
+  .dark .btn-primary:hover {
     background-color: #9C2815;
     box-shadow: 0 0 40px rgba(184, 48, 26, 0.6);
   }
 
-  .btn-ghost {
+  :not(.dark) .btn-primary {
+    background: linear-gradient(135deg, #B8301A 0%, #D4422A 100%);
+    box-shadow: 0 4px 12px rgba(184, 48, 26, 0.25);
+  }
+
+  :not(.dark) .btn-primary:hover {
+    background: linear-gradient(135deg, #D4422A 0%, #B8301A 100%);
+    box-shadow: 0 6px 20px rgba(184, 48, 26, 0.4);
+  }
+
+  .dark .btn-ghost {
     @apply bg-white/5 hover:bg-white/10 text-white font-semibold px-6 py-3 rounded-xl;
     @apply border border-white/10;
     @apply transition-all duration-300;
   }
 
-  .btn-ghost:hover {
+  .dark .btn-ghost:hover {
     border-color: rgba(255, 75, 43, 0.3);
+  }
+
+  :not(.dark) .btn-ghost {
+    @apply bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold px-6 py-3 rounded-xl;
+    @apply border border-slate-300;
+    @apply transition-all duration-300;
+  }
+
+  :not(.dark) .btn-ghost:hover {
+    border-color: rgba(184, 48, 26, 0.4);
   }
 
   .btn-icon {
@@ -433,6 +676,131 @@
   .glass-card {
     border-width: 2px;
   }
+}
+
+/* FunnelNav & Bottom Navigation - Theme Switching */
+/* Light Mode */
+:not(.dark) .bg-dark-100\/95 {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(184, 48, 26, 0.15) !important;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Dark Mode */
+.dark .bg-dark-100\/95 {
+  background: rgba(10, 22, 40, 0.95) !important;
+  border-color: rgba(0, 180, 216, 0.20) !important;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.50) !important;
+}
+
+/* Light Mode Buttons */
+:not(.dark) .bg-dark-200\/80,
+:not(.dark) .bg-dark-200 {
+  background: rgba(248, 250, 252, 0.90) !important;
+  border-color: rgba(184, 48, 26, 0.15) !important;
+}
+
+/* Dark Mode Buttons */
+.dark .bg-dark-200\/80,
+.dark .bg-dark-200 {
+  background: rgba(30, 41, 59, 0.80) !important;
+  border-color: rgba(0, 180, 216, 0.10) !important;
+}
+
+:not(.dark) .bg-dark-200\/80:hover,
+:not(.dark) .bg-dark-200:hover {
+  background: rgba(241, 245, 249, 1) !important;
+  border-color: rgba(184, 48, 26, 0.25) !important;
+}
+
+.dark .bg-dark-200\/80:hover,
+.dark .bg-dark-200:hover {
+  background: rgba(30, 41, 59, 1) !important;
+  border-color: rgba(0, 180, 216, 0.30) !important;
+}
+
+/* Border utilities for light mode */
+:not(.dark) .border-secondary\/20 {
+  border-color: rgba(184, 48, 26, 0.15) !important;
+}
+
+:not(.dark) .border-secondary\/10 {
+  border-color: rgba(184, 48, 26, 0.10) !important;
+}
+
+:not(.dark) .border-secondary\/30 {
+  border-color: rgba(184, 48, 26, 0.25) !important;
+}
+
+/* Shadow utilities for light mode */
+:not(.dark) .shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
+}
+
+:not(.dark) .shadow-black\/50 {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Comprehensive Gray Text Utilities - Light Mode - with nested element support */
+:not(.dark) .text-gray-100,
+:not(.dark) * .text-gray-100 {
+  color: rgb(243, 244, 246) !important; /* Keep light in light mode for backgrounds */
+}
+
+:not(.dark) .text-gray-200,
+:not(.dark) * .text-gray-200 {
+  color: rgb(229, 231, 235) !important;
+}
+
+:not(.dark) .text-gray-300,
+:not(.dark) * .text-gray-300 {
+  color: rgb(71, 85, 105) !important; /* Darker for readability */
+}
+
+:not(.dark) .text-gray-400,
+:not(.dark) * .text-gray-400 {
+  color: rgb(100, 116, 139) !important; /* Medium dark */
+}
+
+:not(.dark) .text-gray-500,
+:not(.dark) * .text-gray-500 {
+  color: rgb(100, 116, 139) !important;
+}
+
+:not(.dark) .text-gray-600,
+:not(.dark) * .text-gray-600 {
+  color: rgb(75, 85, 99) !important; /* Darker */
+}
+
+:not(.dark) .text-gray-700,
+:not(.dark) * .text-gray-700 {
+  color: rgb(55, 65, 81) !important;
+}
+
+:not(.dark) .text-gray-800,
+:not(.dark) * .text-gray-800 {
+  color: rgb(31, 41, 55) !important;
+}
+
+:not(.dark) .text-gray-900,
+:not(.dark) * .text-gray-900 {
+  color: rgb(17, 24, 39) !important; /* Very dark */
+}
+
+/* Hover states for gray text */
+:not(.dark) .group:hover .text-gray-400,
+:not(.dark) .group:hover * .text-gray-400 {
+  color: rgb(184, 48, 26) !important; /* Orange accent on hover */
+}
+
+:not(.dark) .group:hover .text-gray-300,
+:not(.dark) .group:hover * .text-gray-300 {
+  color: rgb(30, 41, 59) !important; /* Dark slate on hover */
+}
+
+/* Background utilities for light mode */
+:not(.dark) .bg-dark-300 {
+  background: rgba(203, 213, 225, 0.5) !important;
 }
 
 /* Reduced Motion Support */

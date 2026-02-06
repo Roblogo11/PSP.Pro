@@ -4,14 +4,13 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import {
   Users,
+  User,
   Plus,
   Search,
   Filter,
   Edit,
   Trash2,
   X,
-  Mail,
-  Phone,
   Calendar,
   TrendingUp,
   Dumbbell,
@@ -26,18 +25,13 @@ import { useRouter } from 'next/navigation'
 interface Athlete {
   id: string
   full_name: string
-  email: string | null
+  email: string | null // Fetched from auth.users
   avatar_url: string | null
   athlete_type: string | null
   age: number | null
-  parent_email: string | null
-  parent_phone: string | null
-  emergency_contact: string | null
-  velocity_goal_mph: number | null
-  phone: string | null
-  location: string | null
   role: string
   created_at: string
+  updated_at: string
 }
 
 interface AthleteStats {
@@ -66,18 +60,17 @@ export default function AthletesManagementPage() {
   const [selectedAthlete, setSelectedAthlete] = useState<Athlete | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
+  const [showParentFields, setShowParentFields] = useState(false)
 
   // Form state
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
-    phone: '',
-    athlete_type: 'baseball',
+    athlete_type: 'softball',
     age: '',
-    parent_email: '',
-    parent_phone: '',
-    emergency_contact: '',
-    velocity_goal_mph: '',
+    parent_guardian_name: '',
+    parent_guardian_email: '',
+    parent_guardian_phone: '',
   })
 
   // Check if user is coach/admin
@@ -95,70 +88,64 @@ export default function AthletesManagementPage() {
       try {
         const supabase = createClient()
 
-        // Load all athletes
+        // Load all athletes (email is in auth.users, not profiles, so we set it to null)
         const { data: athletesData, error: athletesError } = await supabase
           .from('profiles')
-          .select('*')
+          .select('id, full_name, avatar_url, athlete_type, age, role, created_at, updated_at')
           .eq('role', 'athlete')
           .order('full_name')
 
         if (athletesError) throw athletesError
 
-        setAthletes(athletesData || [])
+        // Map to include null email (email is stored in auth.users, not accessible client-side)
+        const athletesWithSchema = (athletesData || []).map(athlete => ({
+          ...athlete,
+          email: null
+        }))
 
-        // Load stats for each athlete
+        setAthletes(athletesWithSchema)
+
+        // Load stats for each athlete from real performance metrics
         if (athletesData && athletesData.length > 0) {
           const statsMap: Record<string, AthleteStats> = {}
 
           for (const athlete of athletesData) {
-            // Get session count
+            // Get total sessions from bookings
             const { count: sessionCount } = await supabase
-              .from('sessions')
+              .from('bookings')
               .select('*', { count: 'exact', head: true })
-              .eq('user_id', athlete.id)
-              .eq('completed', true)
+              .eq('athlete_id', athlete.id)
+              .eq('status', 'completed')
 
-            // Get drill completions
-            const { count: drillCount } = await supabase
-              .from('drill_completions')
-              .select('*', { count: 'exact', head: true })
-              .eq('user_id', athlete.id)
-
-            // Get velocity stats
-            const { data: velocityData } = await supabase
-              .from('velocity_logs')
-              .select('velocity_mph')
-              .eq('user_id', athlete.id)
-              .order('velocity_mph', { ascending: false })
+            // Get performance metrics
+            const { data: metricsData } = await supabase
+              .from('athlete_performance_metrics')
+              .select('throwing_velocity_mph, throwing_velocity_avg_mph')
+              .eq('athlete_id', athlete.id)
+              .order('test_date', { ascending: false })
               .limit(10)
 
-            const avgVelocity = velocityData && velocityData.length > 0
-              ? velocityData.reduce((sum, v) => sum + (v.velocity_mph || 0), 0) / velocityData.length
+            const avgVelocity = metricsData && metricsData.length > 0
+              ? metricsData.reduce((sum, v) => sum + (v.throwing_velocity_avg_mph || v.throwing_velocity_mph || 0), 0) / metricsData.length
               : null
 
-            const maxVelocity = velocityData && velocityData.length > 0
-              ? Math.max(...velocityData.map(v => v.velocity_mph || 0))
+            const maxVelocity = metricsData && metricsData.length > 0
+              ? Math.max(...metricsData.map(v => v.throwing_velocity_mph || 0).filter(v => v > 0))
               : null
 
-            // Get assigned drills
-            const { count: assignedCount } = await supabase
-              .from('assigned_drills')
+            // Get total metrics count
+            const { count: metricsCount } = await supabase
+              .from('athlete_performance_metrics')
               .select('*', { count: 'exact', head: true })
-              .eq('user_id', athlete.id)
-
-            const { count: pendingCount } = await supabase
-              .from('assigned_drills')
-              .select('*', { count: 'exact', head: true })
-              .eq('user_id', athlete.id)
-              .eq('completed', false)
+              .eq('athlete_id', athlete.id)
 
             statsMap[athlete.id] = {
               total_sessions: sessionCount || 0,
-              drills_completed: drillCount || 0,
+              drills_completed: metricsCount || 0, // Using metrics count as performance tests
               avg_velocity: avgVelocity ? parseFloat(avgVelocity.toFixed(1)) : null,
               max_velocity: maxVelocity ? parseFloat(maxVelocity.toFixed(1)) : null,
-              assigned_drills: assignedCount || 0,
-              pending_drills: pendingCount || 0,
+              assigned_drills: 0, // Not tracking assigned drills yet
+              pending_drills: 0, // Not tracking assigned drills yet
             }
           }
 
@@ -192,48 +179,45 @@ export default function AthletesManagementPage() {
 
     setIsProcessing(true)
     try {
-      const supabase = createClient()
-
-      // Create auth user
-      const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-        email: formData.email,
-        email_confirm: true,
-        user_metadata: {
-          full_name: formData.full_name,
+      // Call API route to create athlete (uses service role)
+      const response = await fetch('/api/admin/create-athlete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      })
-
-      if (authError) throw authError
-
-      // Update profile with additional data
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({
+        body: JSON.stringify({
+          email: formData.email,
           full_name: formData.full_name,
           athlete_type: formData.athlete_type,
-          age: formData.age ? parseInt(formData.age) : null,
-          parent_email: formData.parent_email || null,
-          parent_phone: formData.parent_phone || null,
-          emergency_contact: formData.emergency_contact || null,
-          velocity_goal_mph: formData.velocity_goal_mph ? parseFloat(formData.velocity_goal_mph) : null,
-          phone: formData.phone || null,
-          role: 'athlete',
-        })
-        .eq('id', authData.user.id)
+          age: formData.age,
+          parent_guardian_name: formData.parent_guardian_name,
+          parent_guardian_email: formData.parent_guardian_email,
+          parent_guardian_phone: formData.parent_guardian_phone,
+        }),
+      })
 
-      if (profileError) throw profileError
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create athlete')
+      }
 
       // Reload athletes
+      const supabase = createClient()
       const { data: athletesData } = await supabase
         .from('profiles')
-        .select('*')
+        .select('id, full_name, avatar_url, athlete_type, age, role, created_at, updated_at')
         .eq('role', 'athlete')
         .order('full_name')
 
-      setAthletes(athletesData || [])
+      const athletesWithSchema = (athletesData || []).map(athlete => ({
+        ...athlete,
+        email: null
+      }))
+      setAthletes(athletesWithSchema)
       setCreateModalOpen(false)
       resetForm()
-      showSuccess('Athlete created successfully! Login credentials sent to email.')
+      showSuccess('Athlete created successfully! They can now log in with their email.')
     } catch (error: any) {
       console.error('Error creating athlete:', error)
       alert(`Failed to create athlete: ${error.message}`)
@@ -255,11 +239,6 @@ export default function AthletesManagementPage() {
           full_name: formData.full_name,
           athlete_type: formData.athlete_type,
           age: formData.age ? parseInt(formData.age) : null,
-          parent_email: formData.parent_email || null,
-          parent_phone: formData.parent_phone || null,
-          emergency_contact: formData.emergency_contact || null,
-          velocity_goal_mph: formData.velocity_goal_mph ? parseFloat(formData.velocity_goal_mph) : null,
-          phone: formData.phone || null,
         })
         .eq('id', selectedAthlete.id)
 
@@ -268,11 +247,15 @@ export default function AthletesManagementPage() {
       // Reload athletes
       const { data: athletesData } = await supabase
         .from('profiles')
-        .select('*')
+        .select('id, full_name, avatar_url, athlete_type, age, role, created_at, updated_at')
         .eq('role', 'athlete')
         .order('full_name')
 
-      setAthletes(athletesData || [])
+      const athletesWithSchema = (athletesData || []).map(athlete => ({
+        ...athlete,
+        email: null
+      }))
+      setAthletes(athletesWithSchema)
       setEditModalOpen(false)
       setSelectedAthlete(null)
       resetForm()
@@ -290,12 +273,15 @@ export default function AthletesManagementPage() {
 
     setIsProcessing(true)
     try {
-      const supabase = createClient()
+      const response = await fetch(`/api/admin/delete-athlete?id=${selectedAthlete.id}`, {
+        method: 'DELETE',
+      })
 
-      // Delete athlete (this will cascade to all related data)
-      const { error } = await supabase.auth.admin.deleteUser(selectedAthlete.id)
+      const data = await response.json()
 
-      if (error) throw error
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to delete athlete')
+      }
 
       setAthletes(athletes.filter(a => a.id !== selectedAthlete.id))
       setDeleteModalOpen(false)
@@ -309,18 +295,22 @@ export default function AthletesManagementPage() {
     }
   }
 
+  const handleAgeChange = (value: string) => {
+    setFormData({ ...formData, age: value })
+    const ageNum = parseInt(value, 10)
+    setShowParentFields(ageNum > 0 && ageNum < 18)
+  }
+
   const openEditModal = (athlete: Athlete) => {
     setSelectedAthlete(athlete)
     setFormData({
       full_name: athlete.full_name,
       email: athlete.email || '',
-      phone: athlete.phone || '',
-      athlete_type: athlete.athlete_type || 'baseball',
+      athlete_type: athlete.athlete_type || 'softball',
       age: athlete.age?.toString() || '',
-      parent_email: athlete.parent_email || '',
-      parent_phone: athlete.parent_phone || '',
-      emergency_contact: athlete.emergency_contact || '',
-      velocity_goal_mph: athlete.velocity_goal_mph?.toString() || '',
+      parent_guardian_name: '',
+      parent_guardian_email: '',
+      parent_guardian_phone: '',
     })
     setEditModalOpen(true)
   }
@@ -329,14 +319,13 @@ export default function AthletesManagementPage() {
     setFormData({
       full_name: '',
       email: '',
-      phone: '',
-      athlete_type: 'baseball',
+      athlete_type: 'softball',
       age: '',
-      parent_email: '',
-      parent_phone: '',
-      emergency_contact: '',
-      velocity_goal_mph: '',
+      parent_guardian_name: '',
+      parent_guardian_email: '',
+      parent_guardian_phone: '',
     })
+    setShowParentFields(false)
   }
 
   const showSuccess = (message: string) => {
@@ -406,12 +395,22 @@ export default function AthletesManagementPage() {
         <div className="command-panel-active">
           <div className="flex items-center gap-3 mb-2">
             <Dumbbell className="w-6 h-6 text-cyan" />
-            <span className="text-sm text-slate-400">Baseball</span>
+            <span className="text-sm text-slate-400">Soccer</span>
           </div>
           <p className="text-3xl font-bold text-white">
-            {athletes.filter(a => a.athlete_type === 'baseball').length}
+            {athletes.filter(a => a.athlete_type === 'soccer').length}
           </p>
-          <p className="text-sm text-slate-400">Baseball Players</p>
+          <p className="text-sm text-slate-400">Soccer Players</p>
+        </div>
+        <div className="command-panel-active">
+          <div className="flex items-center gap-3 mb-2">
+            <Dumbbell className="w-6 h-6 text-orange" />
+            <span className="text-sm text-slate-400">Basketball</span>
+          </div>
+          <p className="text-3xl font-bold text-white">
+            {athletes.filter(a => a.athlete_type === 'basketball').length}
+          </p>
+          <p className="text-sm text-slate-400">Basketball Players</p>
         </div>
         <div className="command-panel-active">
           <div className="flex items-center gap-3 mb-2">
@@ -422,23 +421,6 @@ export default function AthletesManagementPage() {
             {athletes.filter(a => a.athlete_type === 'softball').length}
           </p>
           <p className="text-sm text-slate-400">Softball Players</p>
-        </div>
-        <div className="command-panel-active">
-          <div className="flex items-center gap-3 mb-2">
-            <TrendingUp className="w-6 h-6 text-green-400" />
-            <span className="text-sm text-slate-400">Avg Goal</span>
-          </div>
-          <p className="text-3xl font-bold text-white">
-            {athletes.filter(a => a.velocity_goal_mph).length > 0
-              ? Math.round(
-                  athletes
-                    .filter(a => a.velocity_goal_mph)
-                    .reduce((sum, a) => sum + (a.velocity_goal_mph || 0), 0) /
-                    athletes.filter(a => a.velocity_goal_mph).length
-                )
-              : 0}
-          </p>
-          <p className="text-sm text-slate-400">MPH Target</p>
         </div>
       </div>
 
@@ -465,10 +447,10 @@ export default function AthletesManagementPage() {
               onChange={(e) => setTypeFilter(e.target.value)}
               className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
             >
-              <option value="all">All Types</option>
-              <option value="baseball">Baseball</option>
+              <option value="all">All Sports</option>
               <option value="softball">Softball</option>
-              <option value="other">Other</option>
+              <option value="basketball">Basketball</option>
+              <option value="soccer">Soccer</option>
             </select>
           </div>
         </div>
@@ -479,13 +461,10 @@ export default function AthletesManagementPage() {
         {filteredAthletes.map((athlete) => {
           const stats = athleteStats[athlete.id]
           return (
-            <div
+            <Link
               key={athlete.id}
-              className="command-panel hover:border-orange/30 transition-all group cursor-pointer"
-              onClick={() => {
-                setSelectedAthlete(athlete)
-                setViewModalOpen(true)
-              }}
+              href={`/admin/athletes/${athlete.id}`}
+              className="command-panel hover:border-orange/30 transition-all group cursor-pointer block"
             >
               {/* Athlete Header */}
               <div className="flex items-start gap-3 mb-4">
@@ -550,26 +529,11 @@ export default function AthletesManagementPage() {
                 </div>
               )}
 
-              {/* Contact Info */}
-              <div className="space-y-2 text-sm">
-                {athlete.email && (
-                  <div className="flex items-center gap-2 text-slate-400">
-                    <Mail className="w-4 h-4" />
-                    <span className="truncate">{athlete.email}</span>
-                  </div>
-                )}
-                {athlete.phone && (
-                  <div className="flex items-center gap-2 text-slate-400">
-                    <Phone className="w-4 h-4" />
-                    <span>{athlete.phone}</span>
-                  </div>
-                )}
-              </div>
-
               {/* Actions */}
               <div className="flex gap-2 mt-4 pt-4 border-t border-white/5">
                 <button
                   onClick={(e) => {
+                    e.preventDefault()
                     e.stopPropagation()
                     openEditModal(athlete)
                   }}
@@ -580,6 +544,7 @@ export default function AthletesManagementPage() {
                 </button>
                 <button
                   onClick={(e) => {
+                    e.preventDefault()
                     e.stopPropagation()
                     setSelectedAthlete(athlete)
                     setDeleteModalOpen(true)
@@ -589,7 +554,7 @@ export default function AthletesManagementPage() {
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
-            </div>
+            </Link>
           )
         })}
       </div>
@@ -672,21 +637,23 @@ export default function AthletesManagementPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-white mb-2">Phone</label>
-                  <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    placeholder="(555) 123-4567"
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
-                  />
+                  <label className="block text-sm font-semibold text-white mb-2">Sport</label>
+                  <select
+                    value={formData.athlete_type}
+                    onChange={(e) => setFormData({ ...formData, athlete_type: e.target.value })}
+                    className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
+                  >
+                    <option value="soccer">Soccer</option>
+                    <option value="basketball">Basketball</option>
+                    <option value="softball">Softball</option>
+                  </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-white mb-2">Age</label>
+                  <label className="block text-sm font-semibold text-white mb-2">Age (Optional)</label>
                   <input
                     type="number"
                     value={formData.age}
-                    onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                    onChange={(e) => handleAgeChange(e.target.value)}
                     placeholder="16"
                     min="5"
                     max="100"
@@ -695,70 +662,54 @@ export default function AthletesManagementPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-semibold text-white mb-2">Athlete Type</label>
-                  <select
-                    value={formData.athlete_type}
-                    onChange={(e) => setFormData({ ...formData, athlete_type: e.target.value })}
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
-                  >
-                    <option value="baseball">Baseball</option>
-                    <option value="softball">Softball</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-white mb-2">Velocity Goal (MPH)</label>
-                  <input
-                    type="number"
-                    value={formData.velocity_goal_mph}
-                    onChange={(e) => setFormData({ ...formData, velocity_goal_mph: e.target.value })}
-                    placeholder="75"
-                    step="0.1"
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
-                  />
-                </div>
-              </div>
-
-              {/* Parent/Guardian Info */}
-              <div className="pt-4 border-t border-white/10">
-                <h3 className="text-lg font-bold text-white mb-4">Parent/Guardian Information</h3>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-white mb-2">Parent Email</label>
-                      <input
-                        type="email"
-                        value={formData.parent_email}
-                        onChange={(e) => setFormData({ ...formData, parent_email: e.target.value })}
-                        placeholder="parent@example.com"
-                        className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-white mb-2">Parent Phone</label>
-                      <input
-                        type="tel"
-                        value={formData.parent_phone}
-                        onChange={(e) => setFormData({ ...formData, parent_phone: e.target.value })}
-                        placeholder="(555) 123-4567"
-                        className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
-                      />
-                    </div>
+              {/* Parent/Guardian Information (only if under 18 and creating new athlete) */}
+              {showParentFields && !editModalOpen && (
+                <div className="space-y-4 p-4 rounded-xl bg-orange/10 border border-orange/30 mt-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <User className="w-4 h-4 text-orange" />
+                    <h3 className="text-sm font-semibold text-orange">Parent/Guardian Information</h3>
                   </div>
+
                   <div>
-                    <label className="block text-sm font-semibold text-white mb-2">Emergency Contact</label>
+                    <label className="block text-sm font-semibold text-white mb-2">
+                      Parent/Guardian Name
+                    </label>
                     <input
                       type="text"
-                      value={formData.emergency_contact}
-                      onChange={(e) => setFormData({ ...formData, emergency_contact: e.target.value })}
-                      placeholder="Name and phone number"
+                      value={formData.parent_guardian_name}
+                      onChange={(e) => setFormData({ ...formData, parent_guardian_name: e.target.value })}
+                      placeholder="Jane Smith"
+                      className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-white mb-2">
+                      Parent/Guardian Email
+                    </label>
+                    <input
+                      type="email"
+                      value={formData.parent_guardian_email}
+                      onChange={(e) => setFormData({ ...formData, parent_guardian_email: e.target.value })}
+                      placeholder="parent@example.com"
+                      className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-white mb-2">
+                      Parent/Guardian Phone
+                    </label>
+                    <input
+                      type="tel"
+                      value={formData.parent_guardian_phone}
+                      onChange={(e) => setFormData({ ...formData, parent_guardian_phone: e.target.value })}
+                      placeholder="(555) 123-4567"
                       className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:border-orange/50"
                     />
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Actions */}
@@ -875,37 +826,6 @@ export default function AthletesManagementPage() {
                   </div>
                 </div>
               )}
-
-              {/* Contact Info */}
-              <div className="bg-slate-800/30 rounded-xl p-4">
-                <h3 className="text-lg font-bold text-white mb-3">Contact Information</h3>
-                <div className="space-y-2">
-                  {selectedAthlete.email && (
-                    <div className="flex items-center gap-3">
-                      <Mail className="w-5 h-5 text-slate-400" />
-                      <span className="text-slate-300">{selectedAthlete.email}</span>
-                    </div>
-                  )}
-                  {selectedAthlete.phone && (
-                    <div className="flex items-center gap-3">
-                      <Phone className="w-5 h-5 text-slate-400" />
-                      <span className="text-slate-300">{selectedAthlete.phone}</span>
-                    </div>
-                  )}
-                  {selectedAthlete.parent_email && (
-                    <div className="flex items-center gap-3">
-                      <Mail className="w-5 h-5 text-slate-400" />
-                      <span className="text-slate-300">{selectedAthlete.parent_email} (Parent)</span>
-                    </div>
-                  )}
-                  {selectedAthlete.parent_phone && (
-                    <div className="flex items-center gap-3">
-                      <Phone className="w-5 h-5 text-slate-400" />
-                      <span className="text-slate-300">{selectedAthlete.parent_phone} (Parent)</span>
-                    </div>
-                  )}
-                </div>
-              </div>
 
               {/* Quick Actions */}
               <div className="flex gap-3">

@@ -23,30 +23,33 @@ import {
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
+
 
 interface NavItem {
   label: string
   href: string
   icon: React.ElementType
+  color?: string
 }
 
 const athleteNavItems: NavItem[] = [
-  { label: 'Athlete Locker', href: '/locker', icon: LayoutDashboard },
-  { label: 'Drill Bank', href: '/drills', icon: Dumbbell },
-  { label: 'Sessions', href: '/sessions', icon: Calendar },
-  { label: 'Progress', href: '/progress', icon: TrendingUp },
-  { label: 'Achievements', href: '/achievements', icon: Trophy },
-  { label: 'Booking', href: '/booking', icon: Clock },
-  { label: 'Settings', href: '/settings', icon: Settings },
+  { label: 'Athlete Locker', href: '/locker', icon: LayoutDashboard, color: 'text-orange-400' },
+  { label: 'Drill Bank', href: '/drills', icon: Dumbbell, color: 'text-cyan-400' },
+  { label: 'Sessions', href: '/sessions', icon: Calendar, color: 'text-purple-400' },
+  { label: 'Progress', href: '/progress', icon: TrendingUp, color: 'text-green-400' },
+  { label: 'Achievements', href: '/achievements', icon: Trophy, color: 'text-yellow-400' },
+  { label: 'Booking', href: '/booking', icon: Clock, color: 'text-blue-400' },
+  { label: 'Settings', href: '/settings', icon: Settings, color: 'text-slate-400' },
 ]
 
 const adminNavItems: NavItem[] = [
-  { label: 'Admin Control', href: '/admin', icon: Shield },
-  { label: 'Athletes', href: '/admin/athletes', icon: Users },
-  { label: 'Drills', href: '/admin/drills', icon: Dumbbell },
-  { label: 'Bookings', href: '/admin/bookings', icon: Calendar },
-  { label: 'Media Library', href: '/admin/media', icon: Video },
-  { label: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
+  { label: 'Admin Control', href: '/admin', icon: Shield, color: 'text-red-400' },
+  { label: 'Athletes', href: '/admin/athletes', icon: Users, color: 'text-cyan-400' },
+  { label: 'Drills', href: '/admin/drills', icon: Dumbbell, color: 'text-purple-400' },
+  { label: 'Bookings', href: '/admin/bookings', icon: Calendar, color: 'text-blue-400' },
+  { label: 'Media Library', href: '/admin/media', icon: Video, color: 'text-pink-400' },
+  { label: 'Analytics', href: '/admin/analytics', icon: BarChart3, color: 'text-green-400' },
 ]
 
 export function Sidebar() {
@@ -122,7 +125,7 @@ export function Sidebar() {
                   whileHover={{ x: 4 }}
                   whileTap={{ scale: 0.98 }}
                   className={`
-                    flex items-center gap-3 px-4 py-3 rounded-xl
+                    group flex items-center gap-3 px-4 py-3 rounded-xl
                     transition-all duration-200 cursor-pointer
                     ${
                       isActive
@@ -131,7 +134,7 @@ export function Sidebar() {
                     }
                   `}
                 >
-                  <Icon className={`w-5 h-5 ${collapsed ? 'mx-auto' : ''}`} />
+                  <Icon className={`w-5 h-5 ${collapsed ? 'mx-auto' : ''} ${item.color || 'text-white'}`} />
                   <AnimatePresence>
                     {!collapsed && (
                       <motion.span
@@ -185,7 +188,7 @@ export function Sidebar() {
                       whileHover={{ x: 4 }}
                       whileTap={{ scale: 0.98 }}
                       className={`
-                        flex items-center gap-3 px-4 py-3 rounded-xl
+                        group flex items-center gap-3 px-4 py-3 rounded-xl
                         transition-all duration-200 cursor-pointer
                         ${
                           isActive
@@ -194,7 +197,7 @@ export function Sidebar() {
                         }
                       `}
                     >
-                      <Icon className={`w-5 h-5 ${collapsed ? 'mx-auto' : ''}`} />
+                      <Icon className={`w-5 h-5 ${collapsed ? 'mx-auto' : ''} ${item.color || 'text-white'}`} />
                       <AnimatePresence>
                         {!collapsed && (
                           <motion.span
@@ -216,13 +219,21 @@ export function Sidebar() {
           )}
         </nav>
 
-        {/* Collapse Toggle & Logout */}
+        {/* Theme Toggle, Collapse & Logout */}
         <div className="p-4 border-t border-white/10 space-y-2">
+          {/* Theme Toggle */}
+          <div className={`flex items-center ${collapsed ? 'justify-center' : 'justify-between'} px-2 py-2 rounded-lg bg-gradient-to-r from-cyan/10 to-orange/10 border border-cyan/20`}>
+            {!collapsed && (
+              <span className="text-sm font-medium bg-gradient-to-r from-cyan to-orange bg-clip-text text-transparent">Theme</span>
+            )}
+            <ThemeToggle />
+          </div>
+
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setCollapsed(!collapsed)}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-all duration-200"
+            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-orange/10 hover:bg-orange/20 text-orange hover:text-orange-400 border border-orange/30 hover:border-orange/50 transition-all duration-200"
           >
             {collapsed ? (
               <ChevronRight className="w-5 h-5" />
@@ -240,14 +251,14 @@ export function Sidebar() {
             onClick={handleLogout}
             className={`
               w-full flex items-center gap-3 px-4 py-3 rounded-xl
-              bg-white/5 hover:bg-red-500/20 text-slate-300 hover:text-red-400
-              border border-transparent hover:border-red-500/50
-              transition-all duration-200
+              bg-red-500/10 hover:bg-red-500/20
+              border border-red-500/30 hover:border-red-500/60
+              transition-all duration-200 shadow-sm hover:shadow-red-500/20
               ${collapsed ? 'justify-center' : ''}
             `}
           >
-            <LogOut className="w-5 h-5" />
-            {!collapsed && <span className="font-medium">Logout</span>}
+            <LogOut className="w-5 h-5 text-red-300 hover:text-red-200" />
+            {!collapsed && <span className="font-medium text-red-300 hover:text-red-200">Logout</span>}
           </motion.button>
         </div>
       </motion.aside>
