@@ -21,7 +21,7 @@ export default function AdminBookingsPage() {
       .from('bookings')
       .select(`
         *,
-        athlete:athlete_id (full_name, email),
+        athlete:athlete_id (full_name),
         coach:coach_id (full_name),
         service:service_id (name)
       `)
@@ -210,7 +210,6 @@ export default function AdminBookingsPage() {
                     <td className="py-4 px-4">
                       <div>
                         <p className="text-sm font-semibold text-white">{booking.athlete?.full_name}</p>
-                        <p className="text-xs text-slate-400">{booking.athlete?.email}</p>
                       </div>
                     </td>
                     <td className="py-4 px-4">
