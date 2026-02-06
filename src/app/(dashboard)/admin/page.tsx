@@ -19,6 +19,8 @@ import {
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
+import { Tooltip, InfoBanner } from '@/components/ui/tooltip'
+import { Lightbulb } from 'lucide-react'
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -192,9 +194,17 @@ export default function AdminDashboard() {
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
           Admin <span className="text-gradient-orange">Control Center</span>
         </h1>
-        <p className="text-slate-400 text-lg">
+        <p className="text-slate-400 text-lg mb-4">
           Manage your athletes, drills, and content from one place
         </p>
+
+        {/* Welcome Guide */}
+        <InfoBanner
+          title="Welcome to Your Command Center!"
+          description="Start by adding drills (bulk import is 180x faster!), then invite athletes, and approve their bookings. Everything updates in real-time."
+          icon={<Lightbulb className="w-5 h-5" />}
+          color="blue"
+        />
       </div>
 
       {/* Quick Stats */}
@@ -202,7 +212,10 @@ export default function AdminDashboard() {
         <div className="command-panel-active">
           <div className="flex items-center justify-between mb-2">
             <Users className="w-8 h-8 text-orange" />
-            <span className="text-sm text-slate-400">Total</span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-slate-400">Total</span>
+              <Tooltip content="Total number of athletes in your system. Click 'Athletes' in the sidebar to manage them or add new ones." />
+            </div>
           </div>
           <p className="text-3xl font-bold text-white mb-1">{stats.totalAthletes}</p>
           <p className="text-sm text-slate-400">Active Athletes</p>
@@ -211,7 +224,10 @@ export default function AdminDashboard() {
         <div className="command-panel-active">
           <div className="flex items-center justify-between mb-2">
             <Calendar className="w-8 h-8 text-cyan" />
-            <span className="text-sm text-slate-400">Upcoming</span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-slate-400">Upcoming</span>
+              <Tooltip content="Shows confirmed and pending sessions scheduled in the future. Go to 'Bookings' to manage them." />
+            </div>
           </div>
           <p className="text-3xl font-bold text-white mb-1">{stats.activeSessions}</p>
           <p className="text-sm text-slate-400">Scheduled Sessions</p>
@@ -220,7 +236,10 @@ export default function AdminDashboard() {
         <div className="command-panel-active">
           <div className="flex items-center justify-between mb-2">
             <Dumbbell className="w-8 h-8 text-green-400" />
-            <span className="text-sm text-slate-400">Library</span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-slate-400">Library</span>
+              <Tooltip content="Total drills in your library. Use 'Bulk Import' to add multiple YouTube videos at once (180x faster than manual entry!)" />
+            </div>
           </div>
           <p className="text-3xl font-bold text-white mb-1">{stats.totalDrills}</p>
           <p className="text-sm text-slate-400">Training Drills</p>
@@ -229,11 +248,16 @@ export default function AdminDashboard() {
         <div className="command-panel-active">
           <div className="flex items-center justify-between mb-2">
             <Clock className="w-8 h-8 text-yellow-400" />
-            {stats.pendingBookings > 0 && (
-              <span className="px-2 py-1 bg-orange/20 border border-orange/40 rounded-full text-xs text-orange font-semibold">
-                {stats.pendingBookings} Pending
-              </span>
-            )}
+            <div className="flex items-center gap-2">
+              {stats.pendingBookings > 0 ? (
+                <span className="px-2 py-1 bg-orange/20 border border-orange/40 rounded-full text-xs text-orange font-semibold">
+                  {stats.pendingBookings} Pending
+                </span>
+              ) : (
+                <span className="text-sm text-slate-400">None</span>
+              )}
+              <Tooltip content="Bookings waiting for your approval. Click to review and confirm or cancel them." />
+            </div>
           </div>
           <p className="text-3xl font-bold text-white mb-1">{stats.pendingBookings}</p>
           <p className="text-sm text-slate-400">Pending Bookings</p>
