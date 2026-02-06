@@ -113,11 +113,18 @@ export default function DrillsManagementPage() {
       try {
         const supabase = createClient()
 
-        // Load all drills (coaches can see unpublished drills too)
-        const { data: drillsData, error: drillsError } = await supabase
+        // Load drills: coaches see only their own, admins see all
+        let drillsQuery = supabase
           .from('drills')
           .select('*')
           .order('created_at', { ascending: false })
+
+        // Coaches can only see drills they created
+        if (!isAdmin && profile?.id) {
+          drillsQuery = drillsQuery.eq('created_by', profile.id)
+        }
+
+        const { data: drillsData, error: drillsError } = await drillsQuery
 
         if (drillsError) throw drillsError
 
@@ -412,10 +419,17 @@ export default function DrillsManagementPage() {
       <div className="flex items-start justify-between mb-8">
         <div>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
-            Drill <span className="text-gradient-orange">Bank</span>
+            {isAdmin ? (
+              <>Drill <span className="text-gradient-orange">Bank</span> <span className="text-slate-500 text-2xl">(All)</span></>
+            ) : (
+              <>My <span className="text-gradient-orange">Drills</span></>
+            )}
           </h1>
           <p className="text-slate-400 text-lg">
-            Create, organize, and assign training drills to athletes
+            {isAdmin
+              ? 'Manage all training drills from all coaches'
+              : 'Create and manage your training drills'
+            }
           </p>
         </div>
         <div className="flex gap-3">
