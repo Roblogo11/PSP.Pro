@@ -413,16 +413,24 @@ export default function DrillsManagementPage() {
             Create, organize, and assign training drills to athletes
           </p>
         </div>
-        <button
-          onClick={() => {
-            resetForm()
-            setCreateModalOpen(true)
-          }}
-          className="btn-primary flex items-center gap-2"
-        >
-          <Plus className="w-5 h-5" />
-          Create Drill
-        </button>
+        <div className="flex gap-3">
+          <Link href="/admin/drills/import">
+            <button className="btn-ghost flex items-center gap-2 border-cyan/30 hover:border-cyan/50 hover:text-cyan">
+              <Upload className="w-5 h-5" />
+              Bulk Import
+            </button>
+          </Link>
+          <button
+            onClick={() => {
+              resetForm()
+              setCreateModalOpen(true)
+            }}
+            className="btn-primary flex items-center gap-2"
+          >
+            <Plus className="w-5 h-5" />
+            Create Drill
+          </button>
+        </div>
       </div>
 
       {/* Stats */}
