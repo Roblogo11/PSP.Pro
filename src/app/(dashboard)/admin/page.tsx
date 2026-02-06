@@ -57,7 +57,7 @@ export default function AdminDashboard() {
           .from('bookings')
           .select('*', { count: 'exact', head: true })
           .in('status', ['confirmed', 'pending'])
-          .gte('session_date', new Date().toISOString().split('T')[0])
+          .gte('booking_date', new Date().toISOString().split('T')[0])
 
         // Get total drills
         const { count: drillCount } = await supabase
