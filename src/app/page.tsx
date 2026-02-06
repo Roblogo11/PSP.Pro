@@ -1,3 +1,7 @@
+'use client'
+
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
@@ -19,8 +23,40 @@ import { GoogleReviews } from '@/components/google-reviews'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
 import { OptimizedImage } from '@/components/ui/optimized-image'
 import { PLACEHOLDER_IMAGES } from '@/lib/placeholder-images'
+import { useUserRole } from '@/lib/hooks/use-user-role'
 
 export default function HomePage() {
+  const router = useRouter()
+  const { profile, isCoach, isAdmin, isAthlete, loading } = useUserRole()
+
+  // Redirect logged-in users to their appropriate dashboard
+  useEffect(() => {
+    if (!loading && profile) {
+      if (isCoach || isAdmin) {
+        router.push('/admin')
+      } else if (isAthlete) {
+        router.push('/locker')
+      }
+    }
+  }, [loading, profile, isCoach, isAdmin, isAthlete, router])
+
+  // Show landing page for non-logged-in users
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-400">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // If user is logged in, they'll be redirected by the useEffect
+  if (profile) {
+    return null
+  }
+
   return (
     <main className="min-h-screen home-page">
       {/* Hero Section */}
