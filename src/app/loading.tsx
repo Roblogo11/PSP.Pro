@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 export default function Loading() {
   return (
     <div
@@ -20,32 +22,18 @@ export default function Loading() {
         />
 
         {/* PSP Logo */}
-        <div className="relative z-10 mb-6">
-          <svg
-            width="240"
-            height="80"
-            viewBox="0 0 240 80"
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-20 md:h-24 animate-pulse"
+        <div className="relative z-10 mb-6 animate-pulse" style={{ animationDuration: '2s' }}>
+          <Image
+            src="/images/PSP-black-300x99-1.png"
+            alt="PSP.Pro Logo"
+            width={300}
+            height={99}
+            priority
+            className="h-20 md:h-24 w-auto brightness-0 invert"
             style={{
-              filter: 'drop-shadow(0 0 25px rgba(0, 180, 216, 0.6))',
-              animationDuration: '2s',
+              filter: 'drop-shadow(0 0 25px rgba(0, 180, 216, 0.6)) brightness(0) invert(1)',
             }}
-          >
-            {/* PSP.Pro text */}
-            <text
-              x="120"
-              y="50"
-              fontFamily="system-ui, -apple-system, sans-serif"
-              fontSize="48"
-              fontWeight="800"
-              fill="#FFFFFF"
-              textAnchor="middle"
-              letterSpacing="2"
-            >
-              PSP<tspan fill="#00B4D8">.Pro</tspan>
-            </text>
-          </svg>
+          />
         </div>
 
         {/* Brand Tagline */}
