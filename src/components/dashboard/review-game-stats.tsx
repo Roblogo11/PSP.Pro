@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { Star, Trophy, Target, TrendingUp, Play } from 'lucide-react'
 import {
   getReviewGameScore,
@@ -63,11 +62,7 @@ export function ReviewGameStats() {
   const rank = getReviewGameRank(score.accuracy)
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="command-panel p-6 border-orange/20"
-    >
+    <div className="command-panel p-6 border-orange/20">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
@@ -163,6 +158,6 @@ export function ReviewGameStats() {
           </p>
         </div>
       )}
-    </motion.div>
+    </div>
   )
 }
