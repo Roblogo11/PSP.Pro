@@ -44,11 +44,13 @@ export default function BookingPage() {
     const { data, error } = await supabase
       .from('services')
       .select('*')
-      .eq('is_active', true)
-      .order('category', { ascending: true })
+      .eq('active', true)
+      .order('name', { ascending: true })
 
     if (data) {
       setServices(data)
+    } else if (error) {
+      console.error('Error fetching services:', error)
     }
   }
 
