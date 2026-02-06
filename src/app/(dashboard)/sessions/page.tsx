@@ -2,10 +2,12 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Calendar, Clock, MapPin, Video, CheckCircle2, XCircle, AlertCircle, X } from 'lucide-react'
 import { format } from 'date-fns'
 import { createClient } from '@/lib/supabase/client'
+import { PLACEHOLDER_IMAGES } from '@/lib/placeholder-images'
 
 export default function SessionsPage() {
   const router = useRouter()
@@ -15,7 +17,7 @@ export default function SessionsPage() {
   const [selectedSession, setSelectedSession] = useState<number | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
 
-  // Mock sessions data
+  // Mock sessions data with coach photos
   const sessions = [
     {
       id: 1,
@@ -23,6 +25,7 @@ export default function SessionsPage() {
       date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
       time: '4:00 PM - 5:00 PM',
       coach: 'Coach Mike',
+      coachPhoto: PLACEHOLDER_IMAGES.coaches.mike,
       location: 'PSP Training Center',
       status: 'upcoming',
       hasVideo: false,
@@ -33,6 +36,7 @@ export default function SessionsPage() {
       date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       time: '3:00 PM - 4:00 PM',
       coach: 'Coach Sarah',
+      coachPhoto: PLACEHOLDER_IMAGES.coaches.sarah,
       location: 'PSP Training Center',
       status: 'upcoming',
       hasVideo: false,
@@ -43,6 +47,7 @@ export default function SessionsPage() {
       date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
       time: '5:00 PM - 6:00 PM',
       coach: 'Coach Mike',
+      coachPhoto: PLACEHOLDER_IMAGES.coaches.mike,
       location: 'PSP Training Center',
       status: 'completed',
       hasVideo: true,
@@ -54,6 +59,7 @@ export default function SessionsPage() {
       date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
       time: '2:00 PM - 3:00 PM',
       coach: 'Coach Sarah',
+      coachPhoto: PLACEHOLDER_IMAGES.coaches.sarah,
       location: 'PSP Training Center',
       status: 'completed',
       hasVideo: true,
@@ -155,12 +161,25 @@ export default function SessionsPage() {
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-start gap-4">
-                {getStatusIcon(session.status)}
-                <div>
-                  <h3 className="text-xl font-bold text-white group-hover:text-orange transition-colors">
-                    {session.type}
-                  </h3>
-                  <p className="text-sm text-slate-400 mt-1">{session.coach}</p>
+                {/* Coach Photo */}
+                <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-orange/30">
+                  <Image
+                    src={session.coachPhoto}
+                    alt={session.coach}
+                    fill
+                    sizes="48px"
+                    className="object-cover"
+                  />
+                </div>
+
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="text-xl font-bold text-white group-hover:text-orange transition-colors">
+                      {session.type}
+                    </h3>
+                    {getStatusIcon(session.status)}
+                  </div>
+                  <p className="text-sm text-slate-400">{session.coach}</p>
                 </div>
               </div>
               {session.hasVideo && (

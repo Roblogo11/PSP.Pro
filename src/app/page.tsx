@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   Zap,
   Target,
@@ -16,19 +17,36 @@ import {
 } from 'lucide-react'
 import { GoogleReviews } from '@/components/google-reviews'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
+import { OptimizedImage } from '@/components/ui/optimized-image'
+import { PLACEHOLDER_IMAGES } from '@/lib/placeholder-images'
 
 export default function HomePage() {
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Hero Background Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={PLACEHOLDER_IMAGES.hero.main}
+            alt={PLACEHOLDER_IMAGES.hero.alt}
+            fill
+            priority
+            quality={90}
+            sizes="100vw"
+            className="object-cover"
+          />
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/80 to-slate-950/95" />
+        </div>
+
         {/* Background Pattern */}
-        <div className="absolute inset-0 bg-grid-pattern opacity-20" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-10 z-[1]" />
 
         {/* Cyan Glow Effect - PSP Blue */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] rounded-full blur-[150px]" style={{ background: 'radial-gradient(circle, rgba(0, 180, 216, 0.15) 0%, rgba(0, 180, 216, 0.05) 50%, transparent 100%)' }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] rounded-full blur-[150px] z-[2]" style={{ background: 'radial-gradient(circle, rgba(0, 180, 216, 0.15) 0%, rgba(0, 180, 216, 0.05) 50%, transparent 100%)' }} />
         {/* Orange accent glow */}
-        <div className="absolute bottom-0 right-0 w-[800px] h-[800px] rounded-full blur-[150px]" style={{ background: 'radial-gradient(circle, rgba(184, 48, 26, 0.08) 0%, transparent 70%)' }} />
+        <div className="absolute bottom-0 right-0 w-[800px] h-[800px] rounded-full blur-[150px] z-[2]" style={{ background: 'radial-gradient(circle, rgba(184, 48, 26, 0.08) 0%, transparent 70%)' }} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 text-center">
           {/* Logo */}
@@ -142,31 +160,53 @@ export default function HomePage() {
                 icon: TrendingUp,
                 title: 'Velocity Tracking',
                 description: 'Monitor your progress with detailed velocity charts and performance analytics. See your improvement over time.',
-                color: '#10B981'
+                color: '#10B981',
+                image: PLACEHOLDER_IMAGES.features.velocityTracking,
+                imageAlt: PLACEHOLDER_IMAGES.features.alt.velocityTracking
               },
               {
                 icon: Play,
                 title: 'Premium Drill Bank',
                 description: 'Access 100+ professional training drills with video tutorials, categorized by mechanics, speed, and power.',
-                color: '#B8301A'
+                color: '#B8301A',
+                image: PLACEHOLDER_IMAGES.features.drillBank,
+                imageAlt: PLACEHOLDER_IMAGES.features.alt.drillBank
               },
               {
                 icon: Target,
                 title: 'Personalized Training',
                 description: 'Get custom drill assignments from coaches and track your completion rate. Built for baseball and softball athletes.',
-                color: '#8B5CF6'
+                color: '#8B5CF6',
+                image: PLACEHOLDER_IMAGES.features.personalizedTraining,
+                imageAlt: PLACEHOLDER_IMAGES.features.alt.personalizedTraining
               },
             ].map((feature, index) => (
-              <div key={index} className="glass-card-hover p-8 group">
-                <div className="p-4 bg-orange/10 rounded-xl w-fit mb-6 group-hover:shadow-glow-orange transition-all">
-                  <feature.icon className="w-8 h-8" style={{ color: feature.color }} />
+              <div key={index} className="glass-card-hover p-0 group overflow-hidden">
+                {/* Feature Image */}
+                <div className="relative h-48 w-full overflow-hidden">
+                  <Image
+                    src={feature.image}
+                    alt={feature.imageAlt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
+                  {/* Icon Overlay */}
+                  <div className="absolute bottom-4 left-4 p-3 bg-orange/10 backdrop-blur-sm rounded-xl border border-white/10 group-hover:shadow-glow-orange transition-all">
+                    <feature.icon className="w-6 h-6" style={{ color: feature.color }} />
+                  </div>
                 </div>
-                <h3 className="text-2xl font-display font-bold mb-4" style={{ color: '#F7FAFC' }}>
-                  {feature.title}
-                </h3>
-                <p style={{ color: '#4A5568' }} className="leading-relaxed">
-                  {feature.description}
-                </p>
+
+                {/* Content */}
+                <div className="p-8">
+                  <h3 className="text-2xl font-display font-bold mb-4" style={{ color: '#F7FAFC' }}>
+                    {feature.title}
+                  </h3>
+                  <p style={{ color: '#4A5568' }} className="leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
               </div>
             ))}
           </div>

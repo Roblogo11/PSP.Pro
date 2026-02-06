@@ -15,6 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Zap,
+  Trophy,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -29,6 +30,7 @@ const navItems: NavItem[] = [
   { label: 'Drill Bank', href: '/drills', icon: Dumbbell },
   { label: 'Sessions', href: '/sessions', icon: Calendar },
   { label: 'Progress', href: '/progress', icon: TrendingUp },
+  { label: 'Achievements', href: '/achievements', icon: Trophy },
   { label: 'Booking', href: '/booking', icon: Clock },
   { label: 'Settings', href: '/settings', icon: Settings },
 ]
