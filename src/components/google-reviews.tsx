@@ -98,14 +98,6 @@ export function GoogleReviews() {
     setScoreSaved(false)
   }
 
-  // Save score when game is complete
-  useEffect(() => {
-    if (totalRevealed === GOOGLE_REVIEWS.length && !scoreSaved) {
-      updateReviewGameScore(correctGuesses, totalRevealed)
-      setScoreSaved(true)
-    }
-  }, [totalRevealed, correctGuesses, scoreSaved])
-
   // Calculate score
   const totalGuessed = Object.keys(userGuesses).length
   const totalRevealed = Object.keys(revealedReviews).length
@@ -114,6 +106,14 @@ export function GoogleReviews() {
     const review = GOOGLE_REVIEWS.find(r => r.id === parseInt(id))
     return review && userGuesses[parseInt(id)] === review.rating
   }).length
+
+  // Save score when game is complete
+  useEffect(() => {
+    if (totalRevealed === GOOGLE_REVIEWS.length && !scoreSaved) {
+      updateReviewGameScore(correctGuesses, totalRevealed)
+      setScoreSaved(true)
+    }
+  }, [totalRevealed, correctGuesses, scoreSaved])
 
   const getResultMessage = (reviewId: number, actualRating: number) => {
     const userGuess = userGuesses[reviewId]
