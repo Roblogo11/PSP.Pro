@@ -11,9 +11,11 @@ import {
   Clock,
   Users,
   Flame,
-  Activity
+  Activity,
+  LayoutDashboard
 } from 'lucide-react'
 import { GoogleReviews } from '@/components/google-reviews'
+import { FunnelNav } from '@/components/navigation/funnel-nav'
 
 export default function HomePage() {
   return (
@@ -62,7 +64,7 @@ export default function HomePage() {
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-20">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link href="/signup">
               <button className="btn-primary text-lg px-8 py-4 flex items-center gap-2 mx-auto">
                 <span>Start Training</span>
@@ -70,10 +72,35 @@ export default function HomePage() {
               </button>
             </Link>
             <Link href="/locker">
-              <button className="btn-ghost text-lg px-8 py-4">
-                View Dashboard Demo
+              <button className="btn-ghost text-lg px-8 py-4 flex items-center gap-2 mx-auto border-cyan/30 hover:border-cyan/50">
+                <LayoutDashboard className="w-5 h-5" />
+                <span>Access Athletic OS</span>
               </button>
             </Link>
+          </div>
+
+          {/* Dashboard CTA Card */}
+          <div className="command-panel max-w-2xl mx-auto p-8 mb-20 border-cyan/20">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 bg-gradient-velocity rounded-xl flex items-center justify-center shadow-glow-orange">
+                <LayoutDashboard className="w-6 h-6 text-white" />
+              </div>
+              <div className="text-left">
+                <h3 className="text-xl font-bold text-white">Athletic OS Dashboard</h3>
+                <p className="text-slate-400 text-sm">Track progress • Analyze drills • Book sessions</p>
+              </div>
+            </div>
+            <p className="text-slate-300 mb-6 text-left">
+              Access your personalized training dashboard to view velocity gains, drill history, upcoming sessions, and performance analytics.
+            </p>
+            <div className="flex gap-3">
+              <Link href="/login" className="flex-1">
+                <button className="btn-primary w-full">Login to Dashboard</button>
+              </Link>
+              <Link href="/signup" className="flex-1">
+                <button className="btn-ghost w-full border-orange/30">Create Account</button>
+              </Link>
+            </div>
           </div>
 
           {/* Quick Stats */}
@@ -322,6 +349,9 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* Funnel Navigation */}
+      <FunnelNav />
     </main>
   )
 }
