@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { usePathname, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 
-const LOGO_URL = 'https://roblogo.com/wp-content/uploads/2025/02/smp-icon-anim.gif'
+const LOGO_PATH = '/images/PSP-black-300x99-1.png'
 
 // Timing thresholds
 const SHOW_DELAY = 150 // Show loader if navigation takes longer than 150ms
@@ -139,53 +139,74 @@ export function FlashLoader() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="relative"
-            style={{ width: '140px', height: '140px' }}
+            className="relative flex flex-col items-center"
           >
-            {/* Soft glow behind hex */}
+            {/* Soft glow behind logo */}
             <div
-              className="absolute inset-0 blur-2xl opacity-60"
+              className="absolute inset-0 blur-3xl opacity-60"
               style={{
-                background: 'radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(236, 72, 153, 0.2) 50%, transparent 70%)',
-                transform: 'scale(1.5)',
+                background: 'radial-gradient(circle, rgba(255, 87, 34, 0.5) 0%, rgba(0, 180, 216, 0.3) 50%, transparent 70%)',
+                transform: 'scale(2)',
               }}
             />
-            {/* Spinning hex border */}
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-              className="absolute inset-0"
+
+            {/* Spinning circular border rings */}
+            <div className="relative" style={{ width: '120px', height: '120px' }}>
+              {/* Outer rotating ring */}
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+                className="absolute inset-0 rounded-full"
+                style={{
+                  border: '3px solid transparent',
+                  borderTopColor: 'rgba(255, 87, 34, 0.8)',
+                  borderRightColor: 'rgba(255, 87, 34, 0.4)',
+                }}
+              />
+              {/* Middle counter-rotating ring */}
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                className="absolute inset-2 rounded-full"
+                style={{
+                  border: '2px solid transparent',
+                  borderTopColor: 'rgba(0, 180, 216, 0.6)',
+                  borderLeftColor: 'rgba(0, 180, 216, 0.3)',
+                }}
+              />
+
+              {/* Center circle with logo */}
+              <div
+                className="absolute inset-4 rounded-full flex items-center justify-center"
+                style={{
+                  background: 'radial-gradient(circle, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 1) 100%)',
+                  boxShadow: '0 0 30px rgba(255, 87, 34, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.5)',
+                }}
+              >
+                <Image
+                  src={LOGO_PATH}
+                  alt="PSP.Pro"
+                  width={80}
+                  height={26}
+                  priority
+                  className="brightness-0 invert opacity-90"
+                />
+              </div>
+            </div>
+
+            {/* Loading text */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+              className="mt-6 text-sm font-semibold tracking-wider uppercase"
               style={{
-                clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-                background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.5) 0%, rgba(236, 72, 153, 0.3) 100%)',
-              }}
-            />
-            {/* Static hex background */}
-            <div
-              className="absolute"
-              style={{
-                inset: '6px',
-                clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-                background: 'rgba(10, 10, 10, 0.9)',
-              }}
-            />
-            {/* Static logo centered - clipped to hex */}
-            <div
-              className="absolute flex items-center justify-center overflow-hidden"
-              style={{
-                inset: '6px',
-                clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                color: '#FF5722',
+                textShadow: '0 0 10px rgba(255, 87, 34, 0.5)',
               }}
             >
-              <Image
-                src={LOGO_URL}
-                alt=""
-                width={90}
-                height={90}
-                priority
-                unoptimized
-              />
-            </div>
+              Loading...
+            </motion.p>
           </motion.div>
         </motion.div>
       )}

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { ChevronDown, HelpCircle, Search } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { InfoSidebar } from '@/components/layout/info-sidebar'
 
 interface FAQItem {
   id: number
@@ -126,7 +127,9 @@ export default function FAQPage() {
   })
 
   return (
-    <div className="min-h-screen p-4 md:p-8 pb-24">
+    <div className="flex min-h-screen">
+      <InfoSidebar />
+      <main className="flex-1 p-4 md:p-8 pb-24 lg:pb-8">
       {/* Header */}
       <div className="max-w-4xl mx-auto mb-12 text-center">
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan/10 border border-cyan/20 rounded-full mb-6">
@@ -246,6 +249,7 @@ export default function FAQPage() {
           </a>
         </div>
       </div>
+      </main>
     </div>
   )
 }

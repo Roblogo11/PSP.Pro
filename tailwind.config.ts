@@ -12,6 +12,16 @@ const config: Config = {
         // PSP.Pro Brand Colors - Premium Athletic OS Theme
         border: '#1F2937', // Subtle border
 
+        // Semantic Color Aliases (for compatibility)
+        primary: '#050A18', // Navy
+        secondary: '#FF5722', // Orange (main CTA color)
+        accent: '#00B4D8', // Cyan (accent/highlight)
+
+        // Dark backgrounds
+        'dark-100': '#1A1F2E',
+        'dark-200': '#141824',
+        'dark-300': '#0F1219',
+
         // Primary: Deep Navy (Command Center Background)
         navy: {
           DEFAULT: '#050A18',

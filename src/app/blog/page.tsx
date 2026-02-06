@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { Calendar, Clock, ArrowRight, BookOpen, TrendingUp } from 'lucide-react'
+import { InfoSidebar } from '@/components/layout/info-sidebar'
 
 interface BlogPost {
   id: string
@@ -86,7 +87,9 @@ export default function BlogPage() {
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-8 pb-24">
+    <div className="flex min-h-screen">
+      <InfoSidebar />
+      <main className="flex-1 p-4 md:p-8 pb-24 lg:pb-8">
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-12 text-center">
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan/10 border border-cyan/20 rounded-full mb-6">
@@ -210,6 +213,7 @@ export default function BlogPage() {
           </p>
         </div>
       </div>
+      </main>
     </div>
   )
 }

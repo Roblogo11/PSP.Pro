@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Mail, Phone, MapPin, Send, Loader2, MessageSquare } from 'lucide-react'
 import { GoogleReviews } from '@/components/google-reviews'
+import { InfoSidebar } from '@/components/layout/info-sidebar'
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -53,7 +54,9 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-8 pb-24">
+    <div className="flex min-h-screen">
+      <InfoSidebar />
+      <main className="flex-1 p-4 md:p-8 pb-24 lg:pb-8">
       {/* Header */}
       <div className="max-w-6xl mx-auto mb-12">
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
@@ -272,6 +275,7 @@ export default function ContactPage() {
           </div>
         </div>
       </div>
+      </main>
     </div>
   )
 }

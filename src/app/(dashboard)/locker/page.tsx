@@ -1,4 +1,5 @@
-import { Metadata } from 'next'
+'use client'
+
 import { Activity, Dumbbell, Target, Flame } from 'lucide-react'
 import { VelocityChart } from '@/components/dashboard/velocity-chart'
 import { NextSessionCard } from '@/components/dashboard/next-session-card'
@@ -7,20 +8,12 @@ import { ProgressRing } from '@/components/dashboard/progress-ring'
 import { ActivityFeed } from '@/components/dashboard/activity-feed'
 import { AchievementBadges } from '@/components/dashboard/achievement-badges'
 
-// Force dynamic rendering for this protected dashboard page
-export const dynamic = 'force-dynamic'
-
-export const metadata: Metadata = {
-  title: 'Athlete Locker | PSP.Pro',
-  description: 'Your personal athletic command center. Track velocity, progress, and upcoming sessions.',
-}
-
 // Mock data - Replace with real Supabase queries
 const upcomingSession = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) // 2 days from now
 
 export default function AthleteLockerPage() {
   return (
-    <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8">
+    <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8 relative">
       {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">

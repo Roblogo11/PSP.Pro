@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { ArrowLeft, ArrowRight, Zap, Home, Video, Package, Globe, Rocket, Sparkles } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Zap, Home, Video, Package, Globe, Rocket, Sparkles, Users } from 'lucide-react'
 import { getFunnelNavigation, getTransitionDirection, getFunnelIndex } from '@/config/navigation'
 import { useNavigation } from './nav-context'
 
-// Step labels for the progress indicator
-const STEP_LABELS = ['Home', 'Video', 'Shock Kit', 'Website', 'Start']
-const STEP_ICONS = [Home, Video, Package, Globe, Rocket]
+// Step labels for the progress indicator - PSP.Pro Athletic Journey
+const STEP_LABELS = ['Home', 'About', 'Pricing', 'Get Started', 'Contact']
+const STEP_ICONS = [Home, Users, Package, Rocket, Sparkles]
 
 interface FunnelNavProps {
   className?: string

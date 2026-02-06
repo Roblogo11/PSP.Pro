@@ -4,9 +4,23 @@ import { cookies } from 'next/headers'
 export async function createClient() {
   const cookieStore = await cookies()
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  // Validate Supabase configuration
+  if (!supabaseUrl || !supabaseKey ||
+      supabaseUrl.includes('placeholder') ||
+      supabaseKey.includes('placeholder')) {
+    throw new Error(
+      "Your project's URL and Key are required to create a Supabase client!\n\n" +
+      "Check your Supabase project's API settings to find these values\n\n" +
+      "https://supabase.com/dashboard/project/_/settings/api"
+    )
+  }
+
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseKey,
     {
       cookies: {
         get(name: string) {

@@ -2,10 +2,13 @@
 
 import Link from 'next/link'
 import { Home, CheckCircle, Calendar, Target, ArrowRight } from 'lucide-react'
+import { InfoSidebar } from '@/components/layout/info-sidebar'
 
 export default function ThankYouPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="flex min-h-screen">
+      <InfoSidebar />
+      <main className="flex-1 flex items-center justify-center p-4">
       <div className="max-w-2xl w-full text-center">
         {/* Success Icon */}
         <div className="mb-8 flex justify-center">
@@ -116,6 +119,7 @@ export default function ThankYouPage() {
           ProPer Sports Performance • Virginia Beach, VA
         </p>
       </div>
+      </main>
     </div>
   )
 }

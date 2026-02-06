@@ -6,6 +6,7 @@ import { Providers } from '@/providers'
 import { CommandPalette } from '@/components/ui/command-palette'
 import { JsonLdSchema } from '@/components/seo/json-ld-schema'
 import { PSPAssistant } from '@/components/psp-assistant'
+import { AthleticOSBackground } from '@/components/athletic-os-background'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -92,6 +93,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen">
         <Providers>
+          <AthleticOSBackground />
           <CommandPalette />
           <PSPAssistant />
           {children}

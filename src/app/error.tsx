@@ -87,15 +87,19 @@ export default function Error({
 
         {/* Reassurance */}
         <p className="mt-12 text-sm text-gray-500">
-          Our services are still available. You can explore our{' '}
-          <Link href="/video" className="text-secondary hover:underline">
-            video production
+          Your training continues. You can explore our{' '}
+          <Link href="/drills" className="text-secondary hover:underline">
+            training drills
           </Link>
           ,{' '}
-          <Link href="/website-help" className="text-secondary hover:underline">
-            web development
+          <Link href="/pricing" className="text-secondary hover:underline">
+            programs
           </Link>
-          , and other creative services.
+          , and{' '}
+          <Link href="/about" className="text-secondary hover:underline">
+            coaching team
+          </Link>
+          .
         </p>
       </div>
     </div>
