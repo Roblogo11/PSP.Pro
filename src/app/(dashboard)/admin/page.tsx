@@ -32,6 +32,8 @@ export default function AdminDashboard() {
     pendingBookings: 0,
   })
   const [loadingStats, setLoadingStats] = useState(true)
+  const [upcomingSessions, setUpcomingSessions] = useState<any[]>([])
+  const [loadingSessions, setLoadingSessions] = useState(true)
 
   // Check if user is coach/admin (only redirect if we have a profile loaded)
   useEffect(() => {
@@ -88,6 +90,47 @@ export default function AdminDashboard() {
     }
 
     loadAdminStats()
+  }, [profile, isCoach])
+
+  // Load upcoming sessions
+  useEffect(() => {
+    if (!profile || !isCoach) return
+
+    async function loadUpcomingSessions() {
+      try {
+        const supabase = createClient()
+        const today = new Date().toISOString().split('T')[0]
+
+        const { data: sessions, error } = await supabase
+          .from('bookings')
+          .select(`
+            id,
+            booking_date,
+            start_time,
+            end_time,
+            status,
+            athlete:athlete_id (full_name),
+            service:service_id (name)
+          `)
+          .in('status', ['confirmed', 'pending'])
+          .gte('booking_date', today)
+          .order('booking_date', { ascending: true })
+          .order('start_time', { ascending: true })
+          .limit(5)
+
+        if (error) {
+          console.error('Error loading upcoming sessions:', error)
+        } else {
+          setUpcomingSessions(sessions || [])
+        }
+      } catch (error) {
+        console.error('Error in loadUpcomingSessions:', error)
+      } finally {
+        setLoadingSessions(false)
+      }
+    }
+
+    loadUpcomingSessions()
   }, [profile, isCoach])
 
   if (loading || loadingStats) {
@@ -262,6 +305,94 @@ export default function AdminDashboard() {
           <p className="text-3xl font-bold text-white mb-1">{stats.pendingBookings}</p>
           <p className="text-sm text-slate-400">Pending Bookings</p>
         </div>
+      </div>
+
+      {/* Upcoming Sessions Widget */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-bold text-white">Upcoming Sessions</h2>
+          <Link
+            href="/admin/bookings"
+            className="text-sm text-cyan hover:text-cyan/80 transition-colors flex items-center gap-1"
+          >
+            View All
+            <TrendingUp className="w-4 h-4" />
+          </Link>
+        </div>
+
+        {loadingSessions ? (
+          <div className="command-panel">
+            <div className="text-center py-8">
+              <div className="w-8 h-8 border-3 border-cyan border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+              <p className="text-sm text-slate-400">Loading sessions...</p>
+            </div>
+          </div>
+        ) : upcomingSessions.length === 0 ? (
+          <div className="command-panel">
+            <div className="text-center py-8">
+              <Calendar className="w-12 h-12 text-slate-600 mx-auto mb-3" />
+              <p className="text-slate-400 mb-2">No upcoming sessions scheduled</p>
+              <p className="text-sm text-slate-500">Set your availability to start booking sessions</p>
+              <Link href="/admin/availability" className="btn-primary mt-4 inline-flex items-center gap-2">
+                <Plus className="w-4 h-4" />
+                Set Availability
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {upcomingSessions.map((session) => {
+              const sessionDate = new Date(session.booking_date)
+              const formattedDate = sessionDate.toLocaleDateString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric',
+              })
+              const statusColor =
+                session.status === 'confirmed'
+                  ? 'bg-green-500/20 border-green-500/40 text-green-400'
+                  : 'bg-yellow-500/20 border-yellow-500/40 text-yellow-400'
+
+              return (
+                <Link key={session.id} href={`/admin/bookings`}>
+                  <div className="command-panel-active hover:border-cyan/30 transition-all group cursor-pointer">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-xl bg-cyan/10 border border-cyan/20 flex items-center justify-center">
+                          <Calendar className="w-6 h-6 text-cyan" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-white group-hover:text-cyan transition-colors">
+                            {session.athlete?.full_name || 'Unknown Athlete'}
+                          </h3>
+                          <p className="text-sm text-slate-400">
+                            {session.service?.name || 'Training Session'}
+                          </p>
+                        </div>
+                      </div>
+                      <span
+                        className={`text-xs font-semibold px-2 py-1 rounded-full border ${statusColor}`}
+                      >
+                        {session.status}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-4 text-sm text-slate-400">
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        {formattedDate}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span>
+                          {session.start_time} - {session.end_time}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        )}
       </div>
 
       {/* Quick Actions */}
