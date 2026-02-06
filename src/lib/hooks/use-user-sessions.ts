@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import type { Database } from '@/lib/database.types'
+import { createClient } from '@/lib/supabase/client'
 
 export interface UserSession {
   id: string
@@ -21,7 +20,7 @@ export interface UserSession {
 export function useUserSessions(userId: string | undefined) {
   const [sessions, setSessions] = useState<UserSession[]>([])
   const [loading, setLoading] = useState(true)
-  const supabase = createClientComponentClient<Database>()
+  const supabase = createClient()
 
   useEffect(() => {
     if (!userId) {

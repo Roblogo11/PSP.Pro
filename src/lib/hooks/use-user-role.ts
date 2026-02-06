@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import type { Database } from '@/lib/database.types'
+import { createClient } from '@/lib/supabase/client'
 
 export type UserRole = 'athlete' | 'coach' | 'admin'
 
@@ -17,7 +16,7 @@ export interface UserProfile {
 export function useUserRole() {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
-  const supabase = createClientComponentClient<Database>()
+  const supabase = createClient()
 
   useEffect(() => {
     async function loadUserProfile() {
