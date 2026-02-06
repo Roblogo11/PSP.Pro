@@ -29,10 +29,10 @@ export function useUserRole() {
           return
         }
 
-        // Get user profile with role
+        // Get user profile with role (email comes from auth.users, not profiles)
         const { data: profileData, error } = await supabase
           .from('profiles')
-          .select('id, email, full_name, role, avatar_url')
+          .select('id, full_name, role, avatar_url')
           .eq('id', user.id)
           .single()
 
@@ -40,7 +40,11 @@ export function useUserRole() {
           console.error('Error loading profile:', error)
           setProfile(null)
         } else {
-          setProfile(profileData as UserProfile)
+          // Combine profile data with email from auth user
+          setProfile({
+            ...profileData,
+            email: user.email || '',
+          } as UserProfile)
         }
       } catch (error) {
         console.error('Error in loadUserProfile:', error)
