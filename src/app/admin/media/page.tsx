@@ -1,10 +1,12 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
+import { useUserRole } from '@/lib/hooks/use-user-role'
 import {
   Search, Filter, Trash2, Edit2, ExternalLink,
   Image as ImageIcon, Video, Link2, Star, X, Check,
-  HardDrive, Cloud, Database, ChevronDown, Home
+  HardDrive, Cloud, Database, ChevronDown, Home, Loader2
 } from 'lucide-react'
 
 interface GalleryItem {
@@ -90,9 +92,8 @@ function getThumbnailUrl(item: GalleryItem): string | null {
 }
 
 export default function MediaDashboard() {
-  const [password, setPassword] = useState('')
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [authError, setAuthError] = useState('')
+  const router = useRouter()
+  const { profile, isAdmin, loading: authLoading } = useUserRole()
 
   const [items, setItems] = useState<GalleryItem[]>([])
   const [stats, setStats] = useState<MediaStats | null>(null)
@@ -118,27 +119,18 @@ export default function MediaDashboard() {
   // Delete confirmation
   const [deletingItem, setDeletingItem] = useState<GalleryItem | null>(null)
 
-  const handleLogin = () => {
-    setAuthError('')
-    // Just store password for API calls
-    setIsAuthenticated(true)
-  }
+  // Redirect non-admins
+  useEffect(() => {
+    if (!authLoading && !isAdmin) {
+      router.push('/admin')
+    }
+  }, [authLoading, isAdmin, router])
 
   const fetchMedia = async () => {
     setLoading(true)
     setError('')
     try {
-      const response = await fetch('/api/media', {
-        headers: {
-          'Authorization': `Bearer ${password}`
-        }
-      })
-
-      if (response.status === 401) {
-        setIsAuthenticated(false)
-        setAuthError('Invalid password')
-        return
-      }
+      const response = await fetch('/api/media')
 
       if (!response.ok) {
         throw new Error('Failed to fetch media')
@@ -156,10 +148,10 @@ export default function MediaDashboard() {
   }
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAdmin && !authLoading) {
       fetchMedia()
     }
-  }, [isAuthenticated])
+  }, [isAdmin, authLoading])
 
   // Filter items
   const filteredItems = useMemo(() => {
@@ -213,7 +205,6 @@ export default function MediaDashboard() {
       const response = await fetch('/api/media', {
         method: 'PATCH',
         headers: {
-          'Authorization': `Bearer ${password}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -245,10 +236,7 @@ export default function MediaDashboard() {
 
     try {
       const response = await fetch(`/api/media?id=${encodeURIComponent(deletingItem.id)}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${password}`
-        }
+        method: 'DELETE'
       })
 
       if (!response.ok) throw new Error('Delete failed')
@@ -271,33 +259,15 @@ export default function MediaDashboard() {
     })
   }
 
-  // Login Screen
-  if (!isAuthenticated) {
+  // Loading or Access Check
+  if (authLoading || !isAdmin) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-        <div className="bg-gray-800 p-8 rounded-lg shadow-xl max-w-md w-full">
-          <h1 className="text-2xl font-bold text-white mb-6 text-center">Media Hot Route</h1>
-          <p className="text-gray-400 text-sm mb-6 text-center">Enter admin password to access media management</p>
-
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
-            placeholder="Admin Password"
-            className="w-full px-4 py-3 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500 mb-4"
-          />
-
-          {authError && (
-            <p className="text-red-400 text-sm mb-4">{authError}</p>
-          )}
-
-          <button
-            onClick={handleLogin}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded transition"
-          >
-            Access Dashboard
-          </button>
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 text-orange animate-spin mx-auto mb-4" />
+          <p className="text-slate-400">
+            {authLoading ? 'Loading...' : 'Checking access permissions...'}
+          </p>
         </div>
       </div>
     )
@@ -314,17 +284,11 @@ export default function MediaDashboard() {
           </div>
           <div className="flex items-center gap-3">
             <a
-              href="/"
-              className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded transition"
+              href="/admin"
+              className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-medium py-2 px-4 rounded-lg transition border border-white/10"
             >
               <Home className="w-4 h-4" />
-              Home
-            </a>
-            <a
-              href="/admin/upload"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition"
-            >
-              + Upload New
+              Admin Dashboard
             </a>
           </div>
         </div>

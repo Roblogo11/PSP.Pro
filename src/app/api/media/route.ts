@@ -1,22 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createServerClient } from '@/lib/supabase/server'
 import { getAllMedia, updateMediaMetadata, deleteMediaItem, GALLERY_TYPES, type GalleryType } from '@/lib/gallery'
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
+async function isAdmin(): Promise<boolean> {
+  try {
+    const supabase = await createServerClient()
+    const { data: { user } } = await supabase.auth.getUser()
 
-if (!ADMIN_PASSWORD) {
-  console.error('ADMIN_PASSWORD environment variable is required')
-}
+    if (!user) return false
 
-function isAuthorized(request: NextRequest): boolean {
-  if (!ADMIN_PASSWORD) return false
-  const authHeader = request.headers.get('authorization')
-  return authHeader === `Bearer ${ADMIN_PASSWORD}`
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    return profile?.role === 'admin'
+  } catch (error) {
+    console.error('Auth check error:', error)
+    return false
+  }
 }
 
 export async function GET(request: NextRequest) {
   try {
-    if (!isAuthorized(request)) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    if (!(await isAdmin())) {
+      return NextResponse.json({ error: 'Unauthorized - Admin access only' }, { status: 401 })
     }
     const { items, stats } = getAllMedia()
     return NextResponse.json({ items, stats })
@@ -28,8 +37,8 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    if (!isAuthorized(request)) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    if (!(await isAdmin())) {
+      return NextResponse.json({ error: 'Unauthorized - Admin access only' }, { status: 401 })
     }
 
     const body = await request.json()
@@ -68,8 +77,8 @@ export async function PATCH(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    if (!isAuthorized(request)) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    if (!(await isAdmin())) {
+      return NextResponse.json({ error: 'Unauthorized - Admin access only' }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
