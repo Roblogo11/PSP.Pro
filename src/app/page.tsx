@@ -28,7 +28,7 @@ export default function HomePage() {
         {/* Cyan Glow Effect - PSP Blue */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] rounded-full blur-[150px]" style={{ background: 'radial-gradient(circle, rgba(0, 180, 216, 0.15) 0%, rgba(0, 180, 216, 0.05) 50%, transparent 100%)' }} />
         {/* Orange accent glow */}
-        <div className="absolute bottom-0 right-0 w-[800px] h-[800px] rounded-full blur-[150px]" style={{ background: 'radial-gradient(circle, rgba(255, 75, 43, 0.08) 0%, transparent 70%)' }} />
+        <div className="absolute bottom-0 right-0 w-[800px] h-[800px] rounded-full blur-[150px]" style={{ background: 'radial-gradient(circle, rgba(184, 48, 26, 0.08) 0%, transparent 70%)' }} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 text-center">
           {/* Logo */}
@@ -46,7 +46,7 @@ export default function HomePage() {
 
           {/* Tagline */}
           <div className="mb-6">
-            <span className="inline-block px-4 py-2 bg-orange/10 border border-orange/20 rounded-full text-sm font-semibold" style={{ color: '#FF4B2B' }}>
+            <span className="inline-block px-4 py-2 bg-orange/10 border border-orange/20 rounded-full text-sm font-semibold" style={{ color: '#B8301A' }}>
               Progression Over Perfection
             </span>
           </div>
@@ -106,7 +106,7 @@ export default function HomePage() {
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
             {[
-              { icon: Users, value: '500+', label: 'Athletes Trained', color: '#FF4B2B' },
+              { icon: Users, value: '500+', label: 'Athletes Trained', color: '#B8301A' },
               { icon: TrendingUp, value: '+5 MPH', label: 'Avg Velocity Gain', color: '#00B4D8' },
               { icon: Award, value: '100+', label: 'Training Drills', color: '#10B981' },
               { icon: Flame, value: '95%', label: 'Goal Achievement', color: '#F59E0B' },
@@ -148,7 +148,7 @@ export default function HomePage() {
                 icon: Play,
                 title: 'Premium Drill Bank',
                 description: 'Access 100+ professional training drills with video tutorials, categorized by mechanics, speed, and power.',
-                color: '#FF4B2B'
+                color: '#B8301A'
               },
               {
                 icon: Target,
@@ -228,11 +228,11 @@ export default function HomePage() {
               <div
                 key={index}
                 className={`glass-card p-8 ${program.featured ? 'border-2 shadow-glow-orange' : ''}`}
-                style={program.featured ? { borderColor: '#FF4B2B' } : {}}
+                style={program.featured ? { borderColor: '#B8301A' } : {}}
               >
                 {program.featured && (
                   <div className="text-center mb-4">
-                    <span className="inline-block px-3 py-1 text-white text-sm font-semibold rounded-full" style={{ backgroundColor: '#FF4B2B' }}>
+                    <span className="inline-block px-3 py-1 text-white text-sm font-semibold rounded-full" style={{ backgroundColor: '#B8301A' }}>
                       Most Popular
                     </span>
                   </div>
@@ -247,7 +247,7 @@ export default function HomePage() {
                 <ul className="space-y-4 mb-8">
                   {program.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3" style={{ color: '#CBD5E1' }}>
-                      <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#FF4B2B' }} />
+                      <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#B8301A' }} />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -267,7 +267,7 @@ export default function HomePage() {
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="glass-card p-12 text-center">
-            <MapPin className="w-12 h-12 mx-auto mb-6" style={{ color: '#FF4B2B' }} />
+            <MapPin className="w-12 h-12 mx-auto mb-6" style={{ color: '#B8301A' }} />
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4" style={{ color: '#F7FAFC' }}>
               Located in Virginia Beach
             </h2>
@@ -276,11 +276,11 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center" style={{ color: '#4A5568' }}>
               <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5" style={{ color: '#FF4B2B' }} />
+                <Clock className="w-5 h-5" style={{ color: '#B8301A' }} />
                 <span>Mon-Fri: 3PM - 9PM</span>
               </div>
               <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5" style={{ color: '#FF4B2B' }} />
+                <Clock className="w-5 h-5" style={{ color: '#B8301A' }} />
                 <span>Sat: 9AM - 5PM</span>
               </div>
             </div>
@@ -312,7 +312,7 @@ export default function HomePage() {
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <Zap className="w-6 h-6" style={{ color: '#FF4B2B' }} />
+                <Zap className="w-6 h-6" style={{ color: '#B8301A' }} />
                 <span className="font-display font-bold text-lg" style={{ color: '#F7FAFC' }}>PSP.Pro</span>
               </div>
               <p className="text-sm" style={{ color: '#4A5568' }}>

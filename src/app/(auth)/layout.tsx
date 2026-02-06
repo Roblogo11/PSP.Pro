@@ -23,7 +23,7 @@ export default async function AuthLayout({
       {/* Cyan Glow Effect - PSP Blue */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full blur-[150px]" style={{ background: 'radial-gradient(circle, rgba(0, 180, 216, 0.15) 0%, transparent 70%)' }} />
-        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] rounded-full blur-[150px]" style={{ background: 'radial-gradient(circle, rgba(255, 75, 43, 0.08) 0%, transparent 70%)' }} />
+        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] rounded-full blur-[150px]" style={{ background: 'radial-gradient(circle, rgba(184, 48, 26, 0.08) 0%, transparent 70%)' }} />
       </div>
 
       {/* Header */}

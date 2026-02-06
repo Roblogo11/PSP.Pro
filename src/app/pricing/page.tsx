@@ -22,7 +22,7 @@ export default function PricingPage() {
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {[
-          { icon: Zap, label: '1-on-1 Training', value: '$75', color: '#FF4B2B' },
+          { icon: Zap, label: '1-on-1 Training', value: '$75', color: '#B8301A' },
           { icon: Users, label: 'Group Sessions', value: '$50', color: '#00B4D8' },
           { icon: Package, label: 'Save up to', value: '$200', color: '#10B981' },
           { icon: Award, label: 'Pro Training', value: '100%', color: '#F59E0B' },
