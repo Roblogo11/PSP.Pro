@@ -36,9 +36,18 @@ export function FunnelNav({ className = '' }: FunnelNavProps) {
     // Only check on initial mount, not on every pathname change
     const hasNavigatedInternally = sessionStorage.getItem('shock-nav-history') === 'true'
     if (hasNavigatedInternally) {
-      sessionStorage.setItem('shock-nav-history', 'true'); setIsFreshEntry(false)
+      sessionStorage.setItem('shock-nav-history', 'true')
+      setIsFreshEntry(false)
     }
   }, [])
+
+  const handleNavigation = (path: string) => {
+    const direction = getTransitionDirection(pathname, path)
+    setNavigationDirection(direction)
+    sessionStorage.setItem('shock-nav-history', 'true')
+    setIsFreshEntry(false)
+    router.push(path)
+  }
 
   // For spoke pages (outside funnel), show simplified nav with Home + Get Started
   if (!isInFunnel) {
@@ -60,25 +69,27 @@ export function FunnelNav({ className = '' }: FunnelNavProps) {
                     <ThemeToggle />
                   </div>
                   <button
-                  onClick={() => {
-                    setNavigationDirection(-1)
-                    sessionStorage.setItem('shock-nav-history', 'true'); setIsFreshEntry(false)
-                    router.push('/')
-                  }}
-                  className="group flex items-center gap-2 px-4 py-4 rounded-xl bg-dark-200/80 border border-secondary/10 hover:border-secondary/30 hover:bg-dark-200 transition-all duration-300 min-h-[48px]"
-                >
-                  <Home className="w-4 h-4 text-gray-400 group-hover:text-secondary transition-all" />
-                  <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">
-                    Home
-                  </span>
-                </button>
+                    onClick={() => {
+                      setNavigationDirection(-1)
+                      sessionStorage.setItem('shock-nav-history', 'true')
+                      setIsFreshEntry(false)
+                      router.push('/')
+                    }}
+                    className="group flex items-center gap-2 px-4 py-4 rounded-xl bg-dark-200/80 border border-secondary/10 hover:border-secondary/30 hover:bg-dark-200 transition-all duration-300 min-h-[48px]"
+                  >
+                    <Home className="w-4 h-4 text-gray-400 group-hover:text-secondary transition-all" />
+                    <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">
+                      Home
+                    </span>
+                  </button>
                 </div>
 
                 {/* Get Started Button */}
                 <button
                   onClick={() => {
                     setNavigationDirection(1)
-                    sessionStorage.setItem('shock-nav-history', 'true'); setIsFreshEntry(false)
+                    sessionStorage.setItem('shock-nav-history', 'true')
+                    setIsFreshEntry(false)
                     router.push('/get-started')
                   }}
                   className="group flex items-center gap-2 px-5 py-4 rounded-xl bg-gradient-to-r from-secondary to-accent hover:from-secondary/90 hover:to-accent/90 shadow-lg shadow-secondary/30 hover:shadow-secondary/50 hover:scale-[1.02] transition-all duration-300 min-h-[48px]"
@@ -93,14 +104,6 @@ export function FunnelNav({ className = '' }: FunnelNavProps) {
         </motion.div>
       </>
     )
-  }
-
-  const handleNavigation = (path: string) => {
-    const direction = getTransitionDirection(pathname, path)
-    setNavigationDirection(direction)
-    sessionStorage.setItem('shock-nav-history', 'true')
-    setIsFreshEntry(false)
-    router.push(path)
   }
 
   return (
@@ -127,70 +130,71 @@ export function FunnelNav({ className = '' }: FunnelNavProps) {
 
               {/* Progress Bar - Center */}
               <div className="flex items-center justify-center gap-2 flex-1">
-              {STEP_LABELS.map((label, index) => {
-                const StepIcon = STEP_ICONS[index]
-                const funnelIndex = STEP_TO_FUNNEL_INDEX[index]
-                const isActive = funnelIndex === currentIndex
-                const isCompleted = funnelIndex < currentIndex
-                const isHome = index === 0
+                {STEP_LABELS.map((label, index) => {
+                  const StepIcon = STEP_ICONS[index]
+                  const funnelIndex = STEP_TO_FUNNEL_INDEX[index]
+                  const isActive = funnelIndex === currentIndex
+                  const isCompleted = funnelIndex < currentIndex
+                  const isHome = index === 0
 
-                return (
-                  <div key={index} className="flex items-center">
-                    {isHome ? (
-                      <button
-                        onClick={() => handleNavigation('/')}
-                        className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all duration-300 cursor-pointer hover:bg-secondary/20 hover:scale-105 hover:shadow-lg hover:shadow-secondary/30 ${
-                          isActive
-                            ? 'bg-secondary/20 text-secondary'
-                            : isCompleted
-                              ? 'text-secondary/60 hover:text-secondary'
-                              : 'text-gray-500 hover:text-secondary'
-                        }`}
-                      >
-                        <StepIcon className={`w-3.5 h-3.5 transition-transform group-hover:scale-110 ${isActive ? 'animate-pulse' : ''}`} />
-                        <span className="text-xs font-medium">{label}</span>
-                      </button>
-                    ) : (
-                      <div
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all duration-300 ${
-                          isActive
-                            ? 'bg-secondary/20 text-secondary'
-                            : isCompleted
-                              ? 'text-secondary/60'
-                              : 'text-gray-500'
-                        }`}
-                      >
-                        <StepIcon className={`w-3.5 h-3.5 ${isActive ? 'animate-pulse' : ''}`} />
-                        <span className="text-xs font-medium">{label}</span>
-                      </div>
-                    )}
-                    {index < 3 && (
-                      <div
-                        className={`w-8 h-0.5 mx-1 transition-colors ${
-                          isCompleted ? 'bg-secondary/50' : 'bg-dark-300'
-                        }`}
-                      />
-                    )}
+                  return (
+                    <div key={index} className="flex items-center">
+                      {isHome ? (
+                        <button
+                          onClick={() => handleNavigation('/')}
+                          className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all duration-300 cursor-pointer hover:bg-secondary/20 hover:scale-105 hover:shadow-lg hover:shadow-secondary/30 ${
+                            isActive
+                              ? 'bg-secondary/20 text-secondary'
+                              : isCompleted
+                                ? 'text-secondary/60 hover:text-secondary'
+                                : 'text-gray-500 hover:text-secondary'
+                          }`}
+                        >
+                          <StepIcon className={`w-3.5 h-3.5 transition-transform group-hover:scale-110 ${isActive ? 'animate-pulse' : ''}`} />
+                          <span className="text-xs font-medium">{label}</span>
+                        </button>
+                      ) : (
+                        <div
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all duration-300 ${
+                            isActive
+                              ? 'bg-secondary/20 text-secondary'
+                              : isCompleted
+                                ? 'text-secondary/60'
+                                : 'text-gray-500'
+                          }`}
+                        >
+                          <StepIcon className={`w-3.5 h-3.5 ${isActive ? 'animate-pulse' : ''}`} />
+                          <span className="text-xs font-medium">{label}</span>
+                        </div>
+                      )}
+                      {index < 3 && (
+                        <div
+                          className={`w-8 h-0.5 mx-1 transition-colors ${
+                            isCompleted ? 'bg-secondary/50' : 'bg-dark-300'
+                          }`}
+                        />
+                      )}
+                    </div>
+                  )
+                })}
+
+                {/* Next Step Button - Positioned at end of progress bar */}
+                {next && (
+                  <div className="flex items-center">
+                    <div className="w-8 h-0.5 mx-1 bg-dark-300" />
+                    <button
+                      onClick={() => handleNavigation(next.path)}
+                      className="group flex items-center gap-2 px-5 py-4 rounded-xl bg-gradient-to-r from-secondary to-accent hover:from-secondary/90 hover:to-accent/90 shadow-lg shadow-secondary/30 hover:shadow-secondary/50 hover:scale-[1.02] transition-all duration-300 min-h-[48px]"
+                    >
+                      <span className="text-sm font-semibold text-white hidden sm:inline">
+                        {next.name}
+                      </span>
+                      <span className="text-sm font-semibold text-white sm:hidden">Next</span>
+                      <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
+                    </button>
                   </div>
-                )
-              })}
-
-              {/* Next Step Button - Positioned at end of progress bar */}
-              {next && (
-                <div className="flex items-center">
-                  <div className="w-8 h-0.5 mx-1 bg-dark-300" />
-                  <button
-                    onClick={() => handleNavigation(next.path)}
-                    className="group flex items-center gap-2 px-5 py-4 rounded-xl bg-gradient-to-r from-secondary to-accent hover:from-secondary/90 hover:to-accent/90 shadow-lg shadow-secondary/30 hover:shadow-secondary/50 hover:scale-[1.02] transition-all duration-300 min-h-[48px]"
-                  >
-                    <span className="text-sm font-semibold text-white hidden sm:inline">
-                      {next.name}
-                    </span>
-                    <span className="text-sm font-semibold text-white sm:hidden">Next</span>
-                    <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
-                  </button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
             {/* Mobile Progress Bar */}
