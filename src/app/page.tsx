@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -25,12 +26,57 @@ import { OptimizedImage } from '@/components/ui/optimized-image'
 import { PLACEHOLDER_IMAGES } from '@/lib/placeholder-images'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useTheme } from '@/lib/contexts/theme-context'
+import { createClient } from '@/lib/supabase/client'
+
+interface FeaturedService {
+  id: string
+  name: string
+  description: string | null
+  duration_minutes: number
+  price_cents: number
+  category: string
+  max_participants: number
+  homepage_image_url: string | null
+  homepage_order: number
+}
 
 export default function HomePage() {
   const router = useRouter()
   const { profile, isCoach, isAdmin, isAthlete, loading } = useUserRole()
   const { theme } = useTheme()
   const footerHeadingColor = theme === 'dark' ? '#ffffff' : '#0f172a'
+
+  // Featured services from database
+  const [featuredIndividual, setFeaturedIndividual] = useState<FeaturedService[]>([])
+  const [featuredGroup, setFeaturedGroup] = useState<FeaturedService[]>([])
+
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        const supabase = createClient()
+        const { data, error } = await supabase
+          .from('services')
+          .select('id, name, description, duration_minutes, price_cents, category, max_participants, homepage_image_url, homepage_order')
+          .eq('featured_on_homepage', true)
+          .eq('is_active', true)
+          .order('homepage_order', { ascending: true })
+
+        if (error) {
+          console.error('Error fetching featured services:', error)
+          return
+        }
+
+        if (data) {
+          setFeaturedIndividual(data.filter(s => s.category === 'individual'))
+          setFeaturedGroup(data.filter(s => s.category === 'group'))
+        }
+      } catch (err) {
+        console.error('Error fetching featured services:', err)
+      }
+    }
+
+    fetchFeatured()
+  }, [])
 
   // Show loading state while checking auth
   if (loading) {
@@ -212,163 +258,302 @@ export default function HomePage() {
       {/* Google Reviews Section */}
       <GoogleReviews />
 
-      {/* Features Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-white">
-              Your Athletic Command Center
-            </h2>
-            <p className="text-xl max-w-2xl mx-auto text-cyan-700 dark:text-white">
-              Everything you need to track progress, improve mechanics, and increase velocity.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: TrendingUp,
-                title: 'Velocity Tracking',
-                description: 'Monitor your progress with detailed velocity charts and performance analytics. See your improvement over time.',
-                color: '#10B981',
-                image: PLACEHOLDER_IMAGES.features.velocityTracking,
-                imageAlt: PLACEHOLDER_IMAGES.features.alt.velocityTracking
-              },
-              {
-                icon: Play,
-                title: 'Premium Drill Bank',
-                description: 'Access 100+ professional training drills with video tutorials, categorized by mechanics, speed, and power.',
-                color: '#B8301A',
-                image: PLACEHOLDER_IMAGES.features.drillBank,
-                imageAlt: PLACEHOLDER_IMAGES.features.alt.drillBank
-              },
-              {
-                icon: Target,
-                title: 'Personalized Training',
-                description: 'Get custom drill assignments from coaches and track your completion rate. Built for baseball and softball athletes.',
-                color: '#8B5CF6',
-                image: PLACEHOLDER_IMAGES.features.personalizedTraining,
-                imageAlt: PLACEHOLDER_IMAGES.features.alt.personalizedTraining
-              },
-            ].map((feature, index) => (
-              <div key={index} className="glass-card-hover p-0 group overflow-hidden">
-                {/* Feature Image */}
-                <div className="relative h-48 w-full overflow-hidden">
-                  <Image
-                    src={feature.image}
-                    alt={feature.imageAlt}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
-                  {/* Icon Overlay */}
-                  <div className="absolute bottom-4 left-4 p-3 bg-orange/10 backdrop-blur-sm rounded-xl border border-cyan-200/40 group-hover:shadow-glow-orange transition-all">
-                    <feature.icon className="w-6 h-6" style={{ color: feature.color }} />
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-8">
-                  <h3 className="text-2xl font-display font-bold mb-4 text-white">
-                    {feature.title}
-                  </h3>
-                  <p className="leading-relaxed text-cyan-700 dark:text-white">
-                    {feature.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Programs Section */}
-      <section className="py-20 px-6 bg-cyan-50/50">
+      {/* Section 1: 1-on-1 Training + Monthly Membership */}
+      <section className="py-20 px-6 bg-cyan-900/20">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-white">
               Training Programs
             </h2>
             <p className="text-xl max-w-2xl mx-auto text-cyan-700 dark:text-white">
-              Choose the program that fits your goals and schedule.
+              Per-session training or monthly membership — pick what fits your goals.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: 'Starter',
-                price: '$99',
-                period: '/month',
-                features: [
-                  'Access to Drill Bank',
-                  'Velocity Tracking',
-                  'Progress Dashboard',
-                  'Mobile App Access',
-                ],
-              },
-              {
-                name: 'Athlete',
-                price: '$199',
-                period: '/month',
-                features: [
-                  'Everything in Starter',
-                  '2 Training Sessions/Week',
-                  'Personalized Drill Plans',
-                  'Coach Feedback',
-                  'Performance Reports',
-                ],
-                featured: true,
-              },
-              {
-                name: 'Elite',
-                price: '$349',
-                period: '/month',
-                features: [
-                  'Everything in Athlete',
-                  '4 Training Sessions/Week',
-                  '1-on-1 Coaching',
-                  'Video Analysis',
-                  'Nutrition Guidance',
-                  'Priority Scheduling',
-                ],
-              },
-            ].map((program, index) => (
-              <div
-                key={index}
-                className={`glass-card p-8 ${program.featured ? 'border-2 shadow-glow-orange' : ''}`}
-                style={program.featured ? { borderColor: '#B8301A' } : {}}
-              >
-                {program.featured && (
-                  <div className="text-center mb-4">
-                    <span className="inline-block px-3 py-1 text-white text-sm font-semibold rounded-full" style={{ backgroundColor: '#B8301A' }}>
-                      Most Popular
-                    </span>
+            {/* Dynamic 1-on-1 cards (up to 2) or fallback */}
+            {featuredIndividual.length > 0 ? (
+              featuredIndividual.slice(0, 2).map((service, idx) => (
+                <div key={service.id} className={`glass-card p-0 overflow-hidden ${idx === 0 ? 'border-2 shadow-glow-orange' : ''}`} style={idx === 0 ? { borderColor: '#B8301A' } : undefined}>
+                  {service.homepage_image_url && (
+                    <div className="relative h-48 w-full overflow-hidden">
+                      <Image
+                        src={service.homepage_image_url}
+                        alt={service.name}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+                      {idx === 0 && (
+                        <div className="absolute top-4 right-4 px-3 py-1 text-white text-sm font-semibold rounded-full" style={{ backgroundColor: '#B8301A' }}>
+                          Most Popular
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  <div className="p-8">
+                    <h3 className="text-2xl font-display font-bold mb-2 text-white">{service.name}</h3>
+                    <div className="mb-4">
+                      <span className="text-5xl font-bold text-gradient-orange">${(service.price_cents / 100).toFixed(0)}</span>
+                      <span className="text-cyan-700 dark:text-white"> / {service.duration_minutes} min</span>
+                    </div>
+                    {service.description && (
+                      <p className="text-sm text-cyan-700 dark:text-white mb-6">{service.description}</p>
+                    )}
+                    <Link href="/booking">
+                      <button className={idx === 0 ? 'btn-primary w-full' : 'btn-ghost w-full'}>Book Session</button>
+                    </Link>
                   </div>
-                )}
-                <h3 className="text-2xl font-display font-bold mb-2 text-white">
-                  {program.name}
-                </h3>
-                <div className="mb-6">
-                  <span className="text-5xl font-bold text-gradient-orange">{program.price}</span>
-                  <span className="text-cyan-700 dark:text-white">{program.period}</span>
                 </div>
-                <ul className="space-y-4 mb-8">
-                  {program.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-3 text-cyan-700 dark:text-white">
-                      <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#B8301A' }} />
-                      <span className="text-white">{feature}</span>
+              ))
+            ) : (
+              <>
+                {/* Fallback 1-on-1 Card 1 */}
+                <div className="glass-card p-0 overflow-hidden border-2 shadow-glow-orange" style={{ borderColor: '#B8301A' }}>
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <Image
+                      src={PLACEHOLDER_IMAGES.programs.oneOnOne}
+                      alt={PLACEHOLDER_IMAGES.programs.alt.oneOnOne}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+                    <div className="absolute top-4 right-4 px-3 py-1 text-white text-sm font-semibold rounded-full" style={{ backgroundColor: '#B8301A' }}>
+                      Most Popular
+                    </div>
+                  </div>
+                  <div className="p-8">
+                    <h3 className="text-2xl font-display font-bold mb-2 text-white">1-on-1 Skills Training</h3>
+                    <div className="mb-4">
+                      <span className="text-5xl font-bold text-gradient-orange">$75</span>
+                      <span className="text-cyan-700 dark:text-white"> / 60 min</span>
+                    </div>
+                    <p className="text-sm text-cyan-700 dark:text-white mb-6">Individual technical skills and mechanics training for your sport</p>
+                    <Link href="/booking">
+                      <button className="btn-primary w-full">Book Session</button>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Fallback 1-on-1 Card 2 */}
+                <div className="glass-card p-0 overflow-hidden">
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <Image
+                      src={PLACEHOLDER_IMAGES.features.personalizedTraining}
+                      alt="1-on-1 performance session"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+                  </div>
+                  <div className="p-8">
+                    <h3 className="text-2xl font-display font-bold mb-2 text-white">1-on-1 Performance</h3>
+                    <div className="mb-4">
+                      <span className="text-5xl font-bold text-gradient-orange">$75</span>
+                      <span className="text-cyan-700 dark:text-white"> / 60 min</span>
+                    </div>
+                    <p className="text-sm text-cyan-700 dark:text-white mb-6">Personalized athletic performance and sport-specific development</p>
+                    <Link href="/booking">
+                      <button className="btn-ghost w-full">Book Session</button>
+                    </Link>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Monthly Membership — always shown */}
+            <div className="glass-card p-0 overflow-hidden border border-purple-500/30">
+              <div className="relative h-48 w-full overflow-hidden">
+                <Image
+                  src={PLACEHOLDER_IMAGES.programs.monthly}
+                  alt={PLACEHOLDER_IMAGES.programs.alt.monthly}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+                <div className="absolute top-4 right-4 px-3 py-1 text-white text-sm font-semibold rounded-full bg-purple-600">
+                  Best Value
+                </div>
+              </div>
+              <div className="p-8">
+                <h3 className="text-2xl font-display font-bold mb-2 text-white">Monthly Membership</h3>
+                <div className="mb-4">
+                  <span className="text-5xl font-bold text-gradient-orange">$60</span>
+                  <span className="text-cyan-700 dark:text-white"> / mo</span>
+                </div>
+                <ul className="space-y-3 mb-6">
+                  {[
+                    'Unlimited group session access',
+                    'Discounted 1-on-1 sessions',
+                    'Priority scheduling',
+                    'PSP.Pro dashboard access',
+                  ].map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#8B5CF6' }} />
+                      <span className="text-white text-sm">{item}</span>
                     </li>
                   ))}
                 </ul>
-                <Link href="/signup">
-                  <button className={program.featured ? 'btn-primary w-full' : 'btn-ghost w-full'}>
-                    Get Started
-                  </button>
+                <Link href="/pricing">
+                  <button className="w-full px-6 py-3 rounded-xl font-semibold text-white bg-purple-600 hover:bg-purple-500 transition-colors">View Plans</button>
                 </Link>
               </div>
-            ))}
+            </div>
+          </div>
+
+          {/* Package Savings */}
+          <div className="max-w-2xl mx-auto mt-8">
+            <div className="p-6 rounded-xl bg-cyan-900/30 border border-orange/20 text-center">
+              <p className="text-white font-semibold mb-3">Save with Session Packages</p>
+              <div className="flex flex-wrap justify-center gap-6 text-sm text-cyan-700 dark:text-white">
+                <p>5 Sessions — <span className="text-orange font-bold">$350</span> <span className="text-cyan text-xs">(save $25)</span></p>
+                <p>10 Sessions — <span className="text-orange font-bold">$675</span> <span className="text-cyan text-xs">(save $75)</span></p>
+                <p>20 Sessions — <span className="text-orange font-bold">$1,300</span> <span className="text-cyan text-xs">(save $200)</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 2: Group Training */}
+      <section className="py-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-white">
+              Group Training
+            </h2>
+            <p className="text-xl max-w-2xl mx-auto text-cyan-700 dark:text-white">
+              Train with teammates in high-energy group sessions led by our coaches.
+            </p>
+          </div>
+
+          <div className={`grid gap-8 ${featuredGroup.length === 1 ? 'max-w-lg mx-auto' : featuredGroup.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'md:grid-cols-3'}`}>
+            {featuredGroup.length > 0 ? (
+              featuredGroup.slice(0, 3).map((service) => (
+                <div key={service.id} className="glass-card p-0 overflow-hidden group">
+                  {service.homepage_image_url && (
+                    <div className="relative h-48 w-full overflow-hidden">
+                      <Image
+                        src={service.homepage_image_url}
+                        alt={service.name}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+                    </div>
+                  )}
+                  <div className="p-8">
+                    <h3 className="text-2xl font-display font-bold mb-2 text-white">{service.name}</h3>
+                    <div className="mb-4">
+                      <span className="text-5xl font-bold text-gradient-orange">${(service.price_cents / 100).toFixed(0)}</span>
+                      <span className="text-cyan-700 dark:text-white"> / {service.duration_minutes} min</span>
+                    </div>
+                    {service.description && (
+                      <p className="text-sm text-cyan-700 dark:text-white mb-4">{service.description}</p>
+                    )}
+                    <div className="flex items-center gap-2 text-sm text-cyan-700 dark:text-white mb-6">
+                      <Users className="w-4 h-4 text-cyan" />
+                      <span>Max {service.max_participants} athletes</span>
+                    </div>
+                    <Link href="/booking">
+                      <button className="btn-ghost w-full">Join Session</button>
+                    </Link>
+                  </div>
+                </div>
+              ))
+            ) : (
+              /* Fallback group cards */
+              <>
+                <div className="glass-card p-0 overflow-hidden group">
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <Image
+                      src={PLACEHOLDER_IMAGES.programs.group}
+                      alt={PLACEHOLDER_IMAGES.programs.alt.group}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+                  </div>
+                  <div className="p-8">
+                    <h3 className="text-2xl font-display font-bold mb-2 text-white">Speed & Agility</h3>
+                    <div className="mb-4">
+                      <span className="text-5xl font-bold text-gradient-orange">$50</span>
+                      <span className="text-cyan-700 dark:text-white"> / 90 min</span>
+                    </div>
+                    <p className="text-sm text-cyan-700 dark:text-white mb-4">Small group speed training and athletic development</p>
+                    <div className="flex items-center gap-2 text-sm text-cyan-700 dark:text-white mb-6">
+                      <Users className="w-4 h-4 text-cyan" />
+                      <span>Max 6 athletes</span>
+                    </div>
+                    <Link href="/booking">
+                      <button className="btn-ghost w-full">Join Session</button>
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="glass-card p-0 overflow-hidden group">
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <Image
+                      src={PLACEHOLDER_IMAGES.features.drillBank}
+                      alt="Small group training"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+                  </div>
+                  <div className="p-8">
+                    <h3 className="text-2xl font-display font-bold mb-2 text-white">Small Group Training</h3>
+                    <div className="mb-4">
+                      <span className="text-5xl font-bold text-gradient-orange">$40</span>
+                      <span className="text-cyan-700 dark:text-white"> / 75 min</span>
+                    </div>
+                    <p className="text-sm text-cyan-700 dark:text-white mb-4">Semi-private training session (2-4 athletes)</p>
+                    <div className="flex items-center gap-2 text-sm text-cyan-700 dark:text-white mb-6">
+                      <Users className="w-4 h-4 text-cyan" />
+                      <span>Max 4 athletes</span>
+                    </div>
+                    <Link href="/booking">
+                      <button className="btn-ghost w-full">Join Session</button>
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="glass-card p-0 overflow-hidden group">
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <Image
+                      src={PLACEHOLDER_IMAGES.features.velocityTracking}
+                      alt="Strength and conditioning"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+                  </div>
+                  <div className="p-8">
+                    <h3 className="text-2xl font-display font-bold mb-2 text-white">Strength & Conditioning</h3>
+                    <div className="mb-4">
+                      <span className="text-5xl font-bold text-gradient-orange">$65</span>
+                      <span className="text-cyan-700 dark:text-white"> / 60 min</span>
+                    </div>
+                    <p className="text-sm text-cyan-700 dark:text-white mb-4">Sport-specific strength training and conditioning</p>
+                    <div className="flex items-center gap-2 text-sm text-cyan-700 dark:text-white mb-6">
+                      <Users className="w-4 h-4 text-cyan" />
+                      <span>Max 4 athletes</span>
+                    </div>
+                    <Link href="/booking">
+                      <button className="btn-ghost w-full">Join Session</button>
+                    </Link>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </section>

@@ -75,6 +75,21 @@ export const PLACEHOLDER_IMAGES = {
     note: 'Replace with: Side-by-side before/after mechanics screenshots from video analysis'
   },
 
+  // Training Programs - 3:2 aspect ratio (600x400)
+  programs: {
+    oneOnOne: 'https://images.unsplash.com/photo-1578432156326-d23924cce2e4?w=600&h=400&fit=crop&q=80',
+    group: 'https://images.unsplash.com/photo-1526232761682-d26e03ac148e?w=600&h=400&fit=crop&q=80',
+    monthly: 'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=600&h=400&fit=crop&q=80',
+    alt: {
+      oneOnOne: '1-on-1 personalized coaching session',
+      group: 'Group speed and agility training',
+      monthly: 'Monthly training membership program'
+    },
+    width: 600,
+    height: 400,
+    note: 'Replace with: Actual photos of 1-on-1 sessions, group training, and membership athletes'
+  },
+
   // Drill Thumbnails - 16:9 aspect ratio (320x180)
   drills: {
     placeholder: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=320&h=180&fit=crop&q=80',

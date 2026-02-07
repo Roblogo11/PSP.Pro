@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Plus, Edit2, Trash2, DollarSign, Clock, Users, Save, X } from 'lucide-react'
+import { Plus, Edit2, Trash2, DollarSign, Clock, Users, Save, X, Star, StarOff, ImageIcon } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
 
@@ -16,6 +16,9 @@ interface Service {
   max_participants: number
   is_active: boolean
   stripe_price_id: string | null
+  featured_on_homepage: boolean
+  homepage_image_url: string | null
+  homepage_order: number
 }
 
 export default function ServicesManagerPage() {
@@ -34,6 +37,9 @@ export default function ServicesManagerPage() {
     max_participants: 1,
     is_active: true,
     stripe_price_id: '',
+    featured_on_homepage: false,
+    homepage_image_url: '',
+    homepage_order: 0,
   })
 
   // Redirect if not admin
@@ -159,6 +165,22 @@ export default function ServicesManagerPage() {
       is_active: true,
       stripe_price_id: '',
     })
+  }
+
+  const handleToggleFeatured = async (service: Service) => {
+    try {
+      const supabase = createClient()
+      const { error } = await supabase
+        .from('services')
+        .update({ featured_on_homepage: !service.featured_on_homepage })
+        .eq('id', service.id)
+
+      if (error) throw error
+      await loadServices()
+    } catch (err: any) {
+      console.error('Error toggling featured:', err)
+      alert(`Error: ${err.message}`)
+    }
   }
 
   const formatPrice = (cents: number) => `$${(cents / 100).toFixed(2)}`
@@ -310,8 +332,25 @@ export default function ServicesManagerPage() {
               />
             </div>
 
+            {/* Homepage Image URL */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-cyan-800 dark:text-white mb-2">
+                Homepage Image URL (optional)
+              </label>
+              <input
+                type="text"
+                value={formData.homepage_image_url || ''}
+                onChange={(e) => setFormData({ ...formData, homepage_image_url: e.target.value })}
+                className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                placeholder="https://images.unsplash.com/... or /images/my-photo.jpg"
+              />
+              <p className="text-xs text-cyan-700 dark:text-white mt-1">
+                Image shown on homepage when featured. Use Unsplash URL or upload to /public/images/
+              </p>
+            </div>
+
             {/* Active Toggle */}
-            <div className="md:col-span-2 flex items-center gap-3">
+            <div className="flex items-center gap-3">
               <input
                 type="checkbox"
                 checked={formData.is_active ?? true}
@@ -319,7 +358,20 @@ export default function ServicesManagerPage() {
                 className="w-5 h-5 rounded border-cyan-200/40 text-orange focus:ring-cyan/50"
               />
               <label className="text-sm font-medium text-cyan-800 dark:text-white">
-                Service is active and visible to athletes
+                Active & visible
+              </label>
+            </div>
+
+            {/* Featured Toggle */}
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                checked={formData.featured_on_homepage ?? false}
+                onChange={(e) => setFormData({ ...formData, featured_on_homepage: e.target.checked })}
+                className="w-5 h-5 rounded border-cyan-200/40 text-orange focus:ring-cyan/50"
+              />
+              <label className="text-sm font-medium text-cyan-800 dark:text-white">
+                Feature on homepage
               </label>
             </div>
           </div>
@@ -361,6 +413,11 @@ export default function ServicesManagerPage() {
                   <span className={`px-3 py-1 rounded-lg text-xs font-semibold uppercase border ${getCategoryColor(service.category)}`}>
                     {service.category}
                   </span>
+                  {service.featured_on_homepage && (
+                    <span className="px-3 py-1 rounded-lg text-xs font-semibold uppercase bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 flex items-center gap-1">
+                      <Star className="w-3 h-3 fill-current" /> Featured
+                    </span>
+                  )}
                   {!service.is_active && (
                     <span className="px-3 py-1 rounded-lg text-xs font-semibold uppercase bg-red-500/20 text-red-400 border border-red-500/50">
                       Inactive
@@ -394,6 +451,17 @@ export default function ServicesManagerPage() {
 
               {/* Actions */}
               <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handleToggleFeatured(service)}
+                  title={service.featured_on_homepage ? 'Remove from homepage' : 'Feature on homepage'}
+                  className={`p-2 rounded-lg transition-all ${
+                    service.featured_on_homepage
+                      ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 hover:bg-yellow-500/30'
+                      : 'bg-cyan-600/10 hover:bg-cyan-600/20 text-cyan-600 border border-cyan-600/30 hover:border-cyan-600/50'
+                  }`}
+                >
+                  {service.featured_on_homepage ? <Star className="w-5 h-5 fill-current" /> : <StarOff className="w-5 h-5" />}
+                </button>
                 <button
                   onClick={() => handleEdit(service)}
                   className="p-2 rounded-lg bg-cyan/10 hover:bg-cyan/20 text-cyan border border-cyan/30 hover:border-cyan/50 transition-all"
