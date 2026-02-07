@@ -203,11 +203,16 @@ export function FunnelNav({ className = '' }: FunnelNavProps) {
               </div>
             </div>
 
-            {/* Mobile Progress Bar */}
-            <div className="md:hidden mb-2">
-              <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400 mb-1">
-                <span>Step {currentIndex + 1} of 5</span>
-                <span className="text-secondary">
+            {/* Mobile Navigation */}
+            <div className="md:hidden">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-3">
+                  <ThemeToggle />
+                  <div className="text-xs text-gray-600 dark:text-gray-400">
+                    Step {currentIndex + 1} of 5
+                  </div>
+                </div>
+                <span className="text-xs text-secondary">
                   {pathname === '/about' ? 'About' : STEP_LABELS[STEP_TO_FUNNEL_INDEX.indexOf(currentIndex)]}
                 </span>
               </div>
