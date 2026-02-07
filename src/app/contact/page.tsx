@@ -22,12 +22,16 @@ export default function ContactPage() {
     setLoading(true)
 
     try {
-      // Build mailto link as reliable submission method
-      const subject = encodeURIComponent(`PSP.Pro ${formData.interest} Inquiry from ${formData.name}`)
-      const body = encodeURIComponent(
-        `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nInterest: ${formData.interest}\n\nMessage:\n${formData.message}`
-      )
-      window.open(`mailto:info@propersports.pro?subject=${subject}&body=${body}`, '_self')
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Failed to submit')
+      }
 
       setSubmitted(true)
     } catch {

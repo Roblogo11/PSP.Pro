@@ -2,91 +2,45 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Calendar, Clock, ArrowRight, BookOpen, TrendingUp } from 'lucide-react'
+import { Calendar, Clock, ArrowRight, BookOpen, TrendingUp, Loader2, CheckCircle } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
-
-interface BlogPost {
-  id: string
-  title: string
-  excerpt: string
-  category: string
-  date: string
-  readTime: string
-  thumbnail: string
-  slug: string
-}
-
-const BLOG_POSTS: BlogPost[] = [
-  {
-    id: '1',
-    title: '5 Keys to Increasing Pitching Velocity',
-    excerpt: 'Learn the proven techniques that have helped our athletes gain 3-7 MPH on their fastball in just 12 weeks. Mechanics, strength training, and recovery all play a role.',
-    category: 'Pitching',
-    date: '2026-02-01',
-    readTime: '5 min read',
-    thumbnail: 'https://images.unsplash.com/photo-1556055078-0d563c7f7fb8?w=800&auto=format&fit=crop',
-    slug: 'increasing-pitching-velocity',
-  },
-  {
-    id: '2',
-    title: 'The Science of Hitting: Launch Angle & Exit Velocity',
-    excerpt: 'Understanding the physics behind power hitting. How launch angle and exit velocity combine to create extra-base hits and home runs.',
-    category: 'Hitting',
-    date: '2026-01-28',
-    readTime: '6 min read',
-    thumbnail: 'https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=800&auto=format&fit=crop',
-    slug: 'science-of-hitting',
-  },
-  {
-    id: '3',
-    title: 'Arm Care Routine Every Pitcher Should Follow',
-    excerpt: 'Prevent injury and maintain peak performance with this comprehensive arm care routine. Includes exercises, stretches, and recovery protocols.',
-    category: 'Recovery',
-    date: '2026-01-25',
-    readTime: '8 min read',
-    thumbnail: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&auto=format&fit=crop',
-    slug: 'arm-care-routine',
-  },
-  {
-    id: '4',
-    title: 'Speed Training: First Step Quickness Drills',
-    excerpt: 'Steal more bases and beat out ground balls with improved first-step explosiveness. These drills will transform your speed on the basepaths.',
-    category: 'Speed & Agility',
-    date: '2026-01-22',
-    readTime: '5 min read',
-    thumbnail: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=800&auto=format&fit=crop',
-    slug: 'speed-training-drills',
-  },
-  {
-    id: '5',
-    title: 'Nutrition for Peak Athletic Performance',
-    excerpt: 'What you eat directly impacts your training results. Learn the nutrition strategies our athletes use to fuel performance and recovery.',
-    category: 'Nutrition',
-    date: '2026-01-19',
-    readTime: '7 min read',
-    thumbnail: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&auto=format&fit=crop',
-    slug: 'nutrition-for-athletes',
-  },
-  {
-    id: '6',
-    title: 'Mental Game: Building Confidence at the Plate',
-    excerpt: 'The mental side of hitting is just as important as mechanics. Develop the mindset that separates good hitters from great ones.',
-    category: 'Mental Game',
-    date: '2026-01-15',
-    readTime: '6 min read',
-    thumbnail: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&auto=format&fit=crop',
-    slug: 'mental-game-hitting',
-  },
-]
-
-const CATEGORIES = ['All', ...Array.from(new Set(BLOG_POSTS.map(post => post.category)))]
+import { BLOG_POSTS } from '@/lib/blog-posts'
 
 export default function BlogPage() {
   const [newsletterEmail, setNewsletterEmail] = useState('')
+  const [newsletterLoading, setNewsletterLoading] = useState(false)
+  const [newsletterSuccess, setNewsletterSuccess] = useState(false)
+  const [newsletterError, setNewsletterError] = useState('')
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
     return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+  }
+
+  const handleNewsletterSubmit = async () => {
+    if (!newsletterEmail || !newsletterEmail.includes('@')) return
+    setNewsletterLoading(true)
+    setNewsletterError('')
+
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: newsletterEmail, source: 'blog' }),
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Failed to subscribe')
+      }
+
+      setNewsletterSuccess(true)
+      setNewsletterEmail('')
+    } catch (err: any) {
+      setNewsletterError(err.message || 'Something went wrong')
+    } finally {
+      setNewsletterLoading(false)
+    }
   }
 
   return (
@@ -109,7 +63,7 @@ export default function BlogPage() {
 
       {/* Featured Post */}
       <div className="max-w-7xl mx-auto mb-16">
-        <div className="block group">
+        <Link href={`/blog/${BLOG_POSTS[0].slug}`} className="block group">
           <div className="command-panel p-0 overflow-hidden lg:flex">
             <div className="lg:w-1/2 relative aspect-video lg:aspect-auto">
               <img
@@ -143,7 +97,7 @@ export default function BlogPage() {
               </div>
             </div>
           </div>
-        </div>
+        </Link>
       </div>
 
       {/* All Posts Grid */}
@@ -155,9 +109,10 @@ export default function BlogPage() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {BLOG_POSTS.slice(1).map(post => (
-            <div
+            <Link
               key={post.id}
-              className="glass-card-hover overflow-hidden group"
+              href={`/blog/${post.slug}`}
+              className="glass-card-hover overflow-hidden group block"
             >
               <div className="relative aspect-video overflow-hidden">
                 <img
@@ -186,7 +141,7 @@ export default function BlogPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
@@ -200,25 +155,41 @@ export default function BlogPage() {
           <p className="text-cyan-800 dark:text-white mb-6 max-w-2xl mx-auto">
             Join our newsletter to receive expert training advice, performance tips, and exclusive offers straight to your inbox.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Your email address"
-              value={newsletterEmail}
-              onChange={(e) => setNewsletterEmail(e.target.value)}
-              className="flex-1 px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-cyan/50"
-            />
-            <button
-              className="btn-primary whitespace-nowrap"
-              onClick={() => {
-                if (!newsletterEmail) return
-                window.open(`mailto:info@propersports.pro?subject=${encodeURIComponent('Newsletter Signup')}&body=${encodeURIComponent(`Please add me to the PSP.Pro newsletter.\n\nEmail: ${newsletterEmail}`)}`, '_self')
-                setNewsletterEmail('')
-              }}
-            >
-              Subscribe
-            </button>
-          </div>
+
+          {newsletterSuccess ? (
+            <div className="flex items-center justify-center gap-2 text-green-400 font-semibold">
+              <CheckCircle className="w-5 h-5" />
+              <span>You&apos;re subscribed! Check your inbox for updates.</span>
+            </div>
+          ) : (
+            <>
+              <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleNewsletterSubmit()}
+                  className="flex-1 px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-cyan/50"
+                />
+                <button
+                  className="btn-primary whitespace-nowrap flex items-center justify-center gap-2"
+                  onClick={handleNewsletterSubmit}
+                  disabled={newsletterLoading}
+                >
+                  {newsletterLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    'Subscribe'
+                  )}
+                </button>
+              </div>
+              {newsletterError && (
+                <p className="text-red-400 text-sm mt-2">{newsletterError}</p>
+              )}
+            </>
+          )}
+
           <p className="text-xs text-cyan-800 dark:text-white mt-4">
             No spam. Unsubscribe anytime. We respect your privacy.
           </p>

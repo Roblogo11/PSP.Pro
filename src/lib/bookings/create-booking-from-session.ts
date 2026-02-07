@@ -1,5 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
+import { sendEmail } from '@/lib/email/send'
+import { getBookingConfirmationEmail } from '@/lib/email/templates'
 
 export type BookingResult =
   | { created: true; bookingId: string }
@@ -118,6 +120,41 @@ export async function createBookingFromSession(
     }
 
     return { created: false, reason: 'insert_failed', error: error.message }
+  }
+
+  // 4. SEND CONFIRMATION EMAIL (non-blocking — don't fail the booking if email fails)
+  try {
+    // Look up athlete email from profiles
+    const { data: athlete } = await supabase
+      .from('profiles')
+      .select('email, full_name')
+      .eq('id', metadata.athlete_id)
+      .single()
+
+    if (athlete?.email) {
+      const emailData = getBookingConfirmationEmail({
+        athleteName: athlete.full_name || 'Athlete',
+        athleteEmail: athlete.email,
+        serviceName: bookingData.serviceName || 'Training Session',
+        date: bookingData.date,
+        startTime: bookingData.startTime,
+        endTime: bookingData.endTime,
+        coachName: bookingData.coachName || 'Your Coach',
+        location: bookingData.location || 'PSP.Pro Facility',
+        amount: ((session.amount_total || 0) / 100).toFixed(2),
+        confirmationId: booking.id,
+      })
+
+      await sendEmail({
+        to: athlete.email,
+        subject: emailData.subject,
+        html: emailData.html,
+        text: emailData.text,
+      })
+    }
+  } catch (emailErr) {
+    // Don't fail the booking — just log
+    console.error('Failed to send booking confirmation email:', emailErr)
   }
 
   return { created: true, bookingId: booking.id }
