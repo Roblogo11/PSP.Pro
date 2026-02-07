@@ -75,7 +75,7 @@ export default function LoginPage() {
             Welcome Back
           </h1>
           <p>
-            Sign in to access your Athletic OS
+            Sign in to access your PSP.Pro
           </p>
         </div>
 

@@ -66,7 +66,7 @@ const KNOWLEDGE_BASE = [
   {
     keywords: ['dashboard', 'locker', 'my account', 'profile', 'stats', 'progress'],
     title: 'Your Dashboard',
-    response: 'Your Athletic OS dashboard shows:\n\n• Velocity progress & charts\n• Upcoming sessions\n• Drill completions\n• Achievement badges\n• Performance analytics\n\nEverything updates in real-time! Login to see your stats.',
+    response: 'Your PSP.Pro dashboard shows:\n\n• Velocity progress & charts\n• Upcoming sessions\n• Drill completions\n• Achievement badges\n• Performance analytics\n\nEverything updates in real-time! Login to see your stats.',
     actions: [{ label: 'Go to Dashboard', href: '/locker' }],
   },
   {

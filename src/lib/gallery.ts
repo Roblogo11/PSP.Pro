@@ -198,11 +198,15 @@ export function deleteMediaItem(id: string): boolean {
       if (!deletedItem.isExternal && deletedItem.type !== 'url') {
         const parts = id.split('/')
         if (parts.length >= 3) {
-          const filePath = path.join(MEDIA_DIR, id)
-          const thumbPath = path.join(MEDIA_DIR, parts[0], parts[1], 'thumbs', parts[2])
+          const filePath = path.resolve(MEDIA_DIR, id)
+          const thumbPath = path.resolve(MEDIA_DIR, parts[0], parts[1], 'thumbs', parts[2])
 
-          if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
-          if (fs.existsSync(thumbPath)) fs.unlinkSync(thumbPath)
+          // Path traversal protection: ensure resolved paths stay within MEDIA_DIR
+          const resolvedMediaDir = path.resolve(MEDIA_DIR)
+          if (filePath.startsWith(resolvedMediaDir) && thumbPath.startsWith(resolvedMediaDir)) {
+            if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
+            if (fs.existsSync(thumbPath)) fs.unlinkSync(thumbPath)
+          }
         }
       }
 

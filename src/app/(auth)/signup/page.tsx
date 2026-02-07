@@ -133,7 +133,7 @@ export default function SignupPage() {
             Start Your Journey
           </h1>
           <p className="">
-            Create your Athletic OS account
+            Create your PSP.Pro account
           </p>
         </div>
 

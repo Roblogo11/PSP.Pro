@@ -10,7 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // PSP.Pro Brand Colors - Premium Athletic OS Theme
+        // PSP.Pro Brand Colors - Premium PSP.Pro Theme
         border: '#1F2937', // Subtle border
 
         // Semantic Color Aliases (for compatibility)

@@ -52,23 +52,36 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Missing or invalid updates' }, { status: 400 })
     }
 
-    if (updates.galleries) {
-      if (!Array.isArray(updates.galleries)) {
+    // Whitelist allowed fields to prevent unintended data modification
+    const allowedFields = ['title', 'description', 'featured', 'galleries', 'primaryGallery', 'category']
+    const sanitizedUpdates: Record<string, any> = {}
+    for (const key of Object.keys(updates)) {
+      if (allowedFields.includes(key)) {
+        sanitizedUpdates[key] = updates[key]
+      }
+    }
+
+    if (Object.keys(sanitizedUpdates).length === 0) {
+      return NextResponse.json({ error: 'No valid update fields provided' }, { status: 400 })
+    }
+
+    if (sanitizedUpdates.galleries) {
+      if (!Array.isArray(sanitizedUpdates.galleries)) {
         return NextResponse.json({ error: 'galleries must be an array' }, { status: 400 })
       }
-      const invalidGalleries = updates.galleries.filter((g: string) => !GALLERY_TYPES.includes(g as GalleryType))
+      const invalidGalleries = sanitizedUpdates.galleries.filter((g: string) => !GALLERY_TYPES.includes(g as GalleryType))
       if (invalidGalleries.length > 0) {
         return NextResponse.json({ error: `Invalid gallery types: ${invalidGalleries.join(', ')}` }, { status: 400 })
       }
     }
 
-    const success = updateMediaMetadata(id, updates)
+    const success = updateMediaMetadata(id, sanitizedUpdates)
 
     if (!success) {
       return NextResponse.json({ error: 'Failed to update media' }, { status: 500 })
     }
 
-    return NextResponse.json({ success: true, id, updates })
+    return NextResponse.json({ success: true, id })
   } catch (error) {
     console.error('Media update error:', error)
     return NextResponse.json({ error: 'Failed to update media' }, { status: 500 })

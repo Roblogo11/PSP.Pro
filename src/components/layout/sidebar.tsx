@@ -94,10 +94,10 @@ export function Sidebar() {
                     <Zap className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h1 className="font-display text-lg font-bold text-white group-hover:text-orange transition-colors">
+                    <h1 className="font-display text-lg font-bold text-slate-800 dark:text-white group-hover:text-orange transition-colors">
                       PSP.Pro
                     </h1>
-                    <p className="text-xs text-cyan-700 dark:text-white">Athletic OS</p>
+                    <p className="text-xs text-cyan-700 dark:text-white">PSP.Pro</p>
                   </div>
                 </motion.div>
               )}
@@ -134,11 +134,11 @@ export function Sidebar() {
                     ${
                       isActive
                         ? 'bg-orange/20 border border-orange/50 text-white shadow-glow-orange'
-                        : 'text-cyan-700 dark:text-white hover:bg-cyan-50/50 hover:text-white'
+                        : 'text-slate-700 dark:text-white hover:bg-cyan-50/50 dark:hover:text-white hover:text-slate-900'
                     }
                   `}
                 >
-                  <Icon className={`w-5 h-5 ${collapsed ? 'mx-auto' : ''} ${item.color || 'text-white'}`} />
+                  <Icon className={`w-5 h-5 ${collapsed ? 'mx-auto' : ''} ${item.color || 'text-slate-700 dark:text-white'}`} />
                   <AnimatePresence>
                     {!collapsed && (
                       <motion.span
@@ -197,11 +197,11 @@ export function Sidebar() {
                         ${
                           isActive
                             ? 'bg-cyan/20 border border-cyan/50 text-white shadow-glow-cyan'
-                            : 'text-cyan-700 dark:text-white hover:bg-cyan-50/50 hover:text-white'
+                            : 'text-slate-700 dark:text-white hover:bg-cyan-50/50 dark:hover:text-white hover:text-slate-900'
                         }
                       `}
                     >
-                      <Icon className={`w-5 h-5 ${collapsed ? 'mx-auto' : ''} ${item.color || 'text-white'}`} />
+                      <Icon className={`w-5 h-5 ${collapsed ? 'mx-auto' : ''} ${item.color || 'text-slate-700 dark:text-white'}`} />
                       <AnimatePresence>
                         {!collapsed && (
                           <motion.span
@@ -287,7 +287,7 @@ export function Sidebar() {
                     ${
                       isActive
                         ? 'bg-orange/20 text-orange'
-                        : 'text-cyan-700 dark:text-white hover:text-white'
+                        : 'text-slate-700 dark:text-white hover:text-slate-900 dark:hover:text-white'
                     }
                   `}
                 >

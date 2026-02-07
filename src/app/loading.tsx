@@ -44,7 +44,7 @@ export default function Loading() {
             textShadow: '0 0 8px rgba(0, 180, 216, 0.3)',
           }}
         >
-          Athletic OS
+          PSP.Pro
         </p>
 
         {/* Loading animation - Cyan pulse rings */}

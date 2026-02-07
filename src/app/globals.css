@@ -236,6 +236,11 @@
     color: #1e293b !important;
   }
 
+  /* Light mode: force dark icons in glass-cards */
+  html:not(.dark) .glass-card svg {
+    color: #1e293b !important;
+  }
+
   .glass-card-hover {
     @apply glass-card transition-all duration-300;
   }
@@ -272,6 +277,61 @@
     box-shadow:
       0 0 30px rgba(0, 180, 216, 0.3),
       0 0 15px rgba(255, 75, 43, 0.15);
+  }
+
+  /* Light Mode Command Panel Override */
+  html:not(.dark) .command-panel,
+  html:not(.dark) .command-panel-active {
+    background: linear-gradient(
+      135deg,
+      rgba(236, 254, 255, 0.90) 0%,
+      rgba(207, 250, 254, 0.85) 50%,
+      rgba(224, 242, 254, 0.90) 100%
+    ) !important;
+    border: 1px solid rgba(0, 180, 216, 0.25) !important;
+    box-shadow:
+      0 8px 32px 0 rgba(0, 180, 216, 0.12),
+      inset 0 0 0 1px rgba(0, 180, 216, 0.15),
+      0 0 20px rgba(0, 180, 216, 0.10),
+      0 0 10px rgba(0, 180, 216, 0.08) !important;
+    color: #334155 !important;
+  }
+
+  html:not(.dark) .command-panel h1,
+  html:not(.dark) .command-panel h2,
+  html:not(.dark) .command-panel h3,
+  html:not(.dark) .command-panel h4,
+  html:not(.dark) .command-panel h5,
+  html:not(.dark) .command-panel h6,
+  html:not(.dark) .command-panel-active h1,
+  html:not(.dark) .command-panel-active h2,
+  html:not(.dark) .command-panel-active h3,
+  html:not(.dark) .command-panel-active h4 {
+    color: #1e293b !important;
+  }
+
+  html:not(.dark) .command-panel svg,
+  html:not(.dark) .command-panel-active svg {
+    color: #1e293b !important;
+  }
+
+  /* Light Mode Form Inputs inside Command Panels */
+  html:not(.dark) .command-panel input,
+  html:not(.dark) .command-panel select,
+  html:not(.dark) .command-panel textarea {
+    background: rgba(241, 245, 249, 0.9) !important;
+    color: #1e293b !important;
+    border-color: rgba(0, 180, 216, 0.3) !important;
+  }
+
+  html:not(.dark) .command-panel input::placeholder,
+  html:not(.dark) .command-panel textarea::placeholder {
+    color: #94a3b8 !important;
+  }
+
+  html:not(.dark) .command-panel select option {
+    background: #f1f5f9;
+    color: #1e293b;
   }
 
   /* Bento Grid */
@@ -357,6 +417,14 @@
     box-shadow:
       0 8px 24px 0 rgba(0, 0, 0, 0.45),
       0 0 12px rgba(184, 48, 26, 0.1) !important;
+    color: #e2e8f0 !important;
+  }
+
+  /* Homepage: keep light SVG icons on dark cards */
+  html:not(.dark) .home-page .glass-card svg,
+  html:not(.dark) .home-page .glass-card-hover svg,
+  html:not(.dark) .home-page .command-panel svg {
+    color: #e2e8f0 !important;
   }
 
   /* Home page button styles */

@@ -18,7 +18,7 @@ export const siteConfig = {
   // Hero Section
   hero: {
     headline: "PSP.Pro",
-    subheadline: "Athletic OS",
+    subheadline: "PSP.Pro",
     description: "Progression Over Perfection",
     cta: {
       primary: "Start Training",

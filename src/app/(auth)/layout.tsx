@@ -34,7 +34,7 @@ export default async function AuthLayout({
           </div>
           <div>
             <h1 className="text-xl font-display font-bold text-white">PSP.Pro</h1>
-            <p className="text-xs text-cyan-800 dark:text-white">Athletic OS</p>
+            <p className="text-xs text-cyan-800 dark:text-white">PSP.Pro</p>
           </div>
         </Link>
       </header>

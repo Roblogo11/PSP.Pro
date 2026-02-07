@@ -30,7 +30,7 @@ export function getBookingConfirmationEmail(data: BookingEmailData) {
     <tr>
       <td style="padding: 40px 30px; text-align: center; background: linear-gradient(135deg, rgba(0, 180, 216, 0.2) 0%, rgba(255, 75, 43, 0.1) 100%);">
         <h1 style="margin: 0; font-size: 32px; font-weight: bold; color: #ffffff;">PSP.Pro</h1>
-        <p style="margin: 8px 0 0 0; font-size: 14px; color: rgba(255, 255, 255, 0.7); letter-spacing: 0.2em; text-transform: uppercase;">Athletic OS</p>
+        <p style="margin: 8px 0 0 0; font-size: 14px; color: rgba(255, 255, 255, 0.7); letter-spacing: 0.2em; text-transform: uppercase;">PSP.Pro</p>
       </td>
     </tr>
 
@@ -182,7 +182,7 @@ export function getBookingCancellationEmail(data: BookingEmailData) {
     <tr>
       <td style="padding: 40px 30px; text-align: center;">
         <h1 style="margin: 0; font-size: 32px; font-weight: bold; color: #ffffff;">PSP.Pro</h1>
-        <p style="margin: 8px 0 0 0; font-size: 14px; color: rgba(255, 255, 255, 0.7);">Athletic OS</p>
+        <p style="margin: 8px 0 0 0; font-size: 14px; color: rgba(255, 255, 255, 0.7);">PSP.Pro</p>
       </td>
     </tr>
     <tr>

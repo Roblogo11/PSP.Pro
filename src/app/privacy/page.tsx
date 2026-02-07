@@ -30,7 +30,7 @@ export default function PrivacyPage() {
         <section>
           <h2 className="text-2xl font-bold text-white mb-4">1. Introduction</h2>
           <p className="text-cyan-700 dark:text-white leading-relaxed">
-            Welcome to PSP.Pro (Proper Sports Performance). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our Athletic OS platform and training services.
+            Welcome to PSP.Pro (Proper Sports Performance). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our PSP.Pro platform and training services.
           </p>
         </section>
 
@@ -42,7 +42,7 @@ export default function PrivacyPage() {
           <ul className="list-disc list-inside text-cyan-700 dark:text-white space-y-2 ml-4">
             <li>Register for an account</li>
             <li>Book training sessions</li>
-            <li>Use our Athletic OS dashboard</li>
+            <li>Use our PSP.Pro dashboard</li>
             <li>Contact us with inquiries</li>
             <li>Subscribe to our newsletter or communications</li>
           </ul>
@@ -57,7 +57,7 @@ export default function PrivacyPage() {
             We use the information we collect to:
           </p>
           <ul className="list-disc list-inside text-cyan-700 dark:text-white space-y-2 ml-4">
-            <li>Provide and manage your training services and Athletic OS access</li>
+            <li>Provide and manage your training services and PSP.Pro access</li>
             <li>Process your bookings and payments</li>
             <li>Track your athletic performance and progress</li>
             <li>Send you training updates, drill assignments, and performance reports</li>

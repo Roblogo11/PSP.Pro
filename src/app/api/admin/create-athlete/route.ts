@@ -2,17 +2,18 @@ import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase/server'
 
-// Create a Supabase client with service role for admin operations
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  }
-)
+function getAdminClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    }
+  )
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -63,6 +64,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Create the auth user with admin client
+    const supabaseAdmin = getAdminClient()
+
     const { data: authData, error: createUserError } = await supabaseAdmin.auth.admin.createUser({
       email,
       email_confirm: true,
@@ -73,7 +76,10 @@ export async function POST(request: NextRequest) {
 
     if (createUserError) {
       console.error('Auth error:', createUserError)
-      return NextResponse.json({ error: createUserError.message }, { status: 400 })
+      const msg = createUserError.message?.includes('already been registered')
+        ? 'An account with this email already exists'
+        : 'Failed to create athlete account'
+      return NextResponse.json({ error: msg }, { status: 400 })
     }
 
     if (!authData.user) {
@@ -106,7 +112,7 @@ export async function POST(request: NextRequest) {
       console.error('Profile error:', profileError)
       // Try to clean up the auth user if profile creation fails
       await supabaseAdmin.auth.admin.deleteUser(authData.user.id)
-      return NextResponse.json({ error: profileError.message }, { status: 400 })
+      return NextResponse.json({ error: 'Failed to create athlete profile' }, { status: 400 })
     }
 
     return NextResponse.json({
@@ -119,7 +125,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Error creating athlete:', error)
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }

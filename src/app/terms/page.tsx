@@ -30,7 +30,7 @@ export default function TermsPage() {
         <section>
           <h2 className="text-2xl font-bold text-white mb-4">1. Agreement to Terms</h2>
           <p className="text-cyan-700 dark:text-white leading-relaxed">
-            By accessing or using PSP.Pro (Proper Sports Performance) Athletic OS platform and training services, you agree to be bound by these Terms of Service. If you do not agree to these terms, you may not access or use our services.
+            By accessing or using PSP.Pro (Proper Sports Performance) PSP.Pro platform and training services, you agree to be bound by these Terms of Service. If you do not agree to these terms, you may not access or use our services.
           </p>
         </section>
 
@@ -41,7 +41,7 @@ export default function TermsPage() {
           </p>
           <ul className="list-disc list-inside text-cyan-700 dark:text-white space-y-2 ml-4">
             <li>In-person baseball and softball training sessions</li>
-            <li>Athletic OS digital platform for performance tracking</li>
+            <li>PSP.Pro digital platform for performance tracking</li>
             <li>Access to premium training drill library</li>
             <li>Velocity tracking and progress analytics</li>
             <li>Personalized coaching and drill assignments</li>
@@ -80,7 +80,7 @@ export default function TermsPage() {
             Cancellation and rescheduling policies:
           </p>
           <ul className="list-disc list-inside text-cyan-700 dark:text-white space-y-2 ml-4">
-            <li>Cancel or reschedule sessions at least 24 hours in advance via the Athletic OS platform</li>
+            <li>Cancel or reschedule sessions at least 24 hours in advance via the PSP.Pro platform</li>
             <li>Late cancellations (less than 24 hours) result in forfeiture of that session</li>
             <li>Package sessions expire 6 months from purchase date</li>
             <li>Weather cancellations by PSP.Pro will be rescheduled at no charge</li>
@@ -104,9 +104,9 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-white mb-4">7. Athletic OS Platform Usage</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">7. PSP.Pro Platform Usage</h2>
           <p className="text-cyan-700 dark:text-white leading-relaxed mb-4">
-            When using the Athletic OS platform, you agree to:
+            When using the PSP.Pro platform, you agree to:
           </p>
           <ul className="list-disc list-inside text-cyan-700 dark:text-white space-y-2 ml-4">
             <li>Use the platform only for lawful purposes</li>
@@ -120,7 +120,7 @@ export default function TermsPage() {
         <section>
           <h2 className="text-2xl font-bold text-white mb-4">8. Intellectual Property</h2>
           <p className="text-cyan-700 dark:text-white leading-relaxed">
-            All content on the Athletic OS platform, including training videos, drill instructions, analytics tools, and branding, is owned by PSP.Pro and protected by copyright and trademark laws. You may not reproduce, distribute, or create derivative works without written permission.
+            All content on the PSP.Pro platform, including training videos, drill instructions, analytics tools, and branding, is owned by PSP.Pro and protected by copyright and trademark laws. You may not reproduce, distribute, or create derivative works without written permission.
           </p>
         </section>
 

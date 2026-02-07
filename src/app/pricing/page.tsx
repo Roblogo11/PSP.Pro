@@ -30,7 +30,7 @@ export default function PricingPage() {
         ].map((stat, index) => (
           <div key={index} className="command-panel hover:border-orange/30 transition-all">
             <stat.icon className="w-8 h-8 mb-3 mx-auto" style={{ color: stat.color }} />
-            <div className="text-2xl font-bold text-white text-center">{stat.value}</div>
+            <div className="text-2xl font-bold text-center text-gradient-orange">{stat.value}</div>
             <div className="text-sm text-center">{stat.label}</div>
           </div>
         ))}
