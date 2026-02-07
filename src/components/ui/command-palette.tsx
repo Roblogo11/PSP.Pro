@@ -201,7 +201,7 @@ export function CommandPalette() {
                     <span className="ml-1">Select</span>
                   </span>
                 </div>
-                <span className="text-secondary/60">ShockAI OS</span>
+                <span className="text-secondary/60">PSP.Pro</span>
               </div>
             </Command>
           </motion.div>

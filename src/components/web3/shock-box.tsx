@@ -8,7 +8,7 @@ import Image from 'next/image'
 
 // The secret content revealed after signing
 const PARTNER_VIDEO_URL = 'https://roblogo.com/wp-content/uploads/2026/02/AI-vs-jobs-SMP.mp4'
-const SIGNATURE_MESSAGE = 'Sign to verify your ShockAI Partner Session'
+const SIGNATURE_MESSAGE = 'Sign to verify your PSP.Pro Partner Session'
 
 // Shatter animation pieces
 const shatterPieces = Array.from({ length: 12 }, (_, i) => ({

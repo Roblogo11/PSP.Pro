@@ -1,6 +1,6 @@
-# ShockAI - Creative Studio Website
+# PSP.Pro - ProPer Sports Performance
 
-A high-performance, AI-first creative studio website built with Next.js 14, Tailwind CSS, and Framer Motion. Features a dynamic gallery system, panel-based navigation, and admin upload capabilities.
+Elite baseball and softball training platform built with Next.js 14, Tailwind CSS, and Supabase. Features athlete dashboards, coach management, booking system, and Stripe payments.
 
 ## Quick Reference for AI Assistants
 

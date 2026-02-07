@@ -8,7 +8,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'shockai.io',
+        hostname: 'propersports.pro',
       },
       {
         protocol: 'https',

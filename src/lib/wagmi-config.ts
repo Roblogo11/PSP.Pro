@@ -12,7 +12,7 @@ export const wagmiConfig = createConfig({
     ...(projectId
       ? [
           walletConnect({ projectId }),
-          coinbaseWallet({ appName: 'ShockAI' }),
+          coinbaseWallet({ appName: 'PSP.Pro' }),
         ]
       : []),
   ],
