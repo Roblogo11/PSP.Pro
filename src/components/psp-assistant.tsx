@@ -87,6 +87,30 @@ const KNOWLEDGE_BASE = [
     response: 'Coach tools available:\n\n• Coaches — View all team coaches\n• My Athletes — Manage your athletes\n• Manage Trainings — Set up packages & pricing\n• Assign Courses — Create & assign drills\n• Confirm Appointments — Review bookings\n• Analytics — Track performance data',
     actions: [{ label: 'Coach Dashboard', href: '/admin' }],
   },
+  {
+    keywords: ['blog', 'article', 'tips', 'read', 'news'],
+    title: 'Blog & Tips',
+    response: 'Check out our blog for training tips and insights!\n\nTopics include:\n• Pitching mechanics breakdowns\n• Hitting drills you can do at home\n• Nutrition for athletes\n• Mental game strategies\n\nMore content coming soon — we\'re building out our full content library!',
+    actions: [{ label: 'Read Blog', href: '/blog' }],
+  },
+  {
+    keywords: ['settings', 'account', 'notification', 'edit profile', 'change password'],
+    title: 'Account Settings',
+    response: 'Manage your account in Settings:\n\n• Update your name, email, phone\n• Change your location\n• Set notification preferences\n• View your account details\n\nAccess settings from the sidebar menu.',
+    actions: [{ label: 'Settings', href: '/settings' }],
+  },
+  {
+    keywords: ['newsletter', 'updates', 'email list', 'subscribe', 'mailing list'],
+    title: 'Stay Updated',
+    response: 'Want to stay in the loop?\n\n• Follow us on social media for training tips\n• Check the blog for new articles\n• Newsletter signup coming soon!\n\nFor now, the best way to stay updated is through your PSP.Pro dashboard — all your session updates and drill assignments show up there in real-time.',
+    actions: [{ label: 'Contact Us', href: '/contact' }],
+  },
+  {
+    keywords: ['cancel', 'refund', 'reschedule', 'change session', 'move session'],
+    title: 'Cancellations & Rescheduling',
+    response: 'Need to change your session?\n\n• View your upcoming sessions in My Sessions\n• Cancel directly from the session card\n• Coaches can reschedule from Confirm Appointments\n\nFor refund questions, reach out to us via the contact page.',
+    actions: [{ label: 'My Sessions', href: '/sessions' }],
+  },
 ]
 
 function findBestMatch(query: string): any {

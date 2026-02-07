@@ -24,6 +24,10 @@ const routes: {
   { path: '/signup', priority: 0.8, changeFrequency: 'yearly' },
   { path: '/booking', priority: 0.7, changeFrequency: 'weekly' },
 
+  // Legal
+  { path: '/privacy', priority: 0.3, changeFrequency: 'yearly' },
+  { path: '/terms', priority: 0.3, changeFrequency: 'yearly' },
+
   // Utility
   { path: '/thank-you', priority: 0.3, changeFrequency: 'yearly' },
 ]
