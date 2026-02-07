@@ -273,8 +273,13 @@ export function Sidebar() {
         animate={{ y: 0 }}
         className="lg:hidden fixed bottom-0 left-0 right-0 glass-card border-t border-cyan-200/40 z-50 mobile-safe"
       >
-        <div className="flex items-center justify-around p-2">
-          {navItems.slice(0, 5).map((item) => {
+        <div className="flex items-center overflow-x-auto scrollbar-hide gap-1 px-2 py-2">
+          {/* Theme Toggle - compact */}
+          <div className="flex-shrink-0 flex flex-col items-center gap-1 px-2">
+            <ThemeToggle />
+          </div>
+
+          {navItems.map((item) => {
             const isActive = pathname === item.href
             const Icon = item.icon
 
@@ -283,7 +288,7 @@ export function Sidebar() {
                 <motion.div
                   whileTap={{ scale: 0.9 }}
                   className={`
-                    flex flex-col items-center gap-1 p-3 rounded-xl min-w-[64px]
+                    flex flex-col items-center gap-0.5 p-2 rounded-xl min-w-[56px] flex-shrink-0
                     ${
                       isActive
                         ? 'bg-orange/20 text-orange'
@@ -291,8 +296,8 @@ export function Sidebar() {
                     }
                   `}
                 >
-                  <Icon className="w-6 h-6" />
-                  <span className="text-xs font-medium">{item.label}</span>
+                  <Icon className="w-5 h-5" />
+                  <span className="text-[10px] font-medium leading-tight text-center whitespace-nowrap">{item.label.split(' ')[0]}</span>
                 </motion.div>
               </Link>
             )

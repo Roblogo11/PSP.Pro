@@ -7,10 +7,10 @@ import { MessageSquare, X, Send } from 'lucide-react'
 
 // Quick Actions for PSP.Pro
 const QUICK_ACTIONS = [
-  { label: 'Book Session', href: '/booking' },
+  { label: 'Buy Lessons', href: '/booking' },
   { label: 'Pricing', href: '/pricing' },
   { label: 'Contact', href: '/contact' },
-  { label: 'Dashboard', href: '/locker' },
+  { label: 'My Dashboard', href: '/locker' },
 ]
 
 // Knowledge Base for PSP.Pro
@@ -18,14 +18,14 @@ const KNOWLEDGE_BASE = [
   {
     keywords: ['pricing', 'cost', 'price', 'how much', 'rate', 'session cost'],
     title: 'Training Pricing',
-    response: 'Our training sessions:\n\n• 1-on-1 Pitching: $75/hour\n• 1-on-1 Hitting: $75/hour\n• Group Training: $50/person\n• Video Analysis: $50/30min\n• Recovery Session: $45/45min\n\nPackages available with savings up to $200!',
+    response: 'Our training sessions:\n\n• 1-on-1 Skills Training: $75/60min\n• 1-on-1 Performance: $75/60min\n• Speed & Agility Group: $50/90min\n• Small Group Training: $40/75min\n• Strength & Conditioning: $65/60min\n\nSave up to $200 with session packages!',
     actions: [{ label: 'View Pricing', href: '/pricing' }],
   },
   {
-    keywords: ['book', 'schedule', 'appointment', 'reserve', 'session', 'training'],
-    title: 'Book a Session',
-    response: 'Ready to train? Booking is easy!\n\n1. Choose your service (pitching, hitting, etc.)\n2. Pick your date and time\n3. Select your coach\n4. Complete payment\n\nWe have availability Monday-Saturday.',
-    actions: [{ label: 'Book Now', href: '/booking' }],
+    keywords: ['book', 'schedule', 'appointment', 'reserve', 'session', 'training', 'buy', 'lesson'],
+    title: 'Buy Lessons',
+    response: 'Ready to train? Booking is easy!\n\n1. Choose your training type\n2. Pick your date and time\n3. Select your coach\n4. Complete payment via Stripe\n\nWe have availability Monday-Saturday.',
+    actions: [{ label: 'Buy Lessons', href: '/booking' }],
   },
   {
     keywords: ['location', 'where', 'address', 'facility', 'virginia beach', '757'],
@@ -34,13 +34,13 @@ const KNOWLEDGE_BASE = [
     actions: [{ label: 'Contact Us', href: '/contact' }],
   },
   {
-    keywords: ['sport', 'soccer', 'basketball', 'softball', 'what sports'],
+    keywords: ['sport', 'baseball', 'softball', 'what sports', 'what do you train'],
     title: 'Sports We Train',
-    response: 'We specialize in:\n\n• Soccer (all positions)\n• Basketball (all positions)\n• Softball (all positions)\n• Technical skills development\n• Speed & agility\n• Athletic performance',
+    response: 'We specialize in:\n\n• Baseball (all positions)\n• Softball (all positions)\n• Pitching mechanics & velocity\n• Hitting & swing development\n• Speed & agility\n• Strength & conditioning',
     actions: [{ label: 'Learn More', href: '/about' }],
   },
   {
-    keywords: ['velocity', 'speed', 'throwing', 'mph', 'velo'],
+    keywords: ['velocity', 'speed', 'throwing', 'mph', 'velo', 'pitching'],
     title: 'Velocity Training',
     response: 'Our velocity development program focuses on:\n\n• Mechanics optimization\n• Power generation\n• Arm health & conditioning\n• Data-driven progress tracking\n\nAverage velocity gains: 3-7 MPH in 12 weeks!',
     actions: [{ label: 'Get Started', href: '/get-started' }],
@@ -58,46 +58,34 @@ const KNOWLEDGE_BASE = [
     actions: [{ label: 'About Us', href: '/about' }],
   },
   {
-    keywords: ['package', 'deal', 'discount', 'bundle', 'sessions'],
+    keywords: ['package', 'deal', 'discount', 'bundle', 'sessions', 'save'],
     title: 'Training Packages',
-    response: 'Save with our packages:\n\n• 5-Session Pack: $350 (save $25)\n• 10-Session Pack: $675 (save $75) ⭐ Most Popular\n• 20-Session Pack: $1,300 (save $200)\n\nPackages are valid for 90 days.',
+    response: 'Save with our packages:\n\n• 5-Session Pack: $350 (save $25)\n• 10-Session Pack: $675 (save $75)\n• 20-Session Pack: $1,300 (save $200)\n\nMonthly Membership: $60/mo for unlimited group access + discounted 1-on-1s!',
     actions: [{ label: 'View Packages', href: '/pricing' }],
   },
   {
     keywords: ['dashboard', 'locker', 'my account', 'profile', 'stats', 'progress'],
-    title: 'Your Dashboard',
-    response: 'Your PSP.Pro dashboard shows:\n\n• Velocity progress & charts\n• Upcoming sessions\n• Drill completions\n• Achievement badges\n• Performance analytics\n\nEverything updates in real-time! Login to see your stats.',
-    actions: [{ label: 'Go to Dashboard', href: '/locker' }],
+    title: 'My Dashboard',
+    response: 'Your PSP.Pro dashboard shows:\n\n• Performance progress & charts\n• Upcoming sessions\n• Training drills with video\n• Achievement badges\n• Session history\n\nEverything updates in real-time!',
+    actions: [{ label: 'My Dashboard', href: '/locker' }],
   },
   {
-    keywords: ['create drill', 'add drill', 'new drill', 'youtube', 'video drill', 'drill library'],
-    title: 'Creating Drills (Coaches)',
-    response: 'Coaches: Adding drills is super easy!\n\n1. Click "Create Drill" or go to Drill Bank\n2. Paste a YouTube URL (that\'s it!)\n3. Add title, category, difficulty\n4. Advanced options are hidden by default\n\n💡 Tip: Use "Bulk Import" to add multiple YouTube videos at once - 180x faster!',
-    actions: [{ label: 'Admin Dashboard', href: '/admin' }],
+    keywords: ['drill', 'drills', 'training video', 'exercise', 'workout'],
+    title: 'Training Drills',
+    response: 'Access our drill library:\n\n• Video drills with YouTube integration\n• Categorized by sport & skill level\n• Assigned by your coach\n• Track completion progress\n\nCoaches can create and assign drills from the Assign Courses page.',
+    actions: [{ label: 'Training Drills', href: '/drills' }],
   },
   {
-    keywords: ['schedule', 'availability', 'set hours', 'booking slots', 'time slots', 'when available'],
-    title: 'Setting Availability (Coaches)',
-    response: 'Coaches: Set your availability in minutes!\n\n1. Go to Admin → "Schedule Session"\n2. Pick date, start/end time, location\n3. Set max bookings (for group sessions)\n4. Done! Athletes can now book\n\n💡 The dashboard shows your upcoming sessions widget for quick overview.',
-    actions: [{ label: 'Manage Availability', href: '/admin/availability' }],
+    keywords: ['membership', 'monthly', 'subscribe', 'unlimited'],
+    title: 'Monthly Membership',
+    response: 'Monthly Membership — $60/mo:\n\n• Unlimited group session access\n• Discounted 1-on-1 sessions\n• Priority scheduling\n• Full PSP.Pro dashboard access\n\nBest value for serious athletes!',
+    actions: [{ label: 'View Plans', href: '/pricing' }],
   },
   {
-    keywords: ['tooltip', 'help', 'question mark', 'what does this mean', 'how to use', 'confused'],
-    title: 'Dashboard Help',
-    response: 'Need help navigating?\n\n• Look for the (?) tooltip icons - hover for explanations\n• Blue info banners show tips and shortcuts\n• "Advanced Options" can be hidden/shown\n• All stats update in real-time\n\nCoaches and athletes see different dashboards customized for their role!',
-    actions: [{ label: 'Dashboard', href: '/locker' }],
-  },
-  {
-    keywords: ['admin', 'coach dashboard', 'control center', 'manage athletes', 'coach view'],
-    title: 'Admin Dashboard (Coaches)',
-    response: 'Your Admin Control Center:\n\n✅ Quick Stats: Athletes, sessions, drills, pending bookings\n✅ Upcoming Sessions widget: See what\'s next\n✅ Quick Actions: Create drill, schedule, add athlete\n✅ Drill Bank: Manage training videos\n✅ Athlete Management: View all athletes\n\nEverything in one place!',
-    actions: [{ label: 'Admin Dashboard', href: '/admin' }],
-  },
-  {
-    keywords: ['bulk import', 'multiple drills', 'many videos', 'import drills', 'fast way'],
-    title: 'Bulk Import Drills',
-    response: 'Add multiple drills at once!\n\n💡 Bulk Import is 180x faster than manual entry\n\nJust:\n1. Go to Drill Bank\n2. Click "Bulk Import"\n3. Paste multiple YouTube URLs (one per line)\n4. Click import - done!\n\nPerfect for building your drill library quickly.',
-    actions: [{ label: 'Drill Bank', href: '/admin/drills' }],
+    keywords: ['admin', 'coach dashboard', 'manage athletes', 'coach view'],
+    title: 'Coach Dashboard',
+    response: 'Coach tools available:\n\n• Coaches — View all team coaches\n• My Athletes — Manage your athletes\n• Manage Trainings — Set up packages & pricing\n• Assign Courses — Create & assign drills\n• Confirm Appointments — Review bookings\n• Analytics — Track performance data',
+    actions: [{ label: 'Coach Dashboard', href: '/admin' }],
   },
 ]
 
@@ -178,7 +166,7 @@ export function PSPAssistant() {
       {/* Floating Chat Button - Top right on mobile, bottom right on desktop */}
       <motion.button
         onClick={handleOpen}
-        className="fixed top-6 sm:top-auto sm:bottom-6 right-6 z-[100] flex items-center gap-2 px-5 py-3.5 rounded-full bg-gradient-to-r from-orange via-orange-500 to-orange-600 text-white text-sm font-bold shadow-2xl hover:shadow-orange/50 transition-all ring-4 ring-orange/20 hover:ring-orange/40"
+        className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-[100] flex items-center gap-2 px-5 py-3.5 rounded-full bg-gradient-to-r from-orange via-orange-500 to-orange-600 text-white text-sm font-bold shadow-2xl hover:shadow-orange/50 transition-all ring-4 ring-orange/20 hover:ring-orange/40"
         style={{
           animation: 'pulse-glow 3s ease-in-out infinite',
         }}
@@ -225,7 +213,7 @@ export function PSPAssistant() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="fixed top-20 sm:top-auto sm:bottom-6 right-6 z-[102] w-[calc(100vw-2rem)] sm:w-[400px] max-h-[calc(100vh-8rem)] sm:max-h-[600px] rounded-2xl overflow-hidden shadow-2xl command-panel"
+              className="fixed bottom-4 left-2 right-2 sm:left-auto sm:bottom-6 sm:right-6 z-[102] sm:w-[400px] max-h-[calc(100vh-6rem)] sm:max-h-[600px] rounded-2xl overflow-hidden shadow-2xl command-panel"
             >
               {/* Header */}
               <div className="flex items-center justify-between px-4 py-3 border-b border-cyan-200/40 bg-gradient-to-r from-orange/10 to-cyan/10">

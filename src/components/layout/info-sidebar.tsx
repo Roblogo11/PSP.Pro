@@ -166,7 +166,7 @@ export function InfoSidebar() {
         animate={{ y: 0 }}
         className="lg:hidden fixed bottom-0 left-0 right-0 glass-card border-t border-cyan-700/30 z-50 mobile-safe"
       >
-        <div className="flex items-center justify-around p-2">
+        <div className="flex items-center overflow-x-auto scrollbar-hide gap-1 px-2 py-2">
           {navItems.map((item) => {
             const isActive = pathname === item.href
             const Icon = item.icon
@@ -176,7 +176,7 @@ export function InfoSidebar() {
                 <motion.div
                   whileTap={{ scale: 0.9 }}
                   className={`
-                    flex flex-col items-center gap-1 p-3 rounded-xl min-w-[64px]
+                    flex flex-col items-center gap-0.5 p-2 rounded-xl min-w-[56px] flex-shrink-0
                     ${
                       isActive
                         ? 'bg-orange/20 text-orange'
@@ -185,7 +185,7 @@ export function InfoSidebar() {
                   `}
                 >
                   <Icon className={`w-5 h-5 ${isActive ? 'text-orange' : 'text-slate-700 dark:text-white'}`} />
-                  <span className="text-xs font-medium">{item.label.split(' ')[0]}</span>
+                  <span className="text-[10px] font-medium leading-tight text-center whitespace-nowrap">{item.label.split(' ')[0]}</span>
                 </motion.div>
               </Link>
             )
