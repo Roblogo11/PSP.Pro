@@ -29,6 +29,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 })
     }
 
+    if (!service.is_active) {
+      return NextResponse.json({ error: 'This service is no longer available' }, { status: 400 })
+    }
+
     // Get user profile for email
     const { data: profile } = await supabase
       .from('profiles')
@@ -51,7 +55,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ sessionId: session.id, url: session.url })
   } catch (error: any) {
-    console.error('Checkout error:', error)
+    console.error('Checkout error:', error?.message || error)
     return NextResponse.json(
       { error: 'Failed to create checkout session' },
       { status: 500 }

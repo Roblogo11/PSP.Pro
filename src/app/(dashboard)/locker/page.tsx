@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Activity, Dumbbell, Target, Flame } from 'lucide-react'
@@ -13,11 +13,48 @@ import { AchievementBadges } from '@/components/dashboard/achievement-badges'
 import { ReviewGameStats } from '@/components/dashboard/review-game-stats'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useUserStats } from '@/lib/hooks/use-user-stats'
+import { createClient } from '@/lib/supabase/client'
+
+interface AssignedDrill {
+  id: string
+  title: string
+  duration_seconds: number
+  category: string | null
+  thumbnail_url: string | null
+  video_url: string
+}
 
 export default function AthleteLockerPage() {
   const router = useRouter()
   const { profile, loading: profileLoading } = useUserRole()
   const { stats, loading: statsLoading } = useUserStats(profile?.id)
+  const [assignedDrills, setAssignedDrills] = useState<AssignedDrill[]>([])
+
+  // Fetch assigned drills from Supabase
+  useEffect(() => {
+    if (!profile?.id) return
+
+    async function fetchAssignedDrills() {
+      const supabase = createClient()
+      const { data } = await supabase
+        .from('assigned_drills')
+        .select(`
+          drill:drill_id (id, title, duration_seconds, category, thumbnail_url, video_url)
+        `)
+        .eq('user_id', profile!.id)
+        .order('created_at', { ascending: false })
+        .limit(6)
+
+      if (data) {
+        const drills = data
+          .map((d: any) => d.drill)
+          .filter(Boolean) as AssignedDrill[]
+        setAssignedDrills(drills)
+      }
+    }
+
+    fetchAssignedDrills()
+  }, [profile?.id])
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -112,15 +149,15 @@ export default function AthleteLockerPage() {
           </h2>
           <div className="grid grid-cols-2 gap-6">
             <ProgressRing
-              progress={72}
+              progress={stats?.totalDrills ? Math.min(Math.round((stats.totalDrills / Math.max(stats.totalDrills + 5, 10)) * 100), 100) : 0}
               label="Drills Complete"
-              value="18/25"
+              value={`${stats?.totalDrills ?? 0}`}
               size={110}
             />
             <ProgressRing
-              progress={85}
-              label="Goal Progress"
-              value="68 MPH"
+              progress={stats?.avgVelocity ? Math.min(Math.round((stats.avgVelocity / 80) * 100), 100) : 0}
+              label="Avg Velocity"
+              value={stats?.avgVelocity ? `${stats.avgVelocity} MPH` : '--'}
               size={110}
               color="#10B981"
             />
@@ -171,60 +208,55 @@ export default function AthleteLockerPage() {
 
         {/* Drill Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[
-            {
-              id: 1,
-              title: 'Rotational Power',
-              duration: '12 min',
-              tag: 'Mechanics',
-              thumbnail: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&auto=format&fit=crop',
-            },
-            {
-              id: 2,
-              title: 'Sprint Mechanics',
-              duration: '8 min',
-              tag: 'Speed',
-              thumbnail: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=800&auto=format&fit=crop',
-            },
-            {
-              id: 3,
-              title: 'Recovery Protocol',
-              duration: '15 min',
-              tag: 'Recovery',
-              thumbnail: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&auto=format&fit=crop',
-            },
-          ].map((drill, index) => (
-            <div
-              key={drill.id}
-              className="glass-card-hover group cursor-pointer overflow-hidden"
-            >
-              {/* Thumbnail */}
-              <div className="relative h-48 bg-cyan-900 overflow-hidden">
-                <img
-                  src={drill.thumbnail}
-                  alt={drill.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-navy via-transparent to-transparent" />
-                <div className="absolute top-3 right-3 px-3 py-1 bg-orange/90 backdrop-blur-sm rounded-full text-xs font-semibold text-white">
-                  {drill.tag}
-                </div>
-              </div>
+          {assignedDrills.length > 0 ? (
+            assignedDrills.map((drill) => (
+              <Link key={drill.id} href={`/drills/${drill.id}`}>
+                <div className="glass-card-hover group cursor-pointer overflow-hidden">
+                  {/* Thumbnail */}
+                  <div className="relative h-48 bg-cyan-900 overflow-hidden">
+                    {drill.thumbnail_url ? (
+                      <img
+                        src={drill.thumbnail_url}
+                        alt={drill.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-cyan-900 to-orange/20">
+                        <Dumbbell className="w-12 h-12 text-orange/50" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-navy via-transparent to-transparent" />
+                    {drill.category && (
+                      <div className="absolute top-3 right-3 px-3 py-1 bg-orange/90 backdrop-blur-sm rounded-full text-xs font-semibold text-white">
+                        {drill.category}
+                      </div>
+                    )}
+                  </div>
 
-              {/* Content */}
-              <div className="p-4">
-                <h3 className="text-lg font-bold text-white mb-2 group-hover:text-orange transition-colors">
-                  {drill.title}
-                </h3>
-                <div className="flex items-center justify-between text-sm text-cyan-700 dark:text-white">
-                  <span>{drill.duration}</span>
-                  <button className="text-orange hover:text-orange-400 font-medium">
-                    Start →
-                  </button>
+                  {/* Content */}
+                  <div className="p-4">
+                    <h3 className="text-lg font-bold text-white mb-2 group-hover:text-orange transition-colors">
+                      {drill.title}
+                    </h3>
+                    <div className="flex items-center justify-between text-sm text-cyan-700 dark:text-white">
+                      <span>{Math.round(drill.duration_seconds / 60)} min</span>
+                      <span className="text-orange hover:text-orange-400 font-medium">
+                        Start →
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </Link>
+            ))
+          ) : (
+            <div className="col-span-full text-center py-8">
+              <Dumbbell className="w-10 h-10 text-cyan-700 dark:text-white mx-auto mb-3" />
+              <p className="text-cyan-700 dark:text-white mb-2">No assigned drills yet</p>
+              <Link href="/drills">
+                <button className="btn-ghost text-sm">Browse Drill Bank</button>
+              </Link>
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>

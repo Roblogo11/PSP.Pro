@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ emails: emailMap })
   } catch (error: any) {
-    console.error('Error in get-athlete-emails:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Error in get-athlete-emails:', error?.message || error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

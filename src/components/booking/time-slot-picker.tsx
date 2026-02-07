@@ -18,9 +18,10 @@ interface TimeSlotPickerProps {
   selectedSlotId: string | null
   onSelectSlot: (slotId: string) => void
   loading?: boolean
+  bookedSlotIds?: string[]
 }
 
-export function TimeSlotPicker({ timeSlots, selectedSlotId, onSelectSlot, loading }: TimeSlotPickerProps) {
+export function TimeSlotPicker({ timeSlots, selectedSlotId, onSelectSlot, loading, bookedSlotIds = [] }: TimeSlotPickerProps) {
   const formatTime = (time: string) => {
     const [hours, minutes] = time.split(':')
     const hour = parseInt(hours)
@@ -66,16 +67,19 @@ export function TimeSlotPicker({ timeSlots, selectedSlotId, onSelectSlot, loadin
           const isSelected = selectedSlotId === slot.id
           const spotsRemaining = getSlotsRemaining(slot)
           const isLimited = spotsRemaining <= 2
+          const isBookedByUser = bookedSlotIds.includes(slot.id)
 
           return (
             <button
               key={slot.id}
-              onClick={() => slot.is_available && onSelectSlot(slot.id)}
-              disabled={!slot.is_available}
+              onClick={() => slot.is_available && !isBookedByUser && onSelectSlot(slot.id)}
+              disabled={!slot.is_available || isBookedByUser}
               className={`
                 text-left p-4 rounded-xl border-2 transition-all duration-200
                 ${
-                  !slot.is_available
+                  isBookedByUser
+                    ? 'border-green-500/50 bg-green-500/5 cursor-default'
+                    : !slot.is_available
                     ? 'opacity-40 cursor-not-allowed border-cyan-200/40 bg-cyan-50/50'
                     : isSelected
                     ? 'border-orange bg-orange/5 shadow-lg shadow-orange/20 scale-[1.02]'
@@ -126,8 +130,18 @@ export function TimeSlotPicker({ timeSlots, selectedSlotId, onSelectSlot, loadin
                 </div>
               )}
 
+              {/* Already Booked by User */}
+              {isBookedByUser && (
+                <div className="mt-2 pt-2 border-t border-green-500/30">
+                  <div className="flex items-center gap-2 text-green-400 text-sm font-semibold">
+                    <div className="w-2 h-2 rounded-full bg-green-400" />
+                    <span>Already Booked</span>
+                  </div>
+                </div>
+              )}
+
               {/* Unavailable Label */}
-              {!slot.is_available && (
+              {!slot.is_available && !isBookedByUser && (
                 <div className="mt-2 pt-2 border-t border-cyan-200/40">
                   <span className="text-xs text-cyan-800 dark:text-white font-semibold">Fully Booked</span>
                 </div>

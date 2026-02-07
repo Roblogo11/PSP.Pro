@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyWebhookSignature, stripe } from '@/lib/stripe/server'
-import { createClient } from '@/lib/supabase/server'
+import { verifyWebhookSignature, getStripe } from '@/lib/stripe/server'
+import { createAdminClient } from '@/lib/supabase/admin'
+import { createBookingFromSession } from '@/lib/bookings/create-booking-from-session'
 import Stripe from 'stripe'
 
 // Disable body parsing so we can verify the webhook signature
@@ -25,7 +26,7 @@ export async function POST(request: NextRequest) {
         break
 
       case 'payment_intent.succeeded':
-        console.log('Payment succeeded:', event.data.object)
+        console.log('Payment succeeded for intent:', (event.data.object as Stripe.PaymentIntent).id)
         break
 
       case 'payment_intent.payment_failed':
@@ -39,16 +40,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ received: true })
   } catch (error: any) {
     console.error('Webhook error:', error)
-    return NextResponse.json({ error: error.message }, { status: 400 })
+    // Always return 200 to prevent Stripe from retrying the webhook
+    // Signature verification failures still return 400 above
+    return NextResponse.json({ error: error.message }, { status: 200 })
   }
 }
 
 async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
+  const stripeInstance = await getStripe()
 
   console.log('Checkout session completed:', session.id)
 
-  // Check if this is a booking or package purchase
   const metadata = session.metadata
 
   if (!metadata) {
@@ -58,99 +61,32 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
 
   // Handle booking payment
   if (metadata.booking_data) {
-    const bookingData = JSON.parse(metadata.booking_data)
+    const result = await createBookingFromSession(supabase, stripeInstance, session)
 
-    try {
-      // 1. IDEMPOTENCY CHECK - prevent duplicate bookings if webhook fires twice
-      const { data: existingBooking } = await supabase
-        .from('bookings')
-        .select('id')
-        .eq('stripe_checkout_session_id', session.id)
-        .single()
-
-      if (existingBooking) {
-        console.log('Booking already exists for session:', session.id)
-        return // Already processed, skip
-      }
-
-      // 2. AVAILABILITY CHECK - verify slot is still available
-      const { data: slot, error: slotError } = await supabase
-        .from('available_slots')
-        .select('current_bookings, max_bookings, is_available')
-        .eq('id', bookingData.slotId)
-        .single()
-
-      if (slotError || !slot) {
-        console.error('Slot not found:', bookingData.slotId)
-        // Refund the payment
-        await stripe.refunds.create({
-          payment_intent: session.payment_intent as string,
-          reason: 'requested_by_customer',
-          metadata: {
-            reason: 'Slot no longer exists'
-          }
-        })
-        return
-      }
-
-      if (!slot.is_available || slot.current_bookings >= slot.max_bookings) {
-        console.error('Slot is full:', bookingData.slotId)
-        // Refund the payment
-        await stripe.refunds.create({
-          payment_intent: session.payment_intent as string,
-          reason: 'requested_by_customer',
-          metadata: {
-            reason: 'Slot is no longer available'
-          }
-        })
-        return
-      }
-
-      // 3. CREATE BOOKING - the trigger will handle slot count increment
-      const { data: booking, error } = await supabase
-        .from('bookings')
-        .insert({
-          athlete_id: metadata.athlete_id,
-          coach_id: bookingData.coachId,
-          service_id: metadata.service_id,
-          slot_id: bookingData.slotId,
-          booking_date: bookingData.date,
-          start_time: bookingData.startTime,
-          end_time: bookingData.endTime,
-          duration_minutes: bookingData.durationMinutes,
-          location: bookingData.location,
-          status: 'confirmed',
-          amount_cents: session.amount_total || 0,
-          payment_status: 'paid',
-          stripe_payment_intent_id: session.payment_intent as string,
-          stripe_checkout_session_id: session.id,
-        })
-        .select()
-        .single()
-
-      if (error) {
-        console.error('Error creating booking:', error)
-        // If booking creation failed (likely due to race condition), refund
-        if (error.message.includes('Cannot book slot')) {
-          await stripe.refunds.create({
-            payment_intent: session.payment_intent as string,
-            reason: 'requested_by_customer',
-            metadata: {
-              reason: 'Slot booking failed - likely full'
-            }
-          })
-        }
-      } else {
-        console.log('Booking created successfully:', booking.id)
-      }
-    } catch (err) {
-      console.error('Failed to create booking:', err)
+    if (result.created) {
+      console.log('Webhook created booking:', result.bookingId)
+    } else if (result.reason === 'already_exists') {
+      console.log('Booking already exists for session:', session.id)
+    } else {
+      console.error('Webhook booking creation failed:', result.error)
     }
   }
 
   // Handle package purchase
   if (metadata.package_id) {
     try {
+      // IDEMPOTENCY CHECK - prevent duplicate packages if webhook fires twice
+      const { data: existingPackage } = await supabase
+        .from('athlete_packages')
+        .select('id')
+        .eq('stripe_payment_intent_id', session.payment_intent as string)
+        .single()
+
+      if (existingPackage) {
+        console.log('Package already exists for payment:', session.payment_intent)
+        return
+      }
+
       const validityDays = 90 // Default to 90 days
       const expiresAt = new Date()
       expiresAt.setDate(expiresAt.getDate() + validityDays)
@@ -183,7 +119,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
 }
 
 async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   console.log('Payment failed:', paymentIntent.id)
 

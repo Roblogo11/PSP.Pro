@@ -8,7 +8,6 @@ export default async function DashboardLayout({
   children: React.ReactNode
 }) {
   // Protect dashboard routes - require authentication
-  // Skip auth check if Supabase is not configured (development mode)
   try {
     const supabase = await createClient()
     const {
@@ -18,13 +17,14 @@ export default async function DashboardLayout({
     if (!user) {
       redirect('/login')
     }
-  } catch (error) {
-    // In development without Supabase configured, allow access
-    if (process.env.NODE_ENV !== 'production') {
-      console.warn('⚠️  Dashboard accessed without Supabase authentication (dev mode)')
-    } else {
+  } catch (error: any) {
+    // Re-throw Next.js redirects (they use throw internally)
+    if (error?.digest?.startsWith('NEXT_REDIRECT')) {
       throw error
     }
+    // Any other error (Supabase down, config issue) → redirect to login
+    console.error('Dashboard auth error:', error?.message || error)
+    redirect('/login')
   }
 
   return (

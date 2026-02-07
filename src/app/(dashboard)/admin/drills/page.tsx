@@ -275,7 +275,7 @@ export default function DrillsManagementPage() {
       const assignments = selectedAthletes.map(athleteId => ({
         user_id: athleteId,
         drill_id: selectedDrill.id,
-        assigned_by: profile?.full_name || 'Coach',
+        assigned_by_id: profile?.id,
         due_date: assignmentDueDate || null,
         priority: assignmentPriority,
         notes: assignmentNotes || null,

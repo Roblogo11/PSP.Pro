@@ -35,21 +35,21 @@ interface NavItem {
 }
 
 const athleteNavItems: NavItem[] = [
-  { label: 'Athlete Locker', href: '/locker', icon: LayoutDashboard, color: 'text-orange-400' },
-  { label: 'Drill Bank', href: '/drills', icon: Dumbbell, color: 'text-cyan-400' },
-  { label: 'Sessions', href: '/sessions', icon: Calendar, color: 'text-purple-400' },
-  { label: 'Progress', href: '/progress', icon: TrendingUp, color: 'text-green-400' },
+  { label: 'My Dashboard', href: '/locker', icon: LayoutDashboard, color: 'text-orange-400' },
+  { label: 'Training Drills', href: '/drills', icon: Dumbbell, color: 'text-cyan-400' },
+  { label: 'My Sessions', href: '/sessions', icon: Calendar, color: 'text-purple-400' },
+  { label: 'My Progress', href: '/progress', icon: TrendingUp, color: 'text-green-400' },
   { label: 'Achievements', href: '/achievements', icon: Trophy, color: 'text-yellow-400' },
-  { label: 'Booking', href: '/booking', icon: Clock, color: 'text-blue-400' },
+  { label: 'Buy Lessons', href: '/booking', icon: Clock, color: 'text-blue-400' },
   { label: 'Settings', href: '/settings', icon: Settings, color: 'text-cyan-600' },
 ]
 
 const adminNavItems: NavItem[] = [
-  { label: 'Admin Control', href: '/admin', icon: Shield, color: 'text-red-400' },
-  { label: 'Athletes', href: '/admin/athletes', icon: Users, color: 'text-cyan-400' },
-  { label: 'Services', href: '/admin/services', icon: DollarSign, color: 'text-green-400' },
-  { label: 'Drills', href: '/admin/drills', icon: Dumbbell, color: 'text-purple-400' },
-  { label: 'Bookings', href: '/admin/bookings', icon: Calendar, color: 'text-blue-400' },
+  { label: 'Coaches', href: '/admin', icon: Shield, color: 'text-red-400' },
+  { label: 'My Athletes', href: '/admin/athletes', icon: Users, color: 'text-cyan-400' },
+  { label: 'Manage Trainings', href: '/admin/services', icon: DollarSign, color: 'text-green-400' },
+  { label: 'Assign Courses', href: '/admin/drills', icon: Dumbbell, color: 'text-purple-400' },
+  { label: 'Confirm Appointments', href: '/admin/bookings', icon: Calendar, color: 'text-blue-400' },
   { label: 'Media Library', href: '/admin/media', icon: Video, color: 'text-pink-400' },
   { label: 'Analytics', href: '/admin/analytics', icon: BarChart3, color: 'text-green-400' },
 ]

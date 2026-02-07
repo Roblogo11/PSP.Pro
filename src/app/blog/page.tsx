@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { Calendar, Clock, ArrowRight, BookOpen, TrendingUp } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
@@ -81,6 +82,8 @@ const BLOG_POSTS: BlogPost[] = [
 const CATEGORIES = ['All', ...Array.from(new Set(BLOG_POSTS.map(post => post.category)))]
 
 export default function BlogPage() {
+  const [newsletterEmail, setNewsletterEmail] = useState('')
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
     return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
@@ -106,7 +109,7 @@ export default function BlogPage() {
 
       {/* Featured Post */}
       <div className="max-w-7xl mx-auto mb-16">
-        <Link href={`/blog/${BLOG_POSTS[0].slug}`} className="block group">
+        <div className="block group">
           <div className="command-panel p-0 overflow-hidden lg:flex">
             <div className="lg:w-1/2 relative aspect-video lg:aspect-auto">
               <img
@@ -140,7 +143,7 @@ export default function BlogPage() {
               </div>
             </div>
           </div>
-        </Link>
+        </div>
       </div>
 
       {/* All Posts Grid */}
@@ -152,9 +155,8 @@ export default function BlogPage() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {BLOG_POSTS.slice(1).map(post => (
-            <Link
+            <div
               key={post.id}
-              href={`/blog/${post.slug}`}
               className="glass-card-hover overflow-hidden group"
             >
               <div className="relative aspect-video overflow-hidden">
@@ -184,7 +186,7 @@ export default function BlogPage() {
                   </div>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </div>
@@ -202,9 +204,18 @@ export default function BlogPage() {
             <input
               type="email"
               placeholder="Your email address"
+              value={newsletterEmail}
+              onChange={(e) => setNewsletterEmail(e.target.value)}
               className="flex-1 px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-cyan/50"
             />
-            <button className="btn-primary whitespace-nowrap">
+            <button
+              className="btn-primary whitespace-nowrap"
+              onClick={() => {
+                if (!newsletterEmail) return
+                window.open(`mailto:info@propersports.pro?subject=${encodeURIComponent('Newsletter Signup')}&body=${encodeURIComponent(`Please add me to the PSP.Pro newsletter.\n\nEmail: ${newsletterEmail}`)}`, '_self')
+                setNewsletterEmail('')
+              }}
+            >
               Subscribe
             </button>
           </div>

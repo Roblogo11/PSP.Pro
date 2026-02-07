@@ -2,11 +2,13 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { User, Target, Calendar, CheckCircle, ArrowRight, Mail, Phone, MapPin } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
 
 export default function GetStartedPage() {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -259,7 +261,17 @@ export default function GetStartedPage() {
               View Pricing
             </button>
           </Link>
-          <button className="btn-primary px-8 py-4 flex items-center gap-2 justify-center">
+          <button
+            onClick={() => {
+              const subject = encodeURIComponent(`PSP.Pro New Athlete Inquiry: ${formData.firstName} ${formData.lastName}`)
+              const body = encodeURIComponent(
+                `Name: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nAge: ${formData.age}\nPosition: ${formData.position}\nExperience: ${formData.experience}\nGoals: ${formData.goals.join(', ')}\nAvailability: ${formData.availability}\n\nAdditional Info:\n${formData.additionalInfo}`
+              )
+              window.open(`mailto:info@propersports.pro?subject=${subject}&body=${body}`, '_self')
+              setTimeout(() => router.push('/signup'), 500)
+            }}
+            className="btn-primary px-8 py-4 flex items-center gap-2 justify-center"
+          >
             <span>Submit & Book Session</span>
             <ArrowRight className="w-5 h-5" />
           </button>

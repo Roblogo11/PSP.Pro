@@ -15,7 +15,7 @@ async function isAdmin(): Promise<boolean> {
       .eq('id', user.id)
       .single()
 
-    return profile?.role === 'admin'
+    return profile?.role === 'admin' || profile?.role === 'master_admin'
   } catch (error) {
     console.error('Auth check error:', error)
     return false

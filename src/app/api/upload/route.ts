@@ -2,12 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
 import sharp from 'sharp'
-
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
-
-if (!ADMIN_PASSWORD) {
-  console.error('ADMIN_PASSWORD environment variable is required')
-}
+import { createClient } from '@/lib/supabase/server'
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
 const GALLERIES_JSON_PATH = path.join(process.cwd(), 'public', 'data', 'galleries.json')
@@ -65,10 +60,22 @@ function saveGalleriesJson(data: Record<GalleryType, GalleryData>): void {
 
 export async function POST(request: NextRequest) {
   try {
-    // Check password authorization
-    const authHeader = request.headers.get('authorization')
-    if (!ADMIN_PASSWORD || !authHeader || authHeader !== `Bearer ${ADMIN_PASSWORD}`) {
+    // Check Supabase auth + admin role
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (!profile || !['admin', 'master_admin', 'coach'].includes(profile.role)) {
+      return NextResponse.json({ error: 'Unauthorized - Admin/Coach access only' }, { status: 403 })
     }
 
     const formData = await request.formData()

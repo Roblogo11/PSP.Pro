@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     if (insertError) {
       console.error('Error creating action request:', insertError)
       return NextResponse.json(
-        { error: insertError.message },
+        { error: 'Failed to create request' },
         { status: 400 }
       )
     }
@@ -72,9 +72,9 @@ export async function POST(request: NextRequest) {
       message: 'Request submitted successfully. A master admin will review it.',
     })
   } catch (error: any) {
-    console.error('Error in action request:', error)
+    console.error('Error in action request:', error?.message || error)
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }
@@ -127,16 +127,16 @@ export async function GET(request: NextRequest) {
     if (fetchError) {
       console.error('Error fetching requests:', fetchError)
       return NextResponse.json(
-        { error: fetchError.message },
+        { error: 'Failed to fetch requests' },
         { status: 400 }
       )
     }
 
     return NextResponse.json({ requests })
   } catch (error: any) {
-    console.error('Error fetching action requests:', error)
+    console.error('Error fetching action requests:', error?.message || error)
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }

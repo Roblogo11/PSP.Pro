@@ -1,25 +1,41 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { CheckCircle2, Calendar, ArrowRight, Loader2 } from 'lucide-react'
 
 export default function BookingSuccessPage() {
   const searchParams = useSearchParams()
-  const router = useRouter()
   const sessionId = searchParams.get('session_id')
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    // Simulate verification (in production, you'd verify the session with Stripe)
-    const timer = setTimeout(() => {
+    if (!sessionId) {
+      setError('No session ID found. Please try booking again.')
       setLoading(false)
-    }, 1500)
+      return
+    }
 
-    return () => clearTimeout(timer)
+    const verifyPayment = async () => {
+      try {
+        const res = await fetch(`/api/stripe/verify?session_id=${encodeURIComponent(sessionId)}`)
+        const data = await res.json()
+
+        if (!res.ok || !data.verified) {
+          setError(data.error || 'Could not verify payment. Please contact support.')
+        }
+      } catch (err) {
+        console.error('Payment verification failed:', err)
+        setError('Could not verify payment. Please contact support if you were charged.')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    verifyPayment()
   }, [sessionId])
 
   if (loading) {

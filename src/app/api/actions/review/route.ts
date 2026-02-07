@@ -70,7 +70,7 @@ export async function PATCH(request: NextRequest) {
     if (updateError) {
       console.error('Error updating request:', updateError)
       return NextResponse.json(
-        { error: updateError.message },
+        { error: 'Failed to update request' },
         { status: 400 }
       )
     }
@@ -88,9 +88,9 @@ export async function PATCH(request: NextRequest) {
       executionResult,
     })
   } catch (error: any) {
-    console.error('Error reviewing action request:', error)
+    console.error('Error reviewing action request:', error?.message || error)
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }

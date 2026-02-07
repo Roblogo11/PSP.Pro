@@ -61,7 +61,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Check if session is in the past
-    const isPastSession = new Date(session.session_date) < new Date()
+    const isPastSession = new Date(session.booking_date) < new Date()
 
     // Master admins can delete any session
     if (profile.role === 'master_admin') {
@@ -121,7 +121,7 @@ export async function DELETE(request: NextRequest) {
         reason,
         sessionDetails: {
           id: session.id,
-          date: session.session_date,
+          date: session.booking_date,
           athlete: session.athlete?.full_name,
           hasAthlete,
           isPastSession,
@@ -130,9 +130,9 @@ export async function DELETE(request: NextRequest) {
       { status: 403 }
     )
   } catch (error: any) {
-    console.error('Error deleting session:', error)
+    console.error('Error deleting session:', error?.message || error)
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }
@@ -192,7 +192,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const isPastSession = new Date(session.session_date) < new Date()
+    const isPastSession = new Date(session.booking_date) < new Date()
     const hasAthlete = !!session.athlete_id
     const isMasterAdmin = profile.role === 'master_admin'
 
@@ -224,9 +224,9 @@ export async function GET(request: NextRequest) {
       },
     })
   } catch (error: any) {
-    console.error('Error checking session deletion:', error)
+    console.error('Error checking session deletion:', error?.message || error)
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }

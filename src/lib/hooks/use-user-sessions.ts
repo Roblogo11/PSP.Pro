@@ -35,14 +35,14 @@ export function useUserSessions(userId: string | undefined) {
           .from('bookings')
           .select(`
             id,
-            session_date,
-            session_time,
+            booking_date,
+            start_time,
             status,
-            service:services(name),
+            service:service_id(name),
             coach:coach_id(full_name, avatar_url)
           `)
           .eq('athlete_id', userId)
-          .order('session_date', { ascending: false })
+          .order('booking_date', { ascending: false })
 
         if (error) throw error
 
@@ -65,14 +65,14 @@ export function useUserSessions(userId: string | undefined) {
 
         // Transform bookings to UserSession format
         const transformedBookings: UserSession[] = (bookings || []).map(booking => {
-          const sessionDate = new Date(booking.session_date)
+          const sessionDate = new Date(booking.booking_date)
           const isUpcoming = sessionDate >= new Date()
 
           return {
             id: booking.id,
             type: (booking.service as any as { name: string } | null)?.name || 'Training Session',
             date: sessionDate,
-            time: booking.session_time,
+            time: booking.start_time,
             coach: (booking.coach as any as { full_name: string; avatar_url: string } | null)?.full_name || 'Coach',
             coachPhoto: (booking.coach as any as { full_name: string; avatar_url: string } | null)?.avatar_url || null,
             location: 'PSP Training Center',

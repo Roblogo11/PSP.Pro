@@ -21,11 +21,20 @@ export default function ContactPage() {
     e.preventDefault()
     setLoading(true)
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    try {
+      // Build mailto link as reliable submission method
+      const subject = encodeURIComponent(`PSP.Pro ${formData.interest} Inquiry from ${formData.name}`)
+      const body = encodeURIComponent(
+        `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nInterest: ${formData.interest}\n\nMessage:\n${formData.message}`
+      )
+      window.open(`mailto:info@propersports.pro?subject=${subject}&body=${body}`, '_self')
 
-    setLoading(false)
-    setSubmitted(true)
+      setSubmitted(true)
+    } catch {
+      alert('Something went wrong. Please email us directly at info@propersports.pro')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {

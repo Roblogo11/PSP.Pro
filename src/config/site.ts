@@ -103,7 +103,7 @@ export const siteConfig = {
     emailPlaceholder: "Your email address",
     cta: "Get Started",
     email: "info@propersports.pro",
-    phone: "(757) 123-4567",
+    phone: "",
     address: "Virginia Beach, VA",
     hours: "Monday-Friday: 3PM-9PM, Saturday: 9AM-5PM",
   },

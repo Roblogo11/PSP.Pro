@@ -35,12 +35,12 @@ export function useUserStats(userId: string | undefined) {
         // Fetch next upcoming session
         const { data: upcomingSession } = await supabase
           .from('bookings')
-          .select('session_date, session_time')
+          .select('booking_date, start_time')
           .eq('athlete_id', userId)
           .in('status', ['confirmed', 'pending'])
-          .gte('session_date', new Date().toISOString().split('T')[0])
-          .order('session_date', { ascending: true })
-          .order('session_time', { ascending: true })
+          .gte('booking_date', new Date().toISOString().split('T')[0])
+          .order('booking_date', { ascending: true })
+          .order('start_time', { ascending: true })
           .limit(1)
           .single()
 
@@ -48,7 +48,7 @@ export function useUserStats(userId: string | undefined) {
         const { count: drillsCount } = await supabase
           .from('drill_completions')
           .select('*', { count: 'exact', head: true })
-          .eq('athlete_id', userId)
+          .eq('user_id', userId)
 
         // Fetch recent velocity data (last 10 sessions)
         const { data: velocityData } = await supabase
@@ -70,7 +70,7 @@ export function useUserStats(userId: string | undefined) {
         const { data: recentCompletions } = await supabase
           .from('drill_completions')
           .select('completed_at')
-          .eq('athlete_id', userId)
+          .eq('user_id', userId)
           .order('completed_at', { ascending: false })
           .limit(30)
 
@@ -95,8 +95,8 @@ export function useUserStats(userId: string | undefined) {
         // Format next session date
         let nextSessionDate: Date | null = null
         if (upcomingSession) {
-          const [hours, minutes] = upcomingSession.session_time.split(':')
-          nextSessionDate = new Date(upcomingSession.session_date)
+          const [hours, minutes] = upcomingSession.start_time.split(':')
+          nextSessionDate = new Date(upcomingSession.booking_date)
           nextSessionDate.setHours(parseInt(hours), parseInt(minutes))
         }
 

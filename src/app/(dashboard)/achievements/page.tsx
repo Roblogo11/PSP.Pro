@@ -1,6 +1,5 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { AchievementBadge } from '@/components/ui/achievement-badge'
 import {
   Zap,
@@ -8,11 +7,13 @@ import {
   Trophy,
   Flame,
   TrendingUp,
-  Award,
   Star,
   Clock,
   Calendar
 } from 'lucide-react'
+import { useUserRole } from '@/lib/hooks/use-user-role'
+import { useUserStats } from '@/lib/hooks/use-user-stats'
+import { useUserSessions } from '@/lib/hooks/use-user-sessions'
 
 interface Achievement {
   id: string
@@ -26,91 +27,118 @@ interface Achievement {
 }
 
 export default function AchievementsPage() {
-  const [achievements, setAchievements] = useState<Achievement[]>([
+  const { profile, loading: profileLoading } = useUserRole()
+  const { stats, loading: statsLoading } = useUserStats(profile?.id)
+  const { sessions, loading: sessionsLoading } = useUserSessions(profile?.id)
+
+  const loading = profileLoading || statsLoading || sessionsLoading
+
+  if (loading) {
+    return (
+      <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-cyan-700 dark:text-white">Loading achievements...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Calculate real values
+  const completedSessions = stats?.totalSessions ?? 0
+  const completedDrills = stats?.totalDrills ?? 0
+  const currentStreak = stats?.currentStreak ?? 0
+  const peakVelocity = stats?.recentVelocities?.length
+    ? Math.max(...stats.recentVelocities.map(v => v.value))
+    : 0
+
+  // Build achievements from real data
+  const achievements: Achievement[] = [
     {
-      id: 'velocity-milestone',
-      icon: Zap,
-      title: 'Velocity Milestone',
-      description: 'Gain +5 MPH on your fastball',
-      progress: 3,
-      maxProgress: 5,
+      id: 'first-session',
+      icon: Calendar,
+      title: 'First Session',
+      description: 'Complete your first training session',
+      progress: Math.min(completedSessions, 1),
+      maxProgress: 1,
       color: 'orange',
+      unlocked: completedSessions >= 1,
     },
     {
-      id: 'streak-master',
-      icon: Flame,
-      title: 'Streak Master',
-      description: 'Complete 7 days in a row',
-      progress: 5,
-      maxProgress: 7,
-      color: 'cyan',
+      id: 'drill-starter',
+      icon: Target,
+      title: 'Drill Starter',
+      description: 'Complete 10 training drills',
+      progress: Math.min(completedDrills, 10),
+      maxProgress: 10,
+      color: 'green',
     },
     {
-      id: 'drill-complete',
+      id: 'drill-collector',
       icon: Target,
       title: 'Drill Collector',
       description: 'Complete 50 training drills',
-      progress: 42,
+      progress: Math.min(completedDrills, 50),
       maxProgress: 50,
       color: 'green',
     },
     {
-      id: 'perfect-form',
-      icon: Award,
-      title: 'Perfect Form',
-      description: 'Achieve perfect mechanics rating',
-      progress: 0,
-      maxProgress: 1,
-      color: 'purple',
-    },
-    {
-      id: 'speed-demon',
-      icon: TrendingUp,
-      title: 'Speed Demon',
-      description: 'Reach 80 MPH velocity',
-      progress: 72,
-      maxProgress: 80,
-      color: 'orange',
-    },
-    {
-      id: 'dedicated',
-      icon: Clock,
-      title: 'Dedicated Athlete',
-      description: 'Log 100 hours of training',
-      progress: 67,
-      maxProgress: 100,
+      id: 'streak-3',
+      icon: Flame,
+      title: 'On Fire',
+      description: 'Maintain a 3-day training streak',
+      progress: Math.min(currentStreak, 3),
+      maxProgress: 3,
       color: 'cyan',
     },
     {
-      id: 'champion',
-      icon: Trophy,
-      title: 'Champion',
-      description: 'Win your league championship',
-      progress: 0,
-      maxProgress: 1,
-      color: 'green',
-      unlocked: false,
+      id: 'streak-7',
+      icon: Flame,
+      title: 'Streak Master',
+      description: 'Maintain a 7-day training streak',
+      progress: Math.min(currentStreak, 7),
+      maxProgress: 7,
+      color: 'cyan',
     },
     {
-      id: 'all-star',
-      icon: Star,
-      title: 'All-Star',
-      description: 'Make the all-star team',
-      progress: 1,
-      maxProgress: 1,
+      id: 'sessions-5',
+      icon: Clock,
+      title: 'Getting Started',
+      description: 'Complete 5 training sessions',
+      progress: Math.min(completedSessions, 5),
+      maxProgress: 5,
       color: 'purple',
-      unlocked: true,
     },
     {
-      id: 'consistent',
-      icon: Calendar,
-      title: 'Consistent Performer',
-      description: 'Train 4 times per week for a month',
-      progress: 12,
-      maxProgress: 16,
-      color: 'orange',
+      id: 'sessions-25',
+      icon: Clock,
+      title: 'Dedicated Athlete',
+      description: 'Complete 25 training sessions',
+      progress: Math.min(completedSessions, 25),
+      maxProgress: 25,
+      color: 'purple',
     },
-  ])
+    {
+      id: 'velocity-60',
+      icon: Zap,
+      title: 'Velocity: 60 mph',
+      description: 'Reach 60 MPH peak velocity',
+      progress: Math.min(peakVelocity, 60),
+      maxProgress: 60,
+      color: 'orange',
+      unlocked: peakVelocity >= 60,
+    },
+    {
+      id: 'velocity-70',
+      icon: Zap,
+      title: 'Velocity: 70 mph',
+      description: 'Reach 70 MPH peak velocity',
+      progress: Math.min(peakVelocity, 70),
+      maxProgress: 70,
+      color: 'orange',
+      unlocked: peakVelocity >= 70,
+    },
+  ]
 
   const unlockedCount = achievements.filter(a =>
     a.unlocked || a.progress >= a.maxProgress
@@ -167,7 +195,7 @@ export default function AchievementsPage() {
             </div>
             <div>
               <p className="text-3xl font-bold text-white mb-1">
-                {Math.round((unlockedCount / achievements.length) * 100)}%
+                {achievements.length > 0 ? Math.round((unlockedCount / achievements.length) * 100) : 0}%
               </p>
               <p className="text-sm text-cyan-700 dark:text-white">Completion Rate</p>
             </div>

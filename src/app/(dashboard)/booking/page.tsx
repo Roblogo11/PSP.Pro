@@ -24,6 +24,7 @@ export default function BookingPage() {
   const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [bookedSlotIds, setBookedSlotIds] = useState<string[]>([])
 
   // Check for canceled parameter
   const canceled = searchParams.get('canceled')
@@ -37,6 +38,7 @@ export default function BookingPage() {
   useEffect(() => {
     if (selectedDate && selectedServiceId) {
       fetchTimeSlots()
+      fetchUserBookings()
     }
   }, [selectedDate, selectedServiceId])
 
@@ -44,7 +46,7 @@ export default function BookingPage() {
     const { data, error } = await supabase
       .from('services')
       .select('*')
-      .eq('active', true)
+      .eq('is_active', true)
       .order('name', { ascending: true })
 
     if (data) {
@@ -79,6 +81,24 @@ export default function BookingPage() {
     }
 
     setLoading(false)
+  }
+
+  const fetchUserBookings = async () => {
+    if (!selectedDate) return
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    const dateString = selectedDate.toISOString().split('T')[0]
+    const { data } = await supabase
+      .from('bookings')
+      .select('slot_id')
+      .eq('athlete_id', user.id)
+      .eq('booking_date', dateString)
+      .in('status', ['confirmed', 'pending'])
+
+    if (data) {
+      setBookedSlotIds(data.map(b => b.slot_id).filter(Boolean))
+    }
   }
 
   const handleServiceSelect = (serviceId: string) => {
@@ -150,7 +170,7 @@ export default function BookingPage() {
       }
     } catch (error: any) {
       console.error('Booking error:', error)
-      alert('Failed to create booking. Please try again.')
+      alert(error.message || 'Failed to create booking. Please try again.')
     } finally {
       setSubmitting(false)
     }
@@ -273,6 +293,7 @@ export default function BookingPage() {
               selectedSlotId={selectedSlotId}
               onSelectSlot={handleSlotSelect}
               loading={loading}
+              bookedSlotIds={bookedSlotIds}
             />
           )}
 

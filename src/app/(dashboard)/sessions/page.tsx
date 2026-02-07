@@ -61,6 +61,7 @@ export default function SessionsPage() {
       const supabase = createClient()
 
       // Update booking status to cancelled
+      // Only cancel sessions belonging to the current user
       const { error } = await supabase
         .from('bookings')
         .update({
@@ -68,6 +69,7 @@ export default function SessionsPage() {
           updated_at: new Date().toISOString()
         })
         .eq('id', selectedSession)
+        .eq('athlete_id', profile?.id)
 
       if (error) throw error
 

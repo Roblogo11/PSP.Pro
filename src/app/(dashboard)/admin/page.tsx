@@ -20,11 +20,19 @@ import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
 import { Tooltip, InfoBanner } from '@/components/ui/tooltip'
-import { Lightbulb } from 'lucide-react'
+import { Lightbulb, AlertTriangle, CreditCard, ToggleLeft, ToggleRight } from 'lucide-react'
 
 export default function AdminDashboard() {
   const router = useRouter()
   const { profile, isCoach, isAdmin, loading } = useUserRole()
+  const isMasterAdmin = profile?.role === 'master_admin'
+
+  // Stripe test mode state
+  const [stripeTestMode, setStripeTestMode] = useState(false)
+  const [testKeysConfigured, setTestKeysConfigured] = useState(false)
+  const [togglingTestMode, setTogglingTestMode] = useState(false)
+  const [testModeMessage, setTestModeMessage] = useState<string | null>(null)
+
   const [stats, setStats] = useState({
     totalAthletes: 0,
     activeSessions: 0,
@@ -49,6 +57,63 @@ export default function AdminDashboard() {
       router.push('/locker')
     }
   }, [loading, profile, isCoach, isAdmin, router])
+
+  // Check Stripe test mode status (admin only)
+  useEffect(() => {
+    if (!profile || (profile.role !== 'master_admin' && profile.role !== 'admin')) return
+
+    async function checkTestMode() {
+      try {
+        const res = await fetch('/api/stripe/test-mode')
+        if (res.ok) {
+          const data = await res.json()
+          setStripeTestMode(data.testMode)
+          setTestKeysConfigured(data.testKeyConfigured)
+        }
+      } catch (err) {
+        console.error('Error checking test mode:', err)
+      }
+    }
+
+    checkTestMode()
+  }, [profile])
+
+  const handleToggleTestMode = async () => {
+    if (togglingTestMode) return
+
+    const newMode = !stripeTestMode
+    const confirmMsg = newMode
+      ? 'Enable Stripe TEST MODE? All payments will use test keys — zero real charges will be processed.'
+      : 'Disable test mode? Payments will switch back to LIVE mode with real charges.'
+
+    if (!window.confirm(confirmMsg)) return
+
+    setTogglingTestMode(true)
+    setTestModeMessage(null)
+
+    try {
+      const res = await fetch('/api/stripe/test-mode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled: newMode }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setTestModeMessage(data.error || 'Failed to toggle test mode')
+      } else {
+        setStripeTestMode(data.testMode)
+        setTestModeMessage(data.message)
+        // Reload to update banner
+        setTimeout(() => window.location.reload(), 1500)
+      }
+    } catch (err) {
+      setTestModeMessage('Network error. Please try again.')
+    } finally {
+      setTogglingTestMode(false)
+    }
+  }
 
   // Load admin stats
   useEffect(() => {
@@ -182,7 +247,7 @@ export default function AdminDashboard() {
       title: 'Create Drill',
       description: 'Add new drill to library',
       icon: Dumbbell,
-      href: '/admin/drills/new',
+      href: '/admin/drills',
       color: '#B8301A',
     },
     {
@@ -253,7 +318,7 @@ export default function AdminDashboard() {
       title: 'Platform Settings',
       description: 'Configure system settings',
       icon: SettingsIcon,
-      href: '/admin/settings',
+      href: '/settings',
       color: '#6B7280',
       stat: 'Configure',
     },
@@ -480,6 +545,66 @@ export default function AdminDashboard() {
           })}
         </div>
       </div>
+
+      {/* Stripe Test Mode - Admin Only */}
+      {(isMasterAdmin || isAdmin) && (
+        <div className="mt-8">
+          <div className={`command-panel border-2 ${stripeTestMode ? 'border-yellow-500/50 bg-yellow-500/5' : 'border-cyan-200/20'}`}>
+            <div className="flex items-start justify-between">
+              <div className="flex items-start gap-4">
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stripeTestMode ? 'bg-yellow-500/20' : 'bg-cyan/10'}`}>
+                  <CreditCard className={`w-6 h-6 ${stripeTestMode ? 'text-yellow-400' : 'text-cyan'}`} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-1">Stripe Payment Mode</h3>
+                  <p className="text-sm text-cyan-700 dark:text-white mb-2">
+                    {stripeTestMode
+                      ? 'TEST MODE — No real charges. Use card: 4242 4242 4242 4242, any future expiry, any CVC.'
+                      : 'LIVE MODE — Real payments are being processed.'}
+                  </p>
+                  {!testKeysConfigured && (
+                    <p className="text-xs text-orange">
+                      Test keys not configured yet. Add your Stripe test keys to .env.local (or Vercel env vars) to enable test mode.
+                    </p>
+                  )}
+                  {testModeMessage && (
+                    <p className={`text-sm mt-2 font-semibold ${stripeTestMode ? 'text-yellow-400' : 'text-green-400'}`}>
+                      {testModeMessage}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <button
+                onClick={handleToggleTestMode}
+                disabled={togglingTestMode || (!testKeysConfigured && !stripeTestMode)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm transition-all ${
+                  stripeTestMode
+                    ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 hover:bg-yellow-500/30'
+                    : 'bg-cyan/10 text-cyan border border-cyan/30 hover:bg-cyan/20'
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                {togglingTestMode ? (
+                  <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                ) : stripeTestMode ? (
+                  <ToggleRight className="w-5 h-5" />
+                ) : (
+                  <ToggleLeft className="w-5 h-5" />
+                )}
+                {stripeTestMode ? 'Switch to Live' : 'Enable Test Mode'}
+              </button>
+            </div>
+            {stripeTestMode && (
+              <div className="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg flex items-start gap-2">
+                <AlertTriangle className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-yellow-400">
+                  Test mode auto-expires after 4 hours. All users will see a yellow banner at the top of the site.
+                  Bookings created in test mode use test payment intents and will not appear on your live Stripe dashboard.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Recent Activity */}
       <div className="mt-8">

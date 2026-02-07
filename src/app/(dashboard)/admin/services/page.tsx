@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Plus, Edit2, Trash2, DollarSign, Clock, Users, Save, X, Star, StarOff, ImageIcon } from 'lucide-react'
+import { Plus, Edit2, Trash2, DollarSign, Clock, Users, Save, X, Star, StarOff, ImageIcon, CheckCircle } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
 
@@ -97,11 +97,17 @@ export default function ServicesManagerPage() {
     try {
       const supabase = createClient()
 
+      // Auto-generate slug from name
+      const slug = (formData.name || 'service')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
+
       if (editingId) {
         // Update existing
         const { error } = await supabase
           .from('services')
-          .update(formData)
+          .update({ ...formData, slug })
           .eq('id', editingId)
 
         if (error) throw error
@@ -109,7 +115,7 @@ export default function ServicesManagerPage() {
         // Create new
         const { error } = await supabase
           .from('services')
-          .insert([formData])
+          .insert([{ ...formData, slug }])
 
         if (error) throw error
       }
@@ -167,18 +173,66 @@ export default function ServicesManagerPage() {
     })
   }
 
+  const MAX_FEATURED = 6
+
   const handleToggleFeatured = async (service: Service) => {
     try {
       const supabase = createClient()
+
+      if (service.featured_on_homepage) {
+        // Un-featuring — always allowed
+        const { error } = await supabase
+          .from('services')
+          .update({ featured_on_homepage: false })
+          .eq('id', service.id)
+        if (error) throw error
+      } else {
+        // Featuring — check the limit
+        const currentFeatured = services.filter(s => s.featured_on_homepage)
+
+        if (currentFeatured.length >= MAX_FEATURED) {
+          // Un-star the last featured (highest homepage_order or last in list)
+          const toRemove = currentFeatured.sort((a, b) => (b.homepage_order || 0) - (a.homepage_order || 0))[0]
+          const { error: removeError } = await supabase
+            .from('services')
+            .update({ featured_on_homepage: false })
+            .eq('id', toRemove.id)
+          if (removeError) throw removeError
+        }
+
+        // Star the new one
+        const nextOrder = Math.max(0, ...services.map(s => s.homepage_order || 0)) + 1
+        const { error } = await supabase
+          .from('services')
+          .update({ featured_on_homepage: true, homepage_order: nextOrder })
+          .eq('id', service.id)
+        if (error) throw error
+      }
+
+      await loadServices()
+    } catch (err: any) {
+      console.error('Error toggling featured:', err)
+      alert(`Error: ${err.message}`)
+    }
+  }
+
+  const handleToggleActive = async (service: Service) => {
+    try {
+      const supabase = createClient()
+      const updates: Partial<Service> = { is_active: !service.is_active }
+      // If deactivating, also remove from homepage
+      if (service.is_active && service.featured_on_homepage) {
+        updates.featured_on_homepage = false
+      }
       const { error } = await supabase
         .from('services')
-        .update({ featured_on_homepage: !service.featured_on_homepage })
+        .update(updates)
         .eq('id', service.id)
 
       if (error) throw error
       await loadServices()
     } catch (err: any) {
-      console.error('Error toggling featured:', err)
+      console.error('Error toggling active:', err)
       alert(`Error: ${err.message}`)
     }
   }
@@ -219,6 +273,21 @@ export default function ServicesManagerPage() {
             New Service
           </button>
         </div>
+
+        {/* Featured counter */}
+        {services.length > 0 && (
+          <div className="mt-4 flex items-center gap-3">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
+              <Star className="w-4 h-4 text-yellow-400 fill-current" />
+              <span className="text-sm font-semibold text-yellow-400">
+                {services.filter(s => s.featured_on_homepage).length}/{MAX_FEATURED} Featured Slots
+              </span>
+            </div>
+            <span className="text-xs text-cyan-700 dark:text-white">
+              Homepage shows up to 2 individual + 3 group. Exceeding the limit auto-removes the oldest featured.
+            </span>
+          </div>
+        )}
       </div>
 
       {/* New/Edit Form */}
@@ -451,11 +520,27 @@ export default function ServicesManagerPage() {
 
               {/* Actions */}
               <div className="flex items-center gap-2">
+                {/* Active toggle */}
+                <button
+                  onClick={() => handleToggleActive(service)}
+                  title={service.is_active ? 'Deactivate service' : 'Activate service'}
+                  className={`p-2 rounded-lg transition-all ${
+                    service.is_active
+                      ? 'bg-green-500/20 text-green-400 border border-green-500/50 hover:bg-green-500/30'
+                      : 'bg-red-500/20 text-red-400 border border-red-500/50 hover:bg-red-500/30'
+                  }`}
+                >
+                  {service.is_active ? <CheckCircle className="w-5 h-5" /> : <X className="w-5 h-5" />}
+                </button>
+                {/* Featured toggle - only if active */}
                 <button
                   onClick={() => handleToggleFeatured(service)}
-                  title={service.featured_on_homepage ? 'Remove from homepage' : 'Feature on homepage'}
+                  disabled={!service.is_active}
+                  title={!service.is_active ? 'Activate service first' : service.featured_on_homepage ? 'Remove from homepage' : 'Feature on homepage'}
                   className={`p-2 rounded-lg transition-all ${
-                    service.featured_on_homepage
+                    !service.is_active
+                      ? 'bg-cyan-600/5 text-cyan-800 border border-cyan-600/20 cursor-not-allowed opacity-40'
+                      : service.featured_on_homepage
                       ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 hover:bg-yellow-500/30'
                       : 'bg-cyan-600/10 hover:bg-cyan-600/20 text-cyan-600 border border-cyan-600/30 hover:border-cyan-600/50'
                   }`}

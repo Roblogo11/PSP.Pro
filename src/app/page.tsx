@@ -78,6 +78,9 @@ export default function HomePage() {
     fetchFeatured()
   }, [])
 
+  // Route helper: coach/admin → /admin, logged-in athlete → /booking, guest → /login
+  const bookingHref = (isCoach || isAdmin) ? '/admin' : profile ? '/booking' : '/login'
+
   // Show loading state while checking auth
   if (loading) {
     return (
@@ -176,24 +179,43 @@ export default function HomePage() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link href="/signup">
-              <button className="btn-primary text-lg px-8 py-4 flex items-center gap-2 mx-auto" style={{ color: '#ffffff' }}>
-                <span className="text-white">Start Training</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            </Link>
-            <Link href="/locker">
-              <button className="btn-ghost text-lg px-8 py-4 flex items-center gap-2 mx-auto border-cyan/30 hover:border-cyan/50" style={{ color: '#ffffff' }}>
-                <LayoutDashboard className="w-5 h-5" style={{ color: '#ffffff' }} />
-                <span className="text-white">Access PSP.Pro</span>
-              </button>
-            </Link>
+            {profile ? (
+              <>
+                <Link href={(isCoach || isAdmin) ? '/admin' : '/locker'}>
+                  <button className="btn-primary text-lg px-8 py-4 flex items-center gap-2 mx-auto" style={{ color: '#ffffff' }}>
+                    <LayoutDashboard className="w-5 h-5" style={{ color: '#ffffff' }} />
+                    <span className="text-white">Go to Dashboard</span>
+                  </button>
+                </Link>
+                <Link href="/booking">
+                  <button className="btn-ghost text-lg px-8 py-4 flex items-center gap-2 mx-auto border-cyan/30 hover:border-cyan/50" style={{ color: '#ffffff' }}>
+                    <span className="text-white">Book a Session</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </button>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link href="/signup">
+                  <button className="btn-primary text-lg px-8 py-4 flex items-center gap-2 mx-auto" style={{ color: '#ffffff' }}>
+                    <span className="text-white">Start Training</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </button>
+                </Link>
+                <Link href="/login">
+                  <button className="btn-ghost text-lg px-8 py-4 flex items-center gap-2 mx-auto border-cyan/30 hover:border-cyan/50" style={{ color: '#ffffff' }}>
+                    <LayoutDashboard className="w-5 h-5" style={{ color: '#ffffff' }} />
+                    <span className="text-white">Access PSP.Pro</span>
+                  </button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Key Action Cards */}
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-20">
             {/* Book Session - Role-aware link */}
-            <Link href={(isCoach || isAdmin) ? '/admin' : '/booking'}>
+            <Link href={bookingHref}>
               <div className="command-panel p-6 hover:scale-105 transition-all duration-300 cursor-pointer border-orange/20 hover:border-orange/50 group">
                 <div className="w-12 h-12 bg-gradient-to-br from-orange to-orange-600 rounded-xl flex items-center justify-center shadow-glow-orange mb-4 group-hover:shadow-glow-orange-intense">
                   <Clock className="w-6 h-6 text-white" />
@@ -301,8 +323,10 @@ export default function HomePage() {
                     {service.description && (
                       <p className="text-sm text-cyan-700 dark:text-white mb-6">{service.description}</p>
                     )}
-                    <Link href="/booking">
-                      <button className={idx === 0 ? 'btn-primary w-full' : 'btn-ghost w-full'}>Book Session</button>
+                    <Link href={bookingHref}>
+                      <button className={idx === 0 ? 'btn-primary w-full' : 'btn-ghost w-full'}>
+                        {(isCoach || isAdmin) ? 'Manage Sessions' : 'Book Session'}
+                      </button>
                     </Link>
                   </div>
                 </div>
@@ -331,8 +355,8 @@ export default function HomePage() {
                       <span className="text-cyan-700 dark:text-white"> / 60 min</span>
                     </div>
                     <p className="text-sm text-cyan-700 dark:text-white mb-6">Individual technical skills and mechanics training for your sport</p>
-                    <Link href="/booking">
-                      <button className="btn-primary w-full">Book Session</button>
+                    <Link href={bookingHref}>
+                      <button className="btn-primary w-full">{(isCoach || isAdmin) ? 'Manage Sessions' : 'Book Session'}</button>
                     </Link>
                   </div>
                 </div>
@@ -356,8 +380,8 @@ export default function HomePage() {
                       <span className="text-cyan-700 dark:text-white"> / 60 min</span>
                     </div>
                     <p className="text-sm text-cyan-700 dark:text-white mb-6">Personalized athletic performance and sport-specific development</p>
-                    <Link href="/booking">
-                      <button className="btn-ghost w-full">Book Session</button>
+                    <Link href={bookingHref}>
+                      <button className="btn-ghost w-full">{(isCoach || isAdmin) ? 'Manage Sessions' : 'Book Session'}</button>
                     </Link>
                   </div>
                 </div>
@@ -460,8 +484,8 @@ export default function HomePage() {
                       <Users className="w-4 h-4 text-cyan" />
                       <span>Max {service.max_participants} athletes</span>
                     </div>
-                    <Link href="/booking">
-                      <button className="btn-ghost w-full">Join Session</button>
+                    <Link href={bookingHref}>
+                      <button className="btn-ghost w-full">{(isCoach || isAdmin) ? 'Manage Sessions' : 'Join Session'}</button>
                     </Link>
                   </div>
                 </div>
@@ -491,8 +515,8 @@ export default function HomePage() {
                       <Users className="w-4 h-4 text-cyan" />
                       <span>Max 6 athletes</span>
                     </div>
-                    <Link href="/booking">
-                      <button className="btn-ghost w-full">Join Session</button>
+                    <Link href={bookingHref}>
+                      <button className="btn-ghost w-full">{(isCoach || isAdmin) ? 'Manage Sessions' : 'Join Session'}</button>
                     </Link>
                   </div>
                 </div>
@@ -519,8 +543,8 @@ export default function HomePage() {
                       <Users className="w-4 h-4 text-cyan" />
                       <span>Max 4 athletes</span>
                     </div>
-                    <Link href="/booking">
-                      <button className="btn-ghost w-full">Join Session</button>
+                    <Link href={bookingHref}>
+                      <button className="btn-ghost w-full">{(isCoach || isAdmin) ? 'Manage Sessions' : 'Join Session'}</button>
                     </Link>
                   </div>
                 </div>
@@ -547,8 +571,8 @@ export default function HomePage() {
                       <Users className="w-4 h-4 text-cyan" />
                       <span>Max 4 athletes</span>
                     </div>
-                    <Link href="/booking">
-                      <button className="btn-ghost w-full">Join Session</button>
+                    <Link href={bookingHref}>
+                      <button className="btn-ghost w-full">{(isCoach || isAdmin) ? 'Manage Sessions' : 'Join Session'}</button>
                     </Link>
                   </div>
                 </div>
@@ -592,9 +616,9 @@ export default function HomePage() {
           <p className="text-xl mb-8 text-cyan-700 dark:text-white">
             Join hundreds of athletes who are improving their game with data-driven training.
           </p>
-          <Link href="/signup">
+          <Link href={profile ? ((isCoach || isAdmin) ? '/admin' : '/locker') : '/signup'}>
             <button className="btn-primary text-lg px-10 py-5 flex items-center gap-3 mx-auto">
-              <span className="text-white">Start Your Journey</span>
+              <span className="text-white">{profile ? 'Go to Dashboard' : 'Start Your Journey'}</span>
               <ArrowRight className="w-6 h-6" />
             </button>
           </Link>

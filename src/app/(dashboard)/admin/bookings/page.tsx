@@ -3,16 +3,29 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Calendar, Clock, User, DollarSign, MapPin, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
+import { useUserRole } from '@/lib/hooks/use-user-role'
+import { useRouter } from 'next/navigation'
 
 export default function AdminBookingsPage() {
   const supabase = createClient()
+  const { isCoach, isAdmin, profile, loading: roleLoading } = useUserRole()
+  const router = useRouter()
   const [bookings, setBookings] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'cancelled'>('all')
 
+  // Auth gate - redirect non-admin/coach users
   useEffect(() => {
-    fetchBookings()
-  }, [filter])
+    if (!roleLoading && profile && !isCoach && !isAdmin) {
+      router.push('/locker')
+    }
+  }, [roleLoading, profile, isCoach, isAdmin, router])
+
+  useEffect(() => {
+    if (!roleLoading && (isCoach || isAdmin)) {
+      fetchBookings()
+    }
+  }, [filter, roleLoading, isCoach, isAdmin])
 
   const fetchBookings = async () => {
     setLoading(true)
