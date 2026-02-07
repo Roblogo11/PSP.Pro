@@ -39,7 +39,6 @@
   .dark body {
     @apply text-white;
     color: white !important;
-    /* Dark Navy Background with subtle cyan accents */
     background-image:
       radial-gradient(circle at 20% 50%, rgba(0, 180, 216, 0.08) 0%, transparent 50%),
       radial-gradient(circle at 80% 80%, rgba(0, 180, 216, 0.06) 0%, transparent 50%),
@@ -52,8 +51,7 @@
   /* Light Mode - Soft peachy background with subtle patterns */
   html:not(.dark) body {
     @apply text-slate-900;
-    color: rgb(15 23 42) !important; /* Dark text - slate-900 */
-    /* Soft peachy background with subtle cyan accents - matches dark theme balance */
+    color: rgb(15 23 42) !important;
     background-image:
       radial-gradient(circle at 20% 50%, rgba(251, 146, 60, 0.08) 0%, transparent 50%),
       radial-gradient(circle at 80% 80%, rgba(0, 180, 216, 0.06) 0%, transparent 50%),
@@ -68,14 +66,14 @@
     font-weight: 700;
   }
 
-  /* Big headers with darker peachy-cyan gradient in light mode for better contrast */
+  /* Light mode header gradients */
   :not(.dark) h1,
   :not(.dark) h2 {
     background: linear-gradient(135deg, #0e7490 0%, #0891b2 30%, #ea580c 70%, #dc2626 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    color: #0e7490; /* Fallback for browsers that don't support background-clip */
+    color: #0e7490;
     text-shadow: 0 2px 20px rgba(8, 145, 178, 0.2);
   }
 
@@ -84,49 +82,19 @@
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    color: #0e7490; /* Fallback for browsers that don't support background-clip */
+    color: #0e7490;
   }
 
-  /* Dark mode headers keep white with subtle cyan glow */
+  /* Dark mode headers - white with cyan glow */
   .dark h1,
   .dark h2 {
     color: white;
     text-shadow: 0 0 30px rgba(0, 180, 216, 0.2);
   }
 
-  /* Text colors adapt to theme - REMOVED broad element selectors to allow utility classes to work */
-  /* Base text colors are now handled by body and explicit utility classes */
+  /* === GLOBAL TEXT COLOR RULES === */
 
-  /* REMOVED aggressive !important rules - Let Tailwind utility classes control colors */
-  /* Only apply base colors to elements WITHOUT utility classes */
-
-  .dark li:not([class*="text-"]) {
-    color: rgb(226 232 240); /* slate-200 - bright for dark mode */
-  }
-
-  :not(.dark) li:not([class*="text-"]) {
-    color: rgb(51 65 85); /* slate-700 - dark for light mode */
-  }
-
-  /* REMOVED all !important overrides on text utilities */
-  /* Let Tailwind's utility classes and dark: variants work naturally */
-  /* Only apply to glass cards for consistent card styling */
-  :not(.dark) .glass-card:not([class*="text-"]) p:not([class*="text-"]),
-  :not(.dark) .glass-card:not([class*="text-"]) span:not([class*="text-"]),
-  :not(.dark) .glass-card:not([class*="text-"]) small:not([class*="text-"]) {
-    @apply text-slate-800;
-  }
-
-  /* CLEAN APPROACH: Single utility class for body text */
-  .body-text {
-    color: rgb(51 65 85); /* slate-700 - dark text for light mode */
-  }
-
-  .dark .body-text {
-    color: white !important;
-  }
-
-  /* Auto-apply to common text elements - FIXED to allow text-sm, text-lg, etc. */
+  /* Dark mode: force white text on common elements */
   .dark p,
   .dark span:not([class*="text-orange"]):not([class*="text-cyan"]):not([class*="text-gradient"]):not([class*="text-white"]):not([class*="text-slate"]),
   .dark li,
@@ -135,15 +103,63 @@
     color: white !important;
   }
 
+  /* Light mode: force dark text on common elements */
   html:not(.dark) p,
   html:not(.dark) span:not([class*="text-orange"]):not([class*="text-cyan"]):not([class*="text-gradient"]):not([class*="text-white"]):not([class*="text-slate"]),
   html:not(.dark) li,
   html:not(.dark) small,
   html:not(.dark) label {
-    color: rgb(51 65 85) !important; /* slate-700 - dark text for light mode */
+    color: rgb(51 65 85) !important;
   }
 
-  /* Custom Scrollbar - Dark Navy Style */
+  /* === HOMEPAGE OVERRIDES (dark-bg elements on light mode need white text) === */
+
+  /* Homepage command-panel: dark bg on light mode */
+  html:not(.dark) .home-page .command-panel p,
+  html:not(.dark) .home-page .command-panel li,
+  html:not(.dark) .home-page .command-panel small,
+  html:not(.dark) .home-page .command-panel label,
+  html:not(.dark) .home-page .command-panel div:not([class*="bg-"]) {
+    color: rgba(226, 232, 240, 0.9) !important;
+  }
+  html:not(.dark) .home-page .command-panel span:not([class*="text-orange"]):not([class*="text-cyan"]):not([class*="text-gradient"]):not([class*="text-white"]):not([class*="text-slate"]) {
+    color: rgba(226, 232, 240, 0.9) !important;
+  }
+  html:not(.dark) .home-page .command-panel h1,
+  html:not(.dark) .home-page .command-panel h2,
+  html:not(.dark) .home-page .command-panel h3,
+  html:not(.dark) .home-page .command-panel h4 {
+    color: #ffffff !important;
+  }
+
+  /* Homepage glass-cards: dark bg on light mode */
+  html:not(.dark) .home-page .glass-card p,
+  html:not(.dark) .home-page .glass-card li,
+  html:not(.dark) .home-page .glass-card small,
+  html:not(.dark) .home-page .glass-card label,
+  html:not(.dark) .home-page .glass-card-hover p,
+  html:not(.dark) .home-page .glass-card-hover li,
+  html:not(.dark) .home-page .glass-card-hover small,
+  html:not(.dark) .home-page .glass-card-hover label {
+    color: #ffffff !important;
+  }
+  html:not(.dark) .home-page .glass-card span:not([class*="text-orange"]):not([class*="text-cyan"]):not([class*="text-gradient"]):not([class*="text-white"]):not([class*="text-slate"]),
+  html:not(.dark) .home-page .glass-card-hover span:not([class*="text-orange"]):not([class*="text-cyan"]):not([class*="text-gradient"]):not([class*="text-white"]):not([class*="text-slate"]) {
+    color: #ffffff !important;
+  }
+
+  /* Homepage hero: dark overlay bg */
+  html:not(.dark) .home-page > section:first-of-type p,
+  html:not(.dark) .home-page > section:first-of-type li,
+  html:not(.dark) .home-page > section:first-of-type small,
+  html:not(.dark) .home-page > section:first-of-type label {
+    color: #ffffff !important;
+  }
+  html:not(.dark) .home-page > section:first-of-type span:not([class*="text-orange"]):not([class*="text-cyan"]):not([class*="text-gradient"]):not([class*="text-white"]):not([class*="text-slate"]) {
+    color: #ffffff !important;
+  }
+
+  /* Custom Scrollbar */
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -172,14 +188,13 @@
 }
 
 @layer components {
-  /* Glassmorphism Card - Adapts to theme */
+  /* Glassmorphism Card */
   .glass-card {
     @apply rounded-2xl transition-all duration-300;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
   }
 
-  /* Dark Mode Glass Card - More cyan glow */
   .dark .glass-card {
     background: linear-gradient(
       135deg,
@@ -195,7 +210,7 @@
       0 0 15px rgba(251, 146, 60, 0.08);
   }
 
-  /* Light Mode Glass Card - Cyan tinted instead of gray */
+  /* Light Mode Glass Card - Cyan tinted */
   html:not(.dark) .glass-card {
     background: linear-gradient(
       135deg,
@@ -209,11 +224,7 @@
       inset 0 0 0 1px rgba(0, 180, 216, 0.15),
       0 0 20px rgba(0, 180, 216, 0.10),
       0 0 10px rgba(0, 180, 216, 0.08) !important;
-  }
-
-  /* Light mode text colors - dark text on glassmorphic cards */
-  html:not(.dark) .glass-card {
-    color: #334155 !important; /* slate-700 */
+    color: #334155 !important;
   }
 
   html:not(.dark) .glass-card h1,
@@ -222,7 +233,7 @@
   html:not(.dark) .glass-card h4,
   html:not(.dark) .glass-card h5,
   html:not(.dark) .glass-card h6 {
-    color: #1e293b !important; /* slate-800 */
+    color: #1e293b !important;
   }
 
   .glass-card-hover {
@@ -244,7 +255,7 @@
     transform: translateY(-2px);
   }
 
-  /* Command Panel Style - For Dashboard Widgets - Dark Navy */
+  /* Command Panel - Dashboard Widgets */
   .command-panel {
     @apply glass-card p-6;
     background: linear-gradient(
@@ -263,13 +274,15 @@
       0 0 15px rgba(255, 75, 43, 0.15);
   }
 
-  /* Bento Grid Container */
+  /* Bento Grid */
   .bento-grid {
     @apply grid gap-4 md:gap-6;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
 
-  /* Home Page Specific - Bright Blue UI Elements */
+  /* === HOME PAGE CARD STYLES === */
+
+  /* Dark mode home page cards */
   .home-page .glass-card,
   .home-page .glass-card-hover {
     background: linear-gradient(
@@ -306,16 +319,68 @@
       0 0 30px rgba(0, 180, 216, 0.25);
   }
 
-  .home-page .btn-ghost {
+  /* Light mode home page cards - matte dark with orange accent */
+  html:not(.dark) .home-page .glass-card,
+  html:not(.dark) .home-page .glass-card-hover {
+    background: #1a1a2e !important;
+    border: 1px solid rgba(184, 48, 26, 0.3) !important;
+    box-shadow:
+      0 8px 24px 0 rgba(0, 0, 0, 0.4),
+      0 0 15px rgba(184, 48, 26, 0.08) !important;
+    color: #e2e8f0 !important;
+  }
+
+  html:not(.dark) .home-page .glass-card h1,
+  html:not(.dark) .home-page .glass-card h2,
+  html:not(.dark) .home-page .glass-card h3,
+  html:not(.dark) .home-page .glass-card h4,
+  html:not(.dark) .home-page .glass-card-hover h1,
+  html:not(.dark) .home-page .glass-card-hover h2,
+  html:not(.dark) .home-page .glass-card-hover h3,
+  html:not(.dark) .home-page .glass-card-hover h4 {
+    color: #ffffff !important;
+  }
+
+  html:not(.dark) .home-page .glass-card-hover:hover {
+    background: #1e1e36 !important;
+    border-color: rgba(184, 48, 26, 0.55) !important;
+    box-shadow:
+      0 8px 32px 0 rgba(0, 0, 0, 0.5),
+      0 0 25px rgba(184, 48, 26, 0.2),
+      0 0 10px rgba(184, 48, 26, 0.1) !important;
+    transform: translateY(-2px);
+  }
+
+  html:not(.dark) .home-page .command-panel {
+    background: #16162a !important;
+    border: 1px solid rgba(184, 48, 26, 0.35) !important;
+    box-shadow:
+      0 8px 24px 0 rgba(0, 0, 0, 0.45),
+      0 0 12px rgba(184, 48, 26, 0.1) !important;
+  }
+
+  /* Home page button styles */
+  .dark .home-page .btn-ghost {
     background: rgba(0, 180, 216, 0.1);
     border: 1px solid rgba(0, 180, 216, 0.4);
     color: #00B4D8;
   }
 
-  .home-page .btn-ghost:hover {
+  .dark .home-page .btn-ghost:hover {
     background: rgba(0, 180, 216, 0.2);
     border-color: rgba(0, 180, 216, 0.6);
     box-shadow: 0 0 25px rgba(0, 180, 216, 0.3);
+  }
+
+  :not(.dark) .home-page .btn-ghost {
+    background: rgba(0, 180, 216, 0.15);
+    border: 1px solid rgba(0, 180, 216, 0.35);
+    color: #ffffff;
+  }
+
+  :not(.dark) .home-page .btn-ghost:hover {
+    background: rgba(0, 180, 216, 0.25);
+    border-color: rgba(0, 180, 216, 0.5);
   }
 
   /* Gradient Text Effects */
@@ -347,7 +412,7 @@
     -webkit-text-fill-color: transparent;
   }
 
-  /* High-Tech Buttons */
+  /* Buttons */
   .btn-primary {
     @apply text-white font-semibold px-6 py-3 rounded-xl;
     @apply transition-all duration-300;
@@ -403,7 +468,7 @@
     border-color: rgba(255, 75, 43, 0.3);
   }
 
-  /* Stat Display - For Metrics */
+  /* Stats */
   .stat-value {
     @apply text-4xl md:text-5xl font-bold text-gradient-orange;
   }
@@ -412,24 +477,22 @@
     @apply text-sm md:text-base text-slate-300 uppercase tracking-wider;
   }
 
-  /* Loading States */
+  /* Loading & Divider */
   .skeleton {
     @apply animate-pulse bg-white/5 rounded-xl;
   }
 
-  /* Divider */
   .divider-glow {
     @apply h-px w-full bg-gradient-to-r from-transparent via-orange-500/50 to-transparent;
   }
 }
 
 @layer utilities {
-  /* Text Utilities */
   .text-balance {
     text-wrap: balance;
   }
 
-  /* Glow Text Effects */
+  /* Glow Effects */
   .glow-text {
     text-shadow: 0 0 20px rgba(255, 75, 43, 0.5);
   }
@@ -446,7 +509,6 @@
     text-shadow: 0 0 30px rgba(0, 180, 216, 0.9);
   }
 
-  /* Box Shadow Glows */
   .shadow-glow-orange {
     box-shadow: 0 0 20px rgba(255, 75, 43, 0.4);
   }
@@ -476,7 +538,7 @@
     will-change: opacity;
   }
 
-  /* Intersection Observer Animation Classes */
+  /* Scroll Animations */
   .animate-on-scroll {
     opacity: 0;
     transform: translateY(30px);
@@ -497,12 +559,12 @@
     to { opacity: 1; }
   }
 
-  /* Responsive Utilities */
+  /* Responsive */
   .mobile-safe {
     padding-bottom: env(safe-area-inset-bottom);
   }
 
-  /* Focus States - Accessibility */
+  /* Focus States */
   .focus-ring {
     @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
   }
@@ -512,7 +574,7 @@
     --tw-ring-offset-color: #050A18;
   }
 
-  /* Backdrop Blur Layers */
+  /* Backdrop Blur */
   .backdrop-layer-1 {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -527,9 +589,14 @@
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
   }
+
+  /* Homepage hero logo filter */
+  html:not(.dark) .home-page > section:first-of-type img[alt="PSP.Pro Logo"] {
+    filter: drop-shadow(0 0 20px rgba(0, 180, 216, 0.4)) !important;
+  }
 }
 
-/* Framer Motion Layout Animations */
+/* Page Transitions */
 .page-transition {
   animation: pageEnter 0.4s ease-out;
 }
@@ -558,36 +625,32 @@
   }
 }
 
-/* High Contrast Mode Support */
+/* High Contrast Mode */
 @media (prefers-contrast: high) {
   .glass-card {
     border-width: 2px;
   }
 }
 
-/* FunnelNav & Bottom Navigation - Theme Switching */
-/* Light Mode */
+/* FunnelNav & Bottom Navigation */
 :not(.dark) .bg-dark-100\/95 {
   background: rgba(255, 255, 255, 0.95) !important;
   border-color: rgba(184, 48, 26, 0.15) !important;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08) !important;
 }
 
-/* Dark Mode */
 .dark .bg-dark-100\/95 {
   background: rgba(10, 22, 40, 0.95) !important;
   border-color: rgba(0, 180, 216, 0.20) !important;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.50) !important;
 }
 
-/* Light Mode Buttons */
 :not(.dark) .bg-dark-200\/80,
 :not(.dark) .bg-dark-200 {
   background: rgba(248, 250, 252, 0.90) !important;
   border-color: rgba(184, 48, 26, 0.15) !important;
 }
 
-/* Dark Mode Buttons */
 .dark .bg-dark-200\/80,
 .dark .bg-dark-200 {
   background: rgba(30, 41, 59, 0.80) !important;
@@ -627,8 +690,6 @@
 :not(.dark) .shadow-black\/50 {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
 }
-
-/* REMOVED all gray text utility overrides - Let Tailwind handle colors naturally */
 
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {

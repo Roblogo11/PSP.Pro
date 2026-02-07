@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -25,23 +24,15 @@ import { FunnelNav } from '@/components/navigation/funnel-nav'
 import { OptimizedImage } from '@/components/ui/optimized-image'
 import { PLACEHOLDER_IMAGES } from '@/lib/placeholder-images'
 import { useUserRole } from '@/lib/hooks/use-user-role'
+import { useTheme } from '@/lib/contexts/theme-context'
 
 export default function HomePage() {
   const router = useRouter()
   const { profile, isCoach, isAdmin, isAthlete, loading } = useUserRole()
+  const { theme } = useTheme()
+  const footerHeadingColor = theme === 'dark' ? '#ffffff' : '#0f172a'
 
-  // Redirect logged-in users to their appropriate dashboard
-  useEffect(() => {
-    if (!loading && profile) {
-      if (isCoach || isAdmin) {
-        router.push('/admin')
-      } else if (isAthlete) {
-        router.push('/locker')
-      }
-    }
-  }, [loading, profile, isCoach, isAdmin, isAthlete, router])
-
-  // Show landing page for non-logged-in users
+  // Show loading state while checking auth
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -51,11 +42,6 @@ export default function HomePage() {
         </div>
       </div>
     )
-  }
-
-  // If user is logged in, they'll be redirected by the useEffect
-  if (profile) {
-    return null
   }
 
   return (
@@ -120,13 +106,13 @@ export default function HomePage() {
                 filter: 'drop-shadow(0 0 20px rgba(0, 180, 216, 0.4)) brightness(0) invert(1)',
               }}
             />
-            <p className="text-sm mt-2 text-cyan-700 dark:text-white">Athletic OS</p>
+            <p className="text-sm mt-2 text-cyan-700 dark:text-white">PSP.Pro</p>
           </div>
 
           {/* Tagline */}
           <div className="mb-6">
-            <span className="inline-block px-4 py-2 bg-orange/10 border border-orange/20 rounded-full text-sm font-semibold" style={{ color: '#B8301A' }}>
-              Progression Over Perfection
+            <span className="inline-block px-5 py-2 bg-orange/10 border border-orange/20 rounded-full text-sm font-semibold italic tracking-wide text-white">
+              &ldquo;Progression Over Perfection&rdquo;
             </span>
           </div>
 
@@ -137,7 +123,7 @@ export default function HomePage() {
             <span className="text-gradient-orange">Perform Like a Champion.</span>
           </h2>
 
-          <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto text-cyan-700 dark:text-white">
+          <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto" style={{ color: '#ffffff' }}>
             Elite baseball and softball training in Virginia Beach. Track velocity, master mechanics,
             and dominate the diamond with data-driven performance.
           </p>
@@ -145,15 +131,15 @@ export default function HomePage() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link href="/signup">
-              <button className="btn-primary text-lg px-8 py-4 flex items-center gap-2 mx-auto">
-                <span>Start Training</span>
+              <button className="btn-primary text-lg px-8 py-4 flex items-center gap-2 mx-auto" style={{ color: '#ffffff' }}>
+                <span className="text-white">Start Training</span>
                 <ArrowRight className="w-5 h-5" />
               </button>
             </Link>
             <Link href="/locker">
-              <button className="btn-ghost text-lg px-8 py-4 flex items-center gap-2 mx-auto border-cyan/30 hover:border-cyan/50">
-                <LayoutDashboard className="w-5 h-5" />
-                <span>Access Athletic OS</span>
+              <button className="btn-ghost text-lg px-8 py-4 flex items-center gap-2 mx-auto border-cyan/30 hover:border-cyan/50" style={{ color: '#ffffff' }}>
+                <LayoutDashboard className="w-5 h-5" style={{ color: '#ffffff' }} />
+                <span className="text-white">Access PSP.Pro</span>
               </button>
             </Link>
           </div>
@@ -372,7 +358,7 @@ export default function HomePage() {
                   {program.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3 text-cyan-700 dark:text-white">
                       <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#B8301A' }} />
-                      <span>{feature}</span>
+                      <span className="text-white">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -401,11 +387,11 @@ export default function HomePage() {
             <div className="flex flex-col sm:flex-row gap-6 justify-center text-cyan-700 dark:text-white">
               <div className="flex items-center gap-2">
                 <Clock className="w-5 h-5" style={{ color: '#B8301A' }} />
-                <span>Mon-Fri: 3PM - 9PM</span>
+                <span className="text-white">Mon-Fri: 3PM - 9PM</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-5 h-5" style={{ color: '#B8301A' }} />
-                <span>Sat: 9AM - 5PM</span>
+                <span className="text-white">Sat: 9AM - 5PM</span>
               </div>
             </div>
           </div>
@@ -423,7 +409,7 @@ export default function HomePage() {
           </p>
           <Link href="/signup">
             <button className="btn-primary text-lg px-10 py-5 flex items-center gap-3 mx-auto">
-              <span>Start Your Journey</span>
+              <span className="text-white">Start Your Journey</span>
               <ArrowRight className="w-6 h-6" />
             </button>
           </Link>
@@ -437,14 +423,14 @@ export default function HomePage() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Zap className="w-6 h-6" style={{ color: '#B8301A' }} />
-                <span className="font-display font-bold text-lg text-white">PSP.Pro</span>
+                <span className="font-display font-bold text-lg" style={{ color: footerHeadingColor }}>PSP.Pro</span>
               </div>
               <p className="text-sm text-cyan-700 dark:text-white">
                 Progression Over Perfection
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4 text-white">Platform</h4>
+              <h4 className="font-semibold mb-4" style={{ color: footerHeadingColor }}>Platform</h4>
               <ul className="space-y-2 text-sm text-cyan-700 dark:text-white">
                 <li><Link href="/locker" className="hover:text-orange transition-colors">Dashboard</Link></li>
                 <li><Link href="/drills" className="hover:text-orange transition-colors">Drill Bank</Link></li>
@@ -453,14 +439,14 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4 text-white">Company</h4>
+              <h4 className="font-semibold mb-4" style={{ color: footerHeadingColor }}>Company</h4>
               <ul className="space-y-2 text-sm text-cyan-700 dark:text-white">
                 <li><Link href="/about" className="hover:text-orange transition-colors">About</Link></li>
                 <li><Link href="/contact" className="hover:text-orange transition-colors">Contact</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4 text-white">Contact</h4>
+              <h4 className="font-semibold mb-4" style={{ color: footerHeadingColor }}>Contact</h4>
               <ul className="space-y-2 text-sm text-cyan-700 dark:text-white">
                 <li>Virginia Beach, VA</li>
                 <li>info@propersports.pro</li>
