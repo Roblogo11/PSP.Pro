@@ -64,14 +64,14 @@ export default function AboutPage() {
         </p>
 
         <div className="grid md:grid-cols-2 gap-6 mt-6">
-          <div className="p-6 rounded-xl bg-cyan-50/50 border border-orange/10 hover:border-orange/30 transition-all">
+          <div className="p-6 rounded-xl bg-cyan-900/20 border border-orange/20 hover:border-orange/40 transition-all">
             <h3 className="text-xl font-bold mb-3 text-orange">Baseball Training</h3>
             <p className="text-cyan-700 dark:text-white leading-relaxed">
               Specialized pitching and hitting programs designed to maximize velocity, power, and consistency.
             </p>
           </div>
 
-          <div className="p-6 rounded-xl bg-cyan-50/50 border border-cyan/10 hover:border-cyan/30 transition-all">
+          <div className="p-6 rounded-xl bg-cyan-900/20 border border-cyan/20 hover:border-cyan/40 transition-all">
             <h3 className="text-xl font-bold mb-3 text-cyan">Softball Excellence</h3>
             <p className="text-cyan-700 dark:text-white leading-relaxed">
               Comprehensive softball training focusing on mechanics, speed development, and game performance.
@@ -134,14 +134,14 @@ export default function AboutPage() {
         </p>
 
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="p-6 rounded-xl bg-cyan-50/50 border border-orange/10 hover:border-orange/30 transition-all">
+          <div className="p-6 rounded-xl bg-cyan-900/20 border border-orange/20 hover:border-orange/40 transition-all">
             <h3 className="text-lg font-bold mb-3 text-orange">World-Class Facility</h3>
             <p className="text-cyan-700 dark:text-white leading-relaxed">
               Modern training equipment, video analysis systems, and dedicated space for athlete development.
             </p>
           </div>
 
-          <div className="p-6 rounded-xl bg-cyan-50/50 border border-cyan/10 hover:border-cyan/30 transition-all">
+          <div className="p-6 rounded-xl bg-cyan-900/20 border border-cyan/20 hover:border-cyan/40 transition-all">
             <h3 className="text-lg font-bold mb-3 text-cyan">Expert Coaching</h3>
             <p className="text-cyan-700 dark:text-white leading-relaxed">
               Experienced coaches dedicated to helping athletes reach their full potential.
@@ -162,25 +162,25 @@ export default function AboutPage() {
         </p>
 
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="p-6 rounded-xl bg-cyan-50/50 border border-orange/10 text-center">
+          <div className="p-6 rounded-xl bg-cyan-900/20 border border-orange/20 text-center">
             <Award className="w-12 h-12 text-orange mb-4 mx-auto" />
             <h3 className="text-xl font-bold mb-3 text-white">Excellence</h3>
             <p className="text-cyan-800 dark:text-white">Striving for the highest standards in every training session</p>
           </div>
 
-          <div className="p-6 rounded-xl bg-cyan-50/50 border border-cyan/10 text-center">
+          <div className="p-6 rounded-xl bg-cyan-900/20 border border-cyan/20 text-center">
             <TrendingUp className="w-12 h-12 text-cyan mb-4 mx-auto" />
             <h3 className="text-xl font-bold mb-3 text-white">Progress</h3>
             <p className="text-cyan-800 dark:text-white">Celebrating continuous improvement over perfection</p>
           </div>
 
-          <div className="p-6 rounded-xl bg-cyan-50/50 border border-orange/10 text-center">
+          <div className="p-6 rounded-xl bg-cyan-900/20 border border-orange/20 text-center">
             <Users className="w-12 h-12 text-orange mb-4 mx-auto" />
             <h3 className="text-xl font-bold mb-3 text-white">Community</h3>
             <p className="text-cyan-800 dark:text-white">Building a supportive environment for athlete growth</p>
           </div>
 
-          <div className="p-6 rounded-xl bg-cyan-50/50 border border-cyan/10 text-center">
+          <div className="p-6 rounded-xl bg-cyan-900/20 border border-cyan/20 text-center">
             <Target className="w-12 h-12 text-cyan mb-4 mx-auto" />
             <h3 className="text-xl font-bold mb-3 text-white">Results</h3>
             <p className="text-cyan-800 dark:text-white">Delivering measurable outcomes through proven methods</p>

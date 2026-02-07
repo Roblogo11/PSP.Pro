@@ -153,7 +153,7 @@ export default function FAQPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search for answers..."
-            className="w-full pl-12 pr-4 py-4 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-cyan/50 transition-all"
+            className="w-full pl-12 pr-4 py-4 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-cyan/50 transition-all"
           />
         </div>
       </div>
@@ -200,7 +200,7 @@ export default function FAQPage() {
             <div key={faq.id} className="glass-card overflow-hidden">
               <button
                 onClick={() => setOpenId(openId === faq.id ? null : faq.id)}
-                className="w-full p-6 text-left flex items-center justify-between gap-4 hover:bg-cyan-50/50 transition-colors"
+                className="w-full p-6 text-left flex items-center justify-between gap-4 hover:bg-cyan-900/20 transition-colors"
               >
                 <div className="flex-1">
                   <span className="text-xs text-cyan font-semibold mb-2 block">{faq.category}</span>
@@ -222,7 +222,7 @@ export default function FAQPage() {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="px-6 pb-6 pt-2 text-cyan-700 dark:text-white leading-relaxed border-t border-cyan-200/40">
+                    <div className="px-6 pb-6 pt-2 text-cyan-700 dark:text-white leading-relaxed border-t border-cyan-700/30">
                       {faq.answer}
                     </div>
                   </motion.div>

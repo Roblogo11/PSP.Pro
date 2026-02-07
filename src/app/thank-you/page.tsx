@@ -42,10 +42,10 @@ export default function ThankYouPage() {
           </Link>
 
           {/* What Happens Next */}
-          <div className="mt-10 pt-8 border-t border-cyan-200/40">
+          <div className="mt-10 pt-8 border-t border-cyan-700/30">
             <h2 className="text-2xl font-bold text-white mb-6">What Happens Next?</h2>
             <div className="grid md:grid-cols-3 gap-6 text-left">
-              <div className="p-4 rounded-xl bg-cyan-50/50 border border-cyan-200/40">
+              <div className="p-4 rounded-xl bg-cyan-900/20 border border-cyan-700/30">
                 <div className="w-10 h-10 bg-cyan/10 rounded-lg flex items-center justify-center mb-3">
                   <span className="text-cyan font-bold">1</span>
                 </div>
@@ -55,7 +55,7 @@ export default function ThankYouPage() {
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-cyan-50/50 border border-cyan-200/40">
+              <div className="p-4 rounded-xl bg-cyan-900/20 border border-cyan-700/30">
                 <div className="w-10 h-10 bg-orange/10 rounded-lg flex items-center justify-center mb-3">
                   <span className="text-orange font-bold">2</span>
                 </div>
@@ -65,7 +65,7 @@ export default function ThankYouPage() {
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-cyan-50/50 border border-cyan-200/40">
+              <div className="p-4 rounded-xl bg-cyan-900/20 border border-cyan-700/30">
                 <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center mb-3">
                   <span className="text-green-400 font-bold">3</span>
                 </div>

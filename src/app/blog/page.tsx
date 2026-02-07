@@ -202,7 +202,7 @@ export default function BlogPage() {
             <input
               type="email"
               placeholder="Your email address"
-              className="flex-1 px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-cyan/50"
+              className="flex-1 px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-cyan/50"
             />
             <button className="btn-primary whitespace-nowrap">
               Subscribe

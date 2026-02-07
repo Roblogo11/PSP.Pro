@@ -149,7 +149,7 @@ export default function ContactPage() {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                   placeholder="John Smith"
                 />
               </div>
@@ -167,7 +167,7 @@ export default function ContactPage() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                     placeholder="athlete@example.com"
                   />
                 </div>
@@ -182,7 +182,7 @@ export default function ContactPage() {
                     type="tel"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                     placeholder="(757) 123-4567"
                   />
                 </div>
@@ -199,7 +199,7 @@ export default function ContactPage() {
                   required
                   value={formData.interest}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                 >
                   <option value="training">1-on-1 Training Sessions</option>
                   <option value="group">Group Training</option>
@@ -221,7 +221,7 @@ export default function ContactPage() {
                   rows={6}
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all resize-none"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all resize-none"
                   placeholder="Tell us about your goals, experience level, and what you're looking to achieve..."
                 />
               </div>
