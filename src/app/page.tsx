@@ -267,8 +267,18 @@ export default function HomePage() {
       <GoogleReviews />
 
       {/* Section 1: 1-on-1 Training + Monthly Membership */}
-      <section className="py-20 px-6 bg-cyan-900/20">
-        <div className="max-w-7xl mx-auto">
+      <section className="relative py-20 px-6 overflow-hidden">
+        {/* Background Image */}
+        <Image
+          src="/images/Costal At Bat.jpg"
+          alt="Softball athlete at bat"
+          fill
+          quality={85}
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/80 to-slate-950/90" />
+        <div className="relative max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-white">
               Training Programs
@@ -430,8 +440,18 @@ export default function HomePage() {
       </section>
 
       {/* Section 2: Group Training */}
-      <section className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
+      <section className="relative py-20 px-6 overflow-hidden">
+        {/* Background Image */}
+        <Image
+          src="/images/over the shoulder psp pitching.jpg"
+          alt="PSP indoor pitching session"
+          fill
+          quality={85}
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/80 to-slate-950/90" />
+        <div className="relative max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-white">
               Group Training

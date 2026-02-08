@@ -13,11 +13,10 @@
 export const PLACEHOLDER_IMAGES = {
   // Hero Section - 16:9 aspect ratio (1920x1080)
   hero: {
-    main: 'https://images.unsplash.com/photo-1624526267942-ab0ff8a3e972?w=1920&h=1080&fit=crop&q=80',
-    alt: 'High-energy baseball training action shot',
+    main: '/images/Proper Sports Performance.jpg',
+    alt: 'Proper Sports Performance training facility',
     width: 1920,
-    height: 1080,
-    note: 'Replace with: Pitcher in motion, batter swing, or fielding action - dynamic movement with training facility in background'
+    height: 1080
   },
 
   // Feature Cards - 3:2 aspect ratio (600x400)
