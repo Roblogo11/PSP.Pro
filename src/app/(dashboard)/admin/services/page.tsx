@@ -411,10 +411,10 @@ export default function ServicesManagerPage() {
                 value={formData.homepage_image_url || ''}
                 onChange={(e) => setFormData({ ...formData, homepage_image_url: e.target.value })}
                 className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
-                placeholder="https://images.unsplash.com/... or /images/my-photo.jpg"
+                placeholder="/images/my-photo.jpg"
               />
               <p className="text-xs text-cyan-700 dark:text-white mt-1">
-                Image shown on homepage when featured. Use Unsplash URL or upload to /public/images/
+                Image shown on homepage when featured. Upload to /public/images/
               </p>
             </div>
 

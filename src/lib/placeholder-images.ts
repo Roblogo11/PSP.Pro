@@ -1,13 +1,7 @@
 /**
- * Placeholder Image Configuration
+ * PSP.Pro Image Configuration
  *
- * These URLs use placehold.co for proper aspect ratio placeholders.
- * Replace these with your actual high-quality images maintaining the same dimensions.
- *
- * Color scheme:
- * - Background: 0f1419 (dark blue-gray)
- * - Primary: 00b4d8 (cyan)
- * - Accent: b8301a (orange)
+ * All images are real PSP.Pro photography.
  */
 
 export const PLACEHOLDER_IMAGES = {
@@ -21,115 +15,98 @@ export const PLACEHOLDER_IMAGES = {
 
   // Feature Cards - 3:2 aspect ratio (600x400)
   features: {
-    velocityTracking: 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=600&h=400&fit=crop&q=80',
-    drillBank: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&h=400&fit=crop&q=80',
-    personalizedTraining: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=600&h=400&fit=crop&q=80',
+    velocityTracking: '/images/psp pitcher.jpg',
+    drillBank: '/images/Praticing Soccer Drills.jpg',
+    personalizedTraining: '/images/PSP Softball Athlete.jpg',
     alt: {
-      velocityTracking: 'Velocity tracking dashboard with performance charts',
-      drillBank: 'Athletes training with professional equipment',
-      personalizedTraining: 'One-on-one coaching session'
+      velocityTracking: 'PSP athlete pitching with coach guidance',
+      drillBank: 'Athletes practicing soccer drills on the field',
+      personalizedTraining: 'Softball athlete mid-swing during training'
     },
     width: 600,
-    height: 400,
-    note: 'Replace with: Screenshot of velocity dashboard, drill thumbnails, coach-athlete training photos'
+    height: 400
   },
 
   // Coach Headshots - 1:1 square (400x400)
   coaches: {
-    rachel: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&q=80',
-    mike: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&q=80',
-    sarah: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&q=80',
+    rachel: '/images/coach rachel psp.jpg',
+    mike: '/images/over the shoulder psp pitching.jpg',
+    sarah: '/images/psp pitcher.jpg',
     alt: {
       rachel: 'Coach Rachel - Lead Pitching Coach',
-      mike: 'Coach Mike - Velocity Training Specialist',
-      sarah: 'Coach Sarah - Movement & Mechanics Coach'
+      mike: 'PSP coaching session in the facility',
+      sarah: 'PSP pitcher training with coach'
     },
     width: 400,
-    height: 400,
-    note: 'Replace with: Professional headshots of actual coaches - friendly, approachable, in PSP gear'
+    height: 400
   },
 
   // Facility Photos - 16:9 aspect ratio (1200x675)
   facility: {
-    training: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&h=675&fit=crop&q=80',
-    equipment: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=1200&h=675&fit=crop&q=80',
-    indoor: 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=1200&h=675&fit=crop&q=80',
+    training: '/images/over the shoulder psp pitching.jpg',
+    equipment: '/images/Proper Sports Performance.jpg',
+    indoor: '/images/Coastal Softball Home Run.jpg',
     alt: {
-      training: 'PSP Training Center main facility',
-      equipment: 'Professional training equipment and technology',
-      indoor: 'Indoor training bay with batting cages'
+      training: 'PSP indoor pitching training session',
+      equipment: 'Proper Sports Performance training facility',
+      indoor: 'Coastal softball game action shot'
     },
     width: 1200,
-    height: 675,
-    note: 'Replace with: Actual facility photos showing training spaces, equipment, technology setup'
+    height: 675
   },
 
   // Before/After Comparison - 4:3 aspect ratio (800x600)
   beforeAfter: {
-    pitchingForm: 'https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=800&h=600&fit=crop&q=80',
-    battingStance: 'https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=800&h=600&fit=crop&q=80',
+    pitchingForm: '/images/psp pitcher.jpg',
+    battingStance: '/images/Costal At Bat.jpg',
     width: 800,
     height: 600,
-    alt: 'Training progress comparison',
-    note: 'Replace with: Side-by-side before/after mechanics screenshots from video analysis'
+    alt: 'Training progress comparison'
   },
 
   // Training Programs - 3:2 aspect ratio (600x400)
   programs: {
-    oneOnOne: 'https://images.unsplash.com/photo-1578432156326-d23924cce2e4?w=600&h=400&fit=crop&q=80',
-    group: 'https://images.unsplash.com/photo-1526232761682-d26e03ac148e?w=600&h=400&fit=crop&q=80',
-    monthly: 'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=600&h=400&fit=crop&q=80',
+    oneOnOne: '/images/psp pitcher.jpg',
+    group: '/images/Praticing Soccer Drills.jpg',
+    monthly: '/images/Top View Soccer Traing.jpg',
     alt: {
-      oneOnOne: '1-on-1 personalized coaching session',
-      group: 'Group speed and agility training',
-      monthly: 'Monthly training membership program'
+      oneOnOne: 'PSP 1-on-1 pitching session with coach',
+      group: 'Group soccer drill training session',
+      monthly: 'Aerial view of soccer training with cones'
     },
     width: 600,
-    height: 400,
-    note: 'Replace with: Actual photos of 1-on-1 sessions, group training, and membership athletes'
+    height: 400
   },
 
   // Drill Thumbnails - 16:9 aspect ratio (320x180)
   drills: {
-    placeholder: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=320&h=180&fit=crop&q=80',
+    placeholder: '/images/PSP Softball Athlete.jpg',
     width: 320,
     height: 180,
-    alt: 'Training drill demonstration',
-    note: 'Replace with: Video thumbnails from actual drill demonstrations - freeze frame of key positions'
+    alt: 'PSP softball training drill'
   },
 
   // Dashboard Profile - 1:1 square (200x200)
   profile: {
-    placeholder: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&q=80',
+    placeholder: '/images/coach rachel psp.jpg',
     width: 200,
     height: 200,
-    alt: 'Athlete profile photo',
-    note: 'Replace with: User-uploaded athlete photos'
+    alt: 'PSP athlete profile'
   },
 
   // Achievement Badges - 1:1 square (120x120)
   badges: {
-    velocityMilestone: 'https://placehold.co/120x120/0f1419/00b4d8?text=+5MPH&font=roboto',
-    streakMaster: 'https://placehold.co/120x120/0f1419/b8301a?text=7+Days&font=roboto',
-    drillComplete: 'https://placehold.co/120x120/0f1419/10b981?text=100%25&font=roboto',
+    velocityMilestone: '/images/psp pitcher.jpg',
+    streakMaster: '/images/Coastal Softball Home Run.jpg',
+    drillComplete: '/images/Top View Soccer Traing.jpg',
     width: 120,
     height: 120,
     alt: {
       velocityMilestone: 'Velocity Milestone Badge',
       streakMaster: 'Training Streak Badge',
       drillComplete: 'Drill Completion Badge'
-    },
-    note: 'Replace with: Custom illustrated achievement badges - trophy icons, velocity lightning bolts, etc.'
+    }
   }
-}
-
-/**
- * Utility function to get placeholder URL with branded colors
- * Use this when you need a quick branded placeholder
- */
-export function getBrandedPlaceholder(width: number, height: number, text: string = '') {
-  const encodedText = encodeURIComponent(text)
-  return `https://placehold.co/${width}x${height}/0f1419/00b4d8?text=${encodedText}&font=roboto`
 }
 
 /**
