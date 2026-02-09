@@ -9,7 +9,7 @@ import { useNavigation } from './nav-context'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 
 // Step labels for the progress indicator - PSP.Pro Athletic Journey
-const STEP_LABELS = ['Home', 'Pricing', 'Get Started', 'Contact']
+const STEP_LABELS = ['Home', 'Pricing', 'Join the Team', 'Contact']
 const STEP_ICONS = [Home, Package, Rocket, Sparkles]
 // Map step indices to funnel indices (About is at index 1, so we skip it)
 const STEP_TO_FUNNEL_INDEX = [0, 2, 3, 4] // Home=0, Pricing=2, GetStarted=3, Contact=4
@@ -95,7 +95,7 @@ export function FunnelNav({ className = '' }: FunnelNavProps) {
                   className="group flex items-center gap-2 px-5 py-4 rounded-xl bg-gradient-to-r from-secondary to-accent hover:from-secondary/90 hover:to-accent/90 shadow-lg shadow-secondary/30 hover:shadow-secondary/50 hover:scale-[1.02] transition-all duration-300 min-h-[48px]"
                 >
                   <Sparkles className="w-4 h-4 text-white" />
-                  <span className="text-sm font-semibold text-white">Get Started</span>
+                  <span className="text-sm font-semibold text-white">Join the Team</span>
                   <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
                 </button>
               </div>

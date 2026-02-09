@@ -33,12 +33,12 @@ export default function AboutPage() {
           <p className="text-xl text-white mb-6 max-w-2xl mx-auto leading-relaxed">
             Virginia Beach&apos;s premier baseball and softball training facility focused on velocity development and mechanics improvement.
           </p>
-          <p className="text-2xl font-bold text-orange">
+          <p className="text-2xl font-bold text-white">
             Progression Over Perfection
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
             <Link href="/get-started" className="btn-primary">
-              Get Started
+              Join the Team
             </Link>
             <Link href="/pricing" className="btn-ghost border-white/30 text-white hover:border-white/50">
               View Programs
@@ -55,25 +55,25 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold text-white">Our Mission</h2>
         </div>
 
-        <p className="text-lg text-cyan-700 dark:text-white leading-relaxed mb-6">
+        <p className="text-lg text-slate-600 dark:text-white leading-relaxed mb-6">
           At PSP.Pro, we believe in <span className="text-orange font-bold">Progression Over Perfection</span>. Our mission is to develop elite baseball and softball athletes through science-based training methodologies that focus on continuous improvement.
         </p>
 
-        <p className="text-cyan-800 dark:text-white leading-relaxed">
+        <p className="text-slate-500 dark:text-white/80 leading-relaxed">
           We specialize in velocity development, mechanics refinement, and overall athletic performance enhancement for athletes of all levels.
         </p>
 
         <div className="grid md:grid-cols-2 gap-6 mt-6">
           <div className="p-6 rounded-xl bg-cyan-900/20 border border-orange/20 hover:border-orange/40 transition-all">
             <h3 className="text-xl font-bold mb-3 text-orange">Baseball Training</h3>
-            <p className="text-cyan-700 dark:text-white leading-relaxed">
+            <p className="text-slate-600 dark:text-white leading-relaxed">
               Specialized pitching and hitting programs designed to maximize velocity, power, and consistency.
             </p>
           </div>
 
           <div className="p-6 rounded-xl bg-cyan-900/20 border border-cyan/20 hover:border-cyan/40 transition-all">
             <h3 className="text-xl font-bold mb-3 text-cyan">Softball Excellence</h3>
-            <p className="text-cyan-700 dark:text-white leading-relaxed">
+            <p className="text-slate-600 dark:text-white leading-relaxed">
               Comprehensive softball training focusing on mechanics, speed development, and game performance.
             </p>
           </div>
@@ -100,31 +100,31 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold text-white">Our Approach</h2>
         </div>
 
-        <p className="text-lg text-cyan-700 dark:text-white leading-relaxed mb-6">
+        <p className="text-lg text-slate-600 dark:text-white leading-relaxed mb-6">
           We combine cutting-edge technology with proven training methodologies to deliver measurable results.
         </p>
 
         <h3 className="text-xl font-bold mb-4 text-white">Training Specialties</h3>
-        <ul className="space-y-3 text-cyan-700 dark:text-white">
+        <ul className="space-y-3 text-slate-600 dark:text-white">
           <li className="flex items-start gap-3">
             <Zap className="w-5 h-5 text-orange flex-shrink-0 mt-1" />
-            <span><strong className="text-white">Velocity Development</strong> – Increase throwing velocity through biomechanics and strength training</span>
+            <span><strong className="text-orange">Velocity Development</strong> – Increase throwing velocity through biomechanics and strength training</span>
           </li>
           <li className="flex items-start gap-3">
             <Zap className="w-5 h-5 text-orange flex-shrink-0 mt-1" />
-            <span><strong className="text-white">Mechanics Analysis</strong> – Video breakdown and corrective exercises for optimal movement patterns</span>
+            <span><strong className="text-orange">Mechanics Analysis</strong> – Video breakdown and corrective exercises for optimal movement patterns</span>
           </li>
           <li className="flex items-start gap-3">
             <Zap className="w-5 h-5 text-orange flex-shrink-0 mt-1" />
-            <span><strong className="text-white">Power Development</strong> – Build explosive strength for hitting and throwing</span>
+            <span><strong className="text-orange">Power Development</strong> – Build explosive strength for hitting and throwing</span>
           </li>
           <li className="flex items-start gap-3">
             <Zap className="w-5 h-5 text-orange flex-shrink-0 mt-1" />
-            <span><strong className="text-white">Speed & Agility</strong> – Improve athletic movement and on-field performance</span>
+            <span><strong className="text-orange">Speed & Agility</strong> – Improve athletic movement and on-field performance</span>
           </li>
           <li className="flex items-start gap-3">
             <Zap className="w-5 h-5 text-orange flex-shrink-0 mt-1" />
-            <span><strong className="text-white">Recovery & Mobility</strong> – Prevent injury and optimize recovery for peak performance</span>
+            <span><strong className="text-orange">Recovery & Mobility</strong> – Prevent injury and optimize recovery for peak performance</span>
           </li>
         </ul>
       </div>
@@ -138,25 +138,25 @@ export default function AboutPage() {
 
         <h3 className="text-xl font-bold mb-3 text-white">Serving Virginia Beach & Hampton Roads</h3>
 
-        <p className="text-lg text-cyan-700 dark:text-white leading-relaxed mb-4">
+        <p className="text-lg text-slate-600 dark:text-white leading-relaxed mb-4">
           Located in the heart of Virginia Beach, our state-of-the-art facility serves athletes throughout the Hampton Roads region.
         </p>
 
-        <p className="text-cyan-800 dark:text-white mb-6">
+        <p className="text-slate-500 dark:text-white/80 mb-6">
           Serving Virginia Beach, Chesapeake, Norfolk, and surrounding areas
         </p>
 
         <div className="grid md:grid-cols-2 gap-6">
           <div className="p-6 rounded-xl bg-cyan-900/20 border border-orange/20 hover:border-orange/40 transition-all">
             <h3 className="text-lg font-bold mb-3 text-orange">World-Class Facility</h3>
-            <p className="text-cyan-700 dark:text-white leading-relaxed">
+            <p className="text-slate-600 dark:text-white leading-relaxed">
               Modern training equipment, video analysis systems, and dedicated space for athlete development.
             </p>
           </div>
 
           <div className="p-6 rounded-xl bg-cyan-900/20 border border-cyan/20 hover:border-cyan/40 transition-all">
             <h3 className="text-lg font-bold mb-3 text-cyan">Expert Coaching</h3>
-            <p className="text-cyan-700 dark:text-white leading-relaxed">
+            <p className="text-slate-600 dark:text-white leading-relaxed">
               Experienced coaches dedicated to helping athletes reach their full potential.
             </p>
           </div>
@@ -170,7 +170,7 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold text-white">Our Values</h2>
         </div>
 
-        <p className="text-lg text-cyan-700 dark:text-white mb-6">
+        <p className="text-lg text-slate-600 dark:text-white mb-6">
           Our core values guide everything we do at PSP.Pro
         </p>
 
@@ -178,25 +178,25 @@ export default function AboutPage() {
           <div className="p-6 rounded-xl bg-cyan-900/20 border border-orange/20 text-center">
             <Award className="w-12 h-12 text-orange mb-4 mx-auto" />
             <h3 className="text-xl font-bold mb-3 text-white">Excellence</h3>
-            <p className="text-cyan-800 dark:text-white">Striving for the highest standards in every training session</p>
+            <p className="text-slate-500 dark:text-white/80">Striving for the highest standards in every training session</p>
           </div>
 
           <div className="p-6 rounded-xl bg-cyan-900/20 border border-cyan/20 text-center">
             <TrendingUp className="w-12 h-12 text-cyan mb-4 mx-auto" />
             <h3 className="text-xl font-bold mb-3 text-white">Progress</h3>
-            <p className="text-cyan-800 dark:text-white">Celebrating continuous improvement over perfection</p>
+            <p className="text-slate-500 dark:text-white/80">Celebrating continuous improvement over perfection</p>
           </div>
 
           <div className="p-6 rounded-xl bg-cyan-900/20 border border-orange/20 text-center">
             <Users className="w-12 h-12 text-orange mb-4 mx-auto" />
             <h3 className="text-xl font-bold mb-3 text-white">Community</h3>
-            <p className="text-cyan-800 dark:text-white">Building a supportive environment for athlete growth</p>
+            <p className="text-slate-500 dark:text-white/80">Building a supportive environment for athlete growth</p>
           </div>
 
           <div className="p-6 rounded-xl bg-cyan-900/20 border border-cyan/20 text-center">
             <Target className="w-12 h-12 text-cyan mb-4 mx-auto" />
             <h3 className="text-xl font-bold mb-3 text-white">Results</h3>
-            <p className="text-cyan-800 dark:text-white">Delivering measurable outcomes through proven methods</p>
+            <p className="text-slate-500 dark:text-white/80">Delivering measurable outcomes through proven methods</p>
           </div>
         </div>
       </div>
@@ -208,7 +208,7 @@ export default function AboutPage() {
           <Link href="/pricing" className="glass-card-hover p-6 text-center group">
             <Package className="w-8 h-8 text-orange mb-3 mx-auto" />
             <h3 className="font-bold text-white group-hover:text-orange transition-colors">View Pricing</h3>
-            <p className="text-sm text-cyan-800 dark:text-white mt-2">Training programs & packages</p>
+            <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Training programs & packages</p>
             <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
               <span>Explore</span>
               <ArrowRight className="w-4 h-4" />
@@ -217,10 +217,10 @@ export default function AboutPage() {
 
           <Link href="/get-started" className="glass-card-hover p-6 text-center group">
             <Rocket className="w-8 h-8 text-cyan mb-3 mx-auto" />
-            <h3 className="font-bold text-white group-hover:text-cyan transition-colors">Get Started</h3>
-            <p className="text-sm text-cyan-800 dark:text-white mt-2">Begin your athletic journey</p>
+            <h3 className="font-bold text-white group-hover:text-cyan transition-colors">Join the Team</h3>
+            <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Join our training family</p>
             <div className="inline-flex items-center gap-1 text-cyan text-sm font-semibold mt-3">
-              <span>Start Now</span>
+              <span>Join Now</span>
               <ArrowRight className="w-4 h-4" />
             </div>
           </Link>
@@ -228,7 +228,7 @@ export default function AboutPage() {
           <Link href="/contact" className="glass-card-hover p-6 text-center group">
             <Mail className="w-8 h-8 text-orange mb-3 mx-auto" />
             <h3 className="font-bold text-white group-hover:text-orange transition-colors">Contact Us</h3>
-            <p className="text-sm text-cyan-800 dark:text-white mt-2">Questions? We&apos;re here to help</p>
+            <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Questions? We&apos;re here to help</p>
             <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
               <span>Reach Out</span>
               <ArrowRight className="w-4 h-4" />

@@ -313,7 +313,7 @@ export default function ContactPage() {
             <Link href="/pricing" className="glass-card-hover p-6 text-center group">
               <Package className="w-8 h-8 text-orange mb-3 mx-auto" />
               <h3 className="font-bold text-white group-hover:text-orange transition-colors">View Pricing</h3>
-              <p className="text-sm text-cyan-800 dark:text-white mt-2">Training programs & packages</p>
+              <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Training programs & packages</p>
               <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
                 <span>Explore</span>
                 <ArrowRight className="w-4 h-4" />
@@ -322,10 +322,10 @@ export default function ContactPage() {
 
             <Link href="/get-started" className="glass-card-hover p-6 text-center group">
               <Rocket className="w-8 h-8 text-cyan mb-3 mx-auto" />
-              <h3 className="font-bold text-white group-hover:text-cyan transition-colors">Get Started</h3>
-              <p className="text-sm text-cyan-800 dark:text-white mt-2">Begin your athletic journey</p>
+              <h3 className="font-bold text-white group-hover:text-cyan transition-colors">Join the Team</h3>
+              <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Join our training family</p>
               <div className="inline-flex items-center gap-1 text-cyan text-sm font-semibold mt-3">
-                <span>Start Now</span>
+                <span>Join Now</span>
                 <ArrowRight className="w-4 h-4" />
               </div>
             </Link>
@@ -333,7 +333,7 @@ export default function ContactPage() {
             <Link href="/about" className="glass-card-hover p-6 text-center group">
               <Info className="w-8 h-8 text-orange mb-3 mx-auto" />
               <h3 className="font-bold text-white group-hover:text-orange transition-colors">About PSP</h3>
-              <p className="text-sm text-cyan-800 dark:text-white mt-2">Learn about our mission</p>
+              <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Learn about our mission</p>
               <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
                 <span>Learn More</span>
                 <ArrowRight className="w-4 h-4" />

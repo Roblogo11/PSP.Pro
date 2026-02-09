@@ -104,11 +104,11 @@
   }
 
   /* Light mode: force dark text on common elements */
-  html:not(.dark) p,
+  html:not(.dark) p:not([class*="text-white"]),
   html:not(.dark) span:not([class*="text-orange"]):not([class*="text-cyan"]):not([class*="text-gradient"]):not([class*="text-white"]):not([class*="text-slate"]),
-  html:not(.dark) li,
-  html:not(.dark) small,
-  html:not(.dark) label {
+  html:not(.dark) li:not([class*="text-white"]),
+  html:not(.dark) small:not([class*="text-white"]),
+  html:not(.dark) label:not([class*="text-white"]) {
     color: rgb(51 65 85) !important;
   }
 
@@ -315,21 +315,21 @@
     color: #1e293b !important;
   }
 
-  /* Light Mode Form Inputs inside Command Panels */
-  html:not(.dark) .command-panel input,
-  html:not(.dark) .command-panel select,
-  html:not(.dark) .command-panel textarea {
+  /* Light Mode Form Inputs (global — all containers) */
+  html:not(.dark) input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+  html:not(.dark) select,
+  html:not(.dark) textarea {
     background: rgba(241, 245, 249, 0.9) !important;
     color: #1e293b !important;
     border-color: rgba(0, 180, 216, 0.3) !important;
   }
 
-  html:not(.dark) .command-panel input::placeholder,
-  html:not(.dark) .command-panel textarea::placeholder {
+  html:not(.dark) input::placeholder,
+  html:not(.dark) textarea::placeholder {
     color: #94a3b8 !important;
   }
 
-  html:not(.dark) .command-panel select option {
+  html:not(.dark) select option {
     background: #f1f5f9;
     color: #1e293b;
   }

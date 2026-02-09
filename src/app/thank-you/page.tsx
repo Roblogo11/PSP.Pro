@@ -107,7 +107,7 @@ export default function ThankYouPage() {
               Schedule your first training session
             </p>
             <div className="inline-flex items-center gap-2 text-cyan text-sm font-semibold">
-              <span>Get Started</span>
+              <span>Join the Team</span>
               <ArrowRight className="w-4 h-4" />
             </div>
           </Link>

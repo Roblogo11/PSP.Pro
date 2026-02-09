@@ -227,7 +227,7 @@ export default function BlogPostPage() {
                 Book a Session
               </Link>
               <Link href="/get-started" className="btn-ghost inline-flex items-center gap-2">
-                Get Started Free
+                Join the Team
               </Link>
             </div>
           </div>

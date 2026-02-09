@@ -105,7 +105,7 @@ export const pspConfig = {
           'Mobile app access',
           'Progress reports',
         ],
-        cta: 'Get Started',
+        cta: 'Join the Team',
       },
       {
         id: 'athlete',

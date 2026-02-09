@@ -3,7 +3,7 @@ export const FUNNEL_ROUTES = [
   { path: '/', name: 'Home', keywords: ['start', 'main', 'landing', 'psp'] },
   { path: '/about', name: 'About', keywords: ['team', 'story', 'coaches', 'who'] },
   { path: '/pricing', name: 'Pricing', keywords: ['cost', 'price', 'packages', 'rates', 'sessions'] },
-  { path: '/get-started', name: 'Get Started', keywords: ['begin', 'assessment', 'training', 'onboard'] },
+  { path: '/get-started', name: 'Join the Team', keywords: ['begin', 'assessment', 'training', 'onboard', 'join'] },
   { path: '/contact', name: 'Contact', keywords: ['email', 'phone', 'message', 'reach', 'location'] },
 ] as const
 

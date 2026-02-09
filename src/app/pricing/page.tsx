@@ -271,10 +271,10 @@ export default function PricingPage() {
         <div className="grid md:grid-cols-3 gap-4">
           <Link href="/get-started" className="glass-card-hover p-6 text-center group">
             <Rocket className="w-8 h-8 text-cyan mb-3 mx-auto" />
-            <h3 className="font-bold text-white group-hover:text-cyan transition-colors">Get Started</h3>
-            <p className="text-sm text-cyan-800 dark:text-white mt-2">Begin your athletic journey</p>
+            <h3 className="font-bold text-white group-hover:text-cyan transition-colors">Join the Team</h3>
+            <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Join our training family</p>
             <div className="inline-flex items-center gap-1 text-cyan text-sm font-semibold mt-3">
-              <span>Start Now</span>
+              <span>Join Now</span>
               <ArrowRight className="w-4 h-4" />
             </div>
           </Link>
@@ -282,7 +282,7 @@ export default function PricingPage() {
           <Link href="/about" className="glass-card-hover p-6 text-center group">
             <Info className="w-8 h-8 text-orange mb-3 mx-auto" />
             <h3 className="font-bold text-white group-hover:text-orange transition-colors">About PSP</h3>
-            <p className="text-sm text-cyan-800 dark:text-white mt-2">Learn about our mission</p>
+            <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Learn about our mission</p>
             <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
               <span>Learn More</span>
               <ArrowRight className="w-4 h-4" />
@@ -292,7 +292,7 @@ export default function PricingPage() {
           <Link href="/contact" className="glass-card-hover p-6 text-center group">
             <Mail className="w-8 h-8 text-cyan mb-3 mx-auto" />
             <h3 className="font-bold text-white group-hover:text-cyan transition-colors">Contact Us</h3>
-            <p className="text-sm text-cyan-800 dark:text-white mt-2">Questions? We&apos;re here to help</p>
+            <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Questions? We&apos;re here to help</p>
             <div className="inline-flex items-center gap-1 text-cyan text-sm font-semibold mt-3">
               <span>Reach Out</span>
               <ArrowRight className="w-4 h-4" />

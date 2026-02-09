@@ -43,7 +43,7 @@ const KNOWLEDGE_BASE = [
     keywords: ['velocity', 'speed', 'throwing', 'mph', 'velo', 'pitching'],
     title: 'Velocity Training',
     response: 'Our velocity development program focuses on:\n\n• Mechanics optimization\n• Power generation\n• Arm health & conditioning\n• Data-driven progress tracking\n\nAverage velocity gains: 3-7 MPH in 12 weeks!',
-    actions: [{ label: 'Get Started', href: '/get-started' }],
+    actions: [{ label: 'Join the Team', href: '/get-started' }],
   },
   {
     keywords: ['age', 'how old', 'youth', 'kid', 'teenager'],

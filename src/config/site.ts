@@ -72,7 +72,7 @@ export const siteConfig = {
     sectionTitle: "How It Works",
     sectionSubtitle: "Your journey to peak performance",
     steps: [
-      { id: "1", number: 1, title: "Assessment", description: "Evaluate your current performance and set goals", icon: "Target", cta: "Get Started", href: "/get-started", image: "/images/PSP-black-300x99-1.png" }
+      { id: "1", number: 1, title: "Assessment", description: "Evaluate your current performance and set goals", icon: "Target", cta: "Join the Team", href: "/get-started", image: "/images/PSP-black-300x99-1.png" }
     ] as Array<{ id: string; number: number; title: string; description: string; icon: string; cta?: string; href?: string; image: string }>,
   },
 
@@ -101,7 +101,7 @@ export const siteConfig = {
     sectionSubtitle: "Ready to Start Your Training Journey?",
     description: "Join Virginia Beach's premier athletic training facility and take your performance to the next level.",
     emailPlaceholder: "Your email address",
-    cta: "Get Started",
+    cta: "Join the Team",
     email: "info@propersports.pro",
     phone: "",
     address: "Virginia Beach, VA",

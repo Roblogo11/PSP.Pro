@@ -62,7 +62,7 @@ export default function GetStartedPage() {
 
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2">
+            <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
               First Name *
             </label>
             <input
@@ -75,7 +75,7 @@ export default function GetStartedPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2">
+            <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
               Last Name *
             </label>
             <input
@@ -88,7 +88,7 @@ export default function GetStartedPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2 flex items-center gap-2">
+            <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2 flex items-center gap-2">
               <Mail className="w-4 h-4" />
               Email Address *
             </label>
@@ -102,7 +102,7 @@ export default function GetStartedPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2 flex items-center gap-2">
+            <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2 flex items-center gap-2">
               <Phone className="w-4 h-4" />
               Phone Number *
             </label>
@@ -116,7 +116,7 @@ export default function GetStartedPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2">
+            <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
               Age *
             </label>
             <input
@@ -129,7 +129,7 @@ export default function GetStartedPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2">
+            <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
               Primary Position *
             </label>
             <select
@@ -168,7 +168,7 @@ export default function GetStartedPage() {
         </div>
 
         <div className="mb-6">
-          <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2">
+          <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
             Experience Level *
           </label>
           <select
@@ -185,7 +185,7 @@ export default function GetStartedPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-4">
+          <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-4">
             What are your training goals? (Select all that apply)
           </label>
           <div className="grid md:grid-cols-2 gap-3">
@@ -232,7 +232,7 @@ export default function GetStartedPage() {
         </div>
 
         <div className="mb-6">
-          <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2">
+          <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
             Preferred Training Days *
           </label>
           <select
@@ -250,7 +250,7 @@ export default function GetStartedPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2">
+          <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
             Additional Information
           </label>
           <textarea
@@ -270,7 +270,7 @@ export default function GetStartedPage() {
           <h2 className="text-2xl font-bold text-white">Ready to Start?</h2>
         </div>
 
-        <p className="text-cyan-700 dark:text-white mb-8 max-w-2xl mx-auto">
+        <p className="text-slate-600 dark:text-white mb-8 max-w-2xl mx-auto">
           Our team will review your information and reach out within 24 hours to schedule your first session. We&apos;ll discuss your goals and create a personalized training plan.
         </p>
 
@@ -296,7 +296,7 @@ export default function GetStartedPage() {
           </button>
         </div>
 
-        <p className="text-cyan-800 dark:text-white text-sm mt-6">
+        <p className="text-slate-500 dark:text-white/80 text-sm mt-6">
           <MapPin className="w-4 h-4 inline mr-1" />
           Training Location: Virginia Beach, VA
         </p>
@@ -309,7 +309,7 @@ export default function GetStartedPage() {
           <Link href="/pricing" className="glass-card-hover p-6 text-center group">
             <Package className="w-8 h-8 text-orange mb-3 mx-auto" />
             <h3 className="font-bold text-white group-hover:text-orange transition-colors">View Pricing</h3>
-            <p className="text-sm text-cyan-800 dark:text-white mt-2">Training programs & packages</p>
+            <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Training programs & packages</p>
             <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
               <span>Explore</span>
               <ArrowRight className="w-4 h-4" />
@@ -319,7 +319,7 @@ export default function GetStartedPage() {
           <Link href="/about" className="glass-card-hover p-6 text-center group">
             <Info className="w-8 h-8 text-cyan mb-3 mx-auto" />
             <h3 className="font-bold text-white group-hover:text-cyan transition-colors">About PSP</h3>
-            <p className="text-sm text-cyan-800 dark:text-white mt-2">Learn about our mission</p>
+            <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Learn about our mission</p>
             <div className="inline-flex items-center gap-1 text-cyan text-sm font-semibold mt-3">
               <span>Learn More</span>
               <ArrowRight className="w-4 h-4" />
@@ -329,7 +329,7 @@ export default function GetStartedPage() {
           <Link href="/contact" className="glass-card-hover p-6 text-center group">
             <Mail className="w-8 h-8 text-orange mb-3 mx-auto" />
             <h3 className="font-bold text-white group-hover:text-orange transition-colors">Contact Us</h3>
-            <p className="text-sm text-cyan-800 dark:text-white mt-2">Questions? We&apos;re here to help</p>
+            <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Questions? We&apos;re here to help</p>
             <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
               <span>Reach Out</span>
               <ArrowRight className="w-4 h-4" />
