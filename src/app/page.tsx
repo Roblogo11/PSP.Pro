@@ -182,9 +182,9 @@ export default function HomePage() {
               </>
             ) : (
               <>
-                <Link href="/signup">
+                <Link href="/get-started">
                   <button className="btn-primary text-lg px-8 py-4 flex items-center gap-2 mx-auto" style={{ color: '#ffffff' }}>
-                    <span className="text-white">Start Training</span>
+                    <span className="text-white">Join the Team</span>
                     <ArrowRight className="w-5 h-5" />
                   </button>
                 </Link>
@@ -622,9 +622,9 @@ export default function HomePage() {
           <p className="text-xl mb-8 text-cyan-700 dark:text-white">
             Join hundreds of athletes who are improving their game with data-driven training.
           </p>
-          <Link href={profile ? ((isCoach || isAdmin) ? '/admin' : '/locker') : '/signup'}>
+          <Link href={profile ? ((isCoach || isAdmin) ? '/admin' : '/locker') : '/get-started'}>
             <button className="btn-primary text-lg px-10 py-5 flex items-center gap-3 mx-auto">
-              <span className="text-white">{profile ? 'Go to Dashboard' : 'Start Your Journey'}</span>
+              <span className="text-white">{profile ? 'Go to Dashboard' : 'Join the Team'}</span>
               <ArrowRight className="w-6 h-6" />
             </button>
           </Link>

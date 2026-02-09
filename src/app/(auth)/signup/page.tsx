@@ -117,7 +117,7 @@ export default function SignupPage() {
       // 5. Success! Refresh server state then navigate to FAQ
       // New members land on FAQ first — they need to purchase a membership to access the dashboard
       router.refresh()
-      router.push('/faq')
+      router.push('/faq?welcome=true')
       return
     } catch (err: any) {
       console.error('Signup error:', err)

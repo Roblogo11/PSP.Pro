@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Zap, Users, Video, Activity, Package, CheckCircle, Award, Info, Rocket, Mail, ArrowRight } from 'lucide-react'
+import { Zap, Users, Video, Activity, Package, CheckCircle, Award, Info, Rocket, Mail, ArrowRight, LayoutDashboard } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
 import { createClient } from '@/lib/supabase/client'
+import { useUserRole } from '@/lib/hooks/use-user-role'
 import {
   DEFAULT_SERVICES,
   DEFAULT_PACKAGES,
@@ -27,9 +28,14 @@ function splitDescription(desc: string | null): string[] {
 }
 
 export default function PricingPage() {
+  const { profile, isCoach, isAdmin } = useUserRole()
   const [services, setServices] = useState<PricingService[]>(DEFAULT_SERVICES)
   const [packages, setPackages] = useState<PricingPackage[]>(DEFAULT_PACKAGES)
   const [loading, setLoading] = useState(true)
+
+  // Dynamic CTA based on auth state
+  const ctaHref = (isCoach || isAdmin) ? '/admin/services' : profile ? '/booking' : '/get-started'
+  const ctaLabel = (isCoach || isAdmin) ? 'Manage Services' : profile ? 'Book Now' : 'Join the Team'
 
   useEffect(() => {
     async function fetchPricing() {
@@ -182,9 +188,9 @@ export default function PricingPage() {
                     ))}
                   </ul>
                 )}
-                <Link href="/get-started">
+                <Link href={ctaHref}>
                   <button className={idx === 0 ? 'btn-primary w-full' : cs.btnGhost}>
-                    Book {service.name}
+                    {(isCoach || isAdmin) ? 'Manage Services' : `Book ${service.name}`}
                   </button>
                 </Link>
               </div>
@@ -241,8 +247,10 @@ export default function PricingPage() {
                   </div>
                 )}
 
-                <Link href="/get-started">
-                  <button className="btn-ghost w-full border-cyan/30 hover:border-cyan/50">Join Group Training</button>
+                <Link href={ctaHref}>
+                  <button className="btn-ghost w-full border-cyan/30 hover:border-cyan/50">
+                    {(isCoach || isAdmin) ? 'Manage Services' : profile ? 'Book Group Training' : 'Join Group Training'}
+                  </button>
                 </Link>
               </div>
             )
@@ -309,9 +317,9 @@ export default function PricingPage() {
                 <div className="text-center mb-6">
                   <p className="text-sm">{formatPrice(perSessionCents)} per session</p>
                 </div>
-                <Link href="/get-started">
+                <Link href={ctaHref}>
                   <button className={isFeatured ? 'btn-primary w-full' : 'btn-ghost w-full'}>
-                    Purchase Pack
+                    {(isCoach || isAdmin) ? 'Manage Packages' : 'Purchase Pack'}
                   </button>
                 </Link>
               </div>
@@ -353,8 +361,10 @@ export default function PricingPage() {
                 {service.description && (
                   <p className="mb-6">{service.description}</p>
                 )}
-                <Link href="/get-started">
-                  <button className={cs.btnGhost}>Book {service.name}</button>
+                <Link href={ctaHref}>
+                  <button className={cs.btnGhost}>
+                    {(isCoach || isAdmin) ? 'Manage Services' : `Book ${service.name}`}
+                  </button>
                 </Link>
               </div>
             )
@@ -367,12 +377,16 @@ export default function PricingPage() {
       <div className="command-panel">
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 text-center">Continue Exploring</h2>
         <div className="grid md:grid-cols-3 gap-4">
-          <Link href="/get-started" className="glass-card-hover p-6 text-center group">
-            <Rocket className="w-8 h-8 text-cyan mb-3 mx-auto" />
-            <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-cyan transition-colors">Join the Team</h3>
-            <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Join our training family</p>
+          <Link href={profile ? (isCoach || isAdmin ? '/admin' : '/locker') : '/get-started'} className="glass-card-hover p-6 text-center group">
+            {profile ? <LayoutDashboard className="w-8 h-8 text-cyan mb-3 mx-auto" /> : <Rocket className="w-8 h-8 text-cyan mb-3 mx-auto" />}
+            <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-cyan transition-colors">
+              {profile ? 'Your Dashboard' : 'Join the Team'}
+            </h3>
+            <p className="text-sm text-slate-500 dark:text-white/80 mt-2">
+              {profile ? 'Back to your training hub' : 'Join our training family'}
+            </p>
             <div className="inline-flex items-center gap-1 text-cyan text-sm font-semibold mt-3">
-              <span>Join Now</span>
+              <span>{profile ? 'Go to Dashboard' : 'Join Now'}</span>
               <ArrowRight className="w-4 h-4" />
             </div>
           </Link>

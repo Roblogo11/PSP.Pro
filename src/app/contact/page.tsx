@@ -3,12 +3,15 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Mail, Phone, MapPin, Send, Loader2, MessageSquare, Package, Rocket, Info, ArrowRight } from 'lucide-react'
+import { Mail, Phone, MapPin, Send, Loader2, MessageSquare, Package, Rocket, Info, ArrowRight, LayoutDashboard } from 'lucide-react'
 import { GoogleReviews } from '@/components/google-reviews'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
+import { useUserRole } from '@/lib/hooks/use-user-role'
 
 export default function ContactPage() {
+  const { profile, isCoach, isAdmin } = useUserRole()
+  const dashboardHref = (isCoach || isAdmin) ? '/admin' : '/locker'
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -320,12 +323,16 @@ export default function ContactPage() {
               </div>
             </Link>
 
-            <Link href="/get-started" className="glass-card-hover p-6 text-center group">
-              <Rocket className="w-8 h-8 text-cyan mb-3 mx-auto" />
-              <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-cyan transition-colors">Join the Team</h3>
-              <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Join our training family</p>
+            <Link href={profile ? dashboardHref : '/get-started'} className="glass-card-hover p-6 text-center group">
+              {profile ? <LayoutDashboard className="w-8 h-8 text-cyan mb-3 mx-auto" /> : <Rocket className="w-8 h-8 text-cyan mb-3 mx-auto" />}
+              <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-cyan transition-colors">
+                {profile ? 'Your Dashboard' : 'Join the Team'}
+              </h3>
+              <p className="text-sm text-slate-500 dark:text-white/80 mt-2">
+                {profile ? 'Back to your training hub' : 'Join our training family'}
+              </p>
               <div className="inline-flex items-center gap-1 text-cyan text-sm font-semibold mt-3">
-                <span>Join Now</span>
+                <span>{profile ? 'Go to Dashboard' : 'Join Now'}</span>
                 <ArrowRight className="w-4 h-4" />
               </div>
             </Link>

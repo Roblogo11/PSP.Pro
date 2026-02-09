@@ -2,11 +2,15 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Target, Users, MapPin, Award, TrendingUp, Zap, Package, Rocket, Mail, ArrowRight } from 'lucide-react'
+import { Target, Users, MapPin, Award, TrendingUp, Zap, Package, Rocket, Mail, ArrowRight, LayoutDashboard } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
+import { useUserRole } from '@/lib/hooks/use-user-role'
 
 export default function AboutPage() {
+  const { profile, isCoach, isAdmin } = useUserRole()
+  const dashboardHref = (isCoach || isAdmin) ? '/admin' : '/locker'
+
   return (
     <div className="flex min-h-screen">
       <InfoSidebar />
@@ -37,10 +41,10 @@ export default function AboutPage() {
             Progression Over Perfection
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-            <Link href="/get-started" className="btn-primary">
-              Join the Team
+            <Link href={profile ? dashboardHref : '/get-started'} className="btn-primary">
+              {profile ? 'Go to Dashboard' : 'Join the Team'}
             </Link>
-            <Link href="/pricing" className="btn-ghost border-white/30 text-white hover:border-white/50">
+            <Link href={profile ? '/booking' : '/pricing'} className="btn-ghost border-white/30 text-white hover:border-white/50">
               View Programs
             </Link>
           </div>
@@ -215,12 +219,16 @@ export default function AboutPage() {
             </div>
           </Link>
 
-          <Link href="/get-started" className="glass-card-hover p-6 text-center group">
-            <Rocket className="w-8 h-8 text-cyan mb-3 mx-auto" />
-            <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-cyan transition-colors">Join the Team</h3>
-            <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Join our training family</p>
+          <Link href={profile ? dashboardHref : '/get-started'} className="glass-card-hover p-6 text-center group">
+            {profile ? <LayoutDashboard className="w-8 h-8 text-cyan mb-3 mx-auto" /> : <Rocket className="w-8 h-8 text-cyan mb-3 mx-auto" />}
+            <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-cyan transition-colors">
+              {profile ? 'Your Dashboard' : 'Join the Team'}
+            </h3>
+            <p className="text-sm text-slate-500 dark:text-white/80 mt-2">
+              {profile ? 'Back to your training hub' : 'Join our training family'}
+            </p>
             <div className="inline-flex items-center gap-1 text-cyan text-sm font-semibold mt-3">
-              <span>Join Now</span>
+              <span>{profile ? 'Go to Dashboard' : 'Join Now'}</span>
               <ArrowRight className="w-4 h-4" />
             </div>
           </Link>

@@ -116,6 +116,8 @@ const FAQ_DATA: FAQItem[] = [
 const CATEGORIES = Array.from(new Set(FAQ_DATA.map(item => item.category)))
 
 export default function FAQPage() {
+  const searchParams = useSearchParams()
+  const isNewSignup = searchParams.get('welcome') === 'true'
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [openId, setOpenId] = useState<number | null>(null)
@@ -132,7 +134,8 @@ export default function FAQPage() {
     <div className="flex min-h-screen">
       <InfoSidebar />
       <main className="flex-1 p-4 md:p-8 pb-24 lg:pb-8">
-      {/* Welcome Banner for New Signups */}
+      {/* Welcome Banner — only shown for new signups arriving via ?welcome=true */}
+      {isNewSignup && (
       <div className="max-w-4xl mx-auto mb-8">
         <div className="command-panel p-6 md:p-8 border-orange/30 bg-gradient-to-br from-orange/5 to-cyan/5">
           <div className="flex items-start gap-4">
@@ -159,6 +162,7 @@ export default function FAQPage() {
           </div>
         </div>
       </div>
+      )}
 
       {/* Header */}
       <div className="max-w-4xl mx-auto mb-12 text-center">

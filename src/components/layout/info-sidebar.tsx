@@ -15,7 +15,10 @@ import {
   Zap,
   Home,
   Package,
+  LayoutDashboard,
+  LogIn,
 } from 'lucide-react'
+import { useUserRole } from '@/lib/hooks/use-user-role'
 
 interface NavItem {
   label: string
@@ -36,6 +39,18 @@ const navItems: NavItem[] = [
 export function InfoSidebar() {
   const [collapsed, setCollapsed] = useState(false)
   const pathname = usePathname()
+  const { profile, isCoach, isAdmin } = useUserRole()
+
+  // Build dynamic nav items based on auth state
+  const dynamicNavItems: NavItem[] = profile
+    ? [
+        { label: 'Your Dashboard', href: (isCoach || isAdmin) ? '/admin' : '/locker', icon: LayoutDashboard },
+        ...navItems,
+      ]
+    : [
+        ...navItems,
+        { label: 'Login', href: '/login', icon: LogIn },
+      ]
 
   return (
     <>
@@ -84,7 +99,7 @@ export function InfoSidebar() {
 
         {/* Navigation Items */}
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-          {navItems.map((item) => {
+          {dynamicNavItems.map((item) => {
             const isActive = pathname === item.href
             const Icon = item.icon
 
@@ -167,7 +182,7 @@ export function InfoSidebar() {
         className="lg:hidden fixed bottom-0 left-0 right-0 glass-card border-t border-cyan-700/30 z-50 mobile-safe"
       >
         <div className="flex items-center overflow-x-auto scrollbar-hide gap-1 px-2 py-2">
-          {navItems.map((item) => {
+          {dynamicNavItems.map((item) => {
             const isActive = pathname === item.href
             const Icon = item.icon
 
