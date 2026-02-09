@@ -1,16 +1,22 @@
 import Stripe from 'stripe'
 import { cookies } from 'next/headers'
 
-// Live Stripe instance
-const liveKey = process.env.STRIPE_SECRET_KEY
-if (!liveKey) {
-  console.warn('STRIPE_SECRET_KEY is not set - Stripe live API calls will fail')
-}
+// Live Stripe instance (lazy-initialized to avoid build-time errors)
+let stripeLive: Stripe | null = null
 
-const stripeLive = new Stripe(liveKey || '', {
-  apiVersion: '2026-01-28.clover',
-  typescript: true,
-})
+function getStripeLive(): Stripe {
+  if (!stripeLive) {
+    const liveKey = process.env.STRIPE_SECRET_KEY
+    if (!liveKey) {
+      throw new Error('STRIPE_SECRET_KEY is not set - configure it in your environment variables')
+    }
+    stripeLive = new Stripe(liveKey, {
+      apiVersion: '2026-01-28.clover',
+      typescript: true,
+    })
+  }
+  return stripeLive
+}
 
 // Test Stripe instance (lazy-initialized)
 let stripeTest: Stripe | null = null
@@ -45,11 +51,13 @@ export async function getStripe(): Promise<Stripe> {
   if (testMode) {
     return getStripeTest()
   }
-  return stripeLive
+  return getStripeLive()
 }
 
-// Default export for backward compatibility (always live)
-export const stripe = stripeLive
+// Default export for backward compatibility (always live, lazy getter)
+export function getStripeLiveInstance(): Stripe {
+  return getStripeLive()
+}
 
 // Utility function to create a checkout session for booking payment
 export async function createBookingCheckoutSession({
@@ -171,7 +179,7 @@ export function verifyWebhookSignature(
   }
 
   try {
-    return stripeLive.webhooks.constructEvent(payload, signature, liveWebhookSecret)
+    return getStripeLive().webhooks.constructEvent(payload, signature, liveWebhookSecret)
   } catch (liveErr: any) {
     // If live verification fails and we have test secret, try test
     if (testWebhookSecret && !testWebhookSecret.includes('PASTE_YOUR')) {

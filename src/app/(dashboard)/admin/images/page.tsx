@@ -101,7 +101,7 @@ export default function AdminImagesPage() {
               currentImage={PLACEHOLDER_IMAGES.hero.main}
               aspectRatio="16/9"
               dimensions="1920x1080px"
-              description={PLACEHOLDER_IMAGES.hero.note}
+              description={PLACEHOLDER_IMAGES.hero.alt}
               onUpload={(file) => handleUpload(file, 'hero', 'main')}
             />
           </div>
