@@ -9,13 +9,14 @@ export const pspConfig = {
   // Meta Information
   meta: {
     title: "PSP.Pro | Proper Sports Performance",
-    description: "Elite athletic training for baseball and softball athletes in Virginia Beach. Track velocity, master mechanics, and dominate your competition.",
+    description: "Elite athletic training for softball, basketball, and soccer athletes in Virginia Beach. Master mechanics, build speed, and dominate your competition.",
     url: "https://propersports.pro",
     ogImage: "/images/psp-og-image.jpg",
     logo: "/images/psp-logo.svg",
     keywords: [
-      "baseball training Virginia Beach",
-      "softball training Norfolk",
+      "softball training Virginia Beach",
+      "basketball training Virginia Beach",
+      "soccer training Norfolk",
       "velocity training",
       "athletic performance",
       "speed mechanics",
@@ -67,24 +68,34 @@ export const pspConfig = {
 
   // Training Programs
   programs: {
-    baseball: {
-      title: "Baseball Performance",
-      description: "Increase velocity, refine mechanics, and dominate on the mound.",
-      features: [
-        "Velocity Development",
-        "Pitching Mechanics",
-        "Hitting Power",
-        "Arm Care Protocol",
-      ],
-    },
     softball: {
       title: "Softball Excellence",
       description: "Build speed, power, and consistency for competitive softball.",
       features: [
+        "Pitching Mechanics",
+        "Hitting Development",
         "Speed Training",
-        "Fielding Mechanics",
-        "Batting Technique",
-        "Game Strategy",
+        "Fielding & Game Strategy",
+      ],
+    },
+    basketball: {
+      title: "Basketball Performance",
+      description: "Develop court speed, agility, and explosive athleticism.",
+      features: [
+        "Speed & Agility",
+        "Vertical Leap Development",
+        "Court Movement",
+        "Strength & Conditioning",
+      ],
+    },
+    soccer: {
+      title: "Soccer Training",
+      description: "Build endurance, footwork, and field awareness for competitive soccer.",
+      features: [
+        "Speed & Endurance",
+        "Agility & Footwork",
+        "Strength Training",
+        "Game Performance",
       ],
     },
   },
@@ -149,7 +160,7 @@ export const pspConfig = {
     {
       id: 1,
       name: "Jake Martinez",
-      role: "Baseball, Age 16",
+      role: "Softball, Age 16",
       content: "Increased my velocity from 76 to 83 mph in just 3 months. The coaching and drill bank are game-changers.",
       rating: 5,
       avatar: "/images/avatars/athlete-1.jpg",
@@ -209,7 +220,7 @@ export const pspConfig = {
   // Footer
   footer: {
     tagline: "Elite Athletic Training Platform",
-    description: "Proper Sports Performance is Virginia Beach's premier athletic training facility for baseball and softball athletes.",
+    description: "Proper Sports Performance is Virginia Beach's premier athletic training facility for softball, basketball, and soccer athletes.",
     copyright: `© ${new Date().getFullYear()} Proper Sports Performance. All rights reserved.`,
     links: [
       {

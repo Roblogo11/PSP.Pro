@@ -81,7 +81,7 @@ export default function AthleteLockerPage() {
     <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8 relative">
       {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
+        <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
           Welcome back, <span className="text-gradient-orange">{firstName}</span>
         </h1>
         <p className="text-cyan-700 dark:text-white text-lg">
@@ -144,7 +144,7 @@ export default function AthleteLockerPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         {/* Progress Rings */}
         <div className="command-panel">
-          <h2 className="text-xl font-bold text-white mb-6">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">
             Your Progress
           </h2>
           <div className="grid grid-cols-2 gap-6">
@@ -167,7 +167,7 @@ export default function AthleteLockerPage() {
         {/* Activity Feed */}
         <div className="command-panel lg:col-span-2">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-white">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">
               Recent Activity
             </h2>
             <Link href="/sessions">
@@ -194,7 +194,7 @@ export default function AthleteLockerPage() {
       <div className="command-panel">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-white mb-1">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">
               Assigned Drills
             </h2>
             <p className="text-sm text-cyan-700 dark:text-white">
@@ -235,7 +235,7 @@ export default function AthleteLockerPage() {
 
                   {/* Content */}
                   <div className="p-4">
-                    <h3 className="text-lg font-bold text-white mb-2 group-hover:text-orange transition-colors">
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 group-hover:text-orange transition-colors">
                       {drill.title}
                     </h3>
                     <div className="flex items-center justify-between text-sm text-cyan-700 dark:text-white">

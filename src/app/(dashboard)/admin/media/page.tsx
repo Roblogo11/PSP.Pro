@@ -279,7 +279,7 @@ export default function MediaDashboard() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-white">Media Hot Route</h1>
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Media Hot Route</h1>
             <p className="text-gray-500 dark:text-gray-400 mt-1">Manage all media across galleries</p>
           </div>
           <div className="flex items-center gap-3">
@@ -331,7 +331,7 @@ export default function MediaDashboard() {
                   placeholder="Search by title, description, filename..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500"
+                  className="w-full pl-10 pr-4 py-2 bg-gray-700 text-slate-900 dark:text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500"
                 />
               </div>
             </div>
@@ -340,7 +340,7 @@ export default function MediaDashboard() {
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
-              className="px-4 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500"
+              className="px-4 py-2 bg-gray-700 text-slate-900 dark:text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500"
             >
               <option value="all">All Galleries</option>
               {GALLERY_TYPES.map(type => (
@@ -354,7 +354,7 @@ export default function MediaDashboard() {
             <select
               value={filterMediaType}
               onChange={(e) => setFilterMediaType(e.target.value)}
-              className="px-4 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500"
+              className="px-4 py-2 bg-gray-700 text-slate-900 dark:text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500"
             >
               <option value="all">All Types</option>
               <option value="image">Images</option>
@@ -370,7 +370,7 @@ export default function MediaDashboard() {
                 else if (e.target.value === 'featured') setFilterFeatured(true)
                 else setFilterFeatured(false)
               }}
-              className="px-4 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500"
+              className="px-4 py-2 bg-gray-700 text-slate-900 dark:text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500"
             >
               <option value="all">All Items</option>
               <option value="featured">Featured Only</option>
@@ -467,7 +467,7 @@ export default function MediaDashboard() {
                           {item.featured && <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />}
                           {item.isExternal && <Cloud className="w-4 h-4 text-blue-400" />}
                           <div>
-                            <p className="text-white font-medium truncate max-w-[200px]">
+                            <p className="text-slate-900 dark:text-white font-medium truncate max-w-[200px]">
                               {item.title || item.filename}
                             </p>
                             {item.title && (
@@ -540,7 +540,7 @@ export default function MediaDashboard() {
         {/* Gallery Breakdown */}
         {stats && stats.byType && (
           <div className="bg-gray-800 rounded-lg p-6">
-            <h3 className="text-lg font-medium text-white mb-4">Storage by Gallery</h3>
+            <h3 className="text-lg font-medium text-slate-900 dark:text-white mb-4">Storage by Gallery</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {GALLERY_TYPES.map(type => {
                 const rawStats = stats.byType?.[type]
@@ -552,7 +552,7 @@ export default function MediaDashboard() {
                     <p className="text-gray-500 dark:text-gray-400 text-sm capitalize">
                       {type.replace(/-/g, ' ')}
                     </p>
-                    <p className="text-white font-medium mt-1">
+                    <p className="text-slate-900 dark:text-white font-medium mt-1">
                       {typeStats.count} items
                     </p>
                     <p className="text-gray-500 dark:text-gray-400 text-xs">
@@ -572,7 +572,7 @@ export default function MediaDashboard() {
           <div className="bg-gray-800 rounded-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-white">Edit Media</h2>
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white">Edit Media</h2>
                 <button
                   onClick={() => setEditingItem(null)}
                   className="text-gray-500 dark:text-gray-400 hover:text-white"
@@ -589,7 +589,7 @@ export default function MediaDashboard() {
                     type="text"
                     value={editForm.title}
                     onChange={(e) => setEditForm(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full px-4 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2 bg-gray-700 text-slate-900 dark:text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
@@ -600,7 +600,7 @@ export default function MediaDashboard() {
                     value={editForm.description}
                     onChange={(e) => setEditForm(prev => ({ ...prev, description: e.target.value }))}
                     rows={3}
-                    className="w-full px-4 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2 bg-gray-700 text-slate-900 dark:text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
@@ -627,7 +627,7 @@ export default function MediaDashboard() {
                     value={editForm.externalUrl}
                     onChange={(e) => setEditForm(prev => ({ ...prev, externalUrl: e.target.value }))}
                     placeholder="https://cdn.example.com/image.jpg"
-                    className="w-full px-4 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2 bg-gray-700 text-slate-900 dark:text-white rounded border border-gray-600 focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
@@ -678,11 +678,11 @@ export default function MediaDashboard() {
       {deletingItem && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
           <div className="bg-gray-800 rounded-lg max-w-md w-full p-6">
-            <h2 className="text-xl font-bold text-white mb-4">Delete Media?</h2>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Delete Media?</h2>
             <p className="text-gray-500 dark:text-gray-400 mb-2">
               Are you sure you want to delete this item?
             </p>
-            <p className="text-white font-medium mb-4 break-all">
+            <p className="text-slate-900 dark:text-white font-medium mb-4 break-all">
               {deletingItem.title || deletingItem.filename}
             </p>
             <p className="text-red-400 text-sm mb-6">
@@ -717,7 +717,7 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
         <div className="text-blue-400">{icon}</div>
         <div>
           <p className="text-gray-500 dark:text-gray-400 text-sm">{label}</p>
-          <p className="text-white font-bold text-xl">{value}</p>
+          <p className="text-slate-900 dark:text-white font-bold text-xl">{value}</p>
         </div>
       </div>
     </div>

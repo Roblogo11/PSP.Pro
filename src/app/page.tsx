@@ -159,8 +159,8 @@ export default function HomePage() {
           </h2>
 
           <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto" style={{ color: '#ffffff' }}>
-            Elite baseball and softball training in Virginia Beach. Track velocity, master mechanics,
-            and dominate the diamond with data-driven performance.
+            Elite softball, basketball, and soccer training in Virginia Beach. Master mechanics, build speed,
+            and dominate your sport with data-driven performance.
           </p>
 
           {/* CTA Buttons */}

@@ -120,7 +120,7 @@ export default function DrillDetailPage() {
     return (
       <div className="min-h-screen p-6 lg:p-10 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-4">Drill Not Found</h1>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Drill Not Found</h1>
           <Link href="/drills" className="btn-primary">
             Back to Drill Bank
           </Link>
@@ -166,7 +166,7 @@ export default function DrillDetailPage() {
           <div className="glass-card p-8">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
+                <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white mb-4">
                   {drill.title}
                 </h1>
                 <p className="text-lg text-cyan-700 dark:text-white">{drill.description}</p>
@@ -212,7 +212,7 @@ export default function DrillDetailPage() {
           {/* Instructions */}
           {drill.description && (
             <div className="glass-card p-8">
-              <h2 className="text-2xl font-display font-bold text-white mb-4">
+              <h2 className="text-2xl font-display font-bold text-slate-900 dark:text-white mb-4">
                 Instructions
               </h2>
               <div className="prose prose-invert prose-orange max-w-none">
@@ -226,19 +226,19 @@ export default function DrillDetailPage() {
         <div className="space-y-6">
           {/* Quick Stats */}
           <div className="glass-card p-6">
-            <h3 className="text-lg font-display font-bold text-white mb-4">
+            <h3 className="text-lg font-display font-bold text-slate-900 dark:text-white mb-4">
               Drill Info
             </h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-cyan-800 dark:text-white">Duration</span>
-                <span className="text-white font-semibold">
+                <span className="text-slate-900 dark:text-white font-semibold">
                   {formatDuration(drill.duration)}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-cyan-800 dark:text-white">Your Completions</span>
-                <span className="text-white font-semibold">{completionCount}</span>
+                <span className="text-slate-900 dark:text-white font-semibold">{completionCount}</span>
               </div>
             </div>
           </div>
@@ -246,7 +246,7 @@ export default function DrillDetailPage() {
           {/* Tags */}
           {drill.tags && drill.tags.length > 0 && (
             <div className="glass-card p-6">
-              <h3 className="text-lg font-display font-bold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-display font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                 <Tag className="w-5 h-5 text-orange" />
                 Tags
               </h3>

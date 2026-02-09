@@ -133,7 +133,7 @@ export function Sidebar() {
                     transition-all duration-200 cursor-pointer
                     ${
                       isActive
-                        ? 'bg-orange/20 border border-orange/50 text-white shadow-glow-orange'
+                        ? 'bg-orange/20 border border-orange/50 text-slate-900 dark:text-white shadow-glow-orange'
                         : 'text-slate-700 dark:text-white hover:bg-cyan-50/50 dark:hover:text-white hover:text-slate-900'
                     }
                   `}
@@ -171,7 +171,7 @@ export function Sidebar() {
                       className="px-4 py-2"
                     >
                       <p className="text-xs font-bold text-cyan-800 dark:text-white uppercase tracking-wider">
-                        Admin Tools
+                        Admin Tools 👈
                       </p>
                     </motion.div>
                   )}
@@ -196,7 +196,7 @@ export function Sidebar() {
                         transition-all duration-200 cursor-pointer
                         ${
                           isActive
-                            ? 'bg-cyan/20 border border-cyan/50 text-white shadow-glow-cyan'
+                            ? 'bg-cyan/20 border border-cyan/50 text-slate-900 dark:text-white shadow-glow-cyan'
                             : 'text-slate-700 dark:text-white hover:bg-cyan-50/50 dark:hover:text-white hover:text-slate-900'
                         }
                       `}

@@ -135,7 +135,7 @@ export default function ProgressPage() {
     <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8 relative">
       {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
+        <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
           Your <span className="text-gradient-orange">Progress</span>
         </h1>
         <p className="text-cyan-700 dark:text-white text-lg">
@@ -158,7 +158,7 @@ export default function ProgressPage() {
                 </div>
               </div>
               <p className="text-sm text-cyan-700 dark:text-white mb-1">{stat.label}</p>
-              <h3 className="text-3xl font-bold text-white">{stat.value}</h3>
+              <h3 className="text-3xl font-bold text-slate-900 dark:text-white">{stat.value}</h3>
             </div>
           )
         })}
@@ -180,7 +180,7 @@ export default function ProgressPage() {
       {/* Milestones */}
       {milestones.length > 0 && (
         <div className="command-panel">
-          <h2 className="text-2xl font-bold text-white mb-6">Milestones</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Milestones</h2>
           <div className="relative">
             {/* Timeline line */}
             <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-orange via-orange/50 to-transparent" />
@@ -202,7 +202,7 @@ export default function ProgressPage() {
 
                   {/* Content */}
                   <div className={`flex-1 ${milestone.achieved ? '' : 'opacity-50'}`}>
-                    <h3 className="text-lg font-bold text-white mb-1">{milestone.title}</h3>
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">{milestone.title}</h3>
                     <div className="flex items-center gap-4 text-sm text-cyan-700 dark:text-white">
                       <span>{milestone.date}</span>
                       <span className="text-orange font-semibold">{milestone.value}</span>
@@ -218,7 +218,7 @@ export default function ProgressPage() {
       {milestones.length === 0 && (
         <div className="command-panel text-center py-12">
           <Award className="w-12 h-12 text-cyan-700 dark:text-white mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-white mb-2">No Milestones Yet</h3>
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Milestones Yet</h3>
           <p className="text-cyan-700 dark:text-white">Complete sessions and drills to start earning milestones!</p>
         </div>
       )}

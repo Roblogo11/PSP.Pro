@@ -47,7 +47,7 @@ export default function AdminImagesPage() {
     <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-3">
+        <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-3">
           Image <span className="text-gradient-orange">Management</span>
         </h1>
         <p className="text-lg text-cyan-800 dark:text-white">
@@ -62,7 +62,7 @@ export default function AdminImagesPage() {
             <Info className="w-6 h-6 text-cyan" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-white mb-2">Image Guidelines</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Image Guidelines</h3>
             <ul className="text-sm text-cyan-700 dark:text-white space-y-2">
               <li>• Upload images matching the exact aspect ratio for best results</li>
               <li>• Use high-resolution images (at least 2x the display dimensions)</li>
@@ -76,14 +76,14 @@ export default function AdminImagesPage() {
 
       {/* Image Specs Reference */}
       <div className="glass-card p-6 mb-8">
-        <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
           <ImageIcon className="w-5 h-5 text-orange" />
           Image Specifications
         </h3>
         <div className="grid md:grid-cols-2 gap-4">
           {Object.entries(IMAGE_SPECS).map(([name, spec]) => (
             <div key={name} className="p-4 bg-cyan-50/50 rounded-xl">
-              <p className="text-sm font-semibold text-white mb-1">{name}</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-white mb-1">{name}</p>
               <p className="text-xs text-cyan-800 dark:text-white">{spec}</p>
             </div>
           ))}
@@ -94,7 +94,7 @@ export default function AdminImagesPage() {
       <div className="space-y-12">
         {/* Hero Section */}
         <section>
-          <h2 className="text-2xl font-bold text-white mb-6">Hero Section</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Hero Section</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <ImageUpload
               category="Hero Banner"
@@ -109,7 +109,7 @@ export default function AdminImagesPage() {
 
         {/* Feature Cards */}
         <section>
-          <h2 className="text-2xl font-bold text-white mb-6">Feature Cards</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Feature Cards</h2>
           <div className="grid md:grid-cols-3 gap-6">
             <ImageUpload
               category="Velocity Tracking"
@@ -140,7 +140,7 @@ export default function AdminImagesPage() {
 
         {/* Coach Headshots */}
         <section>
-          <h2 className="text-2xl font-bold text-white mb-6">Coach Headshots</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Coach Headshots</h2>
           <div className="grid md:grid-cols-3 gap-6">
             <ImageUpload
               category="Coach Rachel"
@@ -171,7 +171,7 @@ export default function AdminImagesPage() {
 
         {/* Facility Photos */}
         <section>
-          <h2 className="text-2xl font-bold text-white mb-6">Facility Photos</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Facility Photos</h2>
           <div className="grid md:grid-cols-3 gap-6">
             <ImageUpload
               category="Training Center"

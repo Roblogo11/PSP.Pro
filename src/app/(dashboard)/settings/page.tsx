@@ -158,7 +158,7 @@ export default function SettingsPage() {
     <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8 relative">
       {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
+        <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
           Account <span className="text-gradient-orange">Settings</span>
         </h1>
         <p className="text-cyan-800 dark:text-white text-lg">Manage your account preferences and settings</p>
@@ -200,7 +200,7 @@ export default function SettingsPage() {
         <div className="lg:col-span-3">
           {activeTab === 'profile' && (
             <div className="command-panel">
-              <h2 className="text-2xl font-bold text-white mb-6">Profile Information</h2>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Profile Information</h2>
 
               <div className="space-y-6">
                 <div>
@@ -211,7 +211,7 @@ export default function SettingsPage() {
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white focus:border-orange focus:outline-none transition-colors"
                   />
                 </div>
 
@@ -224,7 +224,7 @@ export default function SettingsPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white focus:border-orange focus:outline-none transition-colors"
                   />
                   <p className="text-xs text-cyan-800 dark:text-white mt-1">
                     Changing your email will require verification
@@ -241,7 +241,7 @@ export default function SettingsPage() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="(555) 123-4567"
-                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white focus:border-orange focus:outline-none transition-colors"
                   />
                 </div>
 
@@ -255,7 +255,7 @@ export default function SettingsPage() {
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     placeholder="City, State"
-                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white focus:border-orange focus:outline-none transition-colors"
                   />
                 </div>
 
@@ -275,7 +275,7 @@ export default function SettingsPage() {
 
           {activeTab === 'notifications' && (
             <div className="command-panel">
-              <h2 className="text-2xl font-bold text-white mb-6">Notification Preferences</h2>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Notification Preferences</h2>
 
               <div className="space-y-6">
                 {[
@@ -307,7 +307,7 @@ export default function SettingsPage() {
                 ].map((item) => (
                   <div key={item.key} className="flex items-center justify-between p-4 bg-cyan-900/20 rounded-xl">
                     <div>
-                      <h3 className="font-semibold text-white mb-1">{item.label}</h3>
+                      <h3 className="font-semibold text-slate-900 dark:text-white mb-1">{item.label}</h3>
                       <p className="text-sm text-cyan-800 dark:text-white">{item.desc}</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
@@ -340,7 +340,7 @@ export default function SettingsPage() {
 
           {activeTab === 'security' && (
             <div className="command-panel">
-              <h2 className="text-2xl font-bold text-white mb-6">Security Settings</h2>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Security Settings</h2>
               <div className="space-y-6">
                 <div className="p-4 bg-cyan/10 border border-cyan/20 rounded-xl">
                   <p className="text-cyan text-sm">
@@ -353,7 +353,7 @@ export default function SettingsPage() {
 
           {activeTab === 'billing' && (
             <div className="command-panel">
-              <h2 className="text-2xl font-bold text-white mb-6">Billing & Subscription</h2>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Billing & Subscription</h2>
               <div className="space-y-6">
                 <div className="p-4 bg-cyan/10 border border-cyan/20 rounded-xl">
                   <p className="text-cyan text-sm">

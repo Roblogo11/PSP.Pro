@@ -125,7 +125,7 @@ export default function PricingPage() {
             Training <span className="text-gradient-orange">Programs</span>
           </h1>
           <p className="text-xl text-white">
-            Elite baseball & softball training in Virginia Beach
+            Elite softball, basketball & soccer training in Virginia Beach
           </p>
         </div>
       </div>

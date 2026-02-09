@@ -85,7 +85,7 @@ export default function CreateAthletePage() {
     <div className="p-6 max-w-3xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-display font-bold text-white mb-2">Create New Athlete</h1>
+        <h1 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-2">Create New Athlete</h1>
         <p className="text-cyan-700 dark:text-white">Add a new athlete to the system</p>
       </div>
 
@@ -120,7 +120,7 @@ export default function CreateAthletePage() {
                 name="fullName"
                 type="text"
                 required
-                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                 placeholder="John Smith"
               />
             </div>
@@ -138,7 +138,7 @@ export default function CreateAthletePage() {
                 name="email"
                 type="email"
                 required
-                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                 placeholder="athlete@example.com"
               />
             </div>
@@ -155,7 +155,7 @@ export default function CreateAthletePage() {
                 id="password"
                 name="password"
                 type="text"
-                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                 placeholder="Leave blank for default: Welcome123!"
               />
             </div>
@@ -214,7 +214,7 @@ export default function CreateAthletePage() {
                 max="100"
                 value={age}
                 onChange={(e) => handleAgeChange(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                 placeholder="16"
               />
             </div>
@@ -238,7 +238,7 @@ export default function CreateAthletePage() {
                   name="parentGuardianName"
                   type="text"
                   required
-                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                   placeholder="Jane Smith"
                 />
               </div>
@@ -253,7 +253,7 @@ export default function CreateAthletePage() {
                   name="parentGuardianEmail"
                   type="email"
                   required
-                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                   placeholder="parent@example.com"
                 />
               </div>
@@ -270,7 +270,7 @@ export default function CreateAthletePage() {
                     name="parentGuardianPhone"
                     type="tel"
                     required
-                    className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                    className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                     placeholder="(555) 123-4567"
                   />
                 </div>

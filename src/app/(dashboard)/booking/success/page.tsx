@@ -56,7 +56,7 @@ export default function BookingSuccessPage() {
           <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-3xl">❌</span>
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">Booking Failed</h1>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Booking Failed</h1>
           <p className="text-cyan-800 dark:text-white mb-6">{error}</p>
           <Link href="/booking" className="btn-primary inline-flex items-center gap-2">
             <span>Try Again</span>
@@ -79,7 +79,7 @@ export default function BookingSuccessPage() {
           </div>
 
           {/* Heading */}
-          <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-3">
+          <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white mb-3">
             Booking Confirmed! 🎉
           </h1>
           <p className="text-lg text-cyan-700 dark:text-white mb-8">
@@ -88,14 +88,14 @@ export default function BookingSuccessPage() {
 
           {/* What's Next */}
           <div className="bg-cyan-50/50 border border-cyan-200/40 rounded-xl p-6 mb-8 text-left">
-            <h2 className="text-lg font-bold text-white mb-4">What happens next?</h2>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">What happens next?</h2>
             <ul className="space-y-3 text-sm text-cyan-700 dark:text-white">
               <li className="flex items-start gap-3">
                 <span className="w-6 h-6 bg-orange/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                   <span className="text-orange font-bold text-xs">1</span>
                 </span>
                 <span>
-                  <strong className="text-white">Confirmation Email:</strong> Check your inbox for a detailed booking confirmation with all session information.
+                  <strong className="text-slate-900 dark:text-white">Confirmation Email:</strong> Check your inbox for a detailed booking confirmation with all session information.
                 </span>
               </li>
               <li className="flex items-start gap-3">
@@ -103,7 +103,7 @@ export default function BookingSuccessPage() {
                   <span className="text-orange font-bold text-xs">2</span>
                 </span>
                 <span>
-                  <strong className="text-white">Calendar Sync:</strong> Add the session to your calendar to get reminders before your training.
+                  <strong className="text-slate-900 dark:text-white">Calendar Sync:</strong> Add the session to your calendar to get reminders before your training.
                 </span>
               </li>
               <li className="flex items-start gap-3">
@@ -111,7 +111,7 @@ export default function BookingSuccessPage() {
                   <span className="text-orange font-bold text-xs">3</span>
                 </span>
                 <span>
-                  <strong className="text-white">Show Up Ready:</strong> Arrive 10 minutes early with your training gear and a positive attitude!
+                  <strong className="text-slate-900 dark:text-white">Show Up Ready:</strong> Arrive 10 minutes early with your training gear and a positive attitude!
                 </span>
               </li>
             </ul>

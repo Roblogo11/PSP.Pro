@@ -263,7 +263,7 @@ export default function ServicesManagerPage() {
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-display font-bold text-white mb-2">Services Manager</h1>
+            <h1 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-2">Services Manager</h1>
             <p className="text-cyan-700 dark:text-white">Manage training sessions, packages, and pricing</p>
           </div>
           <button
@@ -294,7 +294,7 @@ export default function ServicesManagerPage() {
       {/* New/Edit Form */}
       {(showNewForm || editingId) && (
         <div className="glass-card p-6 mb-6 border-2 border-orange/50">
-          <h3 className="text-xl font-bold text-white mb-4">
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
             {editingId ? 'Edit Service' : 'New Service'}
           </h3>
 
@@ -308,7 +308,7 @@ export default function ServicesManagerPage() {
                 type="text"
                 value={formData.name || ''}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 placeholder="e.g., 1-on-1 Training Session"
               />
             </div>
@@ -322,7 +322,7 @@ export default function ServicesManagerPage() {
                 value={formData.description || ''}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 rows={3}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 placeholder="Brief description of the service..."
               />
             </div>
@@ -336,7 +336,7 @@ export default function ServicesManagerPage() {
                 type="number"
                 value={formData.price_cents || 0}
                 onChange={(e) => setFormData({ ...formData, price_cents: parseInt(e.target.value) })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 placeholder="7500 = $75.00"
               />
               <p className="text-xs text-cyan-700 dark:text-white mt-1">
@@ -353,7 +353,7 @@ export default function ServicesManagerPage() {
                 type="number"
                 value={formData.duration_minutes || 0}
                 onChange={(e) => setFormData({ ...formData, duration_minutes: parseInt(e.target.value) })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 placeholder="60"
               />
             </div>
@@ -366,7 +366,7 @@ export default function ServicesManagerPage() {
               <select
                 value={formData.category || 'individual'}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
               >
                 <option value="individual">Individual</option>
                 <option value="group">Group</option>
@@ -384,7 +384,7 @@ export default function ServicesManagerPage() {
                 type="number"
                 value={formData.max_participants || 1}
                 onChange={(e) => setFormData({ ...formData, max_participants: parseInt(e.target.value) })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 placeholder="1"
               />
             </div>
@@ -398,7 +398,7 @@ export default function ServicesManagerPage() {
                 type="text"
                 value={formData.stripe_price_id || ''}
                 onChange={(e) => setFormData({ ...formData, stripe_price_id: e.target.value })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 placeholder="price_xxxxxxxxxxxxx"
               />
             </div>
@@ -412,7 +412,7 @@ export default function ServicesManagerPage() {
                 type="text"
                 value={formData.homepage_image_url || ''}
                 onChange={(e) => setFormData({ ...formData, homepage_image_url: e.target.value })}
-                className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 placeholder="/images/my-photo.jpg"
               />
               <p className="text-xs text-cyan-700 dark:text-white mt-1">
@@ -480,7 +480,7 @@ export default function ServicesManagerPage() {
               <div className="flex-1">
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-2">
-                  <h3 className="text-xl font-bold text-white">{service.name}</h3>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">{service.name}</h3>
                   <span className={`px-3 py-1 rounded-lg text-xs font-semibold uppercase border ${getCategoryColor(service.category)}`}>
                     {service.category}
                   </span>
@@ -505,7 +505,7 @@ export default function ServicesManagerPage() {
                 <div className="flex items-center gap-6 text-sm">
                   <div className="flex items-center gap-2">
                     <DollarSign className="w-4 h-4 text-green-400" />
-                    <span className="text-white font-semibold">{formatPrice(service.price_cents)}</span>
+                    <span className="text-slate-900 dark:text-white font-semibold">{formatPrice(service.price_cents)}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-cyan" />

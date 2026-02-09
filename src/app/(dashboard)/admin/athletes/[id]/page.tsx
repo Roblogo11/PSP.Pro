@@ -287,7 +287,7 @@ export default function AthleteDetailPage() {
           </div>
         )}
       </div>
-      <p className="text-2xl font-bold text-white">
+      <p className="text-2xl font-bold text-slate-900 dark:text-white">
         {value !== null ? `${value}${unit}` : '-'}
       </p>
     </div>
@@ -328,7 +328,7 @@ export default function AthleteDetailPage() {
 
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-display font-bold text-white mb-2">
+            <h1 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-2">
               {athlete.full_name}
             </h1>
             <div className="flex items-center gap-4 text-cyan-800 dark:text-white">
@@ -350,7 +350,7 @@ export default function AthleteDetailPage() {
 
       {/* Latest Stats Overview */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold text-white mb-4">Latest Performance</h2>
+        <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">Latest Performance</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           <StatCard
             label="Throwing Velocity"
@@ -388,7 +388,7 @@ export default function AthleteDetailPage() {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="glass-card p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">Add Performance Data</h2>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Add Performance Data</h2>
               <button
                 onClick={() => setShowAddMetricForm(false)}
                 className="text-cyan-800 dark:text-white hover:text-white"
@@ -408,13 +408,13 @@ export default function AthleteDetailPage() {
                   value={metricForm.test_date}
                   onChange={(e) => setMetricForm({ ...metricForm, test_date: e.target.value })}
                   required
-                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 />
               </div>
 
               {/* Throwing Metrics */}
               <div>
-                <h3 className="text-lg font-semibold text-white mb-3">Throwing</h3>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">Throwing</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm text-cyan-800 dark:text-white mb-2">Max Velocity (mph)</label>
@@ -423,7 +423,7 @@ export default function AthleteDetailPage() {
                       step="0.1"
                       value={metricForm.throwing_velocity_mph}
                       onChange={(e) => setMetricForm({ ...metricForm, throwing_velocity_mph: e.target.value })}
-                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="75.5"
                     />
                   </div>
@@ -434,7 +434,7 @@ export default function AthleteDetailPage() {
                       step="0.1"
                       value={metricForm.throwing_velocity_avg_mph}
                       onChange={(e) => setMetricForm({ ...metricForm, throwing_velocity_avg_mph: e.target.value })}
-                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="73.2"
                     />
                   </div>
@@ -445,7 +445,7 @@ export default function AthleteDetailPage() {
                       step="0.1"
                       value={metricForm.throwing_accuracy_percentage}
                       onChange={(e) => setMetricForm({ ...metricForm, throwing_accuracy_percentage: e.target.value })}
-                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="85"
                     />
                   </div>
@@ -454,7 +454,7 @@ export default function AthleteDetailPage() {
 
               {/* Batting Metrics */}
               <div>
-                <h3 className="text-lg font-semibold text-white mb-3">Batting</h3>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">Batting</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm text-cyan-800 dark:text-white mb-2">Max Exit Velocity (mph)</label>
@@ -463,7 +463,7 @@ export default function AthleteDetailPage() {
                       step="0.1"
                       value={metricForm.exit_velocity_mph}
                       onChange={(e) => setMetricForm({ ...metricForm, exit_velocity_mph: e.target.value })}
-                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="88.5"
                     />
                   </div>
@@ -474,7 +474,7 @@ export default function AthleteDetailPage() {
                       step="0.1"
                       value={metricForm.exit_velocity_avg_mph}
                       onChange={(e) => setMetricForm({ ...metricForm, exit_velocity_avg_mph: e.target.value })}
-                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="82.0"
                     />
                   </div>
@@ -485,7 +485,7 @@ export default function AthleteDetailPage() {
                       step="0.1"
                       value={metricForm.bat_speed_mph}
                       onChange={(e) => setMetricForm({ ...metricForm, bat_speed_mph: e.target.value })}
-                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="65.0"
                     />
                   </div>
@@ -494,7 +494,7 @@ export default function AthleteDetailPage() {
 
               {/* Speed Metrics */}
               <div>
-                <h3 className="text-lg font-semibold text-white mb-3">Speed & Agility</h3>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">Speed & Agility</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm text-cyan-800 dark:text-white mb-2">60-Yard Dash (sec)</label>
@@ -503,7 +503,7 @@ export default function AthleteDetailPage() {
                       step="0.01"
                       value={metricForm.sixty_yard_dash_seconds}
                       onChange={(e) => setMetricForm({ ...metricForm, sixty_yard_dash_seconds: e.target.value })}
-                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="7.15"
                     />
                   </div>
@@ -514,7 +514,7 @@ export default function AthleteDetailPage() {
                       step="0.01"
                       value={metricForm.home_to_first_seconds}
                       onChange={(e) => setMetricForm({ ...metricForm, home_to_first_seconds: e.target.value })}
-                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="4.25"
                     />
                   </div>
@@ -525,7 +525,7 @@ export default function AthleteDetailPage() {
                       step="0.01"
                       value={metricForm.ten_yard_split_seconds}
                       onChange={(e) => setMetricForm({ ...metricForm, ten_yard_split_seconds: e.target.value })}
-                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="1.65"
                     />
                   </div>
@@ -534,7 +534,7 @@ export default function AthleteDetailPage() {
 
               {/* Power Metrics */}
               <div>
-                <h3 className="text-lg font-semibold text-white mb-3">Power</h3>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">Power</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm text-cyan-800 dark:text-white mb-2">Vertical Jump (inches)</label>
@@ -543,7 +543,7 @@ export default function AthleteDetailPage() {
                       step="0.1"
                       value={metricForm.vertical_jump_inches}
                       onChange={(e) => setMetricForm({ ...metricForm, vertical_jump_inches: e.target.value })}
-                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="28.5"
                     />
                   </div>
@@ -554,7 +554,7 @@ export default function AthleteDetailPage() {
                       step="0.1"
                       value={metricForm.broad_jump_inches}
                       onChange={(e) => setMetricForm({ ...metricForm, broad_jump_inches: e.target.value })}
-                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                      className="w-full px-4 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                       placeholder="95.0"
                     />
                   </div>
@@ -572,7 +572,7 @@ export default function AthleteDetailPage() {
                   max="100"
                   value={metricForm.overall_performance_score}
                   onChange={(e) => setMetricForm({ ...metricForm, overall_performance_score: e.target.value })}
-                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                   placeholder="85"
                 />
               </div>
@@ -586,7 +586,7 @@ export default function AthleteDetailPage() {
                   value={metricForm.notes}
                   onChange={(e) => setMetricForm({ ...metricForm, notes: e.target.value })}
                   rows={3}
-                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                   placeholder="Additional observations..."
                 />
               </div>
@@ -604,7 +604,7 @@ export default function AthleteDetailPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddMetricForm(false)}
-                  className="px-6 py-3 rounded-xl bg-cyan-50/50 hover:bg-white/10 text-white font-medium transition-colors"
+                  className="px-6 py-3 rounded-xl bg-cyan-50/50 hover:bg-white/10 text-slate-900 dark:text-white font-medium transition-colors"
                 >
                   Cancel
                 </button>
@@ -616,7 +616,7 @@ export default function AthleteDetailPage() {
 
       {/* Performance History */}
       <div>
-        <h2 className="text-xl font-semibold text-white mb-4">Performance History</h2>
+        <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">Performance History</h2>
         {metrics.length === 0 ? (
           <div className="glass-card p-8 text-center">
             <Target className="w-12 h-12 text-cyan-700 dark:text-white mx-auto mb-4" />
@@ -635,7 +635,7 @@ export default function AthleteDetailPage() {
               <div key={metric.id} className="glass-card p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <p className="text-lg font-semibold text-white">
+                    <p className="text-lg font-semibold text-slate-900 dark:text-white">
                       {new Date(metric.test_date).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
@@ -658,25 +658,25 @@ export default function AthleteDetailPage() {
                   {metric.throwing_velocity_mph && (
                     <div>
                       <p className="text-sm text-cyan-800 dark:text-white">Throwing Velocity</p>
-                      <p className="text-xl font-bold text-white">{metric.throwing_velocity_mph} mph</p>
+                      <p className="text-xl font-bold text-slate-900 dark:text-white">{metric.throwing_velocity_mph} mph</p>
                     </div>
                   )}
                   {metric.exit_velocity_mph && (
                     <div>
                       <p className="text-sm text-cyan-800 dark:text-white">Exit Velocity</p>
-                      <p className="text-xl font-bold text-white">{metric.exit_velocity_mph} mph</p>
+                      <p className="text-xl font-bold text-slate-900 dark:text-white">{metric.exit_velocity_mph} mph</p>
                     </div>
                   )}
                   {metric.sixty_yard_dash_seconds && (
                     <div>
                       <p className="text-sm text-cyan-800 dark:text-white">60-Yard Dash</p>
-                      <p className="text-xl font-bold text-white">{metric.sixty_yard_dash_seconds}s</p>
+                      <p className="text-xl font-bold text-slate-900 dark:text-white">{metric.sixty_yard_dash_seconds}s</p>
                     </div>
                   )}
                   {metric.overall_performance_score && (
                     <div>
                       <p className="text-sm text-cyan-800 dark:text-white">Overall Score</p>
-                      <p className="text-xl font-bold text-white">{metric.overall_performance_score}/100</p>
+                      <p className="text-xl font-bold text-slate-900 dark:text-white">{metric.overall_performance_score}/100</p>
                     </div>
                   )}
                 </div>

@@ -152,7 +152,7 @@ export default function AchievementsPage() {
     <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-3">
+        <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-3">
           Your <span className="text-gradient-orange">Achievements</span>
         </h1>
         <p className="text-lg text-cyan-700 dark:text-white">
@@ -168,7 +168,7 @@ export default function AchievementsPage() {
               <Trophy className="w-8 h-8 text-orange" />
             </div>
             <div>
-              <p className="text-3xl font-bold text-white mb-1">
+              <p className="text-3xl font-bold text-slate-900 dark:text-white mb-1">
                 {unlockedCount}/{achievements.length}
               </p>
               <p className="text-sm text-cyan-700 dark:text-white">Achievements Unlocked</p>
@@ -182,7 +182,7 @@ export default function AchievementsPage() {
               <Star className="w-8 h-8 text-cyan" />
             </div>
             <div>
-              <p className="text-3xl font-bold text-white mb-1">{totalPoints}</p>
+              <p className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{totalPoints}</p>
               <p className="text-sm text-cyan-700 dark:text-white">Total Points Earned</p>
             </div>
           </div>
@@ -194,7 +194,7 @@ export default function AchievementsPage() {
               <TrendingUp className="w-8 h-8 text-green-400" />
             </div>
             <div>
-              <p className="text-3xl font-bold text-white mb-1">
+              <p className="text-3xl font-bold text-slate-900 dark:text-white mb-1">
                 {achievements.length > 0 ? Math.round((unlockedCount / achievements.length) * 100) : 0}%
               </p>
               <p className="text-sm text-cyan-700 dark:text-white">Completion Rate</p>
@@ -223,7 +223,7 @@ export default function AchievementsPage() {
       {unlockedCount < achievements.length && (
         <div className="mt-12 command-panel p-8 text-center border-cyan/20">
           <Zap className="w-12 h-12 text-cyan mx-auto mb-4" />
-          <h3 className="text-2xl font-bold text-white mb-2">Keep Pushing!</h3>
+          <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Keep Pushing!</h3>
           <p className="text-cyan-700 dark:text-white max-w-2xl mx-auto">
             You're making great progress! Complete drills, maintain your training streak, and
             improve your velocity to unlock more achievements.

@@ -40,7 +40,7 @@ export default function TermsPage() {
             PSP.Pro provides:
           </p>
           <ul className="list-disc list-inside text-cyan-700 dark:text-white space-y-2 ml-4">
-            <li>In-person baseball and softball training sessions</li>
+            <li>In-person softball, basketball, and soccer training sessions</li>
             <li>PSP.Pro digital platform for performance tracking</li>
             <li>Access to premium training drill library</li>
             <li>Velocity tracking and progress analytics</li>

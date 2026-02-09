@@ -363,7 +363,7 @@ export default function AthletesManagementPage() {
       {/* Page Header */}
       <div className="flex items-start justify-between mb-8">
         <div>
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
             Athlete <span className="text-gradient-orange">Management</span>
           </h1>
           <p className="text-cyan-800 dark:text-white text-lg">
@@ -386,7 +386,7 @@ export default function AthletesManagementPage() {
             <Users className="w-6 h-6 text-orange" />
             <span className="text-sm text-cyan-800 dark:text-white">Total</span>
           </div>
-          <p className="text-3xl font-bold text-white">{athletes.length}</p>
+          <p className="text-3xl font-bold text-slate-900 dark:text-white">{athletes.length}</p>
           <p className="text-sm text-cyan-800 dark:text-white">Active Athletes</p>
         </div>
         <div className="command-panel-active">
@@ -394,7 +394,7 @@ export default function AthletesManagementPage() {
             <Dumbbell className="w-6 h-6 text-cyan" />
             <span className="text-sm text-cyan-800 dark:text-white">Soccer</span>
           </div>
-          <p className="text-3xl font-bold text-white">
+          <p className="text-3xl font-bold text-slate-900 dark:text-white">
             {athletes.filter(a => a.athlete_type === 'soccer').length}
           </p>
           <p className="text-sm text-cyan-800 dark:text-white">Soccer Players</p>
@@ -404,7 +404,7 @@ export default function AthletesManagementPage() {
             <Dumbbell className="w-6 h-6 text-orange" />
             <span className="text-sm text-cyan-800 dark:text-white">Basketball</span>
           </div>
-          <p className="text-3xl font-bold text-white">
+          <p className="text-3xl font-bold text-slate-900 dark:text-white">
             {athletes.filter(a => a.athlete_type === 'basketball').length}
           </p>
           <p className="text-sm text-cyan-800 dark:text-white">Basketball Players</p>
@@ -414,7 +414,7 @@ export default function AthletesManagementPage() {
             <Dumbbell className="w-6 h-6 text-purple-400" />
             <span className="text-sm text-cyan-800 dark:text-white">Softball</span>
           </div>
-          <p className="text-3xl font-bold text-white">
+          <p className="text-3xl font-bold text-slate-900 dark:text-white">
             {athletes.filter(a => a.athlete_type === 'softball').length}
           </p>
           <p className="text-sm text-cyan-800 dark:text-white">Softball Players</p>
@@ -432,7 +432,7 @@ export default function AthletesManagementPage() {
               placeholder="Search by name or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
+              className="w-full pl-10 pr-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
             />
           </div>
 
@@ -442,7 +442,7 @@ export default function AthletesManagementPage() {
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
+              className="w-full pl-10 pr-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
             >
               <option value="all">All Sports</option>
               <option value="softball">Softball</option>
@@ -477,7 +477,7 @@ export default function AthletesManagementPage() {
                   </div>
                 )}
                 <div className="flex-1">
-                  <h3 className="text-lg font-bold text-white group-hover:text-orange transition-colors mb-1">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-orange transition-colors mb-1">
                     {athlete.full_name}
                   </h3>
                   {athlete.athlete_type && (
@@ -493,11 +493,11 @@ export default function AthletesManagementPage() {
                 <div className="grid grid-cols-2 gap-3 mb-4">
                   <div className="bg-cyan-900/20 rounded-lg p-3">
                     <p className="text-xs text-cyan-800 dark:text-white mb-1">Sessions</p>
-                    <p className="text-xl font-bold text-white">{stats.total_sessions}</p>
+                    <p className="text-xl font-bold text-slate-900 dark:text-white">{stats.total_sessions}</p>
                   </div>
                   <div className="bg-cyan-900/20 rounded-lg p-3">
                     <p className="text-xs text-cyan-800 dark:text-white mb-1">Drills</p>
-                    <p className="text-xl font-bold text-white">{stats.drills_completed}</p>
+                    <p className="text-xl font-bold text-slate-900 dark:text-white">{stats.drills_completed}</p>
                   </div>
                   <div className="bg-cyan-900/20 rounded-lg p-3">
                     <p className="text-xs text-cyan-800 dark:text-white mb-1">Avg MPH</p>
@@ -583,7 +583,7 @@ export default function AthletesManagementPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
           <div className="glass-card max-w-2xl w-full p-6 my-8 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                 {editModalOpen ? 'Edit Athlete' : 'Add New Athlete'}
               </h2>
               <button
@@ -603,7 +603,7 @@ export default function AthletesManagementPage() {
               {/* Basic Info */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-white mb-2">
+                  <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                     Full Name <span className="text-red-400">*</span>
                   </label>
                   <input
@@ -611,11 +611,11 @@ export default function AthletesManagementPage() {
                     value={formData.full_name}
                     onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
                     placeholder="John Smith"
-                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-white mb-2">
+                  <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                     Email <span className="text-red-400">*</span>
                   </label>
                   <input
@@ -624,7 +624,7 @@ export default function AthletesManagementPage() {
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="john@example.com"
                     disabled={editModalOpen}
-                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50 disabled:opacity-50"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50 disabled:opacity-50"
                   />
                   {editModalOpen && (
                     <p className="text-xs text-cyan-800 dark:text-white mt-1">Email cannot be changed</p>
@@ -634,11 +634,11 @@ export default function AthletesManagementPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-white mb-2">Sport</label>
+                  <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Sport</label>
                   <select
                     value={formData.athlete_type}
                     onChange={(e) => setFormData({ ...formData, athlete_type: e.target.value })}
-                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
                   >
                     <option value="soccer">Soccer</option>
                     <option value="basketball">Basketball</option>
@@ -646,7 +646,7 @@ export default function AthletesManagementPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-white mb-2">Age (Optional)</label>
+                  <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Age (Optional)</label>
                   <input
                     type="number"
                     value={formData.age}
@@ -654,7 +654,7 @@ export default function AthletesManagementPage() {
                     placeholder="16"
                     min="5"
                     max="100"
-                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
                   />
                 </div>
               </div>
@@ -668,7 +668,7 @@ export default function AthletesManagementPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-white mb-2">
+                    <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                       Parent/Guardian Name
                     </label>
                     <input
@@ -676,12 +676,12 @@ export default function AthletesManagementPage() {
                       value={formData.parent_guardian_name}
                       onChange={(e) => setFormData({ ...formData, parent_guardian_name: e.target.value })}
                       placeholder="Jane Smith"
-                      className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
+                      className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-white mb-2">
+                    <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                       Parent/Guardian Email
                     </label>
                     <input
@@ -689,12 +689,12 @@ export default function AthletesManagementPage() {
                       value={formData.parent_guardian_email}
                       onChange={(e) => setFormData({ ...formData, parent_guardian_email: e.target.value })}
                       placeholder="parent@example.com"
-                      className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
+                      className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-white mb-2">
+                    <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                       Parent/Guardian Phone
                     </label>
                     <input
@@ -702,7 +702,7 @@ export default function AthletesManagementPage() {
                       value={formData.parent_guardian_phone}
                       onChange={(e) => setFormData({ ...formData, parent_guardian_phone: e.target.value })}
                       placeholder="(555) 123-4567"
-                      className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
+                      className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
                     />
                   </div>
                 </div>
@@ -739,9 +739,9 @@ export default function AthletesManagementPage() {
       {deleteModalOpen && selectedAthlete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="glass-card max-w-md w-full p-6">
-            <h2 className="text-2xl font-bold text-white mb-4">Delete Athlete</h2>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Delete Athlete</h2>
             <p className="text-cyan-700 dark:text-white mb-6">
-              Are you sure you want to delete <span className="font-bold text-white">{selectedAthlete.full_name}</span>?
+              Are you sure you want to delete <span className="font-bold text-slate-900 dark:text-white">{selectedAthlete.full_name}</span>?
               This will permanently delete all their sessions, drills, and progress data. This action cannot be undone.
             </p>
             <div className="flex gap-3">
@@ -772,7 +772,7 @@ export default function AthletesManagementPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
           <div className="glass-card max-w-3xl w-full p-6 my-8">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">{selectedAthlete.full_name}</h2>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{selectedAthlete.full_name}</h2>
               <button
                 onClick={() => {
                   setViewModalOpen(false)
@@ -794,14 +794,14 @@ export default function AthletesManagementPage() {
                       <Calendar className="w-5 h-5 text-cyan" />
                       <span className="text-sm text-cyan-800 dark:text-white">Sessions</span>
                     </div>
-                    <p className="text-2xl font-bold text-white">{athleteStats[selectedAthlete.id].total_sessions}</p>
+                    <p className="text-2xl font-bold text-slate-900 dark:text-white">{athleteStats[selectedAthlete.id].total_sessions}</p>
                   </div>
                   <div className="bg-cyan-900/20 rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <Dumbbell className="w-5 h-5 text-purple-400" />
                       <span className="text-sm text-cyan-800 dark:text-white">Drills</span>
                     </div>
-                    <p className="text-2xl font-bold text-white">{athleteStats[selectedAthlete.id].drills_completed}</p>
+                    <p className="text-2xl font-bold text-slate-900 dark:text-white">{athleteStats[selectedAthlete.id].drills_completed}</p>
                   </div>
                   <div className="bg-cyan-900/20 rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-2">

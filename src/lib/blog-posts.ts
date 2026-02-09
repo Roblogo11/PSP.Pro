@@ -255,11 +255,11 @@ Every PSP.Pro athlete gets a personalized arm care protocol based on their age, 
     readTime: '5 min read',
     thumbnail: '/images/Praticing Soccer Drills.jpg',
     slug: 'speed-training-drills',
-    content: `In baseball and softball, the difference between safe and out often comes down to a fraction of a second. Your first step — that initial explosive movement — is the most trainable aspect of speed, and it has the biggest impact on the basepaths and in the field.
+    content: `In softball and competitive sports, the difference between safe and out — or beating your defender — often comes down to a fraction of a second. Your first step — that initial explosive movement — is the most trainable aspect of speed, and it has the biggest impact on the field and court.
 
 ## Why First Step Matters More Than Top Speed
 
-Here's a reality check: most baseball plays happen within 10-30 feet. You rarely reach top speed in a game situation. What matters is:
+Here's a reality check: most game plays happen within 10-30 feet. You rarely reach top speed in a game situation. What matters is:
 
 - **Reaction time**: How fast you process the stimulus (pitch hit, pitcher's first move)
 - **First step explosiveness**: How quickly you can accelerate from a standstill

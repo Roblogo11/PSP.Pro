@@ -31,7 +31,7 @@ export default function AboutPage() {
             About <span className="text-gradient-orange">PSP.Pro</span>
           </h1>
           <p className="text-xl text-white mb-6 max-w-2xl mx-auto leading-relaxed">
-            Virginia Beach&apos;s premier baseball and softball training facility focused on velocity development and mechanics improvement.
+            Virginia Beach&apos;s premier softball, basketball, and soccer training facility focused on skill development and mechanics improvement.
           </p>
           <p className="text-2xl font-bold text-white">
             Progression Over Perfection
@@ -56,7 +56,7 @@ export default function AboutPage() {
         </div>
 
         <p className="text-lg text-slate-600 dark:text-white leading-relaxed mb-6">
-          At PSP.Pro, we believe in <span className="text-orange font-bold">Progression Over Perfection</span>. Our mission is to develop elite baseball and softball athletes through science-based training methodologies that focus on continuous improvement.
+          At PSP.Pro, we believe in <span className="text-orange font-bold">Progression Over Perfection</span>. Our mission is to develop elite softball, basketball, and soccer athletes through science-based training methodologies that focus on continuous improvement.
         </p>
 
         <p className="text-slate-500 dark:text-white/80 leading-relaxed">
@@ -65,16 +65,16 @@ export default function AboutPage() {
 
         <div className="grid md:grid-cols-2 gap-6 mt-6">
           <div className="p-6 rounded-xl bg-cyan-900/20 border border-orange/20 hover:border-orange/40 transition-all">
-            <h3 className="text-xl font-bold mb-3 text-orange">Baseball Training</h3>
+            <h3 className="text-xl font-bold mb-3 text-orange">Softball Training</h3>
             <p className="text-slate-600 dark:text-white leading-relaxed">
-              Specialized pitching and hitting programs designed to maximize velocity, power, and consistency.
+              Specialized pitching, hitting, and fielding programs designed to maximize speed, power, and consistency.
             </p>
           </div>
 
           <div className="p-6 rounded-xl bg-cyan-900/20 border border-cyan/20 hover:border-cyan/40 transition-all">
-            <h3 className="text-xl font-bold mb-3 text-cyan">Softball Excellence</h3>
+            <h3 className="text-xl font-bold mb-3 text-cyan">Basketball & Soccer</h3>
             <p className="text-slate-600 dark:text-white leading-relaxed">
-              Comprehensive softball training focusing on mechanics, speed development, and game performance.
+              Comprehensive athletic training focusing on speed, agility, strength, and game performance.
             </p>
           </div>
         </div>

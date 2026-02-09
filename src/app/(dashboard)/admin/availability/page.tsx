@@ -147,7 +147,7 @@ export default function AvailabilityManagementPage() {
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
             Availability Management
           </h1>
           <p className="text-cyan-800 dark:text-white text-lg">Create and manage your available time slots</p>
@@ -161,7 +161,7 @@ export default function AvailabilityManagementPage() {
       {/* Add Slot Form */}
       {showForm && (
         <div className="command-panel p-6 mb-6">
-          <h3 className="text-xl font-bold text-white mb-6">Create New Time Slot</h3>
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Create New Time Slot</h3>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Service */}
             <div>
@@ -171,7 +171,7 @@ export default function AvailabilityManagementPage() {
               <select
                 value={formData.serviceId}
                 onChange={e => setFormData({ ...formData, serviceId: e.target.value })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
               >
                 <option value="">Any Service</option>
                 {services.map(service => (
@@ -191,7 +191,7 @@ export default function AvailabilityManagementPage() {
                 value={formData.slotDate}
                 onChange={e => setFormData({ ...formData, slotDate: e.target.value })}
                 min={new Date().toISOString().split('T')[0]}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
               />
             </div>
 
@@ -203,7 +203,7 @@ export default function AvailabilityManagementPage() {
                 required
                 value={formData.startTime}
                 onChange={e => setFormData({ ...formData, startTime: e.target.value })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
               />
             </div>
 
@@ -215,7 +215,7 @@ export default function AvailabilityManagementPage() {
                 required
                 value={formData.endTime}
                 onChange={e => setFormData({ ...formData, endTime: e.target.value })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
               />
             </div>
 
@@ -228,7 +228,7 @@ export default function AvailabilityManagementPage() {
                 value={formData.location}
                 onChange={e => setFormData({ ...formData, location: e.target.value })}
                 placeholder="e.g., PSP Training Facility"
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
               />
             </div>
 
@@ -242,7 +242,7 @@ export default function AvailabilityManagementPage() {
                 max="20"
                 value={formData.maxBookings}
                 onChange={e => setFormData({ ...formData, maxBookings: parseInt(e.target.value) })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
               />
             </div>
 
@@ -273,7 +273,7 @@ export default function AvailabilityManagementPage() {
         ) : slots.length === 0 ? (
           <div className="p-12 text-center">
             <Calendar className="w-16 h-16 text-cyan-700 dark:text-white mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-white mb-2">No Time Slots Yet</h3>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Time Slots Yet</h3>
             <p className="text-cyan-800 dark:text-white mb-4">
               Create your first time slot to start accepting bookings.
             </p>
@@ -292,7 +292,7 @@ export default function AvailabilityManagementPage() {
                     <div className="flex items-start gap-2">
                       <Calendar className="w-5 h-5 text-cyan mt-0.5" />
                       <div>
-                        <p className="text-sm font-semibold text-white">{formatDate(slot.slot_date)}</p>
+                        <p className="text-sm font-semibold text-slate-900 dark:text-white">{formatDate(slot.slot_date)}</p>
                         <p className="text-xs text-cyan-800 dark:text-white">
                           {formatTime(slot.start_time)} - {formatTime(slot.end_time)}
                         </p>
@@ -302,7 +302,7 @@ export default function AvailabilityManagementPage() {
                     {/* Service */}
                     <div>
                       <p className="text-xs text-cyan-800 dark:text-white mb-1">Service</p>
-                      <p className="text-sm text-white">{slot.service?.name || 'Any Service'}</p>
+                      <p className="text-sm text-slate-900 dark:text-white">{slot.service?.name || 'Any Service'}</p>
                     </div>
 
                     {/* Location */}
@@ -310,14 +310,14 @@ export default function AvailabilityManagementPage() {
                       <MapPin className="w-4 h-4 text-cyan-800 dark:text-white mt-0.5" />
                       <div>
                         <p className="text-xs text-cyan-800 dark:text-white mb-1">Location</p>
-                        <p className="text-sm text-white">{slot.location}</p>
+                        <p className="text-sm text-slate-900 dark:text-white">{slot.location}</p>
                       </div>
                     </div>
 
                     {/* Bookings */}
                     <div>
                       <p className="text-xs text-cyan-800 dark:text-white mb-1">Bookings</p>
-                      <p className="text-sm font-semibold text-white">
+                      <p className="text-sm font-semibold text-slate-900 dark:text-white">
                         {slot.current_bookings} / {slot.max_bookings}
                       </p>
                       <p

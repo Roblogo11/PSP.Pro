@@ -24,13 +24,14 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'PSP.Pro - Elite Baseball & Softball Training | Virginia Beach',
+  title: 'PSP.Pro - Elite Softball, Basketball & Soccer Training | Virginia Beach',
   description:
-    'ProPer Sports Performance - Elite baseball and softball training in Virginia Beach. Track velocity, master mechanics, and dominate the diamond with data-driven performance.',
+    'ProPer Sports Performance - Elite softball, basketball, and soccer training in Virginia Beach. Master mechanics, build speed, and dominate your sport with data-driven performance.',
   keywords: [
     'Virginia Beach',
-    'baseball training',
     'softball training',
+    'basketball training',
+    'soccer training',
     'velocity tracking',
     'sports performance',
     'athletic training',
@@ -45,9 +46,9 @@ export const metadata: Metadata = {
     canonical: 'https://propersports.pro',
   },
   openGraph: {
-    title: 'PSP.Pro - Elite Baseball & Softball Training | Virginia Beach',
+    title: 'PSP.Pro - Elite Softball, Basketball & Soccer Training | Virginia Beach',
     description:
-      'Elite baseball and softball training in Virginia Beach. Track velocity, master mechanics, and dominate the diamond with data-driven performance.',
+      'Elite softball, basketball, and soccer training in Virginia Beach. Master mechanics, build speed, and dominate your sport with data-driven performance.',
     url: 'https://propersports.pro',
     siteName: 'PSP.Pro',
     images: [
@@ -63,9 +64,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'PSP.Pro - Elite Baseball & Softball Training | Virginia Beach',
+    title: 'PSP.Pro - Elite Softball, Basketball & Soccer Training | Virginia Beach',
     description:
-      'Elite baseball and softball training in Virginia Beach. Track velocity, master mechanics, and dominate the diamond.',
+      'Elite softball, basketball, and soccer training in Virginia Beach. Master mechanics, build speed, and dominate your sport.',
     images: [siteConfig.meta.ogImage],
     creator: '@propersports',
   },

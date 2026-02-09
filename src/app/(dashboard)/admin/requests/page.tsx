@@ -155,7 +155,7 @@ export default function RequestsPage() {
     <div className="p-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-display font-bold text-white mb-2">
+        <h1 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-2">
           Action Requests
         </h1>
         <p className="text-cyan-800 dark:text-white">
@@ -193,7 +193,7 @@ export default function RequestsPage() {
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-lg font-semibold text-white">
+                    <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
                       {getActionLabel(request.action_type)}
                     </h3>
                     {getStatusBadge(request.status)}
@@ -203,7 +203,7 @@ export default function RequestsPage() {
                     <div className="flex items-center gap-2">
                       <User className="w-4 h-4" />
                       <span>
-                        Requested by: <span className="text-white">{request.requester.full_name}</span>
+                        Requested by: <span className="text-slate-900 dark:text-white">{request.requester.full_name}</span>
                       </span>
                     </div>
 
@@ -239,7 +239,7 @@ export default function RequestsPage() {
                     {request.reviewed_at && request.reviewer && (
                       <div className="mt-3 pt-3 border-t border-cyan-200/40">
                         <p className="text-xs">
-                          Reviewed by <span className="text-white">{request.reviewer.full_name}</span> on{' '}
+                          Reviewed by <span className="text-slate-900 dark:text-white">{request.reviewer.full_name}</span> on{' '}
                           {new Date(request.reviewed_at).toLocaleDateString()}
                         </p>
                       </div>

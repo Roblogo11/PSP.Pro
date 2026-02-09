@@ -131,7 +131,7 @@ export default function AdminBookingsPage() {
     <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
+        <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
           Booking Management
         </h1>
         <p className="text-cyan-800 dark:text-white text-lg">
@@ -165,7 +165,7 @@ export default function AdminBookingsPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div className="glass-card p-4">
           <p className="text-sm text-cyan-800 dark:text-white mb-1">Total Bookings</p>
-          <p className="text-2xl font-bold text-white">{bookings.length}</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white">{bookings.length}</p>
         </div>
         <div className="glass-card p-4">
           <p className="text-sm text-cyan-800 dark:text-white mb-1">Confirmed</p>
@@ -199,7 +199,7 @@ export default function AdminBookingsPage() {
         ) : bookings.length === 0 ? (
           <div className="p-12 text-center">
             <Calendar className="w-16 h-16 text-cyan-700 dark:text-white mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-white mb-2">No Bookings Found</h3>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Bookings Found</h3>
             <p className="text-cyan-800 dark:text-white">No bookings match your current filter.</p>
           </div>
         ) : (
@@ -222,18 +222,18 @@ export default function AdminBookingsPage() {
                   <tr key={booking.id} className="border-b border-white/5 hover:bg-cyan-50/50 transition-colors">
                     <td className="py-4 px-4">
                       <div>
-                        <p className="text-sm font-semibold text-white">{booking.athlete?.full_name}</p>
+                        <p className="text-sm font-semibold text-slate-900 dark:text-white">{booking.athlete?.full_name}</p>
                       </div>
                     </td>
                     <td className="py-4 px-4">
-                      <p className="text-sm text-white">{booking.service?.name}</p>
+                      <p className="text-sm text-slate-900 dark:text-white">{booking.service?.name}</p>
                       <p className="text-xs text-cyan-800 dark:text-white">{booking.duration_minutes} min</p>
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex items-start gap-2">
                         <Calendar className="w-4 h-4 text-cyan-800 dark:text-white mt-0.5" />
                         <div>
-                          <p className="text-sm text-white">{formatDate(booking.booking_date)}</p>
+                          <p className="text-sm text-slate-900 dark:text-white">{formatDate(booking.booking_date)}</p>
                           <p className="text-xs text-cyan-800 dark:text-white">
                             {formatTime(booking.start_time)} - {formatTime(booking.end_time)}
                           </p>
@@ -243,13 +243,13 @@ export default function AdminBookingsPage() {
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-2">
                         <User className="w-4 h-4 text-cyan-800 dark:text-white" />
-                        <p className="text-sm text-white">{booking.coach?.full_name}</p>
+                        <p className="text-sm text-slate-900 dark:text-white">{booking.coach?.full_name}</p>
                       </div>
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-2">
                         <MapPin className="w-4 h-4 text-cyan-800 dark:text-white" />
-                        <p className="text-sm text-white">{booking.location || 'TBD'}</p>
+                        <p className="text-sm text-slate-900 dark:text-white">{booking.location || 'TBD'}</p>
                       </div>
                     </td>
                     <td className="py-4 px-4">

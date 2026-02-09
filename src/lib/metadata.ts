@@ -93,7 +93,7 @@ export const PAGE_METADATA = {
   about: generateLocalMetadata({
     title: 'About Us',
     description:
-      'Learn about ProPer Sports Performance, our coaches, and our commitment to developing elite baseball and softball athletes.',
+      'Learn about ProPer Sports Performance, our coaches, and our commitment to developing elite softball, basketball, and soccer athletes.',
     path: '/about',
     keywords: ['about us', 'coaches', 'athletic training', 'sports performance'],
   }),
@@ -101,9 +101,9 @@ export const PAGE_METADATA = {
   pricing: generateLocalMetadata({
     title: 'Training Packages & Pricing',
     description:
-      'View our training packages and pricing for baseball and softball lessons, group sessions, and performance programs.',
+      'View our training packages and pricing for softball, basketball, and soccer lessons, group sessions, and performance programs.',
     path: '/pricing',
-    keywords: ['pricing', 'training packages', 'baseball lessons', 'softball lessons'],
+    keywords: ['pricing', 'training packages', 'softball lessons', 'basketball training', 'soccer training'],
   }),
 
   contact: generateLocalMetadata({
@@ -117,7 +117,7 @@ export const PAGE_METADATA = {
   getStarted: generateLocalMetadata({
     title: 'Get Started - Begin Training',
     description:
-      'Start your athletic training journey with PSP.Pro. Sign up for baseball or softball training sessions today.',
+      'Start your athletic training journey with PSP.Pro. Sign up for softball, basketball, or soccer training sessions today.',
     path: '/get-started',
     keywords: ['get started', 'sign up', 'training', 'registration'],
   }),

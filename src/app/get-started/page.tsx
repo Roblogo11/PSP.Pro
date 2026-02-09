@@ -44,7 +44,7 @@ export default function GetStartedPage() {
             Get <span className="text-gradient-orange">Started</span>
           </h1>
           <p className="text-xl text-white mb-4">
-            Ready to take your baseball or softball game to the next level? Let&apos;s get you set up for success.
+            Ready to take your game to the next level? Let&apos;s get you set up for success.
           </p>
           <p className="text-white/80">
             Complete this form to schedule your first training session at our Virginia Beach facility.

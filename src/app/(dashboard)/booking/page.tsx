@@ -202,7 +202,7 @@ export default function BookingPage() {
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
           <CalendarDays className="w-8 h-8 text-orange" />
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-white">
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white">
             Book a Session
           </h1>
         </div>
@@ -249,7 +249,7 @@ export default function BookingPage() {
                 </div>
                 <span
                   className={`font-semibold whitespace-nowrap ${
-                    isActive ? 'text-white' : isCompleted ? 'text-green-400' : 'text-cyan-700'
+                    isActive ? 'text-slate-900 dark:text-white' : isCompleted ? 'text-green-400' : 'text-cyan-700'
                   }`}
                 >
                   {step.label}
@@ -299,18 +299,18 @@ export default function BookingPage() {
 
           {currentStep === 'confirm' && selectedService && selectedSlot && selectedDate && (
             <div className="glass-card p-6">
-              <h3 className="text-2xl font-bold text-white mb-6">Confirm Your Booking</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Confirm Your Booking</h3>
 
               <div className="space-y-4 mb-6">
                 <div className="p-4 rounded-lg bg-cyan-50/50 border border-cyan-200/40">
                   <p className="text-sm text-cyan-800 dark:text-white mb-1">Service</p>
-                  <p className="text-lg font-bold text-white">{selectedService.name}</p>
+                  <p className="text-lg font-bold text-slate-900 dark:text-white">{selectedService.name}</p>
                   <p className="text-sm text-cyan-700 dark:text-white">{selectedService.duration_minutes} minutes</p>
                 </div>
 
                 <div className="p-4 rounded-lg bg-cyan-50/50 border border-cyan-200/40">
                   <p className="text-sm text-cyan-800 dark:text-white mb-1">Date & Time</p>
-                  <p className="text-lg font-bold text-white">{formatDate(selectedDate)}</p>
+                  <p className="text-lg font-bold text-slate-900 dark:text-white">{formatDate(selectedDate)}</p>
                   <p className="text-sm text-cyan-700 dark:text-white">
                     {formatTime(selectedSlot.start_time)} - {formatTime(selectedSlot.end_time)}
                   </p>
@@ -318,17 +318,17 @@ export default function BookingPage() {
 
                 <div className="p-4 rounded-lg bg-cyan-50/50 border border-cyan-200/40">
                   <p className="text-sm text-cyan-800 dark:text-white mb-1">Coach</p>
-                  <p className="text-lg font-bold text-white">{selectedSlot.coach_name}</p>
+                  <p className="text-lg font-bold text-slate-900 dark:text-white">{selectedSlot.coach_name}</p>
                 </div>
 
                 <div className="p-4 rounded-lg bg-cyan-50/50 border border-cyan-200/40">
                   <p className="text-sm text-cyan-800 dark:text-white mb-1">Location</p>
-                  <p className="text-lg font-bold text-white">{selectedSlot.location}</p>
+                  <p className="text-lg font-bold text-slate-900 dark:text-white">{selectedSlot.location}</p>
                 </div>
 
                 <div className="p-4 rounded-lg bg-orange/10 border border-orange/20">
                   <p className="text-sm text-orange mb-1">Total Amount</p>
-                  <p className="text-2xl font-bold text-white">
+                  <p className="text-2xl font-bold text-slate-900 dark:text-white">
                     ${(selectedService.price_cents / 100).toFixed(2)}
                   </p>
                 </div>
@@ -362,13 +362,13 @@ export default function BookingPage() {
         {/* Sidebar Summary */}
         <div className="lg:col-span-1">
           <div className="glass-card p-6 sticky top-24">
-            <h3 className="text-lg font-bold text-white mb-4">Booking Summary</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Booking Summary</h3>
 
             <div className="space-y-4">
               {selectedService ? (
                 <div>
                   <p className="text-xs text-cyan-800 dark:text-white mb-1">Service</p>
-                  <p className="text-sm font-semibold text-white">{selectedService.name}</p>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">{selectedService.name}</p>
                   <p className="text-xs text-cyan-700 dark:text-white mt-1">
                     ${(selectedService.price_cents / 100).toFixed(2)} • {selectedService.duration_minutes} min
                   </p>
@@ -382,7 +382,7 @@ export default function BookingPage() {
               {selectedDate ? (
                 <div>
                   <p className="text-xs text-cyan-800 dark:text-white mb-1">Date</p>
-                  <p className="text-sm font-semibold text-white">{formatDate(selectedDate)}</p>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">{formatDate(selectedDate)}</p>
                 </div>
               ) : (
                 <div className="p-3 rounded-lg bg-cyan-50/50 border border-dashed border-white/20">
@@ -393,7 +393,7 @@ export default function BookingPage() {
               {selectedSlot ? (
                 <div>
                   <p className="text-xs text-cyan-800 dark:text-white mb-1">Time</p>
-                  <p className="text-sm font-semibold text-white">
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">
                     {formatTime(selectedSlot.start_time)} - {formatTime(selectedSlot.end_time)}
                   </p>
                   <p className="text-xs text-cyan-700 dark:text-white mt-1">{selectedSlot.coach_name}</p>

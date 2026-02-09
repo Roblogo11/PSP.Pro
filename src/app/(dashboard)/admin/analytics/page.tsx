@@ -245,7 +245,7 @@ export default function AnalyticsPage() {
           </div>
         )}
       </div>
-      <h3 className="text-2xl font-bold text-white mb-1">
+      <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">
         {prefix}
         {typeof value === 'number' ? value.toLocaleString() : value}
         {suffix}
@@ -258,7 +258,7 @@ export default function AnalyticsPage() {
     <div className="p-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-display font-bold text-white mb-2">
+        <h1 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-2">
           Analytics Dashboard
         </h1>
         <p className="text-cyan-800 dark:text-white">
@@ -319,11 +319,11 @@ export default function AnalyticsPage() {
         <div className="glass-card p-6">
           <div className="flex items-center gap-3 mb-4">
             <Activity className="w-5 h-5 text-orange" />
-            <h3 className="text-lg font-semibold text-white">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
               Avg Sessions per Athlete
             </h3>
           </div>
-          <p className="text-3xl font-bold text-white">
+          <p className="text-3xl font-bold text-slate-900 dark:text-white">
             {analytics.avgSessionsPerAthlete.toFixed(1)}
           </p>
         </div>
@@ -331,9 +331,9 @@ export default function AnalyticsPage() {
         <div className="glass-card p-6">
           <div className="flex items-center gap-3 mb-4">
             <Award className="w-5 h-5 text-orange" />
-            <h3 className="text-lg font-semibold text-white">Performance</h3>
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Performance</h3>
           </div>
-          <p className="text-3xl font-bold text-white">
+          <p className="text-3xl font-bold text-slate-900 dark:text-white">
             {analytics.completionRate >= 80 ? 'Excellent' : analytics.completionRate >= 60 ? 'Good' : 'Needs Improvement'}
           </p>
         </div>
@@ -343,7 +343,7 @@ export default function AnalyticsPage() {
       <div className="glass-card p-6">
         <div className="flex items-center gap-3 mb-6">
           <Clock className="w-5 h-5 text-orange" />
-          <h3 className="text-lg font-semibold text-white">Recent Bookings</h3>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Recent Bookings</h3>
         </div>
 
         {analytics.recentBookings.length === 0 ? (
@@ -357,7 +357,7 @@ export default function AnalyticsPage() {
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <p className="text-white font-medium mb-1">
+                    <p className="text-slate-900 dark:text-white font-medium mb-1">
                       {booking.athlete?.full_name || 'Unknown Athlete'}
                     </p>
                     <p className="text-sm text-cyan-800 dark:text-white">
@@ -366,7 +366,7 @@ export default function AnalyticsPage() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-white font-semibold mb-1">
+                    <p className="text-slate-900 dark:text-white font-semibold mb-1">
                       ${booking.price}
                     </p>
                     <span

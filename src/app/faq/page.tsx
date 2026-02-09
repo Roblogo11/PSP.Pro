@@ -65,7 +65,7 @@ const FAQ_DATA: FAQItem[] = [
     id: 9,
     category: 'Training Programs',
     question: 'What sports do you specialize in?',
-    answer: 'We specialize in baseball and softball training, covering all positions. Our programs focus on pitching mechanics, hitting development, velocity training, speed & agility, and overall athletic performance.',
+    answer: 'We specialize in softball, basketball, and soccer training. Our programs focus on pitching mechanics, hitting development, speed & agility, strength & conditioning, and overall athletic performance.',
   },
   {
     id: 10,

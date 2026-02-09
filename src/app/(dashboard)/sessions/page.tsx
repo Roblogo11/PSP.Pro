@@ -102,7 +102,7 @@ export default function SessionsPage() {
     <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8 relative">
       {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
+        <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
           Training <span className="text-gradient-orange">Sessions</span>
         </h1>
         <p className="text-cyan-700 dark:text-white text-lg">
@@ -155,7 +155,7 @@ export default function SessionsPage() {
 
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h3 className="text-xl font-bold text-white group-hover:text-orange transition-colors">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-orange transition-colors">
                       {session.type}
                     </h3>
                     {getStatusIcon(session.status)}
@@ -189,7 +189,7 @@ export default function SessionsPage() {
             {session.notes && (
               <div className="mt-4 pt-4 border-t border-white/5">
                 <p className="text-sm text-cyan-700 dark:text-white">
-                  <span className="font-semibold text-white">Notes:</span> {session.notes}
+                  <span className="font-semibold text-slate-900 dark:text-white">Notes:</span> {session.notes}
                 </p>
               </div>
             )}
@@ -197,7 +197,7 @@ export default function SessionsPage() {
             {session.peakVelocity && (
               <div className="mt-4 pt-4 border-t border-white/5">
                 <p className="text-sm text-cyan-700 dark:text-white">
-                  <span className="font-semibold text-white">Peak Velocity:</span>{' '}
+                  <span className="font-semibold text-slate-900 dark:text-white">Peak Velocity:</span>{' '}
                   <span className="text-gradient-orange font-bold">{session.peakVelocity} mph</span>
                 </p>
               </div>
@@ -243,7 +243,7 @@ export default function SessionsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="glass-card max-w-md w-full p-6 animate-scale-in">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">Cancel Session</h2>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Cancel Session</h2>
               <button
                 onClick={() => {
                   setCancelModalOpen(false)
@@ -298,7 +298,7 @@ export default function SessionsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="glass-card max-w-md w-full p-6 animate-scale-in">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">Reschedule Session</h2>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Reschedule Session</h2>
               <button
                 onClick={() => {
                   setRescheduleModalOpen(false)

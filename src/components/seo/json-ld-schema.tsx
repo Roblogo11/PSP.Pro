@@ -4,7 +4,7 @@ export function JsonLdSchema() {
     '@type': 'SportsActivityLocation',
     name: 'PSP.Pro - ProPer Sports Performance',
     description:
-      'Elite baseball and softball training in Virginia Beach. Track velocity, master mechanics, and dominate the diamond with data-driven performance coaching.',
+      'Elite softball, basketball, and soccer training in Virginia Beach. Master mechanics, build speed, and dominate your sport with data-driven performance coaching.',
     url: 'https://propersports.pro',
     logo: 'https://propersports.pro/images/PSP-black-300x99-1.png',
     image: 'https://propersports.pro/images/PSP-black-300x99-1.png',
@@ -37,7 +37,7 @@ export function JsonLdSchema() {
         sameAs: 'https://en.wikipedia.org/wiki/Hampton,_Virginia',
       },
     ],
-    sport: ['Baseball', 'Softball'],
+    sport: ['Softball', 'Basketball', 'Soccer'],
     priceRange: '$$',
     openingHoursSpecification: [
       {

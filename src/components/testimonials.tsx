@@ -23,7 +23,7 @@ const TESTIMONIALS: Testimonial[] = [
     id: 1,
     name: 'Marcus Johnson',
     role: 'High School Pitcher',
-    sport: 'Baseball',
+    sport: 'Softball',
     rating: 5,
     quote: 'PSP.Pro transformed my game! Coach helped me add 6 MPH to my fastball in just 8 weeks. The data-driven approach and personalized training made all the difference.',
     stats: {
@@ -49,7 +49,7 @@ const TESTIMONIALS: Testimonial[] = [
     id: 3,
     name: 'David Chen',
     role: 'Parent of Youth Athlete',
-    sport: 'Baseball',
+    sport: 'Softball',
     rating: 5,
     quote: 'My son loves training at PSP.Pro! The coaches are professional, knowledgeable, and really care about the athletes. We\'ve seen tremendous growth in both skill and confidence.',
   },
@@ -57,7 +57,7 @@ const TESTIMONIALS: Testimonial[] = [
     id: 4,
     name: 'Tyler Rodriguez',
     role: 'Middle School Pitcher',
-    sport: 'Baseball',
+    sport: 'Softball',
     rating: 5,
     quote: 'I learned proper mechanics and my arm feels stronger than ever. The coaches teach you the right way to throw and help you understand the science behind it all.',
     stats: {

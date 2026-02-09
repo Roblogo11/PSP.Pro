@@ -328,7 +328,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8 relative">
       {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
+        <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
           Admin <span className="text-gradient-orange">Control Center</span>
         </h1>
         <p className="text-cyan-700 dark:text-white text-lg mb-4">
@@ -354,7 +354,7 @@ export default function AdminDashboard() {
               <Tooltip content="Total number of athletes in your system. Click 'Athletes' in the sidebar to manage them or add new ones." />
             </div>
           </div>
-          <p className="text-3xl font-bold text-white mb-1">{stats.totalAthletes}</p>
+          <p className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{stats.totalAthletes}</p>
           <p className="text-sm text-cyan-700 dark:text-white">Active Athletes</p>
         </div>
 
@@ -366,7 +366,7 @@ export default function AdminDashboard() {
               <Tooltip content="Shows confirmed and pending sessions scheduled in the future. Go to 'Bookings' to manage them." />
             </div>
           </div>
-          <p className="text-3xl font-bold text-white mb-1">{stats.activeSessions}</p>
+          <p className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{stats.activeSessions}</p>
           <p className="text-sm text-cyan-700 dark:text-white">Scheduled Sessions</p>
         </div>
 
@@ -378,7 +378,7 @@ export default function AdminDashboard() {
               <Tooltip content="Total drills in your library. Use 'Bulk Import' to add multiple YouTube videos at once (180x faster than manual entry!)" />
             </div>
           </div>
-          <p className="text-3xl font-bold text-white mb-1">{stats.totalDrills}</p>
+          <p className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{stats.totalDrills}</p>
           <p className="text-sm text-cyan-700 dark:text-white">Training Drills</p>
         </div>
 
@@ -396,7 +396,7 @@ export default function AdminDashboard() {
               <Tooltip content="Bookings waiting for your approval. Click to review and confirm or cancel them." />
             </div>
           </div>
-          <p className="text-3xl font-bold text-white mb-1">{stats.pendingBookings}</p>
+          <p className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{stats.pendingBookings}</p>
           <p className="text-sm text-cyan-700 dark:text-white">Pending Bookings</p>
         </div>
       </div>
@@ -404,7 +404,7 @@ export default function AdminDashboard() {
       {/* Upcoming Sessions Widget */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold text-white">Upcoming Sessions</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Upcoming Sessions</h2>
           <Link
             href="/admin/bookings"
             className="text-sm text-cyan hover:text-cyan/80 transition-colors flex items-center gap-1"
@@ -456,7 +456,7 @@ export default function AdminDashboard() {
                           <Calendar className="w-6 h-6 text-cyan" />
                         </div>
                         <div>
-                          <h3 className="font-bold text-white group-hover:text-cyan transition-colors">
+                          <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-cyan transition-colors">
                             {session.athlete?.full_name || 'Unknown Athlete'}
                           </h3>
                           <p className="text-sm text-cyan-700 dark:text-white">
@@ -491,7 +491,7 @@ export default function AdminDashboard() {
 
       {/* Quick Actions */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-white mb-4">Quick Actions</h2>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {quickActions.map((action) => {
             const Icon = action.icon
@@ -504,7 +504,7 @@ export default function AdminDashboard() {
                   >
                     <Icon className="w-6 h-6" style={{ color: action.color }} />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-1 group-hover:text-orange transition-colors">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-orange transition-colors">
                     {action.title}
                   </h3>
                   <p className="text-sm text-cyan-700 dark:text-white">{action.description}</p>
@@ -517,7 +517,7 @@ export default function AdminDashboard() {
 
       {/* Admin Sections */}
       <div>
-        <h2 className="text-2xl font-bold text-white mb-4">Platform Management</h2>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Platform Management</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {adminSections.map((section) => {
             const Icon = section.icon
@@ -535,7 +535,7 @@ export default function AdminDashboard() {
                       {section.stat}
                     </span>
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-orange transition-colors">
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-orange transition-colors">
                     {section.title}
                   </h3>
                   <p className="text-sm text-cyan-700 dark:text-white">{section.description}</p>
@@ -556,7 +556,7 @@ export default function AdminDashboard() {
                   <CreditCard className={`w-6 h-6 ${stripeTestMode ? 'text-yellow-400' : 'text-cyan'}`} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-1">Stripe Payment Mode</h3>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">Stripe Payment Mode</h3>
                   <p className="text-sm text-cyan-700 dark:text-white mb-2">
                     {stripeTestMode
                       ? 'TEST MODE — No real charges. Use card: 4242 4242 4242 4242, any future expiry, any CVC.'
@@ -609,7 +609,7 @@ export default function AdminDashboard() {
       {/* Recent Activity */}
       <div className="mt-8">
         <div className="command-panel">
-          <h2 className="text-xl font-bold text-white mb-4">Recent Activity</h2>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Recent Activity</h2>
           <div className="space-y-3">
             <div className="flex items-center gap-3 p-3 bg-cyan-900/20 rounded-xl">
               <CheckCircle className="w-5 h-5 text-green-400" />

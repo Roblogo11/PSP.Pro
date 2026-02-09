@@ -2,14 +2,14 @@
  * CENTRALIZED SITE CONFIGURATION
  *
  * PSP.Pro - ProPer Sports Performance
- * Athletic training platform for baseball and softball athletes
+ * Athletic training platform for softball, basketball, and soccer athletes
  */
 
 export const siteConfig = {
   // Meta Information
   meta: {
     title: "PSP.Pro | ProPer Sports Performance - Elite Athletic Training",
-    description: "Elite baseball and softball training in Virginia Beach. Track velocity, master mechanics, and dominate the diamond with data-driven performance.",
+    description: "Elite softball, basketball, and soccer training in Virginia Beach. Master mechanics, build speed, and dominate your sport with data-driven performance.",
     url: "https://propersports.pro",
     ogImage: "/images/PSP-black-300x99-1.png",
     logo: "/images/PSP-black-300x99-1.png",
@@ -90,7 +90,7 @@ export const siteConfig = {
       {
         id: "1",
         question: "What training programs do you offer?",
-        answer: "We offer specialized baseball and softball training programs focused on velocity development, mechanics improvement, and overall athletic performance."
+        answer: "We offer specialized softball, basketball, and soccer training programs focused on skill development, mechanics improvement, and overall athletic performance."
       }
     ] as Array<{ id: string; question: string; answer: string }>,
   },
@@ -112,7 +112,7 @@ export const siteConfig = {
   footer: {
     copyright: "© 2026 ProPer Sports Performance LLC. All rights reserved.",
     tagline: "Progression Over Perfection",
-    description: "Elite baseball and softball training in Virginia Beach. Progression over perfection.",
+    description: "Elite softball, basketball, and soccer training in Virginia Beach. Progression over perfection.",
     social: [
       { name: "Twitter", icon: "Twitter", url: "#" }
     ] as Array<{ name: string; icon: string; url: string }>,

@@ -418,7 +418,7 @@ export default function DrillsManagementPage() {
       {/* Page Header */}
       <div className="flex items-start justify-between mb-8">
         <div>
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
             {isAdmin ? (
               <>Drill <span className="text-gradient-orange">Bank</span> <span className="text-cyan-800 dark:text-white text-2xl">(All)</span></>
             ) : (
@@ -459,7 +459,7 @@ export default function DrillsManagementPage() {
             <Dumbbell className="w-6 h-6 text-orange" />
             <span className="text-sm text-cyan-800 dark:text-white">Total</span>
           </div>
-          <p className="text-3xl font-bold text-white">{drills.length}</p>
+          <p className="text-3xl font-bold text-slate-900 dark:text-white">{drills.length}</p>
           <p className="text-sm text-cyan-800 dark:text-white">Drills in Library</p>
         </div>
         <div className="command-panel-active">
@@ -467,7 +467,7 @@ export default function DrillsManagementPage() {
             <CheckCircle className="w-6 h-6 text-green-400" />
             <span className="text-sm text-cyan-800 dark:text-white">Active</span>
           </div>
-          <p className="text-3xl font-bold text-white">{drills.filter(d => d.published).length}</p>
+          <p className="text-3xl font-bold text-slate-900 dark:text-white">{drills.filter(d => d.published).length}</p>
           <p className="text-sm text-cyan-800 dark:text-white">Published Drills</p>
         </div>
         <div className="command-panel-active">
@@ -475,7 +475,7 @@ export default function DrillsManagementPage() {
             <Video className="w-6 h-6 text-cyan" />
             <span className="text-sm text-cyan-800 dark:text-white">Content</span>
           </div>
-          <p className="text-3xl font-bold text-white">{drills.filter(d => d.video_url).length}</p>
+          <p className="text-3xl font-bold text-slate-900 dark:text-white">{drills.filter(d => d.video_url).length}</p>
           <p className="text-sm text-cyan-800 dark:text-white">With Video</p>
         </div>
         <div className="command-panel-active">
@@ -483,7 +483,7 @@ export default function DrillsManagementPage() {
             <Users className="w-6 h-6 text-purple-400" />
             <span className="text-sm text-cyan-800 dark:text-white">Athletes</span>
           </div>
-          <p className="text-3xl font-bold text-white">{athletes.length}</p>
+          <p className="text-3xl font-bold text-slate-900 dark:text-white">{athletes.length}</p>
           <p className="text-sm text-cyan-800 dark:text-white">Available to Assign</p>
         </div>
       </div>
@@ -499,7 +499,7 @@ export default function DrillsManagementPage() {
               placeholder="Search drills by title, description, or tags..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
+              className="w-full pl-10 pr-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 focus:outline-none focus:border-orange/50"
             />
           </div>
 
@@ -509,7 +509,7 @@ export default function DrillsManagementPage() {
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
+              className="w-full pl-10 pr-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
             >
               <option value="all">All Categories</option>
               <option value="mechanics">Mechanics</option>
@@ -527,7 +527,7 @@ export default function DrillsManagementPage() {
             <select
               value={difficultyFilter}
               onChange={(e) => setDifficultyFilter(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
+              className="w-full pl-10 pr-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
             >
               <option value="all">All Difficulties</option>
               <option value="beginner">Beginner</option>
@@ -564,7 +564,7 @@ export default function DrillsManagementPage() {
                   {/* Details */}
                   <div className="flex-1">
                     <div className="flex items-start gap-2 mb-1">
-                      <h3 className="text-xl font-bold text-white group-hover:text-orange transition-colors">
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-orange transition-colors">
                         {drill.title}
                       </h3>
                       {!drill.published && (
@@ -676,7 +676,7 @@ export default function DrillsManagementPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
           <div className="glass-card max-w-3xl w-full p-6 my-8 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                 {editModalOpen ? 'Edit Drill' : 'Create New Drill'}
               </h2>
               <button
@@ -695,7 +695,7 @@ export default function DrillsManagementPage() {
             <div className="space-y-4">
               {/* Title */}
               <div>
-                <label className="block text-sm font-semibold text-white mb-2">
+                <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                   Title <span className="text-red-400">*</span>
                 </label>
                 <input
@@ -703,13 +703,13 @@ export default function DrillsManagementPage() {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="e.g., Long Toss Progression"
-                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 focus:outline-none focus:border-orange/50"
                 />
               </div>
 
               {/* Video Source Toggle */}
               <div>
-                <label className="block text-sm font-semibold text-white mb-2">
+                <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                   Video Source <span className="text-red-400">*</span>
                 </label>
                 <div className="flex gap-2 mb-3">
@@ -743,7 +743,7 @@ export default function DrillsManagementPage() {
                     value={formData.video_url}
                     onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
                     placeholder="https://youtube.com/watch?v=..."
-                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 focus:outline-none focus:border-orange/50"
                   />
                 ) : (
                   <div className="border-2 border-dashed border-white/20 rounded-xl p-8 text-center hover:border-orange/50 transition-colors cursor-pointer">
@@ -758,11 +758,11 @@ export default function DrillsManagementPage() {
               {/* Category and Difficulty */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-white mb-2">Category</label>
+                  <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Category</label>
                   <select
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
                   >
                     <option value="mechanics">Mechanics</option>
                     <option value="speed">Speed</option>
@@ -773,11 +773,11 @@ export default function DrillsManagementPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-white mb-2">Difficulty</label>
+                  <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Difficulty</label>
                   <select
                     value={formData.difficulty}
                     onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })}
-                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
                   >
                     <option value="beginner">Beginner</option>
                     <option value="intermediate">Intermediate</option>
@@ -790,7 +790,7 @@ export default function DrillsManagementPage() {
               <button
                 type="button"
                 onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}
-                className="w-full flex items-center justify-between px-4 py-3 bg-cyan-900/20 hover:bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white transition-all"
+                className="w-full flex items-center justify-between px-4 py-3 bg-cyan-900/20 hover:bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white transition-all"
               >
                 <div className="flex items-center gap-2">
                   <span className="font-semibold">Advanced Options</span>
@@ -807,43 +807,43 @@ export default function DrillsManagementPage() {
                 <>
               {/* Description */}
               <div>
-                <label className="block text-sm font-semibold text-white mb-2">Description</label>
+                <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Description</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Brief description of the drill..."
                   rows={3}
-                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50 resize-none"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 focus:outline-none focus:border-orange/50 resize-none"
                 />
               </div>
 
               {/* Instructions */}
               <div>
-                <label className="block text-sm font-semibold text-white mb-2">Instructions</label>
+                <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Instructions</label>
                 <textarea
                   value={formData.instructions}
                   onChange={(e) => setFormData({ ...formData, instructions: e.target.value })}
                   placeholder="Step-by-step instructions..."
                   rows={4}
-                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50 resize-none"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 focus:outline-none focus:border-orange/50 resize-none"
                 />
               </div>
 
               {/* Thumbnail URL */}
               <div>
-                <label className="block text-sm font-semibold text-white mb-2">Thumbnail URL</label>
+                <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Thumbnail URL</label>
                 <input
                   type="url"
                   value={formData.thumbnail_url}
                   onChange={(e) => setFormData({ ...formData, thumbnail_url: e.target.value })}
                   placeholder="https://example.com/thumbnail.jpg"
-                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 focus:outline-none focus:border-orange/50"
                 />
               </div>
 
               {/* Duration */}
               <div>
-                <label className="block text-sm font-semibold text-white mb-2">
+                <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                   Duration (seconds)
                 </label>
                 <input
@@ -851,7 +851,7 @@ export default function DrillsManagementPage() {
                   value={formData.duration_seconds}
                   onChange={(e) => setFormData({ ...formData, duration_seconds: parseInt(e.target.value) || 0 })}
                   min="0"
-                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-orange/50"
                 />
                 <p className="text-xs text-cyan-800 dark:text-white mt-1">
                   {formatDuration(formData.duration_seconds)}
@@ -860,7 +860,7 @@ export default function DrillsManagementPage() {
 
               {/* Tags */}
               <div>
-                <label className="block text-sm font-semibold text-white mb-2">Tags</label>
+                <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Tags</label>
                 <div className="flex gap-2 mb-2">
                   <input
                     type="text"
@@ -868,7 +868,7 @@ export default function DrillsManagementPage() {
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
                     placeholder="Add tag and press Enter"
-                    className="flex-1 px-4 py-2 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
+                    className="flex-1 px-4 py-2 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 focus:outline-none focus:border-orange/50"
                   />
                   <button
                     onClick={addTag}
@@ -897,7 +897,7 @@ export default function DrillsManagementPage() {
 
               {/* Equipment */}
               <div>
-                <label className="block text-sm font-semibold text-white mb-2">Equipment Needed</label>
+                <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Equipment Needed</label>
                 <div className="flex gap-2 mb-2">
                   <input
                     type="text"
@@ -905,7 +905,7 @@ export default function DrillsManagementPage() {
                     onChange={(e) => setEquipmentInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addEquipment())}
                     placeholder="Add equipment and press Enter"
-                    className="flex-1 px-4 py-2 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
+                    className="flex-1 px-4 py-2 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 focus:outline-none focus:border-orange/50"
                   />
                   <button
                     onClick={addEquipment}
@@ -934,7 +934,7 @@ export default function DrillsManagementPage() {
 
               {/* Focus Areas */}
               <div>
-                <label className="block text-sm font-semibold text-white mb-2">Focus Areas</label>
+                <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Focus Areas</label>
                 <div className="flex gap-2 mb-2">
                   <input
                     type="text"
@@ -942,7 +942,7 @@ export default function DrillsManagementPage() {
                     onChange={(e) => setFocusAreaInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addFocusArea())}
                     placeholder="Add focus area and press Enter"
-                    className="flex-1 px-4 py-2 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50"
+                    className="flex-1 px-4 py-2 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 focus:outline-none focus:border-orange/50"
                   />
                   <button
                     onClick={addFocusArea}
@@ -978,7 +978,7 @@ export default function DrillsManagementPage() {
                     onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
                     className="w-5 h-5 rounded border-white/20 bg-cyan-900/30 text-orange focus:ring-cyan focus:ring-offset-0"
                   />
-                  <span className="text-white font-semibold">Published</span>
+                  <span className="text-slate-900 dark:text-white font-semibold">Published</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -987,7 +987,7 @@ export default function DrillsManagementPage() {
                     onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
                     className="w-5 h-5 rounded border-white/20 bg-cyan-900/30 text-orange focus:ring-cyan focus:ring-offset-0"
                   />
-                  <span className="text-white font-semibold">Featured</span>
+                  <span className="text-slate-900 dark:text-white font-semibold">Featured</span>
                 </label>
               </div>
                 </>
@@ -1024,9 +1024,9 @@ export default function DrillsManagementPage() {
       {deleteModalOpen && selectedDrill && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="glass-card max-w-md w-full p-6">
-            <h2 className="text-2xl font-bold text-white mb-4">Delete Drill</h2>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Delete Drill</h2>
             <p className="text-cyan-700 dark:text-white mb-6">
-              Are you sure you want to delete <span className="font-bold text-white">{selectedDrill.title}</span>?
+              Are you sure you want to delete <span className="font-bold text-slate-900 dark:text-white">{selectedDrill.title}</span>?
               This action cannot be undone.
             </p>
             <div className="flex gap-3">
@@ -1057,7 +1057,7 @@ export default function DrillsManagementPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
           <div className="glass-card max-w-2xl w-full p-6 my-8">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                 Assign: {selectedDrill.title}
               </h2>
               <button
@@ -1077,7 +1077,7 @@ export default function DrillsManagementPage() {
             <div className="space-y-4">
               {/* Athletes List */}
               <div>
-                <label className="block text-sm font-semibold text-white mb-3">
+                <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-3">
                   Select Athletes <span className="text-red-400">*</span>
                 </label>
                 <div className="max-h-64 overflow-y-auto space-y-2 border border-cyan-200/40 rounded-xl p-4 bg-cyan-900/20">
@@ -1110,7 +1110,7 @@ export default function DrillsManagementPage() {
                             {athlete.full_name.charAt(0)}
                           </div>
                         )}
-                        <span className="text-white font-semibold">{athlete.full_name}</span>
+                        <span className="text-slate-900 dark:text-white font-semibold">{athlete.full_name}</span>
                       </div>
                     </label>
                   ))}
@@ -1122,11 +1122,11 @@ export default function DrillsManagementPage() {
 
               {/* Priority */}
               <div>
-                <label className="block text-sm font-semibold text-white mb-2">Priority</label>
+                <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Priority</label>
                 <select
                   value={assignmentPriority}
                   onChange={(e) => setAssignmentPriority(e.target.value as 'low' | 'medium' | 'high')}
-                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -1136,24 +1136,24 @@ export default function DrillsManagementPage() {
 
               {/* Due Date */}
               <div>
-                <label className="block text-sm font-semibold text-white mb-2">Due Date (Optional)</label>
+                <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Due Date (Optional)</label>
                 <input
                   type="date"
                   value={assignmentDueDate}
                   onChange={(e) => setAssignmentDueDate(e.target.value)}
-                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white focus:outline-none focus:border-orange/50"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-orange/50"
                 />
               </div>
 
               {/* Notes */}
               <div>
-                <label className="block text-sm font-semibold text-white mb-2">Notes (Optional)</label>
+                <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Notes (Optional)</label>
                 <textarea
                   value={assignmentNotes}
                   onChange={(e) => setAssignmentNotes(e.target.value)}
                   placeholder="Add any special instructions or notes for the athletes..."
                   rows={4}
-                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50 resize-none"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 focus:outline-none focus:border-orange/50 resize-none"
                 />
               </div>
             </div>
