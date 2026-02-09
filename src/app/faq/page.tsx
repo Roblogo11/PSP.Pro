@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, HelpCircle, Search } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
+import { ChevronDown, HelpCircle, Search, Sparkles } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 
@@ -130,17 +132,45 @@ export default function FAQPage() {
     <div className="flex min-h-screen">
       <InfoSidebar />
       <main className="flex-1 p-4 md:p-8 pb-24 lg:pb-8">
+      {/* Welcome Banner for New Signups */}
+      <div className="max-w-4xl mx-auto mb-8">
+        <div className="command-panel p-6 md:p-8 border-orange/30 bg-gradient-to-br from-orange/5 to-cyan/5">
+          <div className="flex items-start gap-4">
+            <div className="p-3 bg-orange/20 rounded-xl flex-shrink-0">
+              <Sparkles className="w-6 h-6 text-orange" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+                Welcome to PSP.Pro!
+              </h2>
+              <p className="text-slate-600 dark:text-white/80 mb-4">
+                Your account is all set. Before you dive in, check out some quick answers below about how training works, what to expect, and how to get the most out of your experience.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Link href="/pricing" className="btn-primary text-sm px-5 py-2.5 inline-flex items-center gap-2">
+                  View Memberships
+                  <span>→</span>
+                </Link>
+                <Link href="/login" className="btn-ghost text-sm px-5 py-2.5">
+                  Log In to Dashboard
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="max-w-4xl mx-auto mb-12 text-center">
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan/10 border border-cyan/20 rounded-full mb-6">
           <HelpCircle className="w-4 h-4 text-cyan" />
           <span className="text-sm font-semibold text-cyan">Frequently Asked Questions</span>
         </div>
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
-          How Can We <span className="text-gradient-orange">Help You?</span>
+        <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-4">
+          Everything You Need to <span className="text-gradient-orange">Know</span>
         </h1>
         <p className="text-lg text-cyan-700 dark:text-white max-w-2xl mx-auto">
-          Find answers to common questions about training at PSP.Pro
+          New here? Here are some quick answers to get you up to speed on training with PSP.Pro
         </p>
       </div>
 

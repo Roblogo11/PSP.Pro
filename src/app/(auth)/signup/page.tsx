@@ -114,9 +114,10 @@ export default function SignupPage() {
         throw new Error('Account created but profile verification failed. Please contact support.')
       }
 
-      // 5. Success! Refresh server state then navigate
+      // 5. Success! Refresh server state then navigate to FAQ
+      // New members land on FAQ first — they need to purchase a membership to access the dashboard
       router.refresh()
-      router.push('/locker')
+      router.push('/faq')
       return
     } catch (err: any) {
       console.error('Signup error:', err)
@@ -365,14 +366,23 @@ export default function SignupPage() {
         </div>
 
         {/* Sign In Link */}
-        <div className="text-center">
-          <p className="">
+        <div className="text-center space-y-3">
+          <p>
             Already have an account?{' '}
             <Link
               href="/login"
               className="text-orange hover:text-orange-400 font-semibold transition-colors"
             >
               Sign in
+            </Link>
+          </p>
+          <p className="text-sm">
+            Haven&apos;t talked to a coach yet?{' '}
+            <Link
+              href="/get-started"
+              className="text-cyan hover:text-cyan-400 font-semibold transition-colors"
+            >
+              Join the Team first
             </Link>
           </p>
         </div>

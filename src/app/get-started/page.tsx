@@ -41,13 +41,19 @@ export default function GetStartedPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/80 to-slate-950/90" />
         <div className="relative z-10 text-center max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
-            Get <span className="text-gradient-orange">Started</span>
+            Join the <span className="text-gradient-orange">Team</span>
           </h1>
           <p className="text-xl text-white mb-4">
-            Ready to take your game to the next level? Let&apos;s get you set up for success.
+            New to PSP? Tell us about yourself and your goals — we&apos;ll build a training plan just for you.
           </p>
           <p className="text-white/80">
-            Complete this form to schedule your first training session at our Virginia Beach facility.
+            Fill out this quick form and our coaching staff will reach out within 24 hours to get you started.
+          </p>
+          <p className="text-white/60 text-sm mt-3">
+            Already a member?{' '}
+            <Link href="/login" className="text-orange hover:text-orange-400 font-semibold transition-colors underline">
+              Log in here
+            </Link>
           </p>
         </div>
       </div>
@@ -271,7 +277,7 @@ export default function GetStartedPage() {
         </div>
 
         <p className="text-slate-600 dark:text-white mb-8 max-w-2xl mx-auto">
-          Our team will review your information and reach out within 24 hours to schedule your first session. We&apos;ll discuss your goals and create a personalized training plan.
+          Once you submit, our coaching staff will review your info and reach out within 24 hours. After that, you&apos;ll create your account and pick a membership to unlock the full PSP.Pro experience.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

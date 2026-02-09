@@ -162,14 +162,23 @@ export default function LoginPage() {
         </div>
 
         {/* Sign Up Link */}
-        <div className="text-center">
+        <div className="text-center space-y-3">
           <p>
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link
               href="/signup"
               className="text-orange hover:text-orange-400 font-semibold transition-colors"
             >
               Sign up
+            </Link>
+          </p>
+          <p className="text-sm">
+            New to PSP?{' '}
+            <Link
+              href="/get-started"
+              className="text-cyan hover:text-cyan-400 font-semibold transition-colors"
+            >
+              Join the Team
             </Link>
           </p>
         </div>
