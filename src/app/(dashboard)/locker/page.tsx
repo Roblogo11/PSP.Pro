@@ -253,7 +253,7 @@ export default function AthleteLockerPage() {
               <Dumbbell className="w-10 h-10 text-cyan-700 dark:text-white mx-auto mb-3" />
               <p className="text-cyan-700 dark:text-white mb-2">No assigned drills yet</p>
               <Link href="/drills">
-                <button className="btn-ghost text-sm">Browse Drill Bank</button>
+                <button className="btn-ghost text-sm">Browse Training</button>
               </Link>
             </div>
           )}

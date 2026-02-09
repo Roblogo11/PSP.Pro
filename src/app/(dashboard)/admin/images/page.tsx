@@ -120,7 +120,7 @@ export default function AdminImagesPage() {
               onUpload={(file) => handleUpload(file, 'features', 'velocity-tracking')}
             />
             <ImageUpload
-              category="Drill Bank"
+              category="Membership Training"
               currentImage={PLACEHOLDER_IMAGES.features.drillBank}
               aspectRatio="3/2"
               dimensions="600x400px"

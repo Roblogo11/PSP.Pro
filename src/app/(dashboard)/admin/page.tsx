@@ -283,8 +283,8 @@ export default function AdminDashboard() {
       stat: `${stats.totalAthletes} Athletes`,
     },
     {
-      title: 'Drill Bank',
-      description: 'Create and organize drills',
+      title: 'Courses',
+      description: 'Create and organize training courses',
       icon: Dumbbell,
       href: '/admin/drills',
       color: '#00B4D8',

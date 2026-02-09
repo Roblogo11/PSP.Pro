@@ -101,10 +101,10 @@ export default function DrillsPage() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-3">
-          Drill Bank
+          Membership Training
         </h1>
         <p className="text-lg text-cyan-700 dark:text-white">
-          Master your craft with our premium training video library
+          Exclusive drills and training videos for PSP members
         </p>
       </div>
 

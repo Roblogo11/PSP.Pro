@@ -280,9 +280,9 @@ const KNOWLEDGE_BASE: KBEntry[] = [
 
   // ── DRILLS ──
   {
-    keywords: ['drill', 'drills', 'training video', 'exercise', 'workout', 'drill bank', 'video', 'assigned drill'],
-    title: 'Training Drills',
-    response: 'The Drill Bank is your training video library:\n\n• Browse all published drills with search and filters\n• Filter by difficulty (beginner, intermediate, advanced)\n• Filter by category (mechanics, speed, power, etc.)\n• Each drill has a video, description, duration, and difficulty badge\n\nHow drills work:\n1. Your coach assigns drills to you (they show up on your dashboard)\n2. Click a drill to open it\n3. Watch the embedded YouTube video\n4. Click "Mark Complete" when you\'re done\n5. Your completion count updates your stats and achievements\n\nYour progress is tracked — coaches can see what you\'ve completed!',
+    keywords: ['drill', 'drills', 'training video', 'exercise', 'workout', 'membership training', 'video', 'assigned drill'],
+    title: 'Membership Training',
+    response: 'Membership Training is your training video library:\n\n• Browse all published drills with search and filters\n• Filter by difficulty (beginner, intermediate, advanced)\n• Filter by category (mechanics, speed, power, etc.)\n• Each drill has a video, description, duration, and difficulty badge\n\nHow drills work:\n1. Your coach assigns drills to you (they show up on your dashboard)\n2. Click a drill to open it\n3. Watch the embedded YouTube video\n4. Click "Mark Complete" when you\'re done\n5. Your completion count updates your stats and achievements\n\nYour progress is tracked — coaches can see what you\'ve completed!',
     actions: [{ label: 'View Drills', href: '/drills' }],
     followUp: ['How do I complete a drill?', 'What are achievements?'],
   },
@@ -291,7 +291,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['how do drills work', 'mark drill complete', 'complete drill', 'drill complete'],
     title: 'Completing Drills',
-    response: 'Here\'s the drill completion flow:\n\n1. Open any drill from the Drill Bank or your Assigned Drills on the dashboard\n2. You\'ll see the drill page with:\n   • Embedded video player (YouTube)\n   • Title, description, and instructions\n   • Category, difficulty, and duration info\n3. Watch the video and practice the drill\n4. Click the "Mark Complete" button\n5. Your completion count increments\n6. It updates your dashboard stats and progress toward achievement badges\n\nYou can complete the same drill multiple times — each completion is tracked!',
+    response: 'Here\'s the drill completion flow:\n\n1. Open any drill from Membership Training or your Assigned Drills on the dashboard\n2. You\'ll see the drill page with:\n   • Embedded video player (YouTube)\n   • Title, description, and instructions\n   • Category, difficulty, and duration info\n3. Watch the video and practice the drill\n4. Click the "Mark Complete" button\n5. Your completion count increments\n6. It updates your dashboard stats and progress toward achievement badges\n\nYou can complete the same drill multiple times — each completion is tracked!',
     actions: [{ label: 'Go to Drills', href: '/drills' }],
   },
 
@@ -356,7 +356,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['walk me through admin', 'admin walkthrough', 'admin page'],
     title: 'Admin Panel Walkthrough',
-    response: 'The Admin Control Center layout:\n\nTop — Welcome banner with quick start tips and your name.\n\nStats Row — 4 cards: Total Athletes, Upcoming Sessions, Training Drills, Pending Bookings (shows notification badge if any pending).\n\nUpcoming Sessions — List of your next 5 sessions with athlete name, date, time, and status.\n\nQuick Actions — 4 cards: Create Drill, Schedule Session, Add Athlete, Upload Video.\n\nPlatform Management — 6 cards linking to: Athlete Management, Drill Bank, Session Schedule, Content Library, Analytics, Platform Settings.\n\nStripe Section (admin only) — Shows test/live payment mode with toggle switch.\n\nUse the sidebar to navigate between all management pages.',
+    response: 'The Admin Control Center layout:\n\nTop — Welcome banner with quick start tips and your name.\n\nStats Row — 4 cards: Total Athletes, Upcoming Sessions, Training Drills, Pending Bookings (shows notification badge if any pending).\n\nUpcoming Sessions — List of your next 5 sessions with athlete name, date, time, and status.\n\nQuick Actions — 4 cards: Create Drill, Schedule Session, Add Athlete, Upload Video.\n\nPlatform Management — 6 cards linking to: Athlete Management, Courses, Session Schedule, Content Library, Analytics, Platform Settings.\n\nStripe Section (admin only) — Shows test/live payment mode with toggle switch.\n\nUse the sidebar to navigate between all management pages.',
     actions: [{ label: 'Go to Admin', href: '/admin' }],
   },
 

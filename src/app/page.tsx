@@ -648,7 +648,7 @@ export default function HomePage() {
               <h4 className="font-semibold mb-4" style={{ color: footerHeadingColor }}>Platform</h4>
               <ul className="space-y-2 text-sm text-cyan-700 dark:text-white">
                 <li><Link href="/locker" className="hover:text-orange transition-colors">Dashboard</Link></li>
-                <li><Link href="/drills" className="hover:text-orange transition-colors">Drill Bank</Link></li>
+                <li><Link href="/drills" className="hover:text-orange transition-colors">Membership Training</Link></li>
                 <li><Link href="/login" className="hover:text-orange transition-colors">Login</Link></li>
                 <li><Link href="/signup" className="hover:text-orange transition-colors">Sign Up</Link></li>
               </ul>

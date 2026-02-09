@@ -122,7 +122,7 @@ export default function DrillDetailPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Drill Not Found</h1>
           <Link href="/drills" className="btn-primary">
-            Back to Drill Bank
+            Back to Training
           </Link>
         </div>
       </div>
@@ -137,7 +137,7 @@ export default function DrillDetailPage() {
         className="flex items-center gap-2 text-cyan-800 dark:text-white hover:text-orange transition-colors mb-6"
       >
         <ArrowLeft className="w-5 h-5" />
-        Back to Drill Bank
+        Back to Training
       </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

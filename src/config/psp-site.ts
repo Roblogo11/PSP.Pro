@@ -50,7 +50,7 @@ export const pspConfig = {
   navigation: {
     dashboard: [
       { label: 'Athlete Locker', href: '/locker', icon: 'LayoutDashboard' },
-      { label: 'Drill Bank', href: '/drills', icon: 'Dumbbell' },
+      { label: 'Membership Training', href: '/drills', icon: 'Dumbbell' },
       { label: 'Sessions', href: '/sessions', icon: 'Calendar' },
       { label: 'Progress', href: '/progress', icon: 'TrendingUp' },
       { label: 'Booking', href: '/booking', icon: 'Clock' },
@@ -111,7 +111,7 @@ export const pspConfig = {
         description: 'Perfect for athletes getting started',
         features: [
           '4 sessions per month',
-          'Access to Drill Bank',
+          'Access to Membership Training',
           'Velocity tracking',
           'Mobile app access',
           'Progress reports',
@@ -200,7 +200,7 @@ export const pspConfig = {
         icon: "TrendingUp",
       },
       {
-        title: "Drill Bank",
+        title: "Membership Training",
         description: "Extensive library of professional training videos",
         icon: "Video",
       },
@@ -227,7 +227,7 @@ export const pspConfig = {
         title: "Platform",
         items: [
           { name: "Athlete Locker", href: "/locker" },
-          { name: "Drill Bank", href: "/drills" },
+          { name: "Membership Training", href: "/drills" },
           { name: "Progress Tracking", href: "/progress" },
         ],
       },
