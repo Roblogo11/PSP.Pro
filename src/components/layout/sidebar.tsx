@@ -41,7 +41,7 @@ const athleteNavItems: NavItem[] = [
   { label: 'Sessions', mobileLabel: 'Sessions', href: '/sessions', icon: Calendar, color: 'text-purple-400' },
   { label: 'Progress', mobileLabel: 'Progress', href: '/progress', icon: TrendingUp, color: 'text-green-400' },
   { label: 'Achievements', mobileLabel: 'Awards', href: '/achievements', icon: Trophy, color: 'text-yellow-400' },
-  { label: 'Buy a Session', mobileLabel: 'Buy', href: '/booking', icon: Clock, color: 'text-blue-400' },
+  { label: 'Buy A Lesson', mobileLabel: 'Buy', href: '/booking', icon: Clock, color: 'text-blue-400' },
   { label: 'Settings', mobileLabel: 'Settings', href: '/settings', icon: Settings, color: 'text-cyan-600' },
 ]
 
