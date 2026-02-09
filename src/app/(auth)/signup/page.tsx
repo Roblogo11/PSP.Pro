@@ -2,10 +2,12 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Mail, Lock, User, Calendar, Loader2, ArrowRight } from 'lucide-react'
 
 export default function SignupPage() {
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [age, setAge] = useState<string>('')
@@ -112,9 +114,9 @@ export default function SignupPage() {
         throw new Error('Account created but profile verification failed. Please contact support.')
       }
 
-      // 5. Success! Use window.location for hard navigation (ensures auth state is fresh)
-      window.location.href = '/locker'
-      // Don't set loading to false - we're navigating away
+      // 5. Success! Refresh server state then navigate
+      router.refresh()
+      router.push('/locker')
       return
     } catch (err: any) {
       console.error('Signup error:', err)

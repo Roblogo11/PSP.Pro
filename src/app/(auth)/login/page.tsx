@@ -49,13 +49,13 @@ export default function LoginPage() {
           throw new Error('User profile not found')
         }
 
-        // Use window.location for hard navigation (ensures auth state is fresh)
+        // Refresh server state then navigate
+        router.refresh()
         if (profile.role === 'admin' || profile.role === 'coach') {
-          window.location.href = '/admin'
+          router.push('/admin')
         } else {
-          window.location.href = '/locker'
+          router.push('/locker')
         }
-        // Don't set loading to false - we're navigating away
         return
       }
     } catch (err: any) {

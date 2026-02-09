@@ -244,6 +244,7 @@ export default function ServicesManagerPage() {
       case 'individual': return 'bg-orange/20 text-orange border-orange/50'
       case 'group': return 'bg-cyan/20 text-cyan border-cyan/50'
       case 'package': return 'bg-purple-500/20 text-purple-400 border-purple-500/50'
+      case 'specialty': return 'bg-green-500/20 text-green-400 border-green-500/50'
       default: return 'bg-cyan-600/20 text-cyan-600 border-cyan-600/50'
     }
   }
@@ -370,6 +371,7 @@ export default function ServicesManagerPage() {
                 <option value="individual">Individual</option>
                 <option value="group">Group</option>
                 <option value="package">Package</option>
+                <option value="specialty">Specialty</option>
               </select>
             </div>
 
