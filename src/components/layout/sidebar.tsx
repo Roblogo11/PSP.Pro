@@ -29,29 +29,30 @@ import { ThemeToggle } from '@/components/ui/theme-toggle'
 
 interface NavItem {
   label: string
+  mobileLabel: string
   href: string
   icon: React.ElementType
   color?: string
 }
 
 const athleteNavItems: NavItem[] = [
-  { label: 'My Dashboard', href: '/locker', icon: LayoutDashboard, color: 'text-orange-400' },
-  { label: 'Training Drills', href: '/drills', icon: Dumbbell, color: 'text-cyan-400' },
-  { label: 'My Sessions', href: '/sessions', icon: Calendar, color: 'text-purple-400' },
-  { label: 'My Progress', href: '/progress', icon: TrendingUp, color: 'text-green-400' },
-  { label: 'Achievements', href: '/achievements', icon: Trophy, color: 'text-yellow-400' },
-  { label: 'Buy Lessons', href: '/booking', icon: Clock, color: 'text-blue-400' },
-  { label: 'Settings', href: '/settings', icon: Settings, color: 'text-cyan-600' },
+  { label: 'Dashboard', mobileLabel: 'Home', href: '/locker', icon: LayoutDashboard, color: 'text-orange-400' },
+  { label: 'Drills', mobileLabel: 'Drills', href: '/drills', icon: Dumbbell, color: 'text-cyan-400' },
+  { label: 'Sessions', mobileLabel: 'Sessions', href: '/sessions', icon: Calendar, color: 'text-purple-400' },
+  { label: 'Progress', mobileLabel: 'Progress', href: '/progress', icon: TrendingUp, color: 'text-green-400' },
+  { label: 'Achievements', mobileLabel: 'Awards', href: '/achievements', icon: Trophy, color: 'text-yellow-400' },
+  { label: 'Book a Session', mobileLabel: 'Book', href: '/booking', icon: Clock, color: 'text-blue-400' },
+  { label: 'Settings', mobileLabel: 'Settings', href: '/settings', icon: Settings, color: 'text-cyan-600' },
 ]
 
 const adminNavItems: NavItem[] = [
-  { label: 'Coaches', href: '/admin', icon: Shield, color: 'text-red-400' },
-  { label: 'My Athletes', href: '/admin/athletes', icon: Users, color: 'text-cyan-400' },
-  { label: 'Manage Trainings', href: '/admin/services', icon: DollarSign, color: 'text-green-400' },
-  { label: 'Assign Courses', href: '/admin/drills', icon: Dumbbell, color: 'text-purple-400' },
-  { label: 'Confirm Appointments', href: '/admin/bookings', icon: Calendar, color: 'text-blue-400' },
-  { label: 'Media Library', href: '/admin/media', icon: Video, color: 'text-pink-400' },
-  { label: 'Analytics', href: '/admin/analytics', icon: BarChart3, color: 'text-green-400' },
+  { label: 'Admin Home', mobileLabel: 'Admin', href: '/admin', icon: Shield, color: 'text-red-400' },
+  { label: 'Athletes', mobileLabel: 'Athletes', href: '/admin/athletes', icon: Users, color: 'text-cyan-400' },
+  { label: 'Services & Pricing', mobileLabel: 'Services', href: '/admin/services', icon: DollarSign, color: 'text-green-400' },
+  { label: 'Drill Bank', mobileLabel: 'Drills', href: '/admin/drills', icon: Dumbbell, color: 'text-purple-400' },
+  { label: 'Bookings', mobileLabel: 'Bookings', href: '/admin/bookings', icon: Calendar, color: 'text-blue-400' },
+  { label: 'Media', mobileLabel: 'Media', href: '/admin/media', icon: Video, color: 'text-pink-400' },
+  { label: 'Analytics', mobileLabel: 'Stats', href: '/admin/analytics', icon: BarChart3, color: 'text-green-400' },
 ]
 
 export function Sidebar() {
@@ -62,7 +63,7 @@ export function Sidebar() {
 
   const handleLogout = async () => {
     const supabase = createClient()
-    await supabase.auth.signOut()
+    await supabase.auth.signOut({ scope: 'local' })
     router.push('/')
   }
 
@@ -273,13 +274,14 @@ export function Sidebar() {
         animate={{ y: 0 }}
         className="lg:hidden fixed bottom-0 left-0 right-0 glass-card border-t border-cyan-200/40 z-50 mobile-safe"
       >
-        <div className="flex items-center overflow-x-auto scrollbar-hide gap-1 px-2 py-2">
+        <div className="flex items-center overflow-x-auto scrollbar-hide gap-0.5 px-1 py-1.5">
           {/* Theme Toggle - compact */}
-          <div className="flex-shrink-0 flex flex-col items-center gap-1 px-2">
+          <div className="flex-shrink-0 flex flex-col items-center gap-1 px-1.5">
             <ThemeToggle />
           </div>
 
-          {navItems.map((item) => {
+          {/* Athlete Nav Items */}
+          {athleteNavItems.map((item) => {
             const isActive = pathname === item.href
             const Icon = item.icon
 
@@ -288,7 +290,7 @@ export function Sidebar() {
                 <motion.div
                   whileTap={{ scale: 0.9 }}
                   className={`
-                    flex flex-col items-center gap-0.5 p-2 rounded-xl min-w-[56px] flex-shrink-0
+                    flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0
                     ${
                       isActive
                         ? 'bg-orange/20 text-orange'
@@ -296,12 +298,52 @@ export function Sidebar() {
                     }
                   `}
                 >
-                  <Icon className="w-5 h-5" />
-                  <span className="text-[10px] font-medium leading-tight text-center whitespace-nowrap">{item.label.split(' ')[0]}</span>
+                  <Icon className="w-4 h-4" />
+                  <span className="text-[9px] font-medium leading-tight text-center whitespace-nowrap">{item.mobileLabel}</span>
                 </motion.div>
               </Link>
             )
           })}
+
+          {/* Admin separator + items (coaches/admins only) */}
+          {(isCoach || isAdmin) && (
+            <>
+              <div className="flex-shrink-0 w-px h-8 bg-cyan-200/40 dark:bg-white/10 mx-1" />
+              {adminNavItems.map((item) => {
+                const isActive = pathname === item.href
+                const Icon = item.icon
+
+                return (
+                  <Link key={item.href} href={item.href}>
+                    <motion.div
+                      whileTap={{ scale: 0.9 }}
+                      className={`
+                        flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0
+                        ${
+                          isActive
+                            ? 'bg-cyan/20 text-cyan'
+                            : 'text-slate-700 dark:text-white hover:text-slate-900 dark:hover:text-white'
+                        }
+                      `}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span className="text-[9px] font-medium leading-tight text-center whitespace-nowrap">{item.mobileLabel}</span>
+                    </motion.div>
+                  </Link>
+                )
+              })}
+            </>
+          )}
+
+          {/* Logout */}
+          <div className="flex-shrink-0 w-px h-8 bg-cyan-200/40 dark:bg-white/10 mx-1" />
+          <button
+            onClick={handleLogout}
+            className="flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0 text-red-400 hover:text-red-300"
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="text-[9px] font-medium leading-tight text-center whitespace-nowrap">Logout</span>
+          </button>
         </div>
       </motion.nav>
 
