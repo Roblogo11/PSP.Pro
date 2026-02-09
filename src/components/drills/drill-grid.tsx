@@ -40,7 +40,7 @@ export function DrillGrid({ drills, loading = false }: DrillGridProps) {
               />
             </svg>
           </div>
-          <h3 className="text-xl font-display font-bold text-white mb-2">
+          <h3 className="text-xl font-display font-bold text-slate-900 dark:text-white mb-2">
             No Drills Found
           </h3>
           <p className="text-cyan-700 dark:text-white">

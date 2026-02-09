@@ -107,7 +107,7 @@ export function ActivityFeed({ activities = defaultActivities, maxItems = 5 }: A
 
             {/* Content */}
             <div className="flex-1 min-w-0">
-              <h4 className="text-sm font-semibold text-white mb-1 group-hover:text-gradient-orange transition-all">
+              <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-1 group-hover:text-gradient-orange transition-all">
                 {activity.title}
               </h4>
               {activity.description && (

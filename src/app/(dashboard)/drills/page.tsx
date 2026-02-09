@@ -100,7 +100,7 @@ export default function DrillsPage() {
     <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8 relative">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-3">
+        <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-3">
           Membership Training
         </h1>
         <p className="text-lg text-cyan-700 dark:text-white">
@@ -117,7 +117,7 @@ export default function DrillsPage() {
             </div>
             <div>
               <p className="text-sm text-cyan-700 dark:text-white">Total Drills</p>
-              <p className="text-2xl font-bold text-white">{drills.length}</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">{drills.length}</p>
             </div>
           </div>
         </div>
@@ -129,7 +129,7 @@ export default function DrillsPage() {
             </div>
             <div>
               <p className="text-sm text-cyan-700 dark:text-white">Completed</p>
-              <p className="text-2xl font-bold text-white">{stats.completed}</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.completed}</p>
             </div>
           </div>
         </div>
@@ -141,7 +141,7 @@ export default function DrillsPage() {
             </div>
             <div>
               <p className="text-sm text-cyan-700 dark:text-white">Progress</p>
-              <p className="text-2xl font-bold text-white">
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">
                 {drills.length > 0
                   ? Math.round((stats.completed / drills.length) * 100)
                   : 0}%
@@ -157,7 +157,7 @@ export default function DrillsPage() {
             </div>
             <div>
               <p className="text-sm text-cyan-700 dark:text-white">Hours Trained</p>
-              <p className="text-2xl font-bold text-white">{stats.hoursSpent}</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.hoursSpent}</p>
             </div>
           </div>
         </div>
@@ -169,8 +169,8 @@ export default function DrillsPage() {
       {/* Results Count */}
       <div className="mb-6">
         <p className="text-cyan-700 dark:text-white">
-          Showing <span className="text-white font-semibold">{filteredDrills.length}</span> of{' '}
-          <span className="text-white font-semibold">{drills.length}</span> drills
+          Showing <span className="text-slate-900 dark:text-white font-semibold">{filteredDrills.length}</span> of{' '}
+          <span className="text-slate-900 dark:text-white font-semibold">{drills.length}</span> drills
         </p>
       </div>
 

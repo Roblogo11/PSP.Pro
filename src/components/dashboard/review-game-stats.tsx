@@ -38,7 +38,7 @@ export function ReviewGameStats() {
               <Star className="w-6 h-6 text-orange" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white group-hover:text-orange transition-colors">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-orange transition-colors">
                 Review Rating Game
               </h3>
               <p className="text-sm text-cyan-700 dark:text-white">Not played yet</p>
@@ -66,7 +66,7 @@ export function ReviewGameStats() {
             <Star className="w-6 h-6 text-orange" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-white">Review Rating Game</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Review Rating Game</h3>
             <p className="text-sm text-cyan-700 dark:text-white">Your performance stats</p>
           </div>
         </div>
@@ -96,7 +96,7 @@ export function ReviewGameStats() {
             <Target className="w-4 h-4 text-cyan" />
             <p className="text-xs text-cyan-700 dark:text-white">Accuracy</p>
           </div>
-          <p className="text-2xl font-bold text-white">{score.accuracy}%</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white">{score.accuracy}%</p>
         </div>
 
         <div className="p-4 bg-cyan-50/50 rounded-xl">
@@ -104,7 +104,7 @@ export function ReviewGameStats() {
             <Trophy className="w-4 h-4 text-green-400" />
             <p className="text-xs text-cyan-700 dark:text-white">Perfect Games</p>
           </div>
-          <p className="text-2xl font-bold text-white">{score.perfectGames}</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white">{score.perfectGames}</p>
         </div>
 
         <div className="p-4 bg-cyan-50/50 rounded-xl">
@@ -112,7 +112,7 @@ export function ReviewGameStats() {
             <TrendingUp className="w-4 h-4 text-orange" />
             <p className="text-xs text-cyan-700 dark:text-white">Best Streak</p>
           </div>
-          <p className="text-2xl font-bold text-white">{score.bestStreak}/6</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white">{score.bestStreak}/6</p>
         </div>
 
         <div className="p-4 bg-cyan-50/50 rounded-xl">
@@ -120,7 +120,7 @@ export function ReviewGameStats() {
             <Star className="w-4 h-4 text-purple-400" />
             <p className="text-xs text-cyan-700 dark:text-white">Total Correct</p>
           </div>
-          <p className="text-2xl font-bold text-white">
+          <p className="text-2xl font-bold text-slate-900 dark:text-white">
             {score.correctGuesses}/{score.totalAttempts}
           </p>
         </div>

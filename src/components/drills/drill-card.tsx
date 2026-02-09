@@ -100,7 +100,7 @@ export function DrillCard({
             </div>
 
             {/* Title */}
-            <h3 className="text-lg font-display font-bold text-white mb-2 group-hover:text-gradient-orange transition-all">
+            <h3 className="text-lg font-display font-bold text-slate-900 dark:text-white mb-2 group-hover:text-gradient-orange transition-all">
               {title}
             </h3>
 

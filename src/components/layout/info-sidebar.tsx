@@ -98,7 +98,7 @@ export function InfoSidebar() {
                     transition-all duration-200 cursor-pointer
                     ${
                       isActive
-                        ? 'bg-orange/20 border border-orange/50 text-white shadow-glow-orange'
+                        ? 'bg-orange/20 border border-orange/50 text-slate-900 dark:text-white shadow-glow-orange'
                         : 'text-slate-700 dark:text-slate-300 hover:bg-cyan-900/20 dark:hover:text-white hover:text-slate-900'
                     }
                   `}

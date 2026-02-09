@@ -81,7 +81,7 @@ export function VelocityChart({
       {/* Header */}
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h3 className="text-xl font-bold text-white mb-1">{title}</h3>
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">{title}</h3>
           <p className="text-sm text-cyan-700 dark:text-white">
             {velocityData && velocityData.length > 0 ? `Last ${velocityData.length} sessions` : 'Sample data'}
           </p>

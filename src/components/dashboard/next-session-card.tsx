@@ -51,7 +51,7 @@ export function NextSessionCard({
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-xl font-bold text-white mb-1">Next Session</h3>
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">Next Session</h3>
           <p className="text-sm text-cyan-700 dark:text-white">{type}</p>
         </div>
         <div className="w-12 h-12 bg-orange/20 rounded-xl flex items-center justify-center">

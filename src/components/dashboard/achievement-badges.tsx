@@ -104,7 +104,7 @@ export function AchievementBadges({ badges = defaultBadges }: AchievementBadgesP
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-xl font-display font-bold text-white">
+          <h3 className="text-xl font-display font-bold text-slate-900 dark:text-white">
             Achievements
           </h3>
           <p className="text-sm text-cyan-700 dark:text-white mt-1">
@@ -154,7 +154,7 @@ export function AchievementBadges({ badges = defaultBadges }: AchievementBadgesP
               {/* Name */}
               <h4
                 className={`text-sm font-semibold text-center mb-1 ${
-                  badge.earned ? 'text-white' : 'text-cyan-700'
+                  badge.earned ? 'text-slate-900 dark:text-white' : 'text-cyan-700'
                 }`}
               >
                 {badge.name}

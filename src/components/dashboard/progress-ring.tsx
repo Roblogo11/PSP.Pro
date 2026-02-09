@@ -63,7 +63,7 @@ export function ProgressRing({
         {/* Center Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           {value && (
-            <div className="text-2xl font-bold text-white">{value}</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white">{value}</div>
           )}
           <div className="text-xl font-bold text-gradient-orange">
             {progress}%

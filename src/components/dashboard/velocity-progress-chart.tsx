@@ -48,7 +48,7 @@ export function VelocityProgressChart({
     <div className={`command-panel ${className}`}>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-xl font-bold text-white mb-1 flex items-center gap-2">
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
             <LineChart className="w-5 h-5 text-cyan" />
             Velocity Progress
           </h3>
@@ -75,7 +75,7 @@ export function VelocityProgressChart({
         </div>
         <div className="p-4 rounded-xl bg-cyan-50/50 border border-cyan-200/40">
           <p className="text-xs text-cyan-700 dark:text-white mb-1">Progress</p>
-          <p className="text-2xl font-bold text-white">{percentToGoal}%</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white">{percentToGoal}%</p>
         </div>
       </div>
 

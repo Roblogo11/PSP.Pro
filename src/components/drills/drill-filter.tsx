@@ -57,7 +57,7 @@ export function DrillFilter({ onFilterChange }: DrillFilterProps) {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <Filter className="w-5 h-5 text-orange" />
-          <h2 className="text-xl font-display font-bold text-white">Filter Drills</h2>
+          <h2 className="text-xl font-display font-bold text-slate-900 dark:text-white">Filter Drills</h2>
         </div>
 
         <div className="flex items-center gap-3">
@@ -99,7 +99,7 @@ export function DrillFilter({ onFilterChange }: DrillFilterProps) {
                 placeholder="Search by name or tag..."
                 value={filters.search}
                 onChange={(e) => updateFilter('search', e.target.value)}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
               />
             </div>
 
