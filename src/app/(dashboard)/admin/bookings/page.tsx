@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 export default function AdminBookingsPage() {
   const supabase = createClient()
@@ -26,7 +27,7 @@ export default function AdminBookingsPage() {
   const [bookings, setBookings] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'cancelled'>('all')
-  const [viewMode, setViewMode] = useState<'table' | 'calendar'>('table')
+  const [viewMode, setViewMode] = useState<'table' | 'calendar'>('calendar')
   const [calendarDate, setCalendarDate] = useState(new Date())
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
 
@@ -227,17 +228,6 @@ export default function AdminBookingsPage() {
         {/* View Toggle */}
         <div className="flex items-center gap-2 glass-card p-1 rounded-xl self-start">
           <button
-            onClick={() => setViewMode('table')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-              viewMode === 'table'
-                ? 'bg-orange text-white shadow-lg shadow-orange/30'
-                : 'text-slate-600 dark:text-slate-300 hover:bg-cyan-50/50'
-            }`}
-          >
-            <List className="w-4 h-4" />
-            Table
-          </button>
-          <button
             onClick={() => setViewMode('calendar')}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
               viewMode === 'calendar'
@@ -247,6 +237,17 @@ export default function AdminBookingsPage() {
           >
             <Grid3X3 className="w-4 h-4" />
             Calendar
+          </button>
+          <button
+            onClick={() => setViewMode('table')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+              viewMode === 'table'
+                ? 'bg-orange text-white shadow-lg shadow-orange/30'
+                : 'text-slate-600 dark:text-slate-300 hover:bg-cyan-50/50'
+            }`}
+          >
+            <List className="w-4 h-4" />
+            Table
           </button>
         </div>
       </div>
@@ -360,7 +361,7 @@ export default function AdminBookingsPage() {
                     key={day}
                     onClick={() => setSelectedDay(isSelected ? null : dateKey)}
                     className={`
-                      aspect-square p-1 rounded-xl transition-all relative flex flex-col items-center
+                      aspect-square p-1 rounded-xl transition-all relative flex flex-col items-center overflow-hidden
                       ${isSelected
                         ? 'bg-orange/20 border-2 border-orange ring-2 ring-orange/30'
                         : isToday
@@ -371,9 +372,22 @@ export default function AdminBookingsPage() {
                       }
                     `}
                   >
+                    {/* PSP Logo watermark */}
+                    <div className={`absolute inset-0 flex items-center justify-center pointer-events-none ${
+                      hasBookings ? 'opacity-[0.08]' : 'opacity-[0.03]'
+                    }`}>
+                      <Image
+                        src="/images/PSP-black-300x99-1.png"
+                        alt=""
+                        width={40}
+                        height={13}
+                        className="dark:invert"
+                      />
+                    </div>
+
                     <span
                       className={`
-                        text-sm font-medium mt-1
+                        text-sm font-medium mt-1 relative z-10
                         ${isSelected
                           ? 'text-orange font-bold'
                           : isToday
@@ -387,7 +401,7 @@ export default function AdminBookingsPage() {
 
                     {/* Booking dots */}
                     {hasBookings && (
-                      <div className="flex flex-wrap justify-center gap-0.5 mt-auto mb-1 max-w-full px-0.5">
+                      <div className="flex flex-wrap justify-center gap-0.5 mt-auto mb-1 max-w-full px-0.5 relative z-10">
                         {dayBookings.slice(0, 4).map((b: any, idx: number) => (
                           <div
                             key={idx}
