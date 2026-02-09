@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { Mail, Phone, MapPin, Send, Loader2, MessageSquare } from 'lucide-react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Mail, Phone, MapPin, Send, Loader2, MessageSquare, Package, Rocket, Info, ArrowRight } from 'lucide-react'
 import { GoogleReviews } from '@/components/google-reviews'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
@@ -54,7 +56,7 @@ export default function ContactPage() {
           </div>
           <h1 className="text-3xl font-bold text-white mb-4">Message Sent!</h1>
           <p className="mb-6">
-            Thanks for reaching out! We'll get back to you within 24 hours.
+            Thanks for reaching out! We&apos;ll get back to you within 24 hours.
           </p>
           <button
             onClick={() => setSubmitted(false)}
@@ -70,17 +72,30 @@ export default function ContactPage() {
   return (
     <div className="flex min-h-screen">
       <InfoSidebar />
-      <main className="flex-1 p-4 md:p-8 pb-24">
-      {/* Header */}
-      <div className="max-w-6xl mx-auto mb-12">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
-          Get in <span className="text-gradient-orange">Touch</span>
-        </h1>
-        <p className="text-lg max-w-2xl">
-          Ready to elevate your game? Have questions about our training programs? We're here to help you reach your athletic potential.
-        </p>
+      <main className="flex-1 pb-24">
+      {/* Hero Image Banner */}
+      <div className="relative px-6 py-20 md:py-28 overflow-hidden">
+        <Image
+          src="/images/Proper Sports Performance.jpg"
+          alt="PSP training facility"
+          fill
+          priority
+          quality={85}
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/80 to-slate-950/90" />
+        <div className="relative z-10 text-center max-w-3xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
+            Get in <span className="text-gradient-orange">Touch</span>
+          </h1>
+          <p className="text-xl text-white max-w-2xl mx-auto">
+            Ready to elevate your game? Have questions about our training programs? We&apos;re here to help you reach your athletic potential.
+          </p>
+        </div>
       </div>
 
+      <div className="p-4 md:p-8">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Contact Info */}
         <div className="space-y-6">
@@ -204,7 +219,7 @@ export default function ContactPage() {
               {/* Interest */}
               <div>
                 <label htmlFor="interest" className="block text-sm font-medium mb-2">
-                  I'm Interested In *
+                  I&apos;m Interested In *
                 </label>
                 <select
                   id="interest"
@@ -288,6 +303,45 @@ export default function ContactPage() {
             />
           </div>
         </div>
+      </div>
+
+      {/* Continue Exploring */}
+      <div className="max-w-6xl mx-auto mt-12">
+        <div className="command-panel">
+          <h2 className="text-2xl font-bold text-white mb-6 text-center">Continue Exploring</h2>
+          <div className="grid md:grid-cols-3 gap-4">
+            <Link href="/pricing" className="glass-card-hover p-6 text-center group">
+              <Package className="w-8 h-8 text-orange mb-3 mx-auto" />
+              <h3 className="font-bold text-white group-hover:text-orange transition-colors">View Pricing</h3>
+              <p className="text-sm text-cyan-800 dark:text-white mt-2">Training programs & packages</p>
+              <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
+                <span>Explore</span>
+                <ArrowRight className="w-4 h-4" />
+              </div>
+            </Link>
+
+            <Link href="/get-started" className="glass-card-hover p-6 text-center group">
+              <Rocket className="w-8 h-8 text-cyan mb-3 mx-auto" />
+              <h3 className="font-bold text-white group-hover:text-cyan transition-colors">Get Started</h3>
+              <p className="text-sm text-cyan-800 dark:text-white mt-2">Begin your athletic journey</p>
+              <div className="inline-flex items-center gap-1 text-cyan text-sm font-semibold mt-3">
+                <span>Start Now</span>
+                <ArrowRight className="w-4 h-4" />
+              </div>
+            </Link>
+
+            <Link href="/about" className="glass-card-hover p-6 text-center group">
+              <Info className="w-8 h-8 text-orange mb-3 mx-auto" />
+              <h3 className="font-bold text-white group-hover:text-orange transition-colors">About PSP</h3>
+              <p className="text-sm text-cyan-800 dark:text-white mt-2">Learn about our mission</p>
+              <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
+                <span>Learn More</span>
+                <ArrowRight className="w-4 h-4" />
+              </div>
+            </Link>
+          </div>
+        </div>
+      </div>
       </div>
       </main>
 

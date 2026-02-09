@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { Target, Users, MapPin, Award, TrendingUp, Zap } from 'lucide-react'
+import Image from 'next/image'
+import { Target, Users, MapPin, Award, TrendingUp, Zap, Package, Rocket, Mail, ArrowRight } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
 
@@ -9,45 +10,44 @@ export default function AboutPage() {
   return (
     <div className="flex min-h-screen">
       <InfoSidebar />
-      <main className="flex-1 p-4 md:p-8 pb-24 lg:pb-20">
-      {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
-          About <span className="text-gradient-orange">PSP.Pro</span>
-        </h1>
-        <p className="text-cyan-700 dark:text-white text-lg">
-          Proper Sports Performance - Progression Over Perfection
-        </p>
-      </div>
-
-      {/* Hero Section */}
-      <div className="command-panel mb-6 text-center">
-        <div className="inline-block mb-4 px-4 py-2 bg-orange/10 border border-orange/20 rounded-full">
-          <span className="text-orange font-semibold">Virginia Beach's Premier Training Facility</span>
-        </div>
-
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-          Proper Sports Performance
-        </h2>
-
-        <p className="text-xl text-cyan-700 dark:text-white mb-6 max-w-3xl mx-auto leading-relaxed">
-          Virginia Beach's premier baseball and softball training facility focused on velocity development and mechanics improvement.
-        </p>
-
-        <p className="text-2xl font-bold text-orange mb-8">
-          Progression Over Perfection
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/get-started" className="btn-primary">
-            Get Started
-          </Link>
-          <Link href="/pricing" className="btn-ghost">
-            View Programs
-          </Link>
+      <main className="flex-1 pb-24 lg:pb-20">
+      {/* Hero Image Banner */}
+      <div className="relative px-6 py-20 md:py-28 overflow-hidden">
+        <Image
+          src="/images/coach rachel psp.jpg"
+          alt="Coach Rachel at PSP"
+          fill
+          priority
+          quality={85}
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/80 to-slate-950/90" />
+        <div className="relative z-10 text-center max-w-3xl mx-auto">
+          <div className="inline-block mb-4 px-4 py-2 bg-orange/10 border border-orange/20 rounded-full">
+            <span className="text-orange font-semibold">Virginia Beach&apos;s Premier Training Facility</span>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
+            About <span className="text-gradient-orange">PSP.Pro</span>
+          </h1>
+          <p className="text-xl text-white mb-6 max-w-2xl mx-auto leading-relaxed">
+            Virginia Beach&apos;s premier baseball and softball training facility focused on velocity development and mechanics improvement.
+          </p>
+          <p className="text-2xl font-bold text-orange">
+            Progression Over Perfection
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+            <Link href="/get-started" className="btn-primary">
+              Get Started
+            </Link>
+            <Link href="/pricing" className="btn-ghost border-white/30 text-white hover:border-white/50">
+              View Programs
+            </Link>
+          </div>
         </div>
       </div>
 
+      <div className="p-4 md:p-8">
       {/* Mission Section */}
       <div className="command-panel mb-6">
         <div className="flex items-center gap-3 mb-6">
@@ -77,6 +77,19 @@ export default function AboutPage() {
               Comprehensive softball training focusing on mechanics, speed development, and game performance.
             </p>
           </div>
+        </div>
+
+        {/* Inline image */}
+        <div className="mt-6 relative h-64 md:h-80 rounded-xl overflow-hidden">
+          <Image
+            src="/images/over the shoulder psp pitching.jpg"
+            alt="PSP coaching session"
+            fill
+            quality={80}
+            sizes="(max-width: 768px) 100vw, 800px"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
         </div>
       </div>
 
@@ -186,15 +199,43 @@ export default function AboutPage() {
             <p className="text-cyan-800 dark:text-white">Delivering measurable outcomes through proven methods</p>
           </div>
         </div>
+      </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-          <Link href="/pricing" className="btn-primary">
-            View Training Programs
+      {/* Continue Exploring */}
+      <div className="command-panel">
+        <h2 className="text-2xl font-bold text-white mb-6 text-center">Continue Exploring</h2>
+        <div className="grid md:grid-cols-3 gap-4">
+          <Link href="/pricing" className="glass-card-hover p-6 text-center group">
+            <Package className="w-8 h-8 text-orange mb-3 mx-auto" />
+            <h3 className="font-bold text-white group-hover:text-orange transition-colors">View Pricing</h3>
+            <p className="text-sm text-cyan-800 dark:text-white mt-2">Training programs & packages</p>
+            <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
+              <span>Explore</span>
+              <ArrowRight className="w-4 h-4" />
+            </div>
           </Link>
-          <Link href="/get-started" className="btn-ghost">
-            Start Training Today
+
+          <Link href="/get-started" className="glass-card-hover p-6 text-center group">
+            <Rocket className="w-8 h-8 text-cyan mb-3 mx-auto" />
+            <h3 className="font-bold text-white group-hover:text-cyan transition-colors">Get Started</h3>
+            <p className="text-sm text-cyan-800 dark:text-white mt-2">Begin your athletic journey</p>
+            <div className="inline-flex items-center gap-1 text-cyan text-sm font-semibold mt-3">
+              <span>Start Now</span>
+              <ArrowRight className="w-4 h-4" />
+            </div>
+          </Link>
+
+          <Link href="/contact" className="glass-card-hover p-6 text-center group">
+            <Mail className="w-8 h-8 text-orange mb-3 mx-auto" />
+            <h3 className="font-bold text-white group-hover:text-orange transition-colors">Contact Us</h3>
+            <p className="text-sm text-cyan-800 dark:text-white mt-2">Questions? We&apos;re here to help</p>
+            <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
+              <span>Reach Out</span>
+              <ArrowRight className="w-4 h-4" />
+            </div>
           </Link>
         </div>
+      </div>
       </div>
       </main>
 

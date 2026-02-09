@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { User, Target, Calendar, CheckCircle, ArrowRight, Mail, Phone, MapPin } from 'lucide-react'
+import { User, Target, Calendar, CheckCircle, ArrowRight, Mail, Phone, MapPin, Package, Info, Rocket } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
 
@@ -25,28 +26,33 @@ export default function GetStartedPage() {
   return (
     <div className="flex min-h-screen">
       <InfoSidebar />
-      <main className="flex-1 p-4 md:p-8 pb-24">
-      {/* Page Header */}
-      <div className="mb-8 text-center">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
-          Get <span className="text-gradient-orange">Started</span>
-        </h1>
-        <p className="text-cyan-800 dark:text-white text-lg">
-          Start your athletic journey with PSP.Pro
-        </p>
+      <main className="flex-1 pb-24">
+      {/* Hero Image Banner */}
+      <div className="relative px-6 py-20 md:py-28 overflow-hidden">
+        <Image
+          src="/images/Coastal Softball Home Run.jpg"
+          alt="PSP softball home run action"
+          fill
+          priority
+          quality={85}
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/80 to-slate-950/90" />
+        <div className="relative z-10 text-center max-w-3xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
+            Get <span className="text-gradient-orange">Started</span>
+          </h1>
+          <p className="text-xl text-white mb-4">
+            Ready to take your baseball or softball game to the next level? Let&apos;s get you set up for success.
+          </p>
+          <p className="text-white/80">
+            Complete this form to schedule your first training session at our Virginia Beach facility.
+          </p>
+        </div>
       </div>
 
-      {/* Welcome Section */}
-      <div className="command-panel mb-6 text-center">
-        <h2 className="text-3xl font-bold text-white mb-4">Welcome to PSP.Pro! 🎯</h2>
-        <p className="text-cyan-700 dark:text-white text-lg mb-4 max-w-2xl mx-auto">
-          Ready to take your baseball or softball game to the next level? Let's get you set up for success.
-        </p>
-        <p className="text-cyan-800 dark:text-white">
-          Complete this form to schedule your first training session at our Virginia Beach facility.
-        </p>
-      </div>
-
+      <div className="p-4 md:p-8">
       {/* Personal Information */}
       <div className="command-panel mb-6">
         <div className="flex items-center gap-3 mb-6">
@@ -139,6 +145,19 @@ export default function GetStartedPage() {
             </select>
           </div>
         </div>
+      </div>
+
+      {/* Athlete Image */}
+      <div className="relative h-64 md:h-80 rounded-xl overflow-hidden mb-6">
+        <Image
+          src="/images/PSP Softball Athlete.jpg"
+          alt="PSP softball athlete training"
+          fill
+          quality={80}
+          sizes="(max-width: 768px) 100vw, 800px"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
       </div>
 
       {/* Training Goals */}
@@ -245,14 +264,14 @@ export default function GetStartedPage() {
       </div>
 
       {/* Submit Section */}
-      <div className="command-panel text-center">
+      <div className="command-panel mb-6 text-center">
         <div className="flex items-center gap-3 mb-6 justify-center">
           <CheckCircle className="w-8 h-8 text-green-400" />
           <h2 className="text-2xl font-bold text-white">Ready to Start?</h2>
         </div>
 
         <p className="text-cyan-700 dark:text-white mb-8 max-w-2xl mx-auto">
-          Our team will review your information and reach out within 24 hours to schedule your first session. We'll discuss your goals and create a personalized training plan.
+          Our team will review your information and reach out within 24 hours to schedule your first session. We&apos;ll discuss your goals and create a personalized training plan.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -281,6 +300,43 @@ export default function GetStartedPage() {
           <MapPin className="w-4 h-4 inline mr-1" />
           Training Location: Virginia Beach, VA
         </p>
+      </div>
+
+      {/* Continue Exploring */}
+      <div className="command-panel">
+        <h2 className="text-2xl font-bold text-white mb-6 text-center">Continue Exploring</h2>
+        <div className="grid md:grid-cols-3 gap-4">
+          <Link href="/pricing" className="glass-card-hover p-6 text-center group">
+            <Package className="w-8 h-8 text-orange mb-3 mx-auto" />
+            <h3 className="font-bold text-white group-hover:text-orange transition-colors">View Pricing</h3>
+            <p className="text-sm text-cyan-800 dark:text-white mt-2">Training programs & packages</p>
+            <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
+              <span>Explore</span>
+              <ArrowRight className="w-4 h-4" />
+            </div>
+          </Link>
+
+          <Link href="/about" className="glass-card-hover p-6 text-center group">
+            <Info className="w-8 h-8 text-cyan mb-3 mx-auto" />
+            <h3 className="font-bold text-white group-hover:text-cyan transition-colors">About PSP</h3>
+            <p className="text-sm text-cyan-800 dark:text-white mt-2">Learn about our mission</p>
+            <div className="inline-flex items-center gap-1 text-cyan text-sm font-semibold mt-3">
+              <span>Learn More</span>
+              <ArrowRight className="w-4 h-4" />
+            </div>
+          </Link>
+
+          <Link href="/contact" className="glass-card-hover p-6 text-center group">
+            <Mail className="w-8 h-8 text-orange mb-3 mx-auto" />
+            <h3 className="font-bold text-white group-hover:text-orange transition-colors">Contact Us</h3>
+            <p className="text-sm text-cyan-800 dark:text-white mt-2">Questions? We&apos;re here to help</p>
+            <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
+              <span>Reach Out</span>
+              <ArrowRight className="w-4 h-4" />
+            </div>
+          </Link>
+        </div>
+      </div>
       </div>
       </main>
 

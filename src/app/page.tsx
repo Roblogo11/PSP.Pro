@@ -283,7 +283,7 @@ export default function HomePage() {
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-white">
               Training Programs
             </h2>
-            <p className="text-xl max-w-2xl mx-auto text-cyan-700 dark:text-white">
+            <p className="text-xl max-w-2xl mx-auto text-white">
               Per-session training or monthly membership — pick what fits your goals.
             </p>
           </div>
@@ -456,7 +456,7 @@ export default function HomePage() {
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-white">
               Group Training
             </h2>
-            <p className="text-xl max-w-2xl mx-auto text-cyan-700 dark:text-white">
+            <p className="text-xl max-w-2xl mx-auto text-white">
               Train with teammates in high-energy group sessions led by our coaches.
             </p>
           </div>
