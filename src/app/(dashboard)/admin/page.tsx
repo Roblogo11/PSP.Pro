@@ -20,12 +20,13 @@ import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
 import { Tooltip, InfoBanner } from '@/components/ui/tooltip'
-import { Lightbulb, AlertTriangle, CreditCard, ToggleLeft, ToggleRight } from 'lucide-react'
+import { Lightbulb, AlertTriangle, CreditCard, ToggleLeft, ToggleRight, UserCircle, Trash2 } from 'lucide-react'
 
 export default function AdminDashboard() {
   const router = useRouter()
-  const { profile, isCoach, isAdmin, loading } = useUserRole()
-  const isMasterAdmin = profile?.role === 'master_admin'
+  const { profile, isCoach, isAdmin, loading, realRole, isSimulating } = useUserRole()
+  // Use real role for master admin checks (not simulated role)
+  const isMasterAdmin = realRole === 'master_admin'
 
   // Stripe test mode state
   const [stripeTestMode, setStripeTestMode] = useState(false)
@@ -51,16 +52,17 @@ export default function AdminDashboard() {
   }, [loading, profile, router])
 
   // Check if user is coach/admin (only redirect if we have a profile loaded)
+  // Master admins always have access even when simulating another role
   useEffect(() => {
-    if (!loading && profile && !isCoach && !isAdmin) {
+    if (!loading && profile && !isCoach && !isAdmin && realRole !== 'master_admin') {
       console.log('Not admin/coach, redirecting to locker. Profile:', profile)
       router.push('/locker')
     }
-  }, [loading, profile, isCoach, isAdmin, router])
+  }, [loading, profile, isCoach, isAdmin, realRole, router])
 
   // Check Stripe test mode status (admin only)
   useEffect(() => {
-    if (!profile || (profile.role !== 'master_admin' && profile.role !== 'admin')) return
+    if (!profile || !isMasterAdmin) return
 
     async function checkTestMode() {
       try {
@@ -238,7 +240,7 @@ export default function AdminDashboard() {
     )
   }
 
-  if (!isCoach && !isAdmin) {
+  if (!isCoach && !isAdmin && realRole !== 'master_admin') {
     return null // Will redirect to /locker
   }
 
@@ -606,6 +608,9 @@ export default function AdminDashboard() {
         </div>
       )}
 
+      {/* Simulation Mode - Master Admin Only */}
+      {isMasterAdmin && <SimulationPanel />}
+
       {/* Recent Activity */}
       <div className="mt-8">
         <div className="command-panel">
@@ -621,6 +626,199 @@ export default function AdminDashboard() {
               <p className="text-sm text-cyan-700 dark:text-white">Activity feed will populate as you use the platform</p>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Simulation Mode Panel ───────────────────────────────────
+function SimulationPanel() {
+  const [simStatus, setSimStatus] = useState<{
+    active: boolean
+    simulatedRole: string | null
+    simulationId: string | null
+    pastSessions: any[]
+  } | null>(null)
+  const [starting, setStarting] = useState(false)
+  const [cleaningUp, setCleaningUp] = useState<string | null>(null)
+
+  // Check simulation status on mount
+  useEffect(() => {
+    async function checkStatus() {
+      try {
+        const res = await fetch('/api/admin/simulation')
+        if (res.ok) {
+          const data = await res.json()
+          setSimStatus(data)
+        }
+      } catch {
+        // Non-critical
+      }
+    }
+    checkStatus()
+  }, [])
+
+  const startSimulation = async (role: 'athlete' | 'coach') => {
+    const roleLabel = role === 'athlete' ? 'Player' : 'Coach'
+    const confirmed = window.confirm(
+      `Start simulation as ${roleLabel}?\n\n` +
+      `• Stripe test mode will be enabled automatically\n` +
+      `• All data you create will be tracked for cleanup\n` +
+      `• The site will render as if you are a ${roleLabel}\n\n` +
+      `You can end the simulation and clean up at any time.`
+    )
+    if (!confirmed) return
+
+    setStarting(true)
+    try {
+      const res = await fetch('/api/admin/simulation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role }),
+      })
+
+      if (res.ok) {
+        // Redirect to locker to experience the simulated role
+        window.location.href = '/locker'
+      }
+    } catch {
+      setStarting(false)
+    }
+  }
+
+  const cleanupSession = async (simulationId: string) => {
+    const confirmed = window.confirm(
+      'Clean up this simulation?\n\n' +
+      'All data created during this simulation session will be permanently deleted ' +
+      'and any test Stripe payments will be refunded.'
+    )
+    if (!confirmed) return
+
+    setCleaningUp(simulationId)
+    try {
+      // End the simulation first if it's the active one
+      if (simStatus?.simulationId === simulationId) {
+        await fetch('/api/admin/simulation', { method: 'DELETE' })
+      }
+
+      const res = await fetch('/api/admin/simulation/cleanup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ simulationId }),
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        const totalCleaned = Object.values(data.summary as Record<string, number>).reduce((a, b) => a + b, 0)
+        alert(
+          `Cleanup complete!\n\n` +
+          `${totalCleaned} record${totalCleaned === 1 ? '' : 's'} deleted` +
+          (data.stripeRefunds > 0 ? `\n${data.stripeRefunds} Stripe refund${data.stripeRefunds === 1 ? '' : 's'} processed` : '')
+        )
+        window.location.reload()
+      }
+    } catch {
+      alert('Cleanup failed. Please try again.')
+    } finally {
+      setCleaningUp(null)
+    }
+  }
+
+  const isActive = simStatus?.active
+  const pastUncleaned = simStatus?.pastSessions?.filter(s => !s.cleaned_up && s.id !== simStatus?.simulationId) || []
+
+  return (
+    <div className="mt-8">
+      <div className={`command-panel border-2 ${isActive ? 'border-purple-500/50 bg-purple-500/5' : 'border-purple-500/20'}`}>
+        <div className="flex items-start gap-4">
+          <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${isActive ? 'bg-purple-500/30' : 'bg-purple-500/10'}`}>
+            <UserCircle className={`w-6 h-6 ${isActive ? 'text-purple-300' : 'text-purple-400'}`} />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">Simulation Mode</h3>
+
+            {isActive ? (
+              <>
+                <p className="text-sm text-cyan-700 dark:text-white mb-4">
+                  You are currently simulating as <span className="font-bold text-purple-400">{simStatus?.simulatedRole === 'athlete' ? 'Player' : 'Coach'}</span>.
+                  Stripe test mode is active. All data is being tracked.
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => simStatus?.simulationId && cleanupSession(simStatus.simulationId)}
+                    disabled={!!cleaningUp}
+                    className="btn-primary bg-purple-600 hover:bg-purple-700 border-purple-500 flex items-center gap-2"
+                  >
+                    {cleaningUp ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Trash2 className="w-4 h-4" />
+                    )}
+                    End & Clean Up
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-cyan-700 dark:text-white mb-4">
+                  Experience the site as a different role. Stripe test mode will be auto-enabled
+                  and all data you create will be tracked for one-click cleanup.
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => startSimulation('athlete')}
+                    disabled={starting}
+                    className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-semibold text-sm transition-all flex items-center gap-2 disabled:opacity-50"
+                  >
+                    {starting && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+                    Act as Player
+                  </button>
+                  <button
+                    onClick={() => startSimulation('coach')}
+                    disabled={starting}
+                    className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/50 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 disabled:opacity-50"
+                  >
+                    Act as Coach
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Past uncleaned simulations */}
+        {pastUncleaned.length > 0 && (
+          <div className="mt-4 pt-4 border-t border-purple-500/20">
+            <p className="text-xs font-semibold text-purple-400 mb-2">Past simulations needing cleanup:</p>
+            <div className="space-y-2">
+              {pastUncleaned.map(session => (
+                <div key={session.id} className="flex items-center justify-between p-2 bg-purple-500/10 rounded-lg">
+                  <div className="text-xs text-cyan-700 dark:text-white">
+                    <span className="font-semibold">{session.simulated_role === 'athlete' ? 'Player' : 'Coach'}</span>
+                    {' — '}
+                    {new Date(session.started_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                  </div>
+                  <button
+                    onClick={() => cleanupSession(session.id)}
+                    disabled={cleaningUp === session.id}
+                    className="text-xs px-2 py-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg transition-all disabled:opacity-50"
+                  >
+                    {cleaningUp === session.id ? 'Cleaning...' : 'Clean Up'}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Info note */}
+        <div className="mt-4 p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg flex items-start gap-2">
+          <AlertTriangle className="w-4 h-4 text-purple-400 mt-0.5 flex-shrink-0" />
+          <p className="text-xs text-purple-300">
+            Simulation auto-expires after 4 hours. During simulation, a purple banner appears site-wide.
+            You can always return to this page to end the simulation and clean up test data.
+          </p>
         </div>
       </div>
     </div>

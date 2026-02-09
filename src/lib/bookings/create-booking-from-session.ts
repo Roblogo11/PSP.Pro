@@ -122,6 +122,19 @@ export async function createBookingFromSession(
     return { created: false, reason: 'insert_failed', error: error.message }
   }
 
+  // TRACK FOR SIMULATION CLEANUP if in simulation mode
+  if (metadata.simulation_id) {
+    try {
+      await supabase.from('simulation_data_log').insert({
+        simulation_id: metadata.simulation_id,
+        table_name: 'bookings',
+        record_id: booking.id,
+      })
+    } catch {
+      // Non-critical — don't fail the booking
+    }
+  }
+
   // 4. SEND CONFIRMATION EMAIL (non-blocking — don't fail the booking if email fails)
   try {
     // Look up athlete email from profiles

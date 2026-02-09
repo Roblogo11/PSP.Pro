@@ -111,6 +111,15 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
         console.error('Error creating athlete package:', error)
       } else {
         console.log('Athlete package created successfully:', athletePackage.id)
+
+        // Track for simulation cleanup if in simulation mode
+        if (metadata.simulation_id) {
+          await supabase.from('simulation_data_log').insert({
+            simulation_id: metadata.simulation_id,
+            table_name: 'athlete_packages',
+            record_id: athletePackage.id,
+          })
+        }
       }
     } catch (err) {
       console.error('Failed to create athlete package:', err)

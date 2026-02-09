@@ -81,6 +81,10 @@ export async function createBookingCheckoutSession({
 }) {
   const stripeInstance = await getStripe()
 
+  // Check for simulation mode to pass tracking ID
+  const cookieStore = await cookies()
+  const simulationId = cookieStore.get('simulation_id')?.value
+
   const session = await stripeInstance.checkout.sessions.create({
     payment_method_types: ['card'],
     line_items: [
@@ -105,6 +109,7 @@ export async function createBookingCheckoutSession({
       service_id: serviceId,
       athlete_id: athleteId,
       booking_data: JSON.stringify(bookingData),
+      ...(simulationId && { simulation_id: simulationId }),
     },
   })
 
@@ -133,6 +138,10 @@ export async function createPackageCheckoutSession({
 }) {
   const stripeInstance = await getStripe()
 
+  // Check for simulation mode to pass tracking ID
+  const cookieStore = await cookies()
+  const simulationId = cookieStore.get('simulation_id')?.value
+
   const session = await stripeInstance.checkout.sessions.create({
     payment_method_types: ['card'],
     line_items: [
@@ -157,6 +166,7 @@ export async function createPackageCheckoutSession({
       package_id: packageId,
       athlete_id: athleteId,
       sessions_included: sessionsIncluded.toString(),
+      ...(simulationId && { simulation_id: simulationId }),
     },
   })
 

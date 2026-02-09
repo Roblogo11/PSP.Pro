@@ -26,7 +26,7 @@ export default async function DashboardLayout({
       .single()
 
     const role = profile?.role
-    const isStaff = role === 'admin' || role === 'coach'
+    const isStaff = role === 'admin' || role === 'coach' || role === 'master_admin'
 
     // Athletes must have an active package to access the dashboard
     if (!isStaff) {

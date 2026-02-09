@@ -16,6 +16,7 @@ export interface UserProfile {
 export function useUserRole() {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
+  const [simulatedRole, setSimulatedRole] = useState<UserRole | null>(null)
   const supabase = createClient()
 
   useEffect(() => {
@@ -66,12 +67,32 @@ export function useUserRole() {
     }
   }, [supabase])
 
+  // Check for simulation mode cookie (same polling pattern as stripe-test-banner)
+  useEffect(() => {
+    const checkSimulation = () => {
+      const cookies = document.cookie.split(';').map(c => c.trim())
+      const simCookie = cookies.find(c => c.startsWith('simulation_role_ui='))
+      const role = simCookie?.split('=')[1] as UserRole | undefined
+      setSimulatedRole(role || null)
+    }
+    checkSimulation()
+    const interval = setInterval(checkSimulation, 3000)
+    return () => clearInterval(interval)
+  }, [])
+
+  // Determine effective role: only master_admin can simulate
+  const realRole = profile?.role || null
+  const isSimulating = !!(realRole === 'master_admin' && simulatedRole)
+  const effectiveRole = isSimulating ? simulatedRole : realRole
+
   return {
     profile,
     loading,
-    isAthlete: profile?.role === 'athlete',
-    isCoach: profile?.role === 'coach' || profile?.role === 'admin' || profile?.role === 'master_admin',
-    isAdmin: profile?.role === 'admin' || profile?.role === 'master_admin',
-    isMasterAdmin: profile?.role === 'master_admin',
+    realRole,
+    isSimulating,
+    isAthlete: effectiveRole === 'athlete',
+    isCoach: effectiveRole === 'coach' || effectiveRole === 'admin' || effectiveRole === 'master_admin',
+    isAdmin: effectiveRole === 'admin' || effectiveRole === 'master_admin',
+    isMasterAdmin: effectiveRole === 'master_admin',
   }
 }

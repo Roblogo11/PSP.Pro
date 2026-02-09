@@ -5,12 +5,15 @@ import { AlertTriangle } from 'lucide-react'
 
 export function StripeTestBanner() {
   const [testMode, setTestMode] = useState(false)
+  const [isSimulating, setIsSimulating] = useState(false)
 
   useEffect(() => {
     const checkCookie = () => {
       const cookies = document.cookie.split(';').map(c => c.trim())
       const testCookie = cookies.find(c => c.startsWith('stripe_test_mode_ui='))
       setTestMode(testCookie?.split('=')[1] === 'true')
+      const simCookie = cookies.find(c => c.startsWith('simulation_role_ui='))
+      setIsSimulating(!!simCookie?.split('=')[1])
     }
 
     checkCookie()
@@ -22,7 +25,7 @@ export function StripeTestBanner() {
   if (!testMode) return null
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[100] bg-yellow-500 text-black text-center py-2 px-4 font-bold text-sm flex items-center justify-center gap-2 shadow-lg">
+    <div className={`fixed ${isSimulating ? 'top-10' : 'top-0'} left-0 right-0 z-[100] bg-yellow-500 text-black text-center py-2 px-4 font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition-all`}>
       <AlertTriangle className="w-4 h-4" />
       STRIPE TEST MODE — No real charges will be processed. Use card 4242 4242 4242 4242
       <AlertTriangle className="w-4 h-4" />

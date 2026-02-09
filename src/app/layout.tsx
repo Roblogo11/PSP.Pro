@@ -8,6 +8,7 @@ import { JsonLdSchema } from '@/components/seo/json-ld-schema'
 import { PSPAssistant } from '@/components/psp-assistant'
 import { AthleticOSBackground } from '@/components/athletic-os-background'
 import { StripeTestBanner } from '@/components/stripe-test-banner'
+import { SimulationBanner } from '@/components/simulation-banner'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -110,6 +111,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen" suppressHydrationWarning>
         <Providers>
+          <SimulationBanner />
           <StripeTestBanner />
           <AthleticOSBackground />
           <CommandPalette />
