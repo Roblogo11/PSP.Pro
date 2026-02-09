@@ -152,7 +152,7 @@ export default function PricingPage() {
       <div className="command-panel mb-6">
         <div className="flex items-center gap-3 mb-6">
           <Zap className="w-8 h-8 text-orange" />
-          <h2 className="text-2xl font-bold text-white">Online Course</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Online Course</h2>
         </div>
 
         <div className={`grid gap-6 ${individualServices.length >= 2 ? 'md:grid-cols-2' : ''}`}>
@@ -165,12 +165,12 @@ export default function PricingPage() {
                 key={service.id}
                 className={`p-6 bg-cyan-900/20 rounded-xl border ${cs.border} transition-all`}
               >
-                <h3 className="text-xl font-bold text-white mb-2">{service.name}</h3>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{service.name}</h3>
                 <div className="flex items-baseline gap-2 mb-4">
                   <span className={`text-4xl font-bold ${cs.text}`}>
                     {formatPrice(service.price_cents)}
                   </span>
-                  <span>/ {service.duration_minutes} minutes</span>
+                  <span className="text-slate-700 dark:text-slate-300">/ {service.duration_minutes} minutes</span>
                 </div>
                 {bullets.length > 0 && (
                   <ul className="space-y-2 mb-6">
@@ -199,7 +199,7 @@ export default function PricingPage() {
       <div className="command-panel mb-6">
         <div className="flex items-center gap-3 mb-6">
           <Users className="w-8 h-8 text-cyan" />
-          <h2 className="text-2xl font-bold text-white">Group Training</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Group Training</h2>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
@@ -207,7 +207,7 @@ export default function PricingPage() {
             const bullets = splitDescription(service.description)
             return (
               <div key={service.id} className="p-6 bg-cyan-900/20 rounded-xl border border-cyan/20">
-                <h3 className="text-2xl font-bold text-white mb-2">{service.name}</h3>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{service.name}</h3>
                 <div className="flex items-baseline gap-2 mb-4">
                   <span className="text-5xl font-bold text-cyan">
                     {formatPrice(service.price_cents)}
@@ -269,7 +269,7 @@ export default function PricingPage() {
       <div className="command-panel mb-6">
         <div className="flex items-center gap-3 mb-6">
           <Package className="w-8 h-8 text-orange" />
-          <h2 className="text-2xl font-bold text-white">Training Packages</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Training Packages</h2>
         </div>
 
         <div className={`grid gap-6 ${packages.length >= 3 ? 'md:grid-cols-3' : packages.length === 2 ? 'md:grid-cols-2' : ''}`}>
@@ -298,7 +298,7 @@ export default function PricingPage() {
                     </span>
                   </div>
                 )}
-                <h3 className="text-xl font-bold text-white mb-2 text-center">{pack.name}</h3>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 text-center">{pack.name}</h3>
                 <div className="text-center mb-4">
                   <div className="text-4xl font-bold text-orange mb-1">{formatPrice(pack.price_cents)}</div>
                   <div className="text-sm line-through">{formatPrice(regularCents)} value</div>
@@ -332,7 +332,7 @@ export default function PricingPage() {
       <div className="command-panel mb-6">
         <div className="flex items-center gap-3 mb-6">
           <Video className="w-8 h-8 text-cyan" />
-          <h2 className="text-2xl font-bold text-white">Specialty Services</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Specialty Services</h2>
         </div>
 
         <div className={`grid gap-6 ${specialtyServices.length >= 2 ? 'md:grid-cols-2' : ''}`}>
@@ -343,12 +343,12 @@ export default function PricingPage() {
             return (
               <div key={service.id} className={`p-6 bg-cyan-900/20 rounded-xl border ${cs.borderStatic}`}>
                 <IconComponent className={`w-10 h-10 ${cs.text} mb-4`} />
-                <h3 className="text-xl font-bold text-white mb-2">{service.name}</h3>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{service.name}</h3>
                 <div className="flex items-baseline gap-2 mb-4">
                   <span className={`text-3xl font-bold ${cs.text}`}>
                     {formatPrice(service.price_cents)}
                   </span>
-                  <span>/ {service.duration_minutes} minutes</span>
+                  <span className="text-slate-700 dark:text-slate-300">/ {service.duration_minutes} minutes</span>
                 </div>
                 {service.description && (
                   <p className="mb-6">{service.description}</p>
@@ -365,11 +365,11 @@ export default function PricingPage() {
 
       {/* Continue Exploring */}
       <div className="command-panel">
-        <h2 className="text-2xl font-bold text-white mb-6 text-center">Continue Exploring</h2>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 text-center">Continue Exploring</h2>
         <div className="grid md:grid-cols-3 gap-4">
           <Link href="/get-started" className="glass-card-hover p-6 text-center group">
             <Rocket className="w-8 h-8 text-cyan mb-3 mx-auto" />
-            <h3 className="font-bold text-white group-hover:text-cyan transition-colors">Join the Team</h3>
+            <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-cyan transition-colors">Join the Team</h3>
             <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Join our training family</p>
             <div className="inline-flex items-center gap-1 text-cyan text-sm font-semibold mt-3">
               <span>Join Now</span>
@@ -379,7 +379,7 @@ export default function PricingPage() {
 
           <Link href="/about" className="glass-card-hover p-6 text-center group">
             <Info className="w-8 h-8 text-orange mb-3 mx-auto" />
-            <h3 className="font-bold text-white group-hover:text-orange transition-colors">About PSP</h3>
+            <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-orange transition-colors">About PSP</h3>
             <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Learn about our mission</p>
             <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
               <span>Learn More</span>
@@ -389,7 +389,7 @@ export default function PricingPage() {
 
           <Link href="/contact" className="glass-card-hover p-6 text-center group">
             <Mail className="w-8 h-8 text-cyan mb-3 mx-auto" />
-            <h3 className="font-bold text-white group-hover:text-cyan transition-colors">Contact Us</h3>
+            <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-cyan transition-colors">Contact Us</h3>
             <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Questions? We&apos;re here to help</p>
             <div className="inline-flex items-center gap-1 text-cyan text-sm font-semibold mt-3">
               <span>Reach Out</span>

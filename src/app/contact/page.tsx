@@ -54,7 +54,7 @@ export default function ContactPage() {
           <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <MessageSquare className="w-10 h-10 text-green-400" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-4">Message Sent!</h1>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Message Sent!</h1>
           <p className="mb-6">
             Thanks for reaching out! We&apos;ll get back to you within 24 hours.
           </p>
@@ -104,7 +104,7 @@ export default function ContactPage() {
             <div className="w-12 h-12 bg-cyan/10 rounded-xl flex items-center justify-center mb-4">
               <MapPin className="w-6 h-6 text-cyan" />
             </div>
-            <h3 className="text-lg font-bold text-white mb-2">Training Facility</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Training Facility</h3>
             <p>
               Virginia Beach, VA<br />
               Hampton Roads / 757 Area
@@ -116,7 +116,7 @@ export default function ContactPage() {
             <div className="w-12 h-12 bg-orange/10 rounded-xl flex items-center justify-center mb-4">
               <Mail className="w-6 h-6 text-orange" />
             </div>
-            <h3 className="text-lg font-bold text-white mb-2">Email Us</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Email Us</h3>
             <a
               href="mailto:info@propersports.pro"
               className="hover:text-orange transition-colors"
@@ -130,7 +130,7 @@ export default function ContactPage() {
             <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center mb-4">
               <Phone className="w-6 h-6 text-green-400" />
             </div>
-            <h3 className="text-lg font-bold text-white mb-2">Call or Text</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Call or Text</h3>
             <a
               href="tel:+17571234567"
               className="hover:text-orange transition-colors"
@@ -141,19 +141,19 @@ export default function ContactPage() {
 
           {/* Hours */}
           <div className="command-panel p-6">
-            <h3 className="text-lg font-bold text-white mb-4">Training Hours</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Training Hours</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span>Monday - Friday</span>
-                <span className="text-white font-semibold">3PM - 9PM</span>
+                <span className="text-slate-900 dark:text-white font-semibold">3PM - 9PM</span>
               </div>
               <div className="flex justify-between">
                 <span>Saturday</span>
-                <span className="text-white font-semibold">9AM - 5PM</span>
+                <span className="text-slate-900 dark:text-white font-semibold">9AM - 5PM</span>
               </div>
               <div className="flex justify-between">
                 <span>Sunday</span>
-                <span className="text-white font-semibold">Closed</span>
+                <span className="text-slate-900 dark:text-white font-semibold">Closed</span>
               </div>
             </div>
           </div>
@@ -162,7 +162,7 @@ export default function ContactPage() {
         {/* Contact Form */}
         <div className="lg:col-span-2">
           <div className="command-panel p-8">
-            <h2 className="text-2xl font-bold text-white mb-6">Send Us a Message</h2>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Send Us a Message</h2>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Name */}
@@ -289,7 +289,7 @@ export default function ContactPage() {
       {/* Google Maps */}
       <div className="max-w-6xl mx-auto mt-12">
         <div className="command-panel p-6">
-          <h2 className="text-2xl font-bold text-white mb-6 text-center">Find Our Facility</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 text-center">Find Our Facility</h2>
           <div className="rounded-xl overflow-hidden">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d817928.3911902515!2d-77.02362511877753!3d36.793764492389535!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa7b9ac5c0e36dc21%3A0x91c996d6f9dfaa64!2sProPer%20Sports%20Performance%20LLC!5e0!3m2!1sen!2sus!4v1770330366049!5m2!1sen!2sus"
@@ -308,11 +308,11 @@ export default function ContactPage() {
       {/* Continue Exploring */}
       <div className="max-w-6xl mx-auto mt-12">
         <div className="command-panel">
-          <h2 className="text-2xl font-bold text-white mb-6 text-center">Continue Exploring</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 text-center">Continue Exploring</h2>
           <div className="grid md:grid-cols-3 gap-4">
             <Link href="/pricing" className="glass-card-hover p-6 text-center group">
               <Package className="w-8 h-8 text-orange mb-3 mx-auto" />
-              <h3 className="font-bold text-white group-hover:text-orange transition-colors">View Pricing</h3>
+              <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-orange transition-colors">View Pricing</h3>
               <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Training programs & packages</p>
               <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
                 <span>Explore</span>
@@ -322,7 +322,7 @@ export default function ContactPage() {
 
             <Link href="/get-started" className="glass-card-hover p-6 text-center group">
               <Rocket className="w-8 h-8 text-cyan mb-3 mx-auto" />
-              <h3 className="font-bold text-white group-hover:text-cyan transition-colors">Join the Team</h3>
+              <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-cyan transition-colors">Join the Team</h3>
               <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Join our training family</p>
               <div className="inline-flex items-center gap-1 text-cyan text-sm font-semibold mt-3">
                 <span>Join Now</span>
@@ -332,7 +332,7 @@ export default function ContactPage() {
 
             <Link href="/about" className="glass-card-hover p-6 text-center group">
               <Info className="w-8 h-8 text-orange mb-3 mx-auto" />
-              <h3 className="font-bold text-white group-hover:text-orange transition-colors">About PSP</h3>
+              <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-orange transition-colors">About PSP</h3>
               <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Learn about our mission</p>
               <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
                 <span>Learn More</span>

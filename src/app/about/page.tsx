@@ -52,7 +52,7 @@ export default function AboutPage() {
       <div className="command-panel mb-6">
         <div className="flex items-center gap-3 mb-6">
           <Target className="w-8 h-8 text-orange" />
-          <h2 className="text-2xl font-bold text-white">Our Mission</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Our Mission</h2>
         </div>
 
         <p className="text-lg text-slate-600 dark:text-white leading-relaxed mb-6">
@@ -97,7 +97,7 @@ export default function AboutPage() {
       <div className="command-panel mb-6">
         <div className="flex items-center gap-3 mb-6">
           <TrendingUp className="w-8 h-8 text-cyan" />
-          <h2 className="text-2xl font-bold text-white">Our Approach</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Our Approach</h2>
         </div>
 
         <p className="text-lg text-slate-600 dark:text-white leading-relaxed mb-6">
@@ -133,7 +133,7 @@ export default function AboutPage() {
       <div className="command-panel mb-6">
         <div className="flex items-center gap-3 mb-6">
           <MapPin className="w-8 h-8 text-orange" />
-          <h2 className="text-2xl font-bold text-white">Location</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Location</h2>
         </div>
 
         <h3 className="text-xl font-bold mb-3 text-white">Serving Virginia Beach & Hampton Roads</h3>
@@ -167,7 +167,7 @@ export default function AboutPage() {
       <div className="command-panel mb-6">
         <div className="flex items-center gap-3 mb-6">
           <Award className="w-8 h-8 text-cyan" />
-          <h2 className="text-2xl font-bold text-white">Our Values</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Our Values</h2>
         </div>
 
         <p className="text-lg text-slate-600 dark:text-white mb-6">
@@ -203,11 +203,11 @@ export default function AboutPage() {
 
       {/* Continue Exploring */}
       <div className="command-panel">
-        <h2 className="text-2xl font-bold text-white mb-6 text-center">Continue Exploring</h2>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 text-center">Continue Exploring</h2>
         <div className="grid md:grid-cols-3 gap-4">
           <Link href="/pricing" className="glass-card-hover p-6 text-center group">
             <Package className="w-8 h-8 text-orange mb-3 mx-auto" />
-            <h3 className="font-bold text-white group-hover:text-orange transition-colors">View Pricing</h3>
+            <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-orange transition-colors">View Pricing</h3>
             <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Training programs & packages</p>
             <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
               <span>Explore</span>
@@ -217,7 +217,7 @@ export default function AboutPage() {
 
           <Link href="/get-started" className="glass-card-hover p-6 text-center group">
             <Rocket className="w-8 h-8 text-cyan mb-3 mx-auto" />
-            <h3 className="font-bold text-white group-hover:text-cyan transition-colors">Join the Team</h3>
+            <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-cyan transition-colors">Join the Team</h3>
             <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Join our training family</p>
             <div className="inline-flex items-center gap-1 text-cyan text-sm font-semibold mt-3">
               <span>Join Now</span>
@@ -227,7 +227,7 @@ export default function AboutPage() {
 
           <Link href="/contact" className="glass-card-hover p-6 text-center group">
             <Mail className="w-8 h-8 text-orange mb-3 mx-auto" />
-            <h3 className="font-bold text-white group-hover:text-orange transition-colors">Contact Us</h3>
+            <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-orange transition-colors">Contact Us</h3>
             <p className="text-sm text-slate-500 dark:text-white/80 mt-2">Questions? We&apos;re here to help</p>
             <div className="inline-flex items-center gap-1 text-orange text-sm font-semibold mt-3">
               <span>Reach Out</span>
