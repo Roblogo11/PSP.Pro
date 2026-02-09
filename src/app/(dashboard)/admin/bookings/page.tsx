@@ -266,7 +266,7 @@ export default function AdminBookingsPage() {
             className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
               filter === option.value
                 ? 'bg-orange text-white shadow-lg shadow-orange/30'
-                : 'glass-card-hover text-slate-300'
+                : 'glass-card-hover text-slate-600 dark:text-slate-300'
             }`}
           >
             {option.label}

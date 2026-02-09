@@ -236,8 +236,8 @@
     color: #1e293b !important;
   }
 
-  /* Light mode: force dark icons in glass-cards */
-  html:not(.dark) .glass-card svg {
+  /* Light mode: force dark icons in glass-cards (exclude explicitly colored ones) */
+  html:not(.dark) .glass-card svg:not([class*="text-orange"]):not([class*="text-cyan"]):not([class*="text-green"]):not([class*="text-red"]):not([class*="text-blue"]):not([class*="text-purple"]):not([class*="text-yellow"]):not([class*="text-pink"]) {
     color: #1e293b !important;
   }
 
@@ -310,8 +310,8 @@
     color: #1e293b !important;
   }
 
-  html:not(.dark) .command-panel svg,
-  html:not(.dark) .command-panel-active svg {
+  html:not(.dark) .command-panel svg:not([class*="text-orange"]):not([class*="text-cyan"]):not([class*="text-green"]):not([class*="text-red"]):not([class*="text-blue"]):not([class*="text-purple"]):not([class*="text-yellow"]):not([class*="text-pink"]),
+  html:not(.dark) .command-panel-active svg:not([class*="text-orange"]):not([class*="text-cyan"]):not([class*="text-green"]):not([class*="text-red"]):not([class*="text-blue"]):not([class*="text-purple"]):not([class*="text-yellow"]):not([class*="text-pink"]) {
     color: #1e293b !important;
   }
 
