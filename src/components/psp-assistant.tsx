@@ -85,10 +85,12 @@ const PAGE_SUGGESTIONS: Record<string, { label: string; query: string }[]> = {
   '/faq': [
     { label: 'Parent/guardian questions', query: 'parent guardian' },
     { label: 'Cancellation policy?', query: 'cancel refund policy' },
+    { label: 'How do memberships work?', query: 'membership required' },
   ],
   '/get-started': [
     { label: 'Walk me through this form', query: 'walk me through get started' },
     { label: 'Do I need an account?', query: 'sign up account' },
+    { label: 'Already a member?', query: 'login' },
   ],
   '/signup': [
     { label: 'What info do I need?', query: 'walk me through signup' },
@@ -101,6 +103,11 @@ const PAGE_SUGGESTIONS: Record<string, { label: string; query: string }[]> = {
   '/contact': [
     { label: 'Where are you located?', query: 'location hours' },
     { label: 'How quickly do you respond?', query: 'contact response time' },
+  ],
+  '/membership-required': [
+    { label: 'What plans are available?', query: 'pricing' },
+    { label: 'How do memberships work?', query: 'membership required' },
+    { label: 'Talk to someone', query: 'contact' },
   ],
 }
 
@@ -148,10 +155,10 @@ const KNOWLEDGE_BASE: KBEntry[] = [
 
   // ── MEMBERSHIP ──
   {
-    keywords: ['membership', 'monthly', 'subscribe', 'unlimited', 'subscription'],
-    title: 'Monthly Membership',
-    response: 'Monthly Membership — $60/mo:\n\n• Unlimited group session access\n• Discounted 1-on-1 sessions\n• Priority scheduling\n• Full PSP.Pro dashboard access\n• Progress tracking & analytics\n\nBest for athletes who train multiple times per week. Cancel anytime.',
-    actions: [{ label: 'View Plans', href: '/pricing' }],
+    keywords: ['membership', 'monthly', 'subscribe', 'unlimited', 'subscription', 'membership required', 'access denied', 'cant access dashboard', 'locked out'],
+    title: 'Memberships & Access',
+    response: 'To access the full training dashboard, you need an active membership or session package.\n\nMonthly Membership — $60/mo:\n• Unlimited group session access\n• Discounted 1-on-1 sessions\n• Priority scheduling\n• Full PSP.Pro dashboard access\n• Progress tracking & analytics\n\nSession Packages also unlock dashboard access:\n• 5-Pack: $350 (valid 90 days)\n• 10-Pack: $675 (valid 180 days)\n• 20-Pack: $1,300 (valid 365 days)\n\nWithout an active plan, you\'ll see the "Membership Required" page instead of the dashboard. Coaches and admins always have full access.\n\nVisit the Pricing page to choose a plan!',
+    actions: [{ label: 'View Pricing', href: '/pricing' }, { label: 'Contact Us', href: '/contact' }],
   },
 
   // ── BOOKING ──
@@ -232,16 +239,16 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['sign up', 'signup', 'create account', 'register', 'join', 'new account', 'get started'],
     title: 'How to Sign Up',
-    response: 'Creating your PSP.Pro account:\n\n1. Go to the Sign Up page\n2. Enter your full name, email, and password (8+ characters)\n3. Select your sports (softball, basketball, soccer — pick all that apply!)\n4. Enter your age\n5. If under 18, provide parent/guardian info\n6. Agree to Terms of Service & Privacy Policy\n7. Click "Create Account"\n\nAfter signup, you\'re taken straight to your Athlete Locker (dashboard) where you can book sessions, view drills, and start tracking progress!',
-    actions: [{ label: 'Sign Up Now', href: '/signup' }],
-    followUp: ['What if I\'m under 18?', 'What does the dashboard do?'],
+    response: 'Here\'s the full process to join PSP.Pro:\n\n1️⃣ Start at "Join the Team" (/get-started)\nFill out the prospect form with your info, goals, and sport preferences. This helps us match you with the right coach.\n\n2️⃣ Create your account (/signup)\nAfter submitting the form, you\'ll be directed to create your login. Enter your name, email, password (8+ chars), sports, and age. Under 18? Provide parent/guardian info.\n\n3️⃣ Land on the FAQ page\nAfter signup you\'ll see a welcome banner with links to view memberships and access your dashboard.\n\n4️⃣ Purchase a membership or package\nVisit the Pricing page to pick a plan. You need an active membership or package to access the full training dashboard.\n\n5️⃣ Start training!\nOnce you have a package, your Athlete Locker unlocks with drills, sessions, progress tracking, and more.',
+    actions: [{ label: 'Join the Team', href: '/get-started' }, { label: 'Sign Up', href: '/signup' }],
+    followUp: ['What if I\'m under 18?', 'What does the dashboard do?', 'Tell me about pricing'],
   },
 
   // ── SIGNUP WALKTHROUGH ──
   {
     keywords: ['walk me through signup', 'signup page', 'signup walkthrough'],
     title: 'Signup Page Walkthrough',
-    response: 'The Signup page has these fields:\n\n• Full Name — your real name\n• Email Address — used for login and notifications\n• Password — minimum 8 characters\n• Sports — checkboxes for Softball, Basketball, Soccer (select all that apply, at least 1 required)\n• Age — your current age\n• Parent/Guardian Info — appears automatically if your age is under 18 (name, email, phone required)\n• Terms checkbox — agree to Terms of Service & Privacy Policy\n\nOnce you submit, your account is created and you\'re logged in immediately. You\'ll land on your Athlete Locker dashboard.',
+    response: 'The Signup page has these fields:\n\n• Full Name — your real name\n• Email Address — used for login and notifications\n• Password — minimum 8 characters\n• Sports — checkboxes for Softball, Basketball, Soccer (select all that apply, at least 1 required)\n• Age — your current age\n• Parent/Guardian Info — appears automatically if your age is under 18 (name, email, phone required)\n• Terms checkbox — agree to Terms of Service & Privacy Policy\n\nOnce you submit, your account is created and you\'re logged in immediately. You\'ll land on the FAQ page with a welcome banner that links to Pricing (to purchase a plan) and your Dashboard.\n\nNote: You need a membership or package to access the training dashboard — without one you\'ll be redirected to the Membership Required page.',
     actions: [{ label: 'Go to Signup', href: '/signup' }],
   },
 
@@ -249,8 +256,8 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['login', 'log in', 'sign in', 'signin', 'access', 'can\'t login', 'cant login', 'password wrong'],
     title: 'Login Help',
-    response: 'To log in:\n\n1. Go to the Login page\n2. Enter your email and password\n3. Click "Sign In"\n\nAfter login:\n• Athletes are taken to the Athlete Locker (/locker)\n• Coaches/Admins are taken to the Admin Panel (/admin)\n\nTrouble logging in?\n• Check your email spelling\n• Password is case-sensitive\n• Use "Forgot Password?" to reset\n• If your account was created by a coach, you may need to set a password first via the reset flow',
-    actions: [{ label: 'Login', href: '/login' }, { label: 'Forgot Password', href: '/forgot-password' }],
+    response: 'To log in:\n\n1. Go to the Login page\n2. Enter your email and password\n3. Click "Sign In"\n\nAfter login:\n• Athletes → Athlete Locker (/locker) — requires active membership/package\n• Coaches/Admins → Admin Panel (/admin)\n\nTrouble logging in?\n• Check your email spelling\n• Password is case-sensitive\n• Use "Forgot Password?" to reset\n• If your account was created by a coach, you may need to set a password first via the reset flow\n\nNew here? Start with "Join the Team" at /get-started — it\'s the onboarding form for new prospects. Once you create an account and purchase a plan, you can log in to access everything.',
+    actions: [{ label: 'Login', href: '/login' }, { label: 'Forgot Password', href: '/forgot-password' }, { label: 'Join the Team', href: '/get-started' }],
   },
 
   // ── FORGOT PASSWORD ──
@@ -265,7 +272,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['dashboard', 'locker', 'my account', 'my profile', 'athlete locker', 'home dashboard'],
     title: 'Your Athlete Locker',
-    response: 'The Athlete Locker is your personal dashboard. Here\'s what you\'ll find:\n\n📊 Quick Stats\n• Total sessions attended\n• Average velocity\n• Drills completed\n• Current training streak\n\n📈 Velocity Chart\nA line graph showing your velocity trend over time\n\n📅 Next Session\nYour upcoming booked session with coach, date, and time\n\n🏋️ Assigned Drills\nDrills your coach has assigned — click to watch and complete them\n\n🏆 Achievements\nBadges you\'ve earned for milestones\n\n📋 Recent Activity\nYour last few sessions and completed drills\n\nAll data updates in real-time!',
+    response: 'The Athlete Locker is your personal dashboard — it adapts to your role:\n\n🏅 Athletes see:\n• Quick Stats — total sessions, avg velocity, drills completed, streak\n• Velocity Chart — your velocity trend over time\n• Next Session — upcoming booked session\n• Assigned Drills — coach-assigned training videos\n• Achievements — badges you\'ve earned\n• Recent Activity — last sessions and completed drills\n• Game Stats Review — log and review game performance\n\n🧑‍🏫 Coaches/Admins see:\n• Quick Stats — total athletes, upcoming sessions, drills in library, pending bookings\n• Upcoming Sessions — next 4 sessions with athlete names and status\n• Quick Links — fast access to Athletes, Bookings, Drills, Analytics, Media, Settings\n• Link to full Admin Panel for complete control\n\nAll data updates in real-time!',
     actions: [{ label: 'Go to Dashboard', href: '/locker' }],
     followUp: ['How do drills work?', 'What are achievements?', 'How do I book a session?'],
   },
@@ -274,7 +281,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['walk me through the dashboard', 'walk me through locker', 'dashboard walkthrough', 'locker walkthrough'],
     title: 'Dashboard Walkthrough',
-    response: 'Let me walk you through your Athlete Locker:\n\nTop Section — Welcome + Quick Stats\nShows your name and 4 stat cards: total sessions, avg velocity, drills done, and training streak.\n\nMiddle — Velocity Chart + Next Session\nLeft: a line chart of your velocity over your last several sessions. Right: details about your next upcoming booked session.\n\nBelow That — Assigned Drills\nUp to 6 drills your coach has assigned. Each card shows the drill title, category, and difficulty. Click any to watch the video and mark it complete.\n\nBottom — Achievements + Activity Feed\nYour earned badges and recent activity (completed drills, attended sessions).\n\nUse the sidebar to navigate to Sessions, Drills, Progress, Achievements, Booking, and Settings.',
+    response: 'Your dashboard adapts to your role:\n\nAthletes:\nTop — Welcome + 4 stat cards: total sessions, avg velocity, drills done, and training streak.\nMiddle — Velocity chart (left) + next session details (right).\nBelow — Progress rings, recent activity feed.\nFurther — Achievement badges and game stats review.\nBottom — Up to 6 assigned drills with video thumbnails.\n\nCoaches/Admins:\nTop — Welcome + 4 stat cards: athletes, upcoming sessions, drills, pending bookings.\nMiddle — Next 4 upcoming sessions with athlete names, service type, date/time, and status.\nBottom — Quick links grid (Athletes, Bookings, Drills, Analytics, Media, Settings) + link to full Admin Panel.\n\nUse the sidebar to navigate — it shows different options based on your role.',
     actions: [{ label: 'Go to Dashboard', href: '/locker' }],
   },
 
@@ -388,7 +395,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['service', 'services', 'manage services', 'training type', 'add service', 'edit service'],
     title: 'Managing Services',
-    response: 'Services are the training types athletes book:\n\nFrom Admin → Services you can:\n• Create new services with name, description, price, duration, category, and max participants\n• Edit existing services\n• Toggle active/inactive (inactive services don\'t show up for booking)\n\nCategories:\n• Individual — 1-on-1 sessions\n• Group — multi-athlete sessions\n• Specialty — video analysis, recovery, etc.\n\nPrices are in cents (e.g., 7500 = $75.00). These prices flow directly to the Pricing page and Booking page.',
+    response: 'Services are the training types athletes book:\n\nFrom Admin → Services you can:\n• Create new services with name, description, price, duration, category, and max participants\n• Edit existing services\n• Toggle active/inactive (inactive services don\'t show on booking or pricing)\n• Link a Stripe price ID for payment processing\n\nCategories:\n• Individual — 1-on-1 sessions\n• Group — multi-athlete sessions\n• Package — session bundles (5/10/20-pack)\n• Specialty — video analysis, recovery, etc.\n\nPrices are in cents (e.g., 7500 = $75.00). These prices flow directly to the public Pricing page and the Booking page — update once, changes appear everywhere.',
     actions: [{ label: 'Manage Services', href: '/admin/services' }],
   },
 
@@ -404,16 +411,16 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['walk me through the pricing page', 'walk me through pricing', 'pricing walkthrough', 'pricing page'],
     title: 'Pricing Page Walkthrough',
-    response: 'The Pricing page is organized in sections:\n\n🔝 Quick Stats — 4 cards showing starting prices for 1-on-1, group, max package savings, and a "100% Pro Training" badge.\n\n🟠 Online Course (1-on-1 Training) — Cards for each individual service with name, price per session, duration, description bullets, and a "Join the Team" button.\n\n🔵 Group Training — Cards for group sessions showing price, duration, max participants, and description.\n\n📦 Training Packages — 5, 10, and 20-session packs showing total price, per-session cost, and savings. The middle one is marked "Most Popular."\n\n🟢 Specialty Services — Video analysis, recovery sessions, etc.\n\nAll prices are pulled live from the database — when coaches update pricing in Admin → Services, it updates here automatically!',
+    response: 'The Pricing page is organized in sections:\n\n🔝 Quick Stats — 4 cards showing starting prices for 1-on-1, group, max package savings, and a "100% Pro Training" badge.\n\n🟠 1-on-1 Training — Cards for each individual service with name, price per session, duration, and description bullets.\n\n🔵 Group Training — Cards for group sessions showing price, duration, max participants, and description.\n\n📦 Training Packages — 5, 10, and 20-session packs showing total price, per-session cost, and savings. The middle one is marked "Most Popular."\n\n🟢 Specialty Services — Video analysis, recovery sessions, etc.\n\nSmart CTAs: Buttons adapt to who you are:\n• Not logged in → "Join the Team" (sends to /get-started)\n• Logged-in member → "Book Now" (sends to /booking)\n• Coach/Admin → "Manage Services" (sends to /admin/services)\n\nAll prices update live from the database!',
     actions: [{ label: 'View Pricing', href: '/pricing' }],
   },
 
   // ── GET STARTED PAGE ──
   {
-    keywords: ['walk me through get started', 'get started walkthrough', 'get started page', 'onboarding'],
-    title: 'Get Started Page Walkthrough',
-    response: 'The Get Started page is an onboarding form to learn about you:\n\n• Personal Info — First name, last name, email, phone, age, primary position\n• Sports — Select softball, basketball, and/or soccer (at least 1)\n• Training Goals — Check all that apply: increase velocity, improve mechanics, build strength, enhance mobility, prevent injuries, mental performance\n• Availability — When can you train? (weekday afternoon, evening, weekend, flexible)\n• Additional Info — Free-text for anything else\n• Parent/Guardian — Auto-shows if under 18\n\nAfter submitting, you\'re directed to create your account. The form info helps us match you with the right coach and program.',
-    actions: [{ label: 'Get Started', href: '/get-started' }],
+    keywords: ['walk me through get started', 'get started walkthrough', 'get started page', 'onboarding', 'join the team'],
+    title: 'Join the Team Page Walkthrough',
+    response: 'The "Join the Team" page (/get-started) is the onboarding form for NEW prospects:\n\n• Personal Info — First name, last name, email, phone, age, primary position\n• Sports — Select softball, basketball, and/or soccer (at least 1)\n• Training Goals — Check all that apply: increase velocity, improve mechanics, build strength, enhance mobility, prevent injuries, mental performance\n• Availability — When can you train? (weekday afternoon, evening, weekend, flexible)\n• Additional Info — Free-text for anything else\n• Parent/Guardian — Auto-shows if under 18\n\nAfter submitting, you\'re directed to create your account (/signup). The form info helps us match you with the right coach and program.\n\nAlready a member? There\'s a "Log in here" link at the top if you already have an account.',
+    actions: [{ label: 'Join the Team', href: '/get-started' }],
   },
 
   // ── BLOG ──
@@ -428,7 +435,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['faq', 'frequently asked', 'questions', 'common questions', 'help'],
     title: 'FAQ Page',
-    response: 'Our FAQ has 16 questions across 6 categories:\n\n• Getting Started — How to begin, what to expect\n• Sessions & Scheduling — Booking, cancellations, what to bring\n• Pricing & Packages — Costs, payment, package details\n• Training Programs — Sports we cover, age groups, program details\n• Facility & Equipment — Location, gear, safety\n• Parents & Guardians — Info for parents of youth athletes\n\nThe page has a search bar to find answers fast, plus category filter buttons. Click any question to expand the answer.',
+    response: 'Our FAQ page has 16 questions across 6 categories:\n\n• Getting Started — How to begin, what to expect\n• Sessions & Scheduling — Booking, cancellations, what to bring\n• Pricing & Packages — Costs, payment, package details\n• Training Programs — Sports we cover, age groups, program details\n• Facility & Equipment — Location, gear, safety\n• Parents & Guardians — Info for parents of youth athletes\n\nThe page has a search bar and category filter buttons.\n\nFor members: The FAQ page features a "Chat with Your PSP Guide" section at the top — that\'s me! Since you\'re already a member, chatting is usually faster than scrolling through FAQs.\n\nNew signups land on this page after creating their account, with a welcome banner linking to Pricing and Dashboard.',
     actions: [{ label: 'View FAQ', href: '/faq' }],
   },
 
@@ -468,7 +475,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['navigate', 'menu', 'sidebar', 'where do i find', 'how to find', 'navigation', 'pages', 'sitemap'],
     title: 'Site Navigation',
-    response: 'Here\'s how to get around PSP.Pro:\n\nPublic Pages (no login needed):\n• Home, About, Pricing, Blog, Contact, FAQ, Get Started\n\nAthlete Pages (login required):\n• Athlete Locker — your main dashboard\n• Sessions — view/manage your bookings\n• Drills — browse training videos\n• Progress — track improvement\n• Achievements — earned badges\n• Booking — book new sessions\n• Settings — account management\n\nCoach/Admin Pages:\n• Admin Panel — main command center\n• Athletes — manage athlete roster\n• Bookings — confirm/manage sessions\n• Drills — create and assign drills\n• Services — set pricing and offerings\n• Availability — set your schedule\n• Analytics — view performance data\n\nUse the sidebar menu on desktop or the bottom nav on mobile.',
+    response: 'Here\'s how to get around PSP.Pro:\n\nPublic Pages (no login needed):\n• Home, About, Pricing, Blog, Contact, FAQ, Join the Team\n\nThe navigation adapts based on your login status:\n• Logged out — sidebar shows a "Login" link at the bottom\n• Logged in — sidebar shows "Your Dashboard" at the top (goes to /locker for athletes, /admin for coaches)\n\nAthlete Pages (login + membership required):\n• Athlete Locker — your main dashboard\n• Sessions — view/manage your bookings\n• Membership Training — browse training videos\n• Progress — track improvement\n• Achievements — earned badges\n• Buy Lessons — book new sessions\n• Settings — account management\n\nCoach/Admin Pages:\n• Admin Panel — main command center\n• Athletes, Bookings, Drills, Services, Availability, Analytics\n\nCTAs across the site also adapt — members see "Book Now" buttons while visitors see "Join the Team."',
     actions: [{ label: 'Home', href: '/' }, { label: 'Dashboard', href: '/locker' }],
   },
 ]

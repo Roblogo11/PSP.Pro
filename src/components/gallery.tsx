@@ -65,8 +65,8 @@ const GALLERY_ITEMS: GalleryItem[] = [
     type: 'image',
     title: 'Softball Home Run',
     category: 'Athletes',
-    thumbnail: '/images/Coastal Softball Home Run.jpg',
-    url: '/images/Coastal Softball Home Run.jpg',
+    thumbnail: '/images/Costal At Bat.jpg',
+    url: '/images/Costal At Bat.jpg',
     description: 'PSP athlete crushing it at the plate!',
   },
 ]

@@ -448,7 +448,7 @@ Want a personalized nutrition plan? Our coaches can help build one that fits you
     category: 'Mental Game',
     date: '2026-01-15',
     readTime: '6 min read',
-    thumbnail: '/images/Coastal Softball Home Run.jpg',
+    thumbnail: '/images/Costal At Bat.jpg',
     slug: 'mental-game-hitting',
     content: `Ask any hitting coach what separates a .250 hitter from a .300 hitter, and mechanics will only be part of the answer. The mental game — confidence, focus, approach, and resilience — is often the bigger differentiator.
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -33,15 +33,16 @@ interface NavItem {
   href: string
   icon: React.ElementType
   color?: string
+  badgeKey?: string
 }
 
 const athleteNavItems: NavItem[] = [
   { label: 'Dashboard', mobileLabel: 'Home', href: '/locker', icon: LayoutDashboard, color: 'text-orange-400' },
   { label: 'Start Training', mobileLabel: 'Train', href: '/drills', icon: Dumbbell, color: 'text-cyan-400' },
-  { label: 'Sessions', mobileLabel: 'Sessions', href: '/sessions', icon: Calendar, color: 'text-purple-400' },
+  { label: 'Sessions', mobileLabel: 'Sessions', href: '/sessions', icon: Calendar, color: 'text-purple-400', badgeKey: 'upcomingSessions' },
   { label: 'Progress', mobileLabel: 'Progress', href: '/progress', icon: TrendingUp, color: 'text-green-400' },
   { label: 'Achievements', mobileLabel: 'Awards', href: '/achievements', icon: Trophy, color: 'text-yellow-400' },
-  { label: 'Buy Lessons', mobileLabel: 'Buy', href: '/booking', icon: Clock, color: 'text-blue-400' },
+  { label: 'Buy Lessons', mobileLabel: 'Buy', href: '/booking', icon: Clock, color: 'text-blue-400', badgeKey: 'sessionsRemaining' },
   { label: 'Settings', mobileLabel: 'Settings', href: '/settings', icon: Settings, color: 'text-cyan-600' },
 ]
 
@@ -50,7 +51,7 @@ const adminNavItems: NavItem[] = [
   { label: 'Services & Pricing', mobileLabel: 'Services', href: '/admin/services', icon: DollarSign, color: 'text-green-400' },
   { label: 'Courses', mobileLabel: 'Courses', href: '/admin/drills', icon: Dumbbell, color: 'text-purple-400' },
   { label: 'Athletes', mobileLabel: 'Athletes', href: '/admin/athletes', icon: Users, color: 'text-cyan-400' },
-  { label: 'Calendar', mobileLabel: 'Calendar', href: '/admin/bookings', icon: Calendar, color: 'text-blue-400' },
+  { label: 'Calendar', mobileLabel: 'Calendar', href: '/admin/bookings', icon: Calendar, color: 'text-blue-400', badgeKey: 'pendingBookings' },
   { label: 'Media', mobileLabel: 'Media', href: '/admin/media', icon: Video, color: 'text-pink-400' },
   { label: 'Analytics', mobileLabel: 'Stats', href: '/admin/analytics', icon: BarChart3, color: 'text-green-400' },
 ]
@@ -59,7 +60,71 @@ export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
-  const { isCoach, isAdmin, loading } = useUserRole()
+  const { profile, isCoach, isAdmin, loading } = useUserRole()
+
+  // Badge counts
+  const [badges, setBadges] = useState<Record<string, number>>({})
+
+  useEffect(() => {
+    if (!profile?.id) return
+
+    async function fetchBadges() {
+      const supabase = createClient()
+      const today = new Date().toISOString().split('T')[0]
+      const counts: Record<string, number> = {}
+
+      // Upcoming sessions for athletes
+      const { count: upcomingCount } = await supabase
+        .from('bookings')
+        .select('*', { count: 'exact', head: true })
+        .eq('athlete_id', profile!.id)
+        .in('status', ['confirmed', 'pending'])
+        .gte('booking_date', today)
+
+      if (upcomingCount && upcomingCount > 0) {
+        counts.upcomingSessions = upcomingCount
+      }
+
+      // Sessions remaining in active package
+      const { data: activePkg } = await supabase
+        .from('athlete_packages')
+        .select('sessions_total, sessions_used')
+        .eq('athlete_id', profile!.id)
+        .eq('is_active', true)
+        .gte('expires_at', new Date().toISOString())
+        .order('expires_at', { ascending: false })
+        .limit(1)
+        .single()
+
+      if (activePkg) {
+        const remaining = activePkg.sessions_total - activePkg.sessions_used
+        if (remaining > 0) {
+          counts.sessionsRemaining = remaining
+        }
+      }
+
+      // Pending bookings for coaches/admins
+      if (isCoach || isAdmin) {
+        let pendingQuery = supabase
+          .from('bookings')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'pending')
+
+        if (!isAdmin && profile?.id) {
+          pendingQuery = pendingQuery.eq('coach_id', profile.id)
+        }
+
+        const { count: pendingCount } = await pendingQuery
+        if (pendingCount && pendingCount > 0) {
+          counts.pendingBookings = pendingCount
+        }
+      }
+
+      setBadges(counts)
+    }
+
+    fetchBadges()
+  }, [profile?.id, isCoach, isAdmin])
 
   const handleLogout = async () => {
     const supabase = createClient()
@@ -69,6 +134,27 @@ export function Sidebar() {
 
   // Determine which nav items to show
   const navItems = isCoach || isAdmin ? [...athleteNavItems, ...adminNavItems] : athleteNavItems
+
+  // Badge renderer
+  const renderBadge = (item: NavItem, isCollapsed: boolean) => {
+    if (!item.badgeKey || !badges[item.badgeKey]) return null
+    const count = badges[item.badgeKey]
+    const isSessions = item.badgeKey === 'sessionsRemaining'
+    return (
+      <span className={`
+        ${isCollapsed ? 'absolute -top-1 -right-1' : 'ml-auto'}
+        px-1.5 py-0.5 text-[10px] font-bold rounded-full min-w-[18px] text-center leading-tight
+        ${isSessions
+          ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+          : item.badgeKey === 'pendingBookings'
+          ? 'bg-orange/20 text-orange border border-orange/30'
+          : 'bg-cyan/20 text-cyan border border-cyan/30'
+        }
+      `}>
+        {count}
+      </span>
+    )
+  }
 
   return (
     <>
@@ -130,7 +216,7 @@ export function Sidebar() {
                   whileHover={{ x: 4 }}
                   whileTap={{ scale: 0.98 }}
                   className={`
-                    group flex items-center gap-3 px-4 py-3 rounded-xl
+                    group flex items-center gap-3 px-4 py-3 rounded-xl relative
                     transition-all duration-200 cursor-pointer
                     ${
                       isActive
@@ -153,6 +239,7 @@ export function Sidebar() {
                       </motion.span>
                     )}
                   </AnimatePresence>
+                  {renderBadge(item, collapsed)}
                 </motion.div>
               </Link>
             )
@@ -193,7 +280,7 @@ export function Sidebar() {
                       whileHover={{ x: 4 }}
                       whileTap={{ scale: 0.98 }}
                       className={`
-                        group flex items-center gap-3 px-4 py-3 rounded-xl
+                        group flex items-center gap-3 px-4 py-3 rounded-xl relative
                         transition-all duration-200 cursor-pointer
                         ${
                           isActive
@@ -216,6 +303,7 @@ export function Sidebar() {
                           </motion.span>
                         )}
                       </AnimatePresence>
+                      {renderBadge(item, collapsed)}
                     </motion.div>
                   </Link>
                 )
@@ -290,7 +378,7 @@ export function Sidebar() {
                 <motion.div
                   whileTap={{ scale: 0.9 }}
                   className={`
-                    flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0
+                    flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0 relative
                     ${
                       isActive
                         ? 'bg-orange/20 text-orange'
@@ -300,6 +388,11 @@ export function Sidebar() {
                 >
                   <Icon className="w-4 h-4" />
                   <span className="text-[9px] font-medium leading-tight text-center whitespace-nowrap">{item.mobileLabel}</span>
+                  {item.badgeKey && badges[item.badgeKey] ? (
+                    <span className="absolute -top-0.5 -right-0.5 px-1 py-0 text-[8px] font-bold rounded-full min-w-[14px] text-center leading-[14px] bg-orange text-white">
+                      {badges[item.badgeKey]}
+                    </span>
+                  ) : null}
                 </motion.div>
               </Link>
             )
@@ -318,7 +411,7 @@ export function Sidebar() {
                     <motion.div
                       whileTap={{ scale: 0.9 }}
                       className={`
-                        flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0
+                        flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0 relative
                         ${
                           isActive
                             ? 'bg-cyan/20 text-cyan'
@@ -328,6 +421,11 @@ export function Sidebar() {
                     >
                       <Icon className="w-4 h-4" />
                       <span className="text-[9px] font-medium leading-tight text-center whitespace-nowrap">{item.mobileLabel}</span>
+                      {item.badgeKey && badges[item.badgeKey] ? (
+                        <span className="absolute -top-0.5 -right-0.5 px-1 py-0 text-[8px] font-bold rounded-full min-w-[14px] text-center leading-[14px] bg-orange text-white">
+                          {badges[item.badgeKey]}
+                        </span>
+                      ) : null}
                     </motion.div>
                   </Link>
                 )

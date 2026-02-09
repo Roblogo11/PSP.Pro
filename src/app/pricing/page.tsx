@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Zap, Users, Video, Activity, Package, CheckCircle, Award, Info, Rocket, Mail, ArrowRight, LayoutDashboard } from 'lucide-react'
+import { Zap, Users, Video, Activity, Package, CheckCircle, Award, Info, Rocket, Mail, ArrowRight, LayoutDashboard, Shield, RefreshCw } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
 import { createClient } from '@/lib/supabase/client'
@@ -32,6 +32,15 @@ export default function PricingPage() {
   const [services, setServices] = useState<PricingService[]>(DEFAULT_SERVICES)
   const [packages, setPackages] = useState<PricingPackage[]>(DEFAULT_PACKAGES)
   const [loading, setLoading] = useState(true)
+
+  // Member package state
+  const [memberPackage, setMemberPackage] = useState<{
+    package_id: string | null
+    sessions_total: number
+    sessions_used: number
+    expires_at: string
+    package_name?: string
+  } | null>(null)
 
   // Dynamic CTA based on auth state
   const ctaHref = (isCoach || isAdmin) ? '/admin/services' : profile ? '/booking' : '/get-started'
@@ -63,7 +72,6 @@ export default function PricingPage() {
         }
       } catch (err) {
         console.error('Error fetching pricing:', err)
-        // Defaults are already set via useState initializers
       } finally {
         setLoading(false)
       }
@@ -71,6 +79,40 @@ export default function PricingPage() {
 
     fetchPricing()
   }, [])
+
+  // Fetch member's active package
+  useEffect(() => {
+    if (!profile?.id || isCoach || isAdmin) return
+
+    async function fetchMemberPackage() {
+      const supabase = createClient()
+      const { data } = await supabase
+        .from('athlete_packages')
+        .select('package_id, sessions_total, sessions_used, expires_at')
+        .eq('athlete_id', profile!.id)
+        .eq('is_active', true)
+        .gte('expires_at', new Date().toISOString())
+        .order('expires_at', { ascending: false })
+        .limit(1)
+        .single()
+
+      if (data) {
+        // Try to get the package name
+        let packageName: string | undefined
+        if (data.package_id) {
+          const { data: pkgData } = await supabase
+            .from('training_packages')
+            .select('name')
+            .eq('id', data.package_id)
+            .single()
+          packageName = pkgData?.name
+        }
+        setMemberPackage({ ...data, package_name: packageName })
+      }
+    }
+
+    fetchMemberPackage()
+  }, [profile?.id, isCoach, isAdmin])
 
   // Group services by category
   const individualServices = services.filter((s) => s.category === 'individual')
@@ -137,6 +179,52 @@ export default function PricingPage() {
       </div>
 
       <div className="p-4 md:p-8">
+      {/* Member Package Status Banner */}
+      {profile && !isCoach && !isAdmin && memberPackage && (
+        <div className="command-panel mb-6 border-green-500/30 bg-gradient-to-r from-green-500/5 to-cyan/5">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Shield className="w-6 h-6 text-green-400" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="font-bold text-slate-900 dark:text-white">
+                    {memberPackage.package_name || 'Your Plan'}
+                  </h3>
+                  <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs font-semibold rounded-full border border-green-500/30">
+                    Active
+                  </span>
+                </div>
+                <p className="text-sm text-cyan-700 dark:text-white/70">
+                  {memberPackage.sessions_total - memberPackage.sessions_used} of {memberPackage.sessions_total} sessions remaining
+                  {' '}&bull;{' '}
+                  Expires {new Date(memberPackage.expires_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Link href="/booking" className="btn-primary text-sm px-4 py-2 flex items-center gap-1.5 flex-1 sm:flex-none justify-center">
+                Book Session
+              </Link>
+              <Link href="/booking" className="btn-ghost text-sm px-4 py-2 flex items-center gap-1.5 flex-1 sm:flex-none justify-center">
+                <RefreshCw className="w-3.5 h-3.5" />
+                Renew
+              </Link>
+            </div>
+          </div>
+          {/* Sessions progress bar */}
+          <div className="mt-4">
+            <div className="w-full h-2 bg-cyan-900/30 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-green-400 to-cyan rounded-full transition-all duration-500"
+                style={{ width: `${Math.max(5, ((memberPackage.sessions_total - memberPackage.sessions_used) / memberPackage.sessions_total) * 100)}%` }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {[
@@ -289,17 +377,27 @@ export default function PricingPage() {
             const isFeatured = packages.length >= 3
               ? index === Math.floor(packages.length / 2)
               : saveCents === Math.max(...packages.map((p) => p.sessions_included * cheapestIndividual - p.price_cents))
+            const isCurrentPlan = memberPackage?.package_id === pack.id
 
             return (
               <div
                 key={pack.id}
-                className={`p-6 bg-cyan-900/20 rounded-xl border transition-all ${
-                  isFeatured
+                className={`p-6 bg-cyan-900/20 rounded-xl border transition-all relative ${
+                  isCurrentPlan
+                    ? 'border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.2)]'
+                    : isFeatured
                     ? 'border-orange shadow-glow-orange'
                     : 'border-cyan-700/50 hover:border-orange/30'
                 }`}
               >
-                {isFeatured && (
+                {isCurrentPlan && (
+                  <div className="text-center mb-4">
+                    <span className="inline-block px-3 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">
+                      Your Plan
+                    </span>
+                  </div>
+                )}
+                {!isCurrentPlan && isFeatured && (
                   <div className="text-center mb-4">
                     <span className="inline-block px-3 py-1 bg-orange text-white text-xs font-semibold rounded-full">
                       Most Popular
@@ -318,8 +416,8 @@ export default function PricingPage() {
                   <p className="text-sm">{formatPrice(perSessionCents)} per session</p>
                 </div>
                 <Link href={ctaHref}>
-                  <button className={isFeatured ? 'btn-primary w-full' : 'btn-ghost w-full'}>
-                    {(isCoach || isAdmin) ? 'Manage Packages' : 'Purchase Pack'}
+                  <button className={isCurrentPlan || isFeatured ? 'btn-primary w-full' : 'btn-ghost w-full'}>
+                    {(isCoach || isAdmin) ? 'Manage Packages' : isCurrentPlan ? 'Renew Package' : 'Purchase Pack'}
                   </button>
                 </Link>
               </div>

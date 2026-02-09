@@ -3,9 +3,10 @@
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { ChevronDown, HelpCircle, Search, Sparkles } from 'lucide-react'
+import { ChevronDown, HelpCircle, Search, Sparkles, MessageSquare, ArrowRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
+import { useUserRole } from '@/lib/hooks/use-user-role'
 
 interface FAQItem {
   id: number
@@ -118,6 +119,8 @@ const CATEGORIES = Array.from(new Set(FAQ_DATA.map(item => item.category)))
 export default function FAQPage() {
   const searchParams = useSearchParams()
   const isNewSignup = searchParams.get('welcome') === 'true'
+  const { profile, loading: profileLoading } = useUserRole()
+  const isMember = !!profile
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [openId, setOpenId] = useState<number | null>(null)
@@ -220,6 +223,38 @@ export default function FAQPage() {
           ))}
         </div>
       </div>
+
+      {/* Member Chatbot CTA — members get the bot front and center */}
+      {isMember && !isNewSignup && (
+        <div className="max-w-4xl mx-auto mb-10">
+          <div className="command-panel p-8 md:p-10 text-center border-cyan/30 bg-gradient-to-br from-cyan/5 to-orange/5">
+            <div className="w-16 h-16 bg-orange/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <MessageSquare className="w-8 h-8 text-orange" />
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-3">
+              Chat with Your <span className="text-gradient-orange">PSP Guide</span>
+            </h2>
+            <p className="text-cyan-700 dark:text-white/80 max-w-lg mx-auto mb-6">
+              As a member, you&apos;ve got instant access to our smart assistant. Ask about your dashboard, booking, drills, progress tracking — anything!
+            </p>
+            <button
+              onClick={() => {
+                // Trigger the global PSP Assistant chatbot
+                const chatBtn = document.querySelector('[class*="fixed bottom"][class*="right"]') as HTMLButtonElement
+                if (chatBtn) chatBtn.click()
+              }}
+              className="btn-primary px-8 py-4 text-lg inline-flex items-center gap-3"
+            >
+              <MessageSquare className="w-5 h-5" />
+              Open Chat
+              <ArrowRight className="w-5 h-5" />
+            </button>
+            <p className="text-xs text-cyan-700 dark:text-white/50 mt-4">
+              Or scroll down to browse FAQs manually
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* FAQ List */}
       <div className="max-w-4xl mx-auto space-y-4">

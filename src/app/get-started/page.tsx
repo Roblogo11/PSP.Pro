@@ -30,7 +30,7 @@ export default function GetStartedPage() {
       {/* Hero Image Banner */}
       <div className="relative px-6 py-20 md:py-28 overflow-hidden">
         <Image
-          src="/images/Coastal Softball Home Run.jpg"
+          src="/images/Costal At Bat.jpg"
           alt="PSP softball home run action"
           fill
           priority

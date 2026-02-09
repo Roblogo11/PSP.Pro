@@ -45,7 +45,7 @@ export const PLACEHOLDER_IMAGES = {
   facility: {
     training: '/images/over the shoulder psp pitching.jpg',
     equipment: '/images/Proper Sports Performance.jpg',
-    indoor: '/images/Coastal Softball Home Run.jpg',
+    indoor: '/images/Costal At Bat.jpg',
     alt: {
       training: 'PSP indoor pitching training session',
       equipment: 'Proper Sports Performance training facility',
@@ -97,7 +97,7 @@ export const PLACEHOLDER_IMAGES = {
   // Achievement Badges - 1:1 square (120x120)
   badges: {
     velocityMilestone: '/images/psp pitcher.jpg',
-    streakMaster: '/images/Coastal Softball Home Run.jpg',
+    streakMaster: '/images/Costal At Bat.jpg',
     drillComplete: '/images/Top View Soccer Traing.jpg',
     width: 120,
     height: 120,
