@@ -47,7 +47,7 @@ export function TimeSlotPicker({ timeSlots, selectedSlotId, onSelectSlot, loadin
     return (
       <div className="glass-card p-8 text-center">
         <Clock className="w-12 h-12 text-cyan-700 dark:text-white mx-auto mb-4" />
-        <h4 className="text-lg font-bold text-white mb-2">No Available Slots</h4>
+        <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">No Available Slots</h4>
         <p className="text-cyan-700 dark:text-white">
           No time slots available for this date. Please select a different date.
         </p>
@@ -58,7 +58,7 @@ export function TimeSlotPicker({ timeSlots, selectedSlotId, onSelectSlot, loadin
   return (
     <div className="space-y-4">
       <div className="mb-6">
-        <h3 className="text-xl font-bold text-white mb-2">Select a Time</h3>
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Select a Time</h3>
         <p className="text-sm text-cyan-700 dark:text-white">Choose an available time slot for your session</p>
       </div>
 
@@ -90,7 +90,7 @@ export function TimeSlotPicker({ timeSlots, selectedSlotId, onSelectSlot, loadin
               {/* Time */}
               <div className="flex items-center gap-2 mb-3">
                 <Clock className={`w-4 h-4 ${isSelected ? 'text-orange' : 'text-cyan'}`} />
-                <span className="font-bold text-white">
+                <span className="font-bold text-slate-900 dark:text-white">
                   {formatTime(slot.start_time)} - {formatTime(slot.end_time)}
                 </span>
               </div>

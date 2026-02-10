@@ -39,7 +39,7 @@ export function ServiceSelector({ services, selectedServiceId, onSelectService }
   return (
     <div className="space-y-4">
       <div className="mb-6">
-        <h3 className="text-xl font-bold text-white mb-2">Select a Service</h3>
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Select a Service</h3>
         <p className="text-sm text-cyan-700 dark:text-white">Choose the training session that fits your goals</p>
       </div>
 
@@ -63,7 +63,7 @@ export function ServiceSelector({ services, selectedServiceId, onSelectService }
               {/* Header */}
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
-                  <h4 className="text-lg font-bold text-white mb-1">{service.name}</h4>
+                  <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-1">{service.name}</h4>
                   <p className="text-sm text-cyan-700 dark:text-white line-clamp-2">{service.description}</p>
                 </div>
                 <span
