@@ -1,11 +1,10 @@
-import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * POST /api/auth/profile-role
  * Fetches a user's role using the service role key (bypasses RLS).
- * Only returns the role for the currently authenticated user.
+ * Verifies auth via Bearer token (not cookies) to avoid Safari cookie sync race.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -15,16 +14,25 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing userId' }, { status: 400 })
     }
 
-    // Verify the requesting user is authenticated and matches the userId
-    const supabase = await createClient()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const adminClient = createAdminClient()
+
+    // Verify the requesting user via Bearer token from Authorization header
+    // This avoids the cookie-sync race condition on Safari/Apple devices
+    const authHeader = request.headers.get('Authorization')
+    const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null
+
+    if (!token) {
+      return NextResponse.json({ error: 'Missing authorization token' }, { status: 401 })
+    }
+
+    // Verify the token and get the user
+    const { data: { user }, error: authError } = await adminClient.auth.getUser(token)
 
     if (authError || !user || user.id !== userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Use admin client to bypass RLS
-    const adminClient = createAdminClient()
+    // Use admin client to bypass RLS for profile lookup
     const { data: profile, error: profileError } = await adminClient
       .from('profiles')
       .select('role')

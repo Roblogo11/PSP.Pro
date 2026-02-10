@@ -37,11 +37,16 @@ export default function LoginPage() {
 
       if (signInError) throw signInError
 
-      if (data.user) {
+      if (data.user && data.session) {
         // Fetch role via server API route (bypasses RLS — no timing issues)
+        // Pass access token in header so server can verify auth immediately
+        // (cookies may not be synced yet on Safari/Apple devices)
         const res = await fetch('/api/auth/profile-role', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${data.session.access_token}`,
+          },
           body: JSON.stringify({ userId: data.user.id }),
         })
 
