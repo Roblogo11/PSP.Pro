@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
       .eq('id', user.id)
       .single()
 
-    if (!profile || (profile.role !== 'admin' && profile.role !== 'coach')) {
+    if (!profile || (profile.role !== 'admin' && profile.role !== 'coach' && profile.role !== 'master_admin')) {
       return NextResponse.json(
         { error: 'Forbidden - admin or coach access required' },
         { status: 403 }
@@ -68,6 +68,7 @@ export async function POST(request: NextRequest) {
 
     const { data: authData, error: createUserError } = await supabaseAdmin.auth.admin.createUser({
       email,
+      password: 'Welcome123!',
       email_confirm: true,
       user_metadata: {
         full_name,

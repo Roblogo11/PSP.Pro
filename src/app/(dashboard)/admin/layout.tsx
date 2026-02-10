@@ -23,7 +23,7 @@ export default async function AdminLayout({
       .eq('id', user.id)
       .single()
 
-    if (!profile || (profile.role !== 'admin' && profile.role !== 'coach')) {
+    if (!profile || (profile.role !== 'admin' && profile.role !== 'coach' && profile.role !== 'master_admin')) {
       redirect('/locker')
     }
   } catch (error: any) {

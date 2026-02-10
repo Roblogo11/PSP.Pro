@@ -51,7 +51,7 @@ export default function LoginPage() {
 
         // Refresh server state then navigate
         router.refresh()
-        if (profile.role === 'admin' || profile.role === 'coach') {
+        if (profile.role === 'admin' || profile.role === 'coach' || profile.role === 'master_admin') {
           router.push('/admin')
         } else {
           router.push('/locker')

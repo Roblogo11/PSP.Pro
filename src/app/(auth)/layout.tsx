@@ -15,7 +15,19 @@ export default async function AuthLayout({
   } = await supabase.auth.getUser()
 
   if (user) {
-    redirect('/locker')
+    // Route staff to admin, athletes to locker
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    const role = profile?.role
+    if (role === 'admin' || role === 'coach' || role === 'master_admin') {
+      redirect('/admin')
+    } else {
+      redirect('/locker')
+    }
   }
 
   return (
