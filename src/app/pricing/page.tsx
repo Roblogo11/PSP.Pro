@@ -513,7 +513,7 @@ export default function PricingPage() {
       </div>
       </main>
 
-      <FunnelNav />
+      <FunnelNav desktopOnly />
     </div>
   )
 }

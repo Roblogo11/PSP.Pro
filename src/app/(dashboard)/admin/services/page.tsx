@@ -23,7 +23,7 @@ interface Service {
 
 export default function ServicesManagerPage() {
   const router = useRouter()
-  const { isAdmin, loading: roleLoading } = useUserRole()
+  const { isAdmin, isCoach, loading: roleLoading, realRole } = useUserRole()
   const [services, setServices] = useState<Service[]>([])
   const [loading, setLoading] = useState(true)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -42,12 +42,13 @@ export default function ServicesManagerPage() {
     homepage_order: 0,
   })
 
-  // Redirect if not admin
+  // Redirect if not admin, coach, or master_admin
+  const hasAccess = isAdmin || isCoach || realRole === 'master_admin'
   useEffect(() => {
-    if (!roleLoading && !isAdmin) {
+    if (!roleLoading && !hasAccess) {
       router.push('/locker')
     }
-  }, [roleLoading, isAdmin, router])
+  }, [roleLoading, hasAccess, router])
 
   // Load services
   useEffect(() => {
@@ -104,10 +105,11 @@ export default function ServicesManagerPage() {
         .replace(/(^-|-$)/g, '')
 
       if (editingId) {
-        // Update existing
+        // Update existing — strip id from payload
+        const { id: _id, ...updateData } = formData as any
         const { error } = await supabase
           .from('services')
-          .update({ ...formData, slug })
+          .update({ ...updateData, slug })
           .eq('id', editingId)
 
         if (error) throw error

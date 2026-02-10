@@ -16,9 +16,11 @@ const STEP_TO_FUNNEL_INDEX = [0, 2, 3, 4] // Home=0, Pricing=2, GetStarted=3, Co
 
 interface FunnelNavProps {
   className?: string
+  /** Hide on mobile — use when InfoSidebar provides mobile navigation */
+  desktopOnly?: boolean
 }
 
-export function FunnelNav({ className = '' }: FunnelNavProps) {
+export function FunnelNav({ className = '', desktopOnly = false }: FunnelNavProps) {
   const pathname = usePathname()
   const router = useRouter()
   const { setNavigationDirection } = useNavigation()
@@ -53,12 +55,12 @@ export function FunnelNav({ className = '' }: FunnelNavProps) {
   if (!isInFunnel) {
     return (
       <>
-        <div className="h-20" />
+        <div className={desktopOnly ? 'hidden lg:block h-20' : 'h-20'} />
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.4, type: 'spring', stiffness: 300, damping: 30 }}
-          className={`fixed bottom-0 left-0 right-0 z-50 ${className}`}
+          className={`${desktopOnly ? 'hidden lg:block' : ''} fixed bottom-0 left-0 right-0 z-50 ${className}`}
         >
           <div className="bg-dark-100/95 backdrop-blur-xl border-t border-secondary/20 shadow-2xl shadow-black/50">
             <div className="max-w-5xl mx-auto px-4 py-3">
@@ -116,7 +118,7 @@ export function FunnelNav({ className = '' }: FunnelNavProps) {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.4, type: 'spring', stiffness: 300, damping: 30 }}
-        className={`fixed bottom-0 left-0 right-0 z-50 ${className}`}
+        className={`${desktopOnly ? 'hidden lg:block' : ''} fixed bottom-0 left-0 right-0 z-50 ${className}`}
       >
         {/* Glass backdrop */}
         <div className="bg-dark-100/95 backdrop-blur-xl border-t border-secondary/20 shadow-2xl shadow-black/50">

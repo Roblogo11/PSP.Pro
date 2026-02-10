@@ -247,7 +247,7 @@ export default function AboutPage() {
       </div>
       </main>
 
-      <FunnelNav />
+      <FunnelNav desktopOnly />
     </div>
   )
 }

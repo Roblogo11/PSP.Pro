@@ -346,7 +346,7 @@ export default function GetStartedPage() {
       </div>
       </main>
 
-      <FunnelNav />
+      <FunnelNav desktopOnly />
     </div>
   )
 }

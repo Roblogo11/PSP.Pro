@@ -86,7 +86,7 @@ export default function MembershipRequiredPage() {
         </div>
       </main>
 
-      <FunnelNav />
+      <FunnelNav desktopOnly />
     </div>
   )
 }

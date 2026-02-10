@@ -38,19 +38,31 @@ export default function LoginPage() {
       if (signInError) throw signInError
 
       if (data.user) {
-        // Wait briefly for auth state to propagate
-        await new Promise(resolve => setTimeout(resolve, 300))
+        // Wait for auth state to propagate before querying with RLS
+        await new Promise(resolve => setTimeout(resolve, 500))
 
-        // Fetch user profile to determine role
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', data.user.id)
-          .single()
+        // Fetch user profile to determine role (retry once if RLS hasn't caught up)
+        let profile = null
+        for (let attempt = 0; attempt < 2; attempt++) {
+          const { data: profileData, error: profileError } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', data.user.id)
+            .single()
 
-        if (profileError) {
-          console.error('Error fetching profile:', profileError)
-          throw new Error('Failed to load user profile. Please try again.')
+          if (!profileError && profileData) {
+            profile = profileData
+            break
+          }
+
+          if (attempt === 0) {
+            // First attempt failed — wait longer for auth to settle
+            console.warn('Profile fetch attempt 1 failed, retrying...', profileError?.message)
+            await new Promise(resolve => setTimeout(resolve, 1000))
+          } else {
+            console.error('Error fetching profile:', profileError)
+            throw new Error('Failed to load user profile. Please try again.')
+          }
         }
 
         if (!profile) {

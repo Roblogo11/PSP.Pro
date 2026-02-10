@@ -352,7 +352,7 @@ export default function ContactPage() {
       </div>
       </main>
 
-      <FunnelNav />
+      <FunnelNav desktopOnly />
     </div>
   )
 }

@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Info,
@@ -17,8 +17,14 @@ import {
   Package,
   LayoutDashboard,
   LogIn,
+  LogOut,
+  Dumbbell,
+  Calendar,
+  TrendingUp,
 } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 
 interface NavItem {
   label: string
@@ -36,10 +42,58 @@ const navItems: NavItem[] = [
   { label: 'Thank You', href: '/thank-you', icon: Zap },
 ]
 
+// Dashboard shortcuts shown in the mobile nav for logged-in users
+const dashboardShortcuts = [
+  { label: 'Home', href: '/locker', icon: LayoutDashboard },
+  { label: 'Train', href: '/drills', icon: Dumbbell },
+  { label: 'Sessions', href: '/sessions', icon: Calendar },
+  { label: 'Progress', href: '/progress', icon: TrendingUp },
+]
+
 export function InfoSidebar() {
   const [collapsed, setCollapsed] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
   const { profile, isCoach, isAdmin } = useUserRole()
+
+  // Mobile nav scroll state
+  const mobileNavRef = useRef<HTMLDivElement>(null)
+  const [showLeftFade, setShowLeftFade] = useState(false)
+  const [showRightFade, setShowRightFade] = useState(false)
+
+  // Update fade indicators on scroll
+  const updateScrollFades = useCallback(() => {
+    const el = mobileNavRef.current
+    if (!el) return
+    setShowLeftFade(el.scrollLeft > 8)
+    setShowRightFade(el.scrollLeft < el.scrollWidth - el.clientWidth - 8)
+  }, [])
+
+  // Auto-scroll to active item on mount / route change
+  useEffect(() => {
+    const el = mobileNavRef.current
+    if (!el) return
+
+    const activeItem = el.querySelector('[data-active="true"]') as HTMLElement
+    if (activeItem) {
+      const scrollLeft = activeItem.offsetLeft - el.clientWidth / 2 + activeItem.offsetWidth / 2
+      el.scrollTo({ left: scrollLeft, behavior: 'smooth' })
+    }
+
+    updateScrollFades()
+    el.addEventListener('scroll', updateScrollFades, { passive: true })
+    window.addEventListener('resize', updateScrollFades)
+    return () => {
+      el.removeEventListener('scroll', updateScrollFades)
+      window.removeEventListener('resize', updateScrollFades)
+    }
+  }, [pathname, updateScrollFades])
+
+  const handleLogout = async () => {
+    const supabase = createClient()
+    await supabase.auth.signOut({ scope: 'local' })
+    router.push('/')
+  }
 
   // Build dynamic nav items based on auth state
   const dynamicNavItems: NavItem[] = profile
@@ -179,32 +233,102 @@ export function InfoSidebar() {
       <motion.nav
         initial={{ y: 100 }}
         animate={{ y: 0 }}
-        className="lg:hidden fixed bottom-0 left-0 right-0 glass-card border-t border-cyan-700/30 z-50 mobile-safe"
+        className="lg:hidden fixed bottom-0 left-0 right-0 glass-card border-t border-cyan-200/40 dark:border-cyan-700/30 z-50 mobile-safe"
       >
-        <div className="flex items-center overflow-x-auto scrollbar-hide gap-1 px-2 py-2">
-          {dynamicNavItems.map((item) => {
-            const isActive = pathname === item.href
-            const Icon = item.icon
+        <div className="flex items-center py-1.5">
+          {/* Pinned: Theme Toggle */}
+          <div className="flex-shrink-0 flex flex-col items-center gap-1 px-2 border-r border-cyan-200/40 dark:border-white/10">
+            <ThemeToggle />
+          </div>
 
-            return (
-              <Link key={item.href} href={item.href}>
+          {/* Scrollable nav items */}
+          <div className="relative flex-1 min-w-0">
+            {/* Scroll fade indicators */}
+            {showLeftFade && (
+              <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white/95 dark:from-[#0a0a0f]/95 via-white/60 dark:via-[#0a0a0f]/60 to-transparent z-10 pointer-events-none" />
+            )}
+            {showRightFade && (
+              <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white/95 dark:from-[#0a0a0f]/95 via-white/60 dark:via-[#0a0a0f]/60 to-transparent z-10 pointer-events-none" />
+            )}
+
+            <div
+              ref={mobileNavRef}
+              className="flex items-center overflow-x-auto scrollbar-hide gap-0.5 px-1"
+            >
+              {/* Marketing page nav items */}
+              {dynamicNavItems.filter(item => item.href !== '/login' && item.label !== 'Your Dashboard').map((item) => {
+                const isActive = pathname === item.href
+                const Icon = item.icon
+
+                return (
+                  <Link key={item.href} href={item.href}>
+                    <motion.div
+                      whileTap={{ scale: 0.9 }}
+                      data-active={isActive}
+                      className={`
+                        flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0
+                        ${
+                          isActive
+                            ? 'bg-orange/20 text-orange'
+                            : 'text-slate-700 dark:text-white hover:text-slate-900 dark:hover:text-white'
+                        }
+                      `}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span className="text-[9px] font-medium leading-tight text-center whitespace-nowrap">
+                        {item.label.split(' ')[0]}
+                      </span>
+                    </motion.div>
+                  </Link>
+                )
+              })}
+
+              {/* Dashboard shortcuts for logged-in users */}
+              {profile && (
+                <>
+                  <div className="flex-shrink-0 w-px h-8 bg-cyan-200/40 dark:bg-white/10 mx-1" />
+                  {dashboardShortcuts.map((item) => {
+                    const Icon = item.icon
+
+                    return (
+                      <Link key={item.href} href={item.href}>
+                        <motion.div
+                          whileTap={{ scale: 0.9 }}
+                          className="flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0 text-slate-700 dark:text-white hover:text-slate-900 dark:hover:text-white"
+                        >
+                          <Icon className="w-4 h-4" />
+                          <span className="text-[9px] font-medium leading-tight text-center whitespace-nowrap">{item.label}</span>
+                        </motion.div>
+                      </Link>
+                    )
+                  })}
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Pinned: Login or Logout */}
+          <div className="flex-shrink-0 border-l border-cyan-200/40 dark:border-white/10 px-2">
+            {profile ? (
+              <button
+                onClick={handleLogout}
+                className="flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[40px] text-red-400 hover:text-red-300"
+              >
+                <LogOut className="w-4 h-4" />
+                <span className="text-[9px] font-medium leading-tight text-center whitespace-nowrap">Exit</span>
+              </button>
+            ) : (
+              <Link href="/login">
                 <motion.div
                   whileTap={{ scale: 0.9 }}
-                  className={`
-                    flex flex-col items-center gap-0.5 p-2 rounded-xl min-w-[56px] flex-shrink-0
-                    ${
-                      isActive
-                        ? 'bg-orange/20 text-orange'
-                        : 'text-slate-700 dark:text-white hover:text-slate-900 dark:hover:text-white'
-                    }
-                  `}
+                  className="flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[40px] text-cyan-600 dark:text-cyan-400 hover:text-cyan-500"
                 >
-                  <Icon className={`w-5 h-5 ${isActive ? 'text-orange' : 'text-slate-700 dark:text-white'}`} />
-                  <span className="text-[10px] font-medium leading-tight text-center whitespace-nowrap">{item.label.split(' ')[0]}</span>
+                  <LogIn className="w-4 h-4" />
+                  <span className="text-[9px] font-medium leading-tight text-center whitespace-nowrap">Login</span>
                 </motion.div>
               </Link>
-            )
-          })}
+            )}
+          </div>
         </div>
       </motion.nav>
 

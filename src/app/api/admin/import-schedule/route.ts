@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
         .from('profiles')
         .select('id')
         .ilike('full_name', `%${coach_name}%`)
-        .in('role', ['coach', 'admin'])
+        .in('role', ['coach', 'admin', 'master_admin'])
         .single()
 
       if (coach) {
