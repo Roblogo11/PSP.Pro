@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 // GET - Check current impersonation status
 export async function GET() {
@@ -11,7 +12,8 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { data: profile } = await supabase
+    const adminClient = createAdminClient()
+    const { data: profile } = await adminClient
       .from('profiles')
       .select('role')
       .eq('id', user.id)
@@ -46,7 +48,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { data: profile } = await supabase
+    const adminClient = createAdminClient()
+    const { data: profile } = await adminClient
       .from('profiles')
       .select('role')
       .eq('id', user.id)
@@ -74,8 +77,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'userId is required' }, { status: 400 })
     }
 
-    // Look up the athlete profile
-    const { data: athleteProfile, error: lookupError } = await supabase
+    // Look up the athlete profile (use admin client to bypass RLS)
+    const { data: athleteProfile, error: lookupError } = await adminClient
       .from('profiles')
       .select('id, full_name, email, role')
       .eq('id', userId)

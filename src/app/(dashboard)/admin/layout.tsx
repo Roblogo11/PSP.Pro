@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export default async function AdminLayout({
   children,
@@ -16,8 +17,9 @@ export default async function AdminLayout({
       redirect('/login')
     }
 
-    // Verify admin or coach role
-    const { data: profile } = await supabase
+    // Verify admin or coach role (use admin client to bypass RLS timing)
+    const adminClient = createAdminClient()
+    const { data: profile } = await adminClient
       .from('profiles')
       .select('role')
       .eq('id', user.id)

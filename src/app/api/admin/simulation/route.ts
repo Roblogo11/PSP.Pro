@@ -13,7 +13,8 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { data: profile } = await supabase
+    const adminClient = createAdminClient()
+    const { data: profile } = await adminClient
       .from('profiles')
       .select('role')
       .eq('id', user.id)
@@ -29,7 +30,6 @@ export async function GET() {
     const simulationId = cookieStore.get('simulation_id')?.value || null
 
     // Also fetch past uncleaned simulations
-    const adminClient = createAdminClient()
     const { data: pastSessions } = await adminClient
       .from('simulation_sessions')
       .select('id, simulated_role, started_at, ended_at, cleaned_up')
@@ -59,7 +59,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { data: profile } = await supabase
+    const adminClient2 = createAdminClient()
+    const { data: profile } = await adminClient2
       .from('profiles')
       .select('role')
       .eq('id', user.id)

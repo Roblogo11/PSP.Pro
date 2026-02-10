@@ -29,8 +29,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if user is admin or coach
-    const { data: profile } = await supabase
+    // Check if user is admin or coach (use admin client to bypass RLS timing)
+    const supabaseAdmin = getAdminClient()
+    const { data: profile } = await supabaseAdmin
       .from('profiles')
       .select('role')
       .eq('id', user.id)
@@ -63,9 +64,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create the auth user with admin client
-    const supabaseAdmin = getAdminClient()
-
+    // Create the auth user with admin client (reuse from role check above)
     const { data: authData, error: createUserError } = await supabaseAdmin.auth.admin.createUser({
       email,
       password: 'Welcome123!',

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { getAllMedia, updateMediaMetadata, deleteMediaItem, GALLERY_TYPES, type GalleryType } from '@/lib/gallery'
 
 async function isAdmin(): Promise<boolean> {
@@ -9,7 +10,8 @@ async function isAdmin(): Promise<boolean> {
 
     if (!user) return false
 
-    const { data: profile } = await supabase
+    const adminClient = createAdminClient()
+    const { data: profile } = await adminClient
       .from('profiles')
       .select('role')
       .eq('id', user.id)

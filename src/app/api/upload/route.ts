@@ -3,6 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import sharp from 'sharp'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
 const GALLERIES_JSON_PATH = path.join(process.cwd(), 'public', 'data', 'galleries.json')
@@ -68,7 +69,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { data: profile } = await supabase
+    const adminClient = createAdminClient()
+    const { data: profile } = await adminClient
       .from('profiles')
       .select('role')
       .eq('id', user.id)

@@ -15,7 +15,19 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    const { data: profile } = await supabase
+    // Create Supabase admin client with service role (also used for role check to bypass RLS)
+    const supabaseAdmin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
+      }
+    )
+
+    const { data: profile } = await supabaseAdmin
       .from('profiles')
       .select('role')
       .eq('id', user.id)
@@ -45,18 +57,6 @@ export async function DELETE(request: NextRequest) {
         { status: 400 }
       )
     }
-
-    // Create Supabase admin client with service role
-    const supabaseAdmin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false,
-        },
-      }
-    )
 
     // Delete the user from auth (this will cascade delete the profile)
     const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(

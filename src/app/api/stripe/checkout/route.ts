@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { createBookingCheckoutSession } from '@/lib/stripe/server'
 
 export async function POST(request: NextRequest) {
@@ -33,8 +34,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'This service is no longer available' }, { status: 400 })
     }
 
-    // Get user profile for email
-    const { data: profile } = await supabase
+    // Get user profile for name (use admin client to bypass RLS timing)
+    const adminClient = createAdminClient()
+    const { data: profile } = await adminClient
       .from('profiles')
       .select('full_name')
       .eq('id', user.id)

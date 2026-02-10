@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 /**
  * GET /api/admin/get-athlete-emails
@@ -20,8 +21,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Check user role
-    const { data: profile, error: profileError } = await supabase
+    // Check user role (use admin client to bypass RLS timing)
+    const adminClient = createAdminClient()
+    const { data: profile, error: profileError } = await adminClient
       .from('profiles')
       .select('role')
       .eq('id', user.id)
