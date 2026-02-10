@@ -53,8 +53,11 @@ export default function LoginPage() {
         const profileData = await res.json()
 
         if (!res.ok || !profileData.role) {
-          console.error('Error fetching profile role:', profileData.error)
-          throw new Error('Failed to load user profile. Please try again.')
+          console.error('Profile role fetch failed:', res.status, profileData.error)
+          if (res.status === 404) {
+            throw new Error('Your account exists but your profile hasn\'t been set up yet. Please contact support at info@propersports.pro.')
+          }
+          throw new Error('Failed to load user profile. Please try again or contact support.')
         }
 
         // Full page navigation ensures middleware syncs auth cookies

@@ -29,6 +29,7 @@ export async function POST(request: NextRequest) {
     const { data: { user }, error: authError } = await adminClient.auth.getUser(token)
 
     if (authError || !user || user.id !== userId) {
+      console.error('Auth verification failed:', { authError: authError?.message, hasUser: !!user, idMatch: user?.id === userId, userId })
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -40,6 +41,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (profileError || !profile) {
+      console.error('Profile lookup failed:', { profileError: profileError?.message, userId, email: user.email })
       return NextResponse.json(
         { error: 'Profile not found' },
         { status: 404 }
