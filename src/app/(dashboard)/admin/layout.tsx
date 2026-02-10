@@ -18,12 +18,24 @@ export default async function AdminLayout({
     }
 
     // Verify admin or coach role (use admin client to bypass RLS timing)
-    const adminClient = createAdminClient()
-    const { data: profile } = await adminClient
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
+    // Fall back to regular client if service role key isn't configured
+    let profile: { role: string } | null = null
+    try {
+      const adminClient = createAdminClient()
+      const { data } = await adminClient
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+      profile = data
+    } catch {
+      const { data } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+      profile = data
+    }
 
     if (!profile || (profile.role !== 'admin' && profile.role !== 'coach' && profile.role !== 'master_admin')) {
       redirect('/locker')

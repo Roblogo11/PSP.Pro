@@ -20,12 +20,25 @@ export default async function DashboardLayout({
     }
 
     // Check user role — use admin client to bypass RLS timing issues
-    const adminClient = createAdminClient()
-    const { data: profile } = await adminClient
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
+    // Fall back to regular client if service role key isn't configured
+    let profile: { role: string } | null = null
+    try {
+      const adminClient = createAdminClient()
+      const { data } = await adminClient
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+      profile = data
+    } catch {
+      // Service role key not configured — fall back to regular client
+      const { data } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+      profile = data
+    }
 
     const role = profile?.role
     const isStaff = role === 'admin' || role === 'coach' || role === 'master_admin'

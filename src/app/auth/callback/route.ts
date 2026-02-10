@@ -15,14 +15,24 @@ export async function GET(request: NextRequest) {
       // Check user role to route them correctly (use admin client to bypass RLS timing)
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
-        const adminClient = createAdminClient()
-        const { data: profile } = await adminClient
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .single()
-
-        const role = profile?.role
+        // Use admin client to bypass RLS timing, fall back to regular client
+        let role: string | undefined
+        try {
+          const adminClient = createAdminClient()
+          const { data: profile } = await adminClient
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single()
+          role = profile?.role
+        } catch {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single()
+          role = profile?.role
+        }
         if (role === 'admin' || role === 'coach' || role === 'master_admin') {
           return NextResponse.redirect(`${origin}/admin`)
         }
