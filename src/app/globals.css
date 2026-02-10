@@ -627,6 +627,19 @@
     to { opacity: 1; }
   }
 
+  /* iOS Safari viewport height fix — 100vh is taller than visible area */
+  .min-h-screen-safe {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  /* Prevent iOS Safari from auto-zooming on input focus (requires font-size >= 16px) */
+  @supports (-webkit-touch-callout: none) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  }
+
   /* Responsive */
   .mobile-safe {
     padding-bottom: env(safe-area-inset-bottom);

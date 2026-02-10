@@ -64,7 +64,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen min-h-[100dvh]">
       <Sidebar />
       <main className="flex-1 lg:ml-0">
         {children}

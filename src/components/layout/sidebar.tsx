@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -61,6 +61,48 @@ export function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
   const { profile, isCoach, isAdmin, loading } = useUserRole()
+
+  // Mobile nav scroll state
+  const mobileNavRef = useRef<HTMLDivElement>(null)
+  const [showLeftFade, setShowLeftFade] = useState(false)
+  const [showRightFade, setShowRightFade] = useState(false)
+
+  // Update fade indicators on scroll
+  const updateScrollFades = useCallback(() => {
+    const el = mobileNavRef.current
+    if (!el) return
+    setShowLeftFade(el.scrollLeft > 8)
+    setShowRightFade(el.scrollLeft < el.scrollWidth - el.clientWidth - 8)
+  }, [])
+
+  // Auto-scroll active item into view on mount and route change
+  useEffect(() => {
+    const el = mobileNavRef.current
+    if (!el) return
+
+    // Find the active item and scroll it to center
+    const activeItem = el.querySelector('[data-active="true"]') as HTMLElement
+    if (activeItem) {
+      const scrollLeft = activeItem.offsetLeft - el.clientWidth / 2 + activeItem.offsetWidth / 2
+      el.scrollTo({ left: scrollLeft, behavior: 'smooth' })
+    }
+
+    // Initial fade check (after scroll settles)
+    setTimeout(updateScrollFades, 100)
+  }, [pathname, updateScrollFades])
+
+  // Listen for scroll events on mobile nav
+  useEffect(() => {
+    const el = mobileNavRef.current
+    if (!el) return
+    el.addEventListener('scroll', updateScrollFades, { passive: true })
+    // Check on resize too
+    window.addEventListener('resize', updateScrollFades)
+    return () => {
+      el.removeEventListener('scroll', updateScrollFades)
+      window.removeEventListener('resize', updateScrollFades)
+    }
+  }, [updateScrollFades])
 
   // Badge counts
   const [badges, setBadges] = useState<Record<string, number>>({})
@@ -362,7 +404,18 @@ export function Sidebar() {
         animate={{ y: 0 }}
         className="lg:hidden fixed bottom-0 left-0 right-0 glass-card border-t border-cyan-200/40 z-50 mobile-safe"
       >
-        <div className="flex items-center overflow-x-auto scrollbar-hide gap-0.5 px-1 py-1.5">
+        {/* Scroll fade indicators */}
+        {showLeftFade && (
+          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white/90 dark:from-[#0a0a0f]/90 to-transparent z-10 pointer-events-none" />
+        )}
+        {showRightFade && (
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white/90 dark:from-[#0a0a0f]/90 to-transparent z-10 pointer-events-none" />
+        )}
+
+        <div
+          ref={mobileNavRef}
+          className="flex items-center overflow-x-auto scrollbar-hide gap-0.5 px-1 py-1.5"
+        >
           {/* Theme Toggle - compact */}
           <div className="flex-shrink-0 flex flex-col items-center gap-1 px-1.5">
             <ThemeToggle />
@@ -377,6 +430,7 @@ export function Sidebar() {
               <Link key={item.href} href={item.href}>
                 <motion.div
                   whileTap={{ scale: 0.9 }}
+                  data-active={isActive}
                   className={`
                     flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0 relative
                     ${
@@ -410,6 +464,7 @@ export function Sidebar() {
                   <Link key={item.href} href={item.href}>
                     <motion.div
                       whileTap={{ scale: 0.9 }}
+                      data-active={isActive}
                       className={`
                         flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0 relative
                         ${

@@ -1,15 +1,23 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Mail, Lock, Loader2, ArrowRight } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const urlError = searchParams.get('error')
+    if (urlError === 'confirmation_failed') {
+      setError('Email confirmation failed. Please try again or contact support.')
+    }
+  }, [searchParams])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -60,7 +68,14 @@ export default function LoginPage() {
       }
     } catch (err: any) {
       console.error('Login error:', err)
-      setError(err.message || 'Failed to sign in. Please try again.')
+      // Provide user-friendly messages for common Supabase auth errors
+      let message = err.message || 'Failed to sign in. Please try again.'
+      if (message.includes('Email not confirmed')) {
+        message = 'Your email has not been confirmed yet. Please check your inbox for a confirmation link, or contact support.'
+      } else if (message.includes('Invalid login credentials')) {
+        message = 'Incorrect email or password. Please try again.'
+      }
+      setError(message)
       setLoading(false)
     }
   }

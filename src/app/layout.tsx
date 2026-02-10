@@ -109,7 +109,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen" suppressHydrationWarning>
+      <body className="min-h-screen min-h-[100dvh]" suppressHydrationWarning>
         <Providers>
           <SimulationBanner />
           <StripeTestBanner />
