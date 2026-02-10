@@ -115,7 +115,7 @@ export default function DrillDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-6 lg:p-10">
+      <div className="min-h-screen px-3 py-4 md:p-6 lg:p-10">
         <div className="skeleton glass-card p-12 h-96" />
       </div>
     )
@@ -123,7 +123,7 @@ export default function DrillDetailPage() {
 
   if (!drill) {
     return (
-      <div className="min-h-screen p-6 lg:p-10 flex items-center justify-center">
+      <div className="min-h-screen px-3 py-4 md:p-6 lg:p-10 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Drill Not Found</h1>
           <Link href="/drills" className="btn-primary">
@@ -135,7 +135,7 @@ export default function DrillDetailPage() {
   }
 
   return (
-    <div className="min-h-screen p-6 lg:p-10">
+    <div className="min-h-screen px-3 py-4 md:p-6 lg:p-10">
       {/* Back Button */}
       <button
         onClick={() => router.back()}

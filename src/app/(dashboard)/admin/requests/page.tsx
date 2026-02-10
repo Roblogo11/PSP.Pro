@@ -152,7 +152,7 @@ export default function RequestsPage() {
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="px-3 py-4 md:p-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-2">

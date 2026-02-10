@@ -124,7 +124,7 @@ Rotational Power Training,Medicine ball exercises for core rotation,https://yout
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8">
+    <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8">
       {/* Back Button */}
       <Link href="/admin/drills">
         <button className="btn-ghost mb-6 inline-flex items-center gap-2">

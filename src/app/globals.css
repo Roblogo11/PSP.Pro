@@ -26,12 +26,14 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
   body {
     font-family: var(--font-inter);
     font-feature-settings: 'cv11', 'ss01';
     font-variation-settings: 'opsz' 32;
+    overflow-x: hidden;
     @apply antialiased transition-colors duration-300;
   }
 
@@ -190,7 +192,7 @@
 @layer components {
   /* Glassmorphism Card */
   .glass-card {
-    @apply rounded-2xl transition-all duration-300;
+    @apply rounded-xl md:rounded-2xl transition-all duration-300;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
   }
@@ -262,7 +264,7 @@
 
   /* Command Panel - Dashboard Widgets */
   .command-panel {
-    @apply glass-card p-6;
+    @apply glass-card p-4 md:p-6;
     background: linear-gradient(
       135deg,
       rgba(15, 23, 42, 0.9) 0%,

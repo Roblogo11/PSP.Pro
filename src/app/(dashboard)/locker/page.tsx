@@ -184,7 +184,7 @@ export default function AthleteLockerPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
+      <div className="min-h-screen px-3 py-4 md:p-8 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-cyan-700 dark:text-white">Loading your dashboard...</p>
@@ -211,7 +211,7 @@ export default function AthleteLockerPage() {
     ]
 
     return (
-      <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8 relative">
+      <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8 relative">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
@@ -348,7 +348,7 @@ export default function AthleteLockerPage() {
 
   // ─── Athlete View (existing) ───
   return (
-    <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8 relative">
+    <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8 relative">
       {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">

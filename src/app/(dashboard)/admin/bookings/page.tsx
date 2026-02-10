@@ -213,7 +213,7 @@ export default function AdminBookingsPage() {
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
   return (
-    <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8">
+    <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8">
       {/* Header */}
       <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>

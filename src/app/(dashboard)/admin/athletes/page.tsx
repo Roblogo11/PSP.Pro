@@ -335,7 +335,7 @@ export default function AthletesManagementPage() {
 
   if (profileLoading || loading) {
     return (
-      <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
+      <div className="min-h-screen px-3 py-4 md:p-8 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-cyan-800 dark:text-white">Loading athletes...</p>
@@ -349,7 +349,7 @@ export default function AthletesManagementPage() {
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8 relative">
+    <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8 relative">
       {/* Success Message */}
       {successMessage && (
         <div className="fixed top-4 right-4 z-50 animate-scale-in">

@@ -136,7 +136,7 @@ export default function FAQPage() {
   return (
     <div className="flex min-h-screen">
       <InfoSidebar />
-      <main className="flex-1 p-4 md:p-8 pb-24 lg:pb-8">
+      <main className="flex-1 px-3 py-4 md:p-8 pb-24 lg:pb-8">
       {/* Welcome Banner — only shown for new signups arriving via ?welcome=true */}
       {isNewSignup && (
       <div className="max-w-4xl mx-auto mb-8">

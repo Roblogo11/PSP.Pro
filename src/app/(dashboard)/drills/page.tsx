@@ -102,7 +102,7 @@ export default function DrillsPage() {
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8 relative">
+    <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8 relative">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-3">

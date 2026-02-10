@@ -178,7 +178,7 @@ export default function PricingPage() {
         </div>
       </div>
 
-      <div className="p-4 md:p-8">
+      <div className="px-3 py-4 md:p-8">
       {/* Member Package Status Banner */}
       {profile && !isCoach && !isAdmin && memberPackage && (
         <div className="command-panel mb-6 border-green-500/30 bg-gradient-to-r from-green-500/5 to-cyan/5">

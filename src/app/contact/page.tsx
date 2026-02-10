@@ -98,7 +98,7 @@ export default function ContactPage() {
         </div>
       </div>
 
-      <div className="p-4 md:p-8">
+      <div className="px-3 py-4 md:p-8">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Contact Info */}
         <div className="space-y-6">

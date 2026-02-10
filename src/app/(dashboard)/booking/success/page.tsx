@@ -40,7 +40,7 @@ export default function BookingSuccessPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
+      <div className="min-h-screen px-3 py-4 md:p-8 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-12 h-12 text-orange mx-auto mb-4 animate-spin" />
           <p className="text-cyan-800 dark:text-white">Confirming your booking...</p>
@@ -51,7 +51,7 @@ export default function BookingSuccessPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
+      <div className="min-h-screen px-3 py-4 md:p-8 flex items-center justify-center">
         <div className="max-w-md w-full glass-card p-8 text-center">
           <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-3xl">❌</span>
@@ -68,7 +68,7 @@ export default function BookingSuccessPage() {
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
+    <div className="min-h-screen px-3 py-4 md:p-8 flex items-center justify-center">
       <div className="max-w-2xl w-full">
         {/* Success Card */}
         <div className="glass-card p-8 md:p-12 text-center mb-6">

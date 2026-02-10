@@ -199,7 +199,7 @@ export default function BookingPage() {
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-8 pb-24 lg:pb-8">
+    <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">

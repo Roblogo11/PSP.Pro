@@ -19,7 +19,7 @@ export default function MembershipRequiredPage() {
   return (
     <div className="flex min-h-screen">
       <InfoSidebar />
-      <main className="flex-1 p-4 md:p-8 pb-24 lg:pb-8">
+      <main className="flex-1 px-3 py-4 md:p-8 pb-24 lg:pb-8">
         <div className="max-w-2xl mx-auto mt-12">
           {/* Main Card */}
           <div className="command-panel p-8 md:p-12 text-center border-orange/30">

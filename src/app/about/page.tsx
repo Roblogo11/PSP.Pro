@@ -51,7 +51,7 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <div className="p-4 md:p-8">
+      <div className="px-3 py-4 md:p-8">
       {/* Mission Section */}
       <div className="command-panel mb-6">
         <div className="flex items-center gap-3 mb-6">
