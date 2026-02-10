@@ -38,8 +38,9 @@ interface AssignedDrill {
 
 export default function AthleteLockerPage() {
   const router = useRouter()
-  const { profile, isCoach, isAdmin, loading: profileLoading } = useUserRole()
-  const { stats, loading: statsLoading } = useUserStats(profile?.id)
+  const { profile, isCoach, isAdmin, isImpersonating, impersonatedUserId, impersonatedUserName, loading: profileLoading } = useUserRole()
+  const effectiveUserId = impersonatedUserId || profile?.id
+  const { stats, loading: statsLoading } = useUserStats(effectiveUserId)
   const [assignedDrills, setAssignedDrills] = useState<AssignedDrill[]>([])
 
   // Coach/admin stats
@@ -52,9 +53,10 @@ export default function AthleteLockerPage() {
   const [coachSessions, setCoachSessions] = useState<any[]>([])
   const [coachLoading, setCoachLoading] = useState(true)
 
-  // Fetch assigned drills from Supabase (athlete only)
+  // Fetch assigned drills from Supabase (athlete view only)
   useEffect(() => {
-    if (!profile?.id || isCoach || isAdmin) return
+    const showAthleteView = isImpersonating || (!isCoach && !isAdmin)
+    if (!effectiveUserId || !showAthleteView) return
 
     async function fetchAssignedDrills() {
       const supabase = createClient()
@@ -63,7 +65,7 @@ export default function AthleteLockerPage() {
         .select(`
           drill:drill_id (id, title, duration_seconds, category, thumbnail_url, video_url)
         `)
-        .eq('user_id', profile!.id)
+        .eq('user_id', effectiveUserId!)
         .order('created_at', { ascending: false })
         .limit(6)
 
@@ -76,7 +78,7 @@ export default function AthleteLockerPage() {
     }
 
     fetchAssignedDrills()
-  }, [profile?.id, isCoach, isAdmin])
+  }, [effectiveUserId, isCoach, isAdmin, isImpersonating])
 
   // Fetch coach/admin quick stats + upcoming sessions
   useEffect(() => {
@@ -172,10 +174,13 @@ export default function AthleteLockerPage() {
     }
   }, [profileLoading, profile, router])
 
+  // When impersonating, always show athlete view
+  const showAthleteView = isImpersonating || (!isCoach && !isAdmin)
+
   // Loading state
-  const isLoading = (isCoach || isAdmin)
-    ? (profileLoading || coachLoading || !profile)
-    : (profileLoading || statsLoading || !profile)
+  const isLoading = showAthleteView
+    ? (profileLoading || statsLoading || !profile)
+    : (profileLoading || coachLoading || !profile)
 
   if (isLoading) {
     return (
@@ -190,10 +195,12 @@ export default function AthleteLockerPage() {
 
   if (!profile) return null
 
-  const firstName = profile.full_name?.split(' ')[0] || 'Coach'
+  const firstName = isImpersonating
+    ? (impersonatedUserName?.split(' ')[0] || 'Player')
+    : (profile.full_name?.split(' ')[0] || 'Coach')
 
-  // ─── Coach / Admin View ───
-  if (isCoach || isAdmin) {
+  // ─── Coach / Admin View (skip when impersonating) ───
+  if (!isImpersonating && (isCoach || isAdmin)) {
     const quickLinks = [
       { title: 'Athletes', desc: `${coachStats.totalAthletes} registered`, icon: Users, href: '/admin/athletes', color: '#B8301A' },
       { title: 'Bookings', desc: `${coachStats.pendingBookings} pending`, icon: Calendar, href: '/admin/bookings', color: '#00B4D8' },

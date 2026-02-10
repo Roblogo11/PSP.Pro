@@ -60,7 +60,7 @@ export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
-  const { profile, isCoach, isAdmin, loading } = useUserRole()
+  const { profile, isCoach, isAdmin, isImpersonating, impersonatedUserId, loading } = useUserRole()
 
   // Mobile nav scroll state
   const mobileNavRef = useRef<HTMLDivElement>(null)
@@ -110,6 +110,9 @@ export function Sidebar() {
   useEffect(() => {
     if (!profile?.id) return
 
+    // Use impersonated user ID for athlete badge counts
+    const effectiveUserId = impersonatedUserId || profile!.id
+
     async function fetchBadges() {
       const supabase = createClient()
       const today = new Date().toISOString().split('T')[0]
@@ -119,7 +122,7 @@ export function Sidebar() {
       const { count: upcomingCount } = await supabase
         .from('bookings')
         .select('*', { count: 'exact', head: true })
-        .eq('athlete_id', profile!.id)
+        .eq('athlete_id', effectiveUserId)
         .in('status', ['confirmed', 'pending'])
         .gte('booking_date', today)
 
@@ -131,7 +134,7 @@ export function Sidebar() {
       const { data: activePkg } = await supabase
         .from('athlete_packages')
         .select('sessions_total, sessions_used')
-        .eq('athlete_id', profile!.id)
+        .eq('athlete_id', effectiveUserId)
         .eq('is_active', true)
         .gte('expires_at', new Date().toISOString())
         .order('expires_at', { ascending: false })
@@ -166,7 +169,7 @@ export function Sidebar() {
     }
 
     fetchBadges()
-  }, [profile?.id, isCoach, isAdmin])
+  }, [profile?.id, isCoach, isAdmin, impersonatedUserId])
 
   const handleLogout = async () => {
     const supabase = createClient()

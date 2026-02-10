@@ -16,12 +16,14 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
+import { useUserRole } from '@/lib/hooks/use-user-role'
 
 type Drill = Database['public']['Tables']['drills']['Row']
 
 export default function DrillDetailPage() {
   const params = useParams()
   const router = useRouter()
+  const { isImpersonating, impersonatedUserId } = useUserRole()
   const [drill, setDrill] = useState<Drill | null>(null)
   const [loading, setLoading] = useState(true)
   const [isCompleted, setIsCompleted] = useState(false)
@@ -31,7 +33,7 @@ export default function DrillDetailPage() {
     if (params.id) {
       fetchDrill(params.id as string)
     }
-  }, [params.id])
+  }, [params.id, impersonatedUserId])
 
   const fetchDrill = async (id: string) => {
     try {
@@ -51,16 +53,18 @@ export default function DrillDetailPage() {
       // Increment view count
       await supabase.rpc('increment_drill_views', { drill_uuid: id })
 
-      // Check if user has completed this drill
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
+      // Check if user has completed this drill (use impersonated user if active)
+      let userId = impersonatedUserId
+      if (!userId) {
+        const { data: { user } } = await supabase.auth.getUser()
+        userId = user?.id || null
+      }
 
-      if (user) {
+      if (userId) {
         const { data: completions } = await supabase
           .from('drill_completions')
           .select('*')
-          .eq('user_id', user.id)
+          .eq('user_id', userId)
           .eq('drill_id', id)
 
         setCompletionCount(completions?.length || 0)
@@ -74,6 +78,7 @@ export default function DrillDetailPage() {
   }
 
   const markAsCompleted = async () => {
+    if (isImpersonating) return
     try {
       const supabase = createClient()
       const {
@@ -172,7 +177,11 @@ export default function DrillDetailPage() {
                 <p className="text-lg text-cyan-700 dark:text-white">{drill.description}</p>
               </div>
 
-              {!isCompleted ? (
+              {isImpersonating ? (
+                <div className="ml-4 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-500 font-semibold flex items-center gap-2 text-sm">
+                  Read-only mode
+                </div>
+              ) : !isCompleted ? (
                 <button
                   onClick={markAsCompleted}
                   className="btn-primary flex items-center gap-2 ml-4"

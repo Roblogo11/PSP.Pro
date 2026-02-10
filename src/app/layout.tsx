@@ -9,6 +9,7 @@ import { PSPAssistant } from '@/components/psp-assistant'
 import { AthleticOSBackground } from '@/components/athletic-os-background'
 import { StripeTestBanner } from '@/components/stripe-test-banner'
 import { SimulationBanner } from '@/components/simulation-banner'
+import { ImpersonationBanner } from '@/components/impersonation-banner'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -112,6 +113,7 @@ export default function RootLayout({
       <body className="min-h-screen min-h-[100dvh]" suppressHydrationWarning>
         <Providers>
           <SimulationBanner />
+          <ImpersonationBanner />
           <StripeTestBanner />
           <AthleticOSBackground />
           <CommandPalette />

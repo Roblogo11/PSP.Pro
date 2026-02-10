@@ -6,10 +6,12 @@ import { DrillFilter, FilterState } from '@/components/drills/drill-filter'
 import { DrillGrid } from '@/components/drills/drill-grid'
 import { Database } from '@/types/database.types'
 import { Trophy, TrendingUp, Clock, Award } from 'lucide-react'
+import { useUserRole } from '@/lib/hooks/use-user-role'
 
 type Drill = Database['public']['Tables']['drills']['Row']
 
 export default function DrillsPage() {
+  const { isImpersonating, impersonatedUserId } = useUserRole()
   const [drills, setDrills] = useState<Drill[]>([])
   const [filteredDrills, setFilteredDrills] = useState<Drill[]>([])
   const [loading, setLoading] = useState(true)
@@ -22,7 +24,7 @@ export default function DrillsPage() {
   useEffect(() => {
     fetchDrills()
     fetchUserStats()
-  }, [])
+  }, [impersonatedUserId])
 
   const fetchDrills = async () => {
     try {
@@ -47,17 +49,20 @@ export default function DrillsPage() {
   const fetchUserStats = async () => {
     try {
       const supabase = createClient()
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
 
-      if (!user) return
+      // Use impersonated user ID if active, otherwise current user
+      let userId = impersonatedUserId
+      if (!userId) {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) return
+        userId = user.id
+      }
 
       // Get completion count
       const { count } = await supabase
         .from('drill_completions')
         .select('*', { count: 'exact', head: true })
-        .eq('user_id', user.id)
+        .eq('user_id', userId)
 
       setStats((prev) => ({
         ...prev,

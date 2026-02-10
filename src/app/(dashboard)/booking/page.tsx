@@ -7,6 +7,7 @@ import { Calendar } from '@/components/booking/calendar'
 import { ServiceSelector } from '@/components/booking/service-selector'
 import { TimeSlotPicker } from '@/components/booking/time-slot-picker'
 import { CheckCircle2, ArrowRight, ArrowLeft, Loader2, CalendarDays } from 'lucide-react'
+import { useUserRole } from '@/lib/hooks/use-user-role'
 
 type BookingStep = 'service' | 'date' | 'time' | 'confirm'
 
@@ -14,6 +15,7 @@ export default function BookingPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const supabase = createClient()
+  const { isImpersonating } = useUserRole()
 
   // State
   const [currentStep, setCurrentStep] = useState<BookingStep>('service')
@@ -120,7 +122,7 @@ export default function BookingPage() {
   }
 
   const handleConfirmBooking = async () => {
-    if (!selectedServiceId || !selectedDate || !selectedSlotId) return
+    if (!selectedServiceId || !selectedDate || !selectedSlotId || isImpersonating) return
 
     setSubmitting(true)
 
@@ -336,10 +338,12 @@ export default function BookingPage() {
 
               <button
                 onClick={handleConfirmBooking}
-                disabled={submitting}
+                disabled={submitting || isImpersonating}
                 className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                {submitting ? (
+                {isImpersonating ? (
+                  <span>Read-only mode — booking disabled</span>
+                ) : submitting ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
                     <span>Processing...</span>

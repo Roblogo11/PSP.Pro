@@ -20,7 +20,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
 import { Tooltip, InfoBanner } from '@/components/ui/tooltip'
-import { Lightbulb, AlertTriangle, CreditCard, ToggleLeft, ToggleRight, UserCircle, Trash2 } from 'lucide-react'
+import { Lightbulb, AlertTriangle, CreditCard, ToggleLeft, ToggleRight, UserCircle, Trash2, Eye, Search, XCircle as XCircleIcon } from 'lucide-react'
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -608,6 +608,9 @@ export default function AdminDashboard() {
         </div>
       )}
 
+      {/* Impersonation Mode - Master Admin Only */}
+      {isMasterAdmin && <ImpersonationPanel />}
+
       {/* Simulation Mode - Master Admin Only */}
       {isMasterAdmin && <SimulationPanel />}
 
@@ -626,6 +629,200 @@ export default function AdminDashboard() {
               <p className="text-sm text-cyan-700 dark:text-white">Activity feed will populate as you use the platform</p>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── View as Player Panel ────────────────────────────────────
+function ImpersonationPanel() {
+  const [athletes, setAthletes] = useState<{ id: string; full_name: string | null; email: string }[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [loadingAthletes, setLoadingAthletes] = useState(true)
+  const [starting, setStarting] = useState<string | null>(null)
+  const [impersonationStatus, setImpersonationStatus] = useState<{
+    active: boolean
+    userId: string | null
+    userName: string | null
+  } | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  // Check impersonation status + fetch athletes
+  useEffect(() => {
+    async function init() {
+      try {
+        const [statusRes, athletesRes] = await Promise.all([
+          fetch('/api/admin/impersonation'),
+          createClient()
+            .from('profiles')
+            .select('id, full_name, email')
+            .eq('role', 'athlete')
+            .order('full_name', { ascending: true }),
+        ])
+
+        if (statusRes.ok) {
+          setImpersonationStatus(await statusRes.json())
+        }
+
+        if (athletesRes.data) {
+          setAthletes(athletesRes.data.map(a => ({
+            ...a,
+            email: a.email || '',
+          })))
+        }
+      } catch {
+        // Non-critical
+      } finally {
+        setLoadingAthletes(false)
+      }
+    }
+    init()
+  }, [])
+
+  const startImpersonation = async (userId: string) => {
+    setStarting(userId)
+    setError(null)
+    try {
+      const res = await fetch('/api/admin/impersonation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.error || 'Failed to start impersonation')
+        setStarting(null)
+        return
+      }
+
+      // Redirect to locker to see athlete dashboard
+      window.location.href = '/locker'
+    } catch {
+      setError('Network error. Please try again.')
+      setStarting(null)
+    }
+  }
+
+  const endImpersonation = async () => {
+    try {
+      await fetch('/api/admin/impersonation', { method: 'DELETE' })
+      window.location.reload()
+    } catch {
+      // Non-critical
+    }
+  }
+
+  const filteredAthletes = searchTerm
+    ? athletes.filter(a =>
+        (a.full_name?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        a.email.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : athletes
+
+  const isActive = impersonationStatus?.active
+
+  return (
+    <div className="mt-8">
+      <div className={`command-panel border-2 ${isActive ? 'border-amber-500/50 bg-amber-500/5' : 'border-amber-500/20'}`}>
+        <div className="flex items-start gap-4">
+          <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${isActive ? 'bg-amber-500/30' : 'bg-amber-500/10'}`}>
+            <Eye className={`w-6 h-6 ${isActive ? 'text-amber-300' : 'text-amber-400'}`} />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">View as Player</h3>
+
+            {isActive ? (
+              <>
+                <p className="text-sm text-cyan-700 dark:text-white mb-4">
+                  Currently viewing as <span className="font-bold text-amber-400">{impersonationStatus?.userName}</span>.
+                  Read-only mode — no data can be modified.
+                </p>
+                <button
+                  onClick={endImpersonation}
+                  className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-semibold text-sm transition-all flex items-center gap-2"
+                >
+                  <XCircleIcon className="w-4 h-4" />
+                  Exit View
+                </button>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-cyan-700 dark:text-white mb-4">
+                  See the dashboard exactly as a player sees it — their stats, sessions, drills, and bookings.
+                  Strictly read-only — no data will be created or modified.
+                </p>
+
+                {error && (
+                  <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                    <p className="text-sm text-red-400">{error}</p>
+                  </div>
+                )}
+
+                {/* Search */}
+                <div className="relative mb-4">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-cyan-700 dark:text-white" />
+                  <input
+                    type="text"
+                    placeholder="Search by name or email..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 bg-cyan-50/50 dark:bg-white/5 border border-cyan-200/40 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white placeholder-cyan-700 dark:placeholder-white/50 focus:outline-none focus:border-amber-500/50"
+                  />
+                </div>
+
+                {/* Athlete List */}
+                {loadingAthletes ? (
+                  <div className="text-center py-4">
+                    <div className="w-6 h-6 border-2 border-amber-400 border-t-transparent rounded-full animate-spin mx-auto" />
+                  </div>
+                ) : filteredAthletes.length === 0 ? (
+                  <p className="text-sm text-cyan-700 dark:text-white text-center py-4">
+                    {searchTerm ? 'No players match your search' : 'No athletes registered yet'}
+                  </p>
+                ) : (
+                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                    {filteredAthletes.map(athlete => (
+                      <div
+                        key={athlete.id}
+                        className="flex items-center justify-between p-3 bg-cyan-50/50 dark:bg-white/5 border border-cyan-200/40 dark:border-white/10 rounded-xl hover:border-amber-500/30 transition-all"
+                      >
+                        <div>
+                          <p className="font-semibold text-sm text-slate-900 dark:text-white">
+                            {athlete.full_name || 'Unnamed Player'}
+                          </p>
+                          <p className="text-xs text-cyan-700 dark:text-white">{athlete.email}</p>
+                        </div>
+                        <button
+                          onClick={() => startImpersonation(athlete.id)}
+                          disabled={starting === athlete.id}
+                          className="px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 rounded-lg text-xs font-semibold transition-all disabled:opacity-50 flex items-center gap-1.5"
+                        >
+                          {starting === athlete.id ? (
+                            <div className="w-3 h-3 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            <Eye className="w-3 h-3" />
+                          )}
+                          View Dashboard
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Info note */}
+        <div className="mt-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg flex items-start gap-2">
+          <AlertTriangle className="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0" />
+          <p className="text-xs text-amber-400">
+            Impersonation auto-expires after 2 hours. An amber banner appears site-wide during impersonation.
+            No data is created or modified — this is purely a read-only view of the player&apos;s experience.
+          </p>
         </div>
       </div>
     </div>

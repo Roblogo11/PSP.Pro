@@ -13,8 +13,9 @@ import { useUserSessions } from '@/lib/hooks/use-user-sessions'
 
 export default function SessionsPage() {
   const router = useRouter()
-  const { profile, loading: profileLoading } = useUserRole()
-  const { sessions, upcomingSessions, pastSessions, loading: sessionsLoading } = useUserSessions(profile?.id)
+  const { profile, isImpersonating, impersonatedUserId, loading: profileLoading } = useUserRole()
+  const effectiveUserId = impersonatedUserId || profile?.id
+  const { sessions, upcomingSessions, pastSessions, loading: sessionsLoading } = useUserSessions(effectiveUserId)
   const [filter, setFilter] = useState<'all' | 'upcoming' | 'past'>('all')
   const [cancelModalOpen, setCancelModalOpen] = useState(false)
   const [rescheduleModalOpen, setRescheduleModalOpen] = useState(false)
@@ -54,7 +55,7 @@ export default function SessionsPage() {
   }
 
   const handleCancelSession = async () => {
-    if (!selectedSession) return
+    if (!selectedSession || isImpersonating) return
     setIsProcessing(true)
 
     try {
@@ -91,7 +92,7 @@ export default function SessionsPage() {
   }
 
   const handleRescheduleSession = () => {
-    if (!selectedSession) return
+    if (!selectedSession || isImpersonating) return
 
     // Close modal and redirect to booking page with session ID
     setRescheduleModalOpen(false)
@@ -203,7 +204,7 @@ export default function SessionsPage() {
               </div>
             )}
 
-            {session.status === 'upcoming' && (
+            {session.status === 'upcoming' && !isImpersonating && (
               <div className="mt-4 pt-4 border-t border-white/5 flex gap-3">
                 <button
                   onClick={() => {

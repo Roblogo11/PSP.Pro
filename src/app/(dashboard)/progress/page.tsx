@@ -7,9 +7,10 @@ import { useUserStats } from '@/lib/hooks/use-user-stats'
 import { useUserSessions } from '@/lib/hooks/use-user-sessions'
 
 export default function ProgressPage() {
-  const { profile, loading: profileLoading } = useUserRole()
-  const { stats, loading: statsLoading } = useUserStats(profile?.id)
-  const { sessions, loading: sessionsLoading } = useUserSessions(profile?.id)
+  const { profile, isImpersonating, impersonatedUserId, loading: profileLoading } = useUserRole()
+  const effectiveUserId = impersonatedUserId || profile?.id
+  const { stats, loading: statsLoading } = useUserStats(effectiveUserId)
+  const { sessions, loading: sessionsLoading } = useUserSessions(effectiveUserId)
 
   const loading = profileLoading || statsLoading || sessionsLoading
 

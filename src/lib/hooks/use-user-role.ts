@@ -17,6 +17,8 @@ export function useUserRole() {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [simulatedRole, setSimulatedRole] = useState<UserRole | null>(null)
+  const [impersonatedUserId, setImpersonatedUserId] = useState<string | null>(null)
+  const [impersonatedUserName, setImpersonatedUserName] = useState<string | null>(null)
   const supabase = createClient()
 
   useEffect(() => {
@@ -80,9 +82,25 @@ export function useUserRole() {
     return () => clearInterval(interval)
   }, [])
 
+  // Check for impersonation mode cookies
+  useEffect(() => {
+    const checkImpersonation = () => {
+      const cookies = document.cookie.split(';').map(c => c.trim())
+      const idCookie = cookies.find(c => c.startsWith('impersonation_user_id_ui='))
+      const nameCookie = cookies.find(c => c.startsWith('impersonation_user_name_ui='))
+      setImpersonatedUserId(idCookie?.split('=')[1] || null)
+      const rawName = nameCookie?.split('=')[1]
+      setImpersonatedUserName(rawName ? decodeURIComponent(rawName) : null)
+    }
+    checkImpersonation()
+    const interval = setInterval(checkImpersonation, 3000)
+    return () => clearInterval(interval)
+  }, [])
+
   // Determine effective role: only master_admin can simulate
   const realRole = profile?.role || null
   const isSimulating = !!(realRole === 'master_admin' && simulatedRole)
+  const isImpersonating = !!(realRole === 'master_admin' && impersonatedUserId)
   const effectiveRole = isSimulating ? simulatedRole : realRole
 
   return {
@@ -90,6 +108,9 @@ export function useUserRole() {
     loading,
     realRole,
     isSimulating,
+    isImpersonating,
+    impersonatedUserId,
+    impersonatedUserName,
     isAthlete: effectiveRole === 'athlete',
     isCoach: effectiveRole === 'coach' || effectiveRole === 'admin' || effectiveRole === 'master_admin',
     isAdmin: effectiveRole === 'admin' || effectiveRole === 'master_admin',

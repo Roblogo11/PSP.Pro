@@ -69,6 +69,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Master admin access required' }, { status: 403 })
     }
 
+    // Mutual exclusion: reject if impersonation mode is active
+    const cookieHeader = (await import('next/headers')).cookies
+    const cookieStore = await cookieHeader()
+    const impersonationUserId = cookieStore.get('impersonation_user_id')?.value
+    if (impersonationUserId) {
+      return NextResponse.json(
+        { error: 'Cannot start simulation while impersonation mode is active. Exit impersonation first.' },
+        { status: 409 }
+      )
+    }
+
     const body = await request.json()
     const { role } = body
 
