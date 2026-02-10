@@ -27,7 +27,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { data: profile } = await supabase
+    // Use admin client for role check (bypasses RLS timing)
+    const adminClient = createAdminClient()
+    const { data: profile } = await adminClient
       .from('profiles')
       .select('role')
       .eq('id', user.id)
@@ -43,8 +45,6 @@ export async function POST(request: NextRequest) {
     if (!simulationId) {
       return NextResponse.json({ error: 'simulationId is required' }, { status: 400 })
     }
-
-    const adminClient = createAdminClient()
 
     // Verify this simulation belongs to the current user
     const { data: session } = await adminClient

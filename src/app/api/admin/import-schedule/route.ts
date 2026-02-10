@@ -55,7 +55,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { data: profile } = await supabase
+    // Use admin client for role check (bypasses RLS timing)
+    const adminClient = getAdminClient()
+    const { data: profile } = await adminClient
       .from('profiles')
       .select('role')
       .eq('id', user.id)
@@ -82,7 +84,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Schedule array is required' }, { status: 400 })
     }
 
-    const adminClient = getAdminClient()
     const duration = default_duration || 60
 
     // 1. Find the coach

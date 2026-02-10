@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import Link from 'next/link'
 import { Activity } from 'lucide-react'
 
@@ -15,14 +16,24 @@ export default async function AuthLayout({
   } = await supabase.auth.getUser()
 
   if (user) {
-    // Route staff to admin, athletes to locker
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-
-    const role = profile?.role
+    // Route staff to admin, athletes to locker (use admin client to bypass RLS timing)
+    let role: string | undefined
+    try {
+      const adminClient = createAdminClient()
+      const { data: profile } = await adminClient
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+      role = profile?.role
+    } catch {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+      role = profile?.role
+    }
     if (role === 'admin' || role === 'coach' || role === 'master_admin') {
       redirect('/admin')
     } else {
