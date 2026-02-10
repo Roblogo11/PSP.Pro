@@ -347,59 +347,47 @@ export default function AdminDashboard() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-8">
         <div className="command-panel-active">
           <div className="flex items-center justify-between mb-2">
-            <Users className="w-8 h-8 text-orange" />
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-cyan-700 dark:text-white">Total</span>
-              <Tooltip content="Total number of athletes in your system. Click 'Athletes' in the sidebar to manage them or add new ones." />
-            </div>
+            <Users className="w-6 h-6 md:w-8 md:h-8 text-orange" />
+            <span className="text-xs text-cyan-700 dark:text-white hidden md:inline">Total</span>
           </div>
-          <p className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{stats.totalAthletes}</p>
-          <p className="text-sm text-cyan-700 dark:text-white">Active Athletes</p>
+          <p className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-1">{stats.totalAthletes}</p>
+          <p className="text-xs md:text-sm text-cyan-700 dark:text-white">Athletes</p>
         </div>
 
         <div className="command-panel-active">
           <div className="flex items-center justify-between mb-2">
-            <Calendar className="w-8 h-8 text-cyan" />
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-cyan-700 dark:text-white">Upcoming</span>
-              <Tooltip content="Shows confirmed and pending sessions scheduled in the future. Go to 'Bookings' to manage them." />
-            </div>
+            <Calendar className="w-6 h-6 md:w-8 md:h-8 text-cyan" />
+            <span className="text-xs text-cyan-700 dark:text-white hidden md:inline">Upcoming</span>
           </div>
-          <p className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{stats.activeSessions}</p>
-          <p className="text-sm text-cyan-700 dark:text-white">Scheduled Sessions</p>
+          <p className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-1">{stats.activeSessions}</p>
+          <p className="text-xs md:text-sm text-cyan-700 dark:text-white">Sessions</p>
         </div>
 
         <div className="command-panel-active">
           <div className="flex items-center justify-between mb-2">
-            <Dumbbell className="w-8 h-8 text-green-400" />
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-cyan-700 dark:text-white">Library</span>
-              <Tooltip content="Total drills in your library. Use 'Bulk Import' to add multiple YouTube videos at once (180x faster than manual entry!)" />
-            </div>
+            <Dumbbell className="w-6 h-6 md:w-8 md:h-8 text-green-400" />
+            <span className="text-xs text-cyan-700 dark:text-white hidden md:inline">Library</span>
           </div>
-          <p className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{stats.totalDrills}</p>
-          <p className="text-sm text-cyan-700 dark:text-white">Training Drills</p>
+          <p className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-1">{stats.totalDrills}</p>
+          <p className="text-xs md:text-sm text-cyan-700 dark:text-white">Drills</p>
         </div>
 
         <div className="command-panel-active">
           <div className="flex items-center justify-between mb-2">
-            <Clock className="w-8 h-8 text-yellow-400" />
-            <div className="flex items-center gap-2">
-              {stats.pendingBookings > 0 ? (
-                <span className="px-2 py-1 bg-orange/20 border border-orange/40 rounded-full text-xs text-orange font-semibold">
-                  {stats.pendingBookings} Pending
-                </span>
-              ) : (
-                <span className="text-sm text-cyan-700 dark:text-white">None</span>
-              )}
-              <Tooltip content="Bookings waiting for your approval. Click to review and confirm or cancel them." />
-            </div>
+            <Clock className="w-6 h-6 md:w-8 md:h-8 text-yellow-400" />
+            {stats.pendingBookings > 0 ? (
+              <span className="px-1.5 py-0.5 bg-orange/20 border border-orange/40 rounded-full text-[10px] md:text-xs text-orange font-semibold">
+                {stats.pendingBookings}
+              </span>
+            ) : (
+              <span className="text-xs text-cyan-700 dark:text-white hidden md:inline">None</span>
+            )}
           </div>
-          <p className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{stats.pendingBookings}</p>
-          <p className="text-sm text-cyan-700 dark:text-white">Pending Bookings</p>
+          <p className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-1">{stats.pendingBookings}</p>
+          <p className="text-xs md:text-sm text-cyan-700 dark:text-white">Pending</p>
         </div>
       </div>
 
@@ -494,22 +482,22 @@ export default function AdminDashboard() {
       {/* Quick Actions */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
           {quickActions.map((action) => {
             const Icon = action.icon
             return (
               <Link key={action.title} href={action.href}>
-                <div className="glass-card-hover p-6 group cursor-pointer">
+                <div className="glass-card-hover p-4 md:p-6 group cursor-pointer h-full">
                   <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:shadow-glow-orange transition-all"
+                    className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center mb-3 md:mb-4 group-hover:shadow-glow-orange transition-all"
                     style={{ backgroundColor: `${action.color}20`, borderColor: `${action.color}40` }}
                   >
-                    <Icon className="w-6 h-6" style={{ color: action.color }} />
+                    <Icon className="w-5 h-5 md:w-6 md:h-6" style={{ color: action.color }} />
                   </div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-orange transition-colors">
+                  <h3 className="text-sm md:text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-orange transition-colors">
                     {action.title}
                   </h3>
-                  <p className="text-sm text-cyan-700 dark:text-white">{action.description}</p>
+                  <p className="text-xs md:text-sm text-cyan-700 dark:text-white">{action.description}</p>
                 </div>
               </Link>
             )
@@ -520,27 +508,34 @@ export default function AdminDashboard() {
       {/* Admin Sections */}
       <div>
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Platform Management</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           {adminSections.map((section) => {
             const Icon = section.icon
             return (
               <Link key={section.title} href={section.href}>
-                <div className="command-panel hover:border-orange/30 transition-all group cursor-pointer">
-                  <div className="flex items-start justify-between mb-4">
+                <div className="command-panel hover:border-orange/30 transition-all group cursor-pointer flex items-center gap-4 md:block">
+                  <div className="flex items-center justify-between md:mb-4">
                     <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center"
+                      className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center flex-shrink-0"
                       style={{ backgroundColor: `${section.color}20`, borderColor: `${section.color}40` }}
                     >
-                      <Icon className="w-6 h-6" style={{ color: section.color }} />
+                      <Icon className="w-5 h-5 md:w-6 md:h-6" style={{ color: section.color }} />
                     </div>
-                    <span className="text-xs text-cyan-700 dark:text-white bg-cyan-900/30 px-2 py-1 rounded-lg">
+                    <span className="text-xs text-cyan-700 dark:text-white bg-cyan-900/30 px-2 py-1 rounded-lg hidden md:inline">
                       {section.stat}
                     </span>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-orange transition-colors">
-                    {section.title}
-                  </h3>
-                  <p className="text-sm text-cyan-700 dark:text-white">{section.description}</p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 md:mb-2">
+                      <h3 className="text-base md:text-xl font-bold text-slate-900 dark:text-white group-hover:text-orange transition-colors">
+                        {section.title}
+                      </h3>
+                      <span className="text-[10px] text-cyan-700 dark:text-white bg-cyan-900/30 px-1.5 py-0.5 rounded md:hidden">
+                        {section.stat}
+                      </span>
+                    </div>
+                    <p className="text-xs md:text-sm text-cyan-700 dark:text-white">{section.description}</p>
+                  </div>
                 </div>
               </Link>
             )
