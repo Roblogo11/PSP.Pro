@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Mail, Lock, Loader2, ArrowRight } from 'lucide-react'
+import { Mail, Lock, Loader2, ArrowRight, Eye, EyeOff } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => {
     const urlError = searchParams.get('error')
@@ -38,40 +39,23 @@ export default function LoginPage() {
       if (signInError) throw signInError
 
       if (data.user) {
-        // Wait for auth state to propagate before querying with RLS
-        await new Promise(resolve => setTimeout(resolve, 500))
+        // Fetch role via server API route (bypasses RLS — no timing issues)
+        const res = await fetch('/api/auth/profile-role', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: data.user.id }),
+        })
 
-        // Fetch user profile to determine role (retry once if RLS hasn't caught up)
-        let profile = null
-        for (let attempt = 0; attempt < 2; attempt++) {
-          const { data: profileData, error: profileError } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', data.user.id)
-            .single()
+        const profileData = await res.json()
 
-          if (!profileError && profileData) {
-            profile = profileData
-            break
-          }
-
-          if (attempt === 0) {
-            // First attempt failed — wait longer for auth to settle
-            console.warn('Profile fetch attempt 1 failed, retrying...', profileError?.message)
-            await new Promise(resolve => setTimeout(resolve, 1000))
-          } else {
-            console.error('Error fetching profile:', profileError)
-            throw new Error('Failed to load user profile. Please try again.')
-          }
-        }
-
-        if (!profile) {
-          throw new Error('User profile not found')
+        if (!res.ok || !profileData.role) {
+          console.error('Error fetching profile role:', profileData.error)
+          throw new Error('Failed to load user profile. Please try again.')
         }
 
         // Refresh server state then navigate
         router.refresh()
-        if (profile.role === 'admin' || profile.role === 'coach' || profile.role === 'master_admin') {
+        if (['admin', 'coach', 'master_admin'].includes(profileData.role)) {
           router.push('/admin')
         } else {
           router.push('/locker')
@@ -144,12 +128,19 @@ export default function LoginPage() {
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 required
                 autoComplete="current-password"
-                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                className="w-full pl-12 pr-12 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                 placeholder="••••••••"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-cyan-700 hover:text-orange transition-colors"
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
             </div>
           </div>
 
