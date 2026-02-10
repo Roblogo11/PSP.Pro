@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { Sidebar } from '@/components/layout/sidebar'
 
 export default async function DashboardLayout({
@@ -18,8 +19,9 @@ export default async function DashboardLayout({
       redirect('/login')
     }
 
-    // Check user role — admins and coaches bypass membership check
-    const { data: profile } = await supabase
+    // Check user role — use admin client to bypass RLS timing issues
+    const adminClient = createAdminClient()
+    const { data: profile } = await adminClient
       .from('profiles')
       .select('role')
       .eq('id', user.id)
