@@ -404,59 +404,28 @@ export function Sidebar() {
         animate={{ y: 0 }}
         className="lg:hidden fixed bottom-0 left-0 right-0 glass-card border-t border-cyan-200/40 z-50 mobile-safe"
       >
-        {/* Scroll fade indicators */}
-        {showLeftFade && (
-          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white/90 dark:from-[#0a0a0f]/90 to-transparent z-10 pointer-events-none" />
-        )}
-        {showRightFade && (
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white/90 dark:from-[#0a0a0f]/90 to-transparent z-10 pointer-events-none" />
-        )}
-
-        <div
-          ref={mobileNavRef}
-          className="flex items-center overflow-x-auto scrollbar-hide gap-0.5 px-1 py-1.5"
-        >
-          {/* Theme Toggle - compact */}
-          <div className="flex-shrink-0 flex flex-col items-center gap-1 px-1.5">
+        <div className="flex items-center py-1.5">
+          {/* Pinned: Theme Toggle */}
+          <div className="flex-shrink-0 flex flex-col items-center gap-1 px-2 border-r border-cyan-200/40 dark:border-white/10">
             <ThemeToggle />
           </div>
 
-          {/* Athlete Nav Items */}
-          {athleteNavItems.map((item) => {
-            const isActive = pathname === item.href
-            const Icon = item.icon
+          {/* Scrollable nav items */}
+          <div className="relative flex-1 min-w-0">
+            {/* Scroll fade indicators */}
+            {showLeftFade && (
+              <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white/95 dark:from-[#0a0a0f]/95 via-white/60 dark:via-[#0a0a0f]/60 to-transparent z-10 pointer-events-none" />
+            )}
+            {showRightFade && (
+              <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white/95 dark:from-[#0a0a0f]/95 via-white/60 dark:via-[#0a0a0f]/60 to-transparent z-10 pointer-events-none" />
+            )}
 
-            return (
-              <Link key={item.href} href={item.href}>
-                <motion.div
-                  whileTap={{ scale: 0.9 }}
-                  data-active={isActive}
-                  className={`
-                    flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0 relative
-                    ${
-                      isActive
-                        ? 'bg-orange/20 text-orange'
-                        : 'text-slate-700 dark:text-white hover:text-slate-900 dark:hover:text-white'
-                    }
-                  `}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span className="text-[9px] font-medium leading-tight text-center whitespace-nowrap">{item.mobileLabel}</span>
-                  {item.badgeKey && badges[item.badgeKey] ? (
-                    <span className="absolute -top-0.5 -right-0.5 px-1 py-0 text-[8px] font-bold rounded-full min-w-[14px] text-center leading-[14px] bg-orange text-white">
-                      {badges[item.badgeKey]}
-                    </span>
-                  ) : null}
-                </motion.div>
-              </Link>
-            )
-          })}
-
-          {/* Admin separator + items (coaches/admins only) */}
-          {(isCoach || isAdmin) && (
-            <>
-              <div className="flex-shrink-0 w-px h-8 bg-cyan-200/40 dark:bg-white/10 mx-1" />
-              {adminNavItems.map((item) => {
+            <div
+              ref={mobileNavRef}
+              className="flex items-center overflow-x-auto scrollbar-hide gap-0.5 px-1"
+            >
+              {/* Athlete Nav Items */}
+              {athleteNavItems.map((item) => {
                 const isActive = pathname === item.href
                 const Icon = item.icon
 
@@ -469,7 +438,7 @@ export function Sidebar() {
                         flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0 relative
                         ${
                           isActive
-                            ? 'bg-cyan/20 text-cyan'
+                            ? 'bg-orange/20 text-orange'
                             : 'text-slate-700 dark:text-white hover:text-slate-900 dark:hover:text-white'
                         }
                       `}
@@ -485,18 +454,55 @@ export function Sidebar() {
                   </Link>
                 )
               })}
-            </>
-          )}
 
-          {/* Logout */}
-          <div className="flex-shrink-0 w-px h-8 bg-cyan-200/40 dark:bg-white/10 mx-1" />
-          <button
-            onClick={handleLogout}
-            className="flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0 text-red-400 hover:text-red-300"
-          >
-            <LogOut className="w-4 h-4" />
-            <span className="text-[9px] font-medium leading-tight text-center whitespace-nowrap">Logout</span>
-          </button>
+              {/* Admin separator + items (coaches/admins only) */}
+              {(isCoach || isAdmin) && (
+                <>
+                  <div className="flex-shrink-0 w-px h-8 bg-cyan-200/40 dark:bg-white/10 mx-1" />
+                  {adminNavItems.map((item) => {
+                    const isActive = pathname === item.href
+                    const Icon = item.icon
+
+                    return (
+                      <Link key={item.href} href={item.href}>
+                        <motion.div
+                          whileTap={{ scale: 0.9 }}
+                          data-active={isActive}
+                          className={`
+                            flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0 relative
+                            ${
+                              isActive
+                                ? 'bg-cyan/20 text-cyan'
+                                : 'text-slate-700 dark:text-white hover:text-slate-900 dark:hover:text-white'
+                            }
+                          `}
+                        >
+                          <Icon className="w-4 h-4" />
+                          <span className="text-[9px] font-medium leading-tight text-center whitespace-nowrap">{item.mobileLabel}</span>
+                          {item.badgeKey && badges[item.badgeKey] ? (
+                            <span className="absolute -top-0.5 -right-0.5 px-1 py-0 text-[8px] font-bold rounded-full min-w-[14px] text-center leading-[14px] bg-orange text-white">
+                              {badges[item.badgeKey]}
+                            </span>
+                          ) : null}
+                        </motion.div>
+                      </Link>
+                    )
+                  })}
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Pinned: Logout */}
+          <div className="flex-shrink-0 border-l border-cyan-200/40 dark:border-white/10 px-2">
+            <button
+              onClick={handleLogout}
+              className="flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[40px] text-red-400 hover:text-red-300"
+            >
+              <LogOut className="w-4 h-4" />
+              <span className="text-[9px] font-medium leading-tight text-center whitespace-nowrap">Exit</span>
+            </button>
+          </div>
         </div>
       </motion.nav>
 
