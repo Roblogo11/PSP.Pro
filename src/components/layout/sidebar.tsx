@@ -118,33 +118,36 @@ export function Sidebar() {
       const today = new Date().toISOString().split('T')[0]
       const counts: Record<string, number> = {}
 
-      // Upcoming sessions for athletes
-      const { count: upcomingCount } = await supabase
-        .from('bookings')
-        .select('*', { count: 'exact', head: true })
-        .eq('athlete_id', effectiveUserId)
-        .in('status', ['confirmed', 'pending'])
-        .gte('booking_date', today)
+      // Athlete-specific badges (skip for staff unless impersonating)
+      if (!isCoach && !isAdmin || impersonatedUserId) {
+        // Upcoming sessions for athletes
+        const { count: upcomingCount } = await supabase
+          .from('bookings')
+          .select('*', { count: 'exact', head: true })
+          .eq('athlete_id', effectiveUserId)
+          .in('status', ['confirmed', 'pending'])
+          .gte('booking_date', today)
 
-      if (upcomingCount && upcomingCount > 0) {
-        counts.upcomingSessions = upcomingCount
-      }
+        if (upcomingCount && upcomingCount > 0) {
+          counts.upcomingSessions = upcomingCount
+        }
 
-      // Sessions remaining in active package
-      const { data: activePkg } = await supabase
-        .from('athlete_packages')
-        .select('sessions_total, sessions_used')
-        .eq('athlete_id', effectiveUserId)
-        .eq('is_active', true)
-        .gte('expires_at', new Date().toISOString())
-        .order('expires_at', { ascending: false })
-        .limit(1)
-        .single()
+        // Sessions remaining in active package
+        const { data: activePkg } = await supabase
+          .from('athlete_packages')
+          .select('sessions_total, sessions_used')
+          .eq('athlete_id', effectiveUserId)
+          .eq('is_active', true)
+          .gte('expires_at', new Date().toISOString())
+          .order('expires_at', { ascending: false })
+          .limit(1)
+          .single()
 
-      if (activePkg) {
-        const remaining = activePkg.sessions_total - activePkg.sessions_used
-        if (remaining > 0) {
-          counts.sessionsRemaining = remaining
+        if (activePkg) {
+          const remaining = activePkg.sessions_total - activePkg.sessions_used
+          if (remaining > 0) {
+            counts.sessionsRemaining = remaining
+          }
         }
       }
 

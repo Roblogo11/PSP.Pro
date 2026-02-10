@@ -2,12 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Mail, Lock, Loader2, ArrowRight, Eye, EyeOff } from 'lucide-react'
 
 export default function LoginPage() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -53,12 +52,12 @@ export default function LoginPage() {
           throw new Error('Failed to load user profile. Please try again.')
         }
 
-        // Refresh server state then navigate
-        router.refresh()
+        // Full page navigation ensures middleware syncs auth cookies
+        // (router.push can race with cookie sync on Safari/Apple devices)
         if (['admin', 'coach', 'master_admin'].includes(profileData.role)) {
-          router.push('/admin')
+          window.location.href = '/admin'
         } else {
-          router.push('/locker')
+          window.location.href = '/locker'
         }
         return
       }
