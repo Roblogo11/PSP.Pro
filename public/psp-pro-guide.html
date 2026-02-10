@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PSP.Pro — How To Guide</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a1628;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 20px 16px; }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 40px 0 32px;
+      border-bottom: 1px solid rgba(0, 180, 216, 0.2);
+      margin-bottom: 32px;
+    }
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #B8301A, #ff6b4a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    .header p { color: #94a3b8; font-size: 1rem; }
+
+    /* Role Tabs */
+    .role-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .role-tab {
+      padding: 8px 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 180, 216, 0.3);
+      background: transparent;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .role-tab:hover { border-color: #00B4D8; color: #e2e8f0; }
+    .role-tab.active {
+      background: rgba(0, 180, 216, 0.15);
+      border-color: #00B4D8;
+      color: #00B4D8;
+    }
+
+    /* Sections */
+    .section {
+      margin-bottom: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      overflow: hidden;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+    .section-header:hover { background: rgba(255, 255, 255, 0.03); }
+    .section-icon { font-size: 1.25rem; }
+    .section-title { font-size: 1.1rem; font-weight: 700; flex: 1; }
+    .section-badge {
+      font-size: 0.7rem;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-admin { background: rgba(184, 48, 26, 0.2); color: #ff6b4a; }
+    .badge-coach { background: rgba(0, 180, 216, 0.15); color: #00B4D8; }
+    .badge-player { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+    .badge-master { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
+    .chevron {
+      transition: transform 0.2s;
+      color: #64748b;
+      font-size: 0.875rem;
+    }
+    .section.open .chevron { transform: rotate(90deg); }
+    .section-body {
+      display: none;
+      padding: 0 20px 20px;
+    }
+    .section.open .section-body { display: block; }
+
+    /* Steps */
+    .step {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .step:last-child { border-bottom: none; padding-bottom: 0; }
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(0, 180, 216, 0.15);
+      color: #00B4D8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-text { font-size: 0.925rem; color: #cbd5e1; }
+    .step-text strong { color: #e2e8f0; }
+
+    /* Shortcut path highlights */
+    .path {
+      display: inline;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: rgba(0, 180, 216, 0.1);
+      color: #00B4D8;
+      font-size: 0.85rem;
+      font-family: 'SF Mono', monospace;
+    }
+
+    /* Tips */
+    .tip {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(234, 179, 8, 0.08);
+      border-left: 3px solid #eab308;
+      font-size: 0.85rem;
+      color: #fde68a;
+    }
+
+    /* Quick reference table */
+    .quick-ref {
+      width: 100%;
+      margin-top: 12px;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .quick-ref th {
+      text-align: left;
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+      font-weight: 600;
+    }
+    .quick-ref td {
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: #cbd5e1;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 32px 0 40px;
+      border-top: 1px solid rgba(0, 180, 216, 0.1);
+      margin-top: 20px;
+      color: #64748b;
+      font-size: 0.85rem;
+    }
+    .footer a { color: #00B4D8; text-decoration: none; }
+
+    /* Role visibility */
+    [data-roles] { display: none; }
+    [data-roles].visible { display: block; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>PSP.Pro How-To Guide</h1>
+    <p>Quick reference for coaches, admins & athletes</p>
+  </div>
+
+  <!-- Role Filter -->
+  <div class="role-tabs">
+    <button class="role-tab active" onclick="filterRole('all')">All</button>
+    <button class="role-tab" onclick="filterRole('player')">Player</button>
+    <button class="role-tab" onclick="filterRole('coach')">Coach</button>
+    <button class="role-tab" onclick="filterRole('admin')">Admin</button>
+    <button class="role-tab" onclick="filterRole('master')">Master Admin</button>
+  </div>
+
+  <!-- ==================== PLAYER SECTIONS ==================== -->
+
+  <div class="section" data-roles="player">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">📊</span>
+      <span class="section-title">Your Dashboard (Locker)</span>
+      <span class="section-badge badge-player">Player</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">After logging in, you land on your <strong>Locker</strong> — your personal dashboard.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text"><strong>Quick Stats</strong> show your total sessions, average velocity, drills completed, and current streak.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text"><strong>Velocity Chart</strong> tracks your throwing speed over time.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text"><strong>Next Session</strong> card shows your upcoming training with a countdown.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <span class="step-text"><strong>Assigned Drills</strong> shows drills your coach has assigned — click "Start" to begin.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" data-roles="player">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">📅</span>
+      <span class="section-title">Book a Session</span>
+      <span class="section-badge badge-player">Player</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Click <span class="path">Booking</span> in the sidebar.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text"><strong>Pick a service</strong> — individual session, group training, or specialty.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text"><strong>Choose a date</strong> from the calendar (only future dates).</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text"><strong>Select a time slot</strong> from available coach openings.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <span class="step-text"><strong>Confirm & pay</strong> — you'll be taken to Stripe for secure checkout.</span>
+      </div>
+      <div class="tip">If you have a training package, session credits are applied automatically — no extra charge.</div>
+    </div>
+  </div>
+
+  <div class="section" data-roles="player">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">🏋️</span>
+      <span class="section-title">Drills & Training</span>
+      <span class="section-badge badge-player">Player</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Click <span class="path">Drills</span> in the sidebar to see the full drill library.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text"><strong>Search or filter</strong> by category, difficulty, or keyword.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text">Click a drill card to <strong>watch the video</strong> and read instructions.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">After completing a drill, tap <strong>"Mark Complete"</strong> to track your progress.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <span class="step-text">Your completion stats update in real time on the Locker and Progress pages.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" data-roles="player">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">📈</span>
+      <span class="section-title">Track Your Progress</span>
+      <span class="section-badge badge-player">Player</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Click <span class="path">Progress</span> to see your performance stats — peak velocity, average velocity, sessions, drills.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text">The <strong>velocity chart</strong> shows your speed trend with a goal line.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text"><strong>Milestones</strong> timeline shows when you hit key achievements (first session, velocity records, session streaks).</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">Check <span class="path">Achievements</span> for unlockable badges — streaks, session counts, velocity goals.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" data-roles="player">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">⚙️</span>
+      <span class="section-title">Manage Sessions & Settings</span>
+      <span class="section-badge badge-player">Player</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Click <span class="path">Sessions</span> to see all your past and upcoming sessions.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text">Use filter tabs (<strong>All / Upcoming / Past</strong>) to find specific sessions.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text">To <strong>cancel</strong>, click the cancel button on an upcoming session (24-hour cancellation policy).</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">Click <span class="path">Settings</span> to update your profile — name, phone, location, and notification preferences.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== COACH SECTIONS ==================== -->
+
+  <div class="section" data-roles="coach">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">🏠</span>
+      <span class="section-title">Coach Dashboard</span>
+      <span class="section-badge badge-coach">Coach</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Your <strong>Locker</strong> shows a Coach Hub with quick stats: total athletes, upcoming sessions, drills in library, and pending bookings.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text"><strong>Upcoming Sessions</strong> widget shows your next 4 sessions with athlete name, service type, and time.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text"><strong>Quick Links</strong> give you one-tap access to Athletes, Bookings, Drills, Analytics, Media, and Settings.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">Click <strong>"Full Admin Panel"</strong> to access the complete Admin Control Center.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" data-roles="coach admin">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">📆</span>
+      <span class="section-title">Set Your Availability</span>
+      <span class="section-badge badge-coach">Coach</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Go to <span class="path">Admin → Availability</span>.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text"><strong>Pick a service</strong> (or "Any Service" for general availability).</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text">Choose a <strong>date</strong>, set <strong>start/end time</strong>, and enter the <strong>location</strong>.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">Set <strong>max bookings</strong> per slot (e.g., 1 for individual, 8 for group).</span>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <span class="step-text">Click <strong>"Create Slot"</strong>. Athletes will now see this slot when booking.</span>
+      </div>
+      <div class="tip">You can only see and manage your own slots. Delete a slot anytime if plans change.</div>
+    </div>
+  </div>
+
+  <div class="section" data-roles="coach admin">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">🏃</span>
+      <span class="section-title">Manage Athletes</span>
+      <span class="section-badge badge-coach">Coach</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Go to <span class="path">Admin → Athletes</span> to see all athletes.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text">Each athlete card shows their <strong>sessions, drills, average velocity</strong>, and <strong>peak velocity</strong>.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text"><strong>Search</strong> by name/email or <strong>filter</strong> by sport.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">Click <strong>"Add Athlete"</strong> to create a new athlete — enter name, email, sport, and age.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <span class="step-text">For athletes under 18, <strong>parent/guardian fields</strong> appear automatically.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">6</span>
+        <span class="step-text">Click an athlete to see their <strong>detailed stats page</strong> and assign drills.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" data-roles="coach admin">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">📋</span>
+      <span class="section-title">Manage Bookings</span>
+      <span class="section-badge badge-coach">Coach</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Go to <span class="path">Admin → Bookings</span>.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text">Toggle between <strong>Calendar View</strong> (monthly overview with color-coded dots) and <strong>Table View</strong> (detailed list).</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text">In Calendar View, click a <strong>day</strong> to see all sessions for that date.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">Use the status filter: <strong>All / Pending / Confirmed / Cancelled</strong>.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <span class="step-text">For pending bookings: click <strong>Confirm</strong> or <strong>Cancel</strong>.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">6</span>
+        <span class="step-text">For confirmed bookings: click <strong>Mark Complete</strong> after the session.</span>
+      </div>
+      <div class="tip">Status colors — Green: confirmed, Yellow: pending, Red: cancelled, Blue: completed.</div>
+    </div>
+  </div>
+
+  <div class="section" data-roles="coach admin">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">🎯</span>
+      <span class="section-title">Create & Manage Drills</span>
+      <span class="section-badge badge-coach">Coach</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Go to <span class="path">Admin → Drills</span>.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text">Click <strong>"Create Drill"</strong> and fill in: title, description, video URL, thumbnail, category, difficulty, and duration.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text">Toggle <strong>Published</strong> on to make it visible to athletes.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">To add drills in bulk, go to <span class="path">Admin → Drills → Import</span> and upload a CSV file.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <span class="step-text">To <strong>assign drills</strong> to a specific athlete, go to their athlete detail page and select drills.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== ADMIN SECTIONS ==================== -->
+
+  <div class="section" data-roles="admin">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">🎛️</span>
+      <span class="section-title">Admin Control Center</span>
+      <span class="section-badge badge-admin">Admin</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">The <span class="path">/admin</span> page is your command center — <strong>Quick Actions</strong> at the top give you one-click shortcuts.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text"><strong>Quick Stats</strong> show total athletes, upcoming sessions, drills in the library, and pending bookings at a glance.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text"><strong>Platform Management</strong> cards link to each admin section: Athletes, Bookings, Drills, Services, Analytics, Media, and more.</span>
+      </div>
+
+      <table class="quick-ref">
+        <tr><th>Section</th><th>What It Does</th></tr>
+        <tr><td>Athletes</td><td>View, add, edit athlete profiles & stats</td></tr>
+        <tr><td>Bookings</td><td>Calendar + table view, confirm/cancel/complete</td></tr>
+        <tr><td>Services</td><td>Create/edit training services & pricing</td></tr>
+        <tr><td>Availability</td><td>Set time slots athletes can book</td></tr>
+        <tr><td>Drills</td><td>Create, edit, bulk import training drills</td></tr>
+        <tr><td>Analytics</td><td>Performance insights & revenue tracking</td></tr>
+        <tr><td>Media</td><td>Upload & manage videos and images</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section" data-roles="admin">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">💰</span>
+      <span class="section-title">Manage Services & Pricing</span>
+      <span class="section-badge badge-admin">Admin</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Go to <span class="path">Admin → Services</span>.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text">Click <strong>"Add Service"</strong> — enter name, description, price, duration, category (individual/group/package/specialty), and max participants.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text">To <strong>feature a service on the homepage</strong>, click the star icon. Up to 6 services can be featured.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">Toggle services <strong>active/inactive</strong> — inactive services won't appear in booking.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <span class="step-text">The <strong>Pricing page</strong> updates automatically — it pulls directly from your services in the database.</span>
+      </div>
+      <div class="tip">Training packages (5/10/20-packs) are managed separately in the training_packages table. Contact your developer to update package pricing.</div>
+    </div>
+  </div>
+
+  <div class="section" data-roles="admin">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">💳</span>
+      <span class="section-title">Stripe & Payments</span>
+      <span class="section-badge badge-admin">Admin</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">When athletes book and pay, <strong>Stripe handles checkout</strong> securely. You don't need to touch payments manually.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text">After successful payment, a <strong>booking is created automatically</strong> and appears in your Bookings page as "Pending".</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text">View payment details and revenue stats in the <strong>Bookings</strong> dashboard and <strong>Analytics</strong> section.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">To manage refunds, disputes, or payment settings, log into your <strong>Stripe Dashboard</strong> directly.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MASTER ADMIN SECTIONS ==================== -->
+
+  <div class="section" data-roles="master">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">🎭</span>
+      <span class="section-title">Simulation Mode (Act as Player/Coach)</span>
+      <span class="section-badge badge-master">Master Admin</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">On the <span class="path">/admin</span> page, find the <strong>Simulation Mode</strong> panel.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text">Choose <strong>"Act as Player"</strong> or <strong>"Act as Coach"</strong> to test the platform from that perspective.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text">A <strong>purple banner</strong> appears at the top confirming simulation is active.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text"><strong>Stripe test mode</strong> auto-enables — use card <strong>4242 4242 4242 4242</strong> for test payments.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <span class="step-text">All actions are <strong>tracked</strong>. When done, click <strong>"End Simulation"</strong> on the banner.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">6</span>
+        <span class="step-text">Use <strong>"One-Click Cleanup"</strong> to delete all test data and refund test payments.</span>
+      </div>
+      <div class="tip">Simulation creates real (test) data. Always clean up when done to keep the database tidy.</div>
+    </div>
+  </div>
+
+  <div class="section" data-roles="master">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">🔧</span>
+      <span class="section-title">Stripe Test Mode</span>
+      <span class="section-badge badge-master">Master Admin</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Toggle <strong>Stripe Test Mode</strong> from the admin panel to test payment flows without real charges.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text">A <strong>yellow banner</strong> appears site-wide when test mode is active.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text">Test mode <strong>auto-expires after 4 hours</strong> as a safety net.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">Use test card: <strong>4242 4242 4242 4242</strong>, any future date, any CVC.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== GENERAL SECTIONS ==================== -->
+
+  <div class="section" data-roles="player coach admin master">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">💬</span>
+      <span class="section-title">PSP Assistant (Chatbot)</span>
+      <span class="section-badge badge-player">Everyone</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Click the <strong>chat bubble</strong> in the bottom-right corner on any page.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text">Ask anything about using PSP.Pro — booking, drills, progress, pricing, or account help.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text">The assistant knows 40+ topics and gives step-by-step guidance with links to the right pages.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" data-roles="player coach admin master">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">🔑</span>
+      <span class="section-title">Login & Account</span>
+      <span class="section-badge badge-player">Everyone</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Go to <span class="path">/login</span> and enter your email and password.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text"><strong>Players</strong> are sent to their Locker. <strong>Coaches, admins, and master admins</strong> go to the Admin page.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text">Forgot your password? Click <strong>"Forgot password?"</strong> on the login page for a reset link.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">New athletes sign up at <span class="path">/get-started</span> ("Join the Team").</span>
+      </div>
+      <div class="tip">If you see "Your account exists but your profile hasn't been set up yet" — contact support at info@propersports.pro.</div>
+    </div>
+  </div>
+
+  <div class="section" data-roles="player coach admin master">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">🗺️</span>
+      <span class="section-title">Quick Page Reference</span>
+      <span class="section-badge badge-player">Everyone</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <table class="quick-ref">
+        <tr><th>Page</th><th>Who</th><th>Purpose</th></tr>
+        <tr><td>/locker</td><td>All</td><td>Personal dashboard & stats</td></tr>
+        <tr><td>/sessions</td><td>Players</td><td>View & manage sessions</td></tr>
+        <tr><td>/booking</td><td>Players</td><td>Book new sessions</td></tr>
+        <tr><td>/drills</td><td>Players</td><td>Browse & complete drills</td></tr>
+        <tr><td>/progress</td><td>Players</td><td>Performance charts & milestones</td></tr>
+        <tr><td>/achievements</td><td>Players</td><td>Unlockable badges</td></tr>
+        <tr><td>/settings</td><td>All</td><td>Profile & preferences</td></tr>
+        <tr><td>/admin</td><td>Staff</td><td>Admin control center</td></tr>
+        <tr><td>/admin/athletes</td><td>Staff</td><td>Manage athletes</td></tr>
+        <tr><td>/admin/bookings</td><td>Staff</td><td>Booking calendar & table</td></tr>
+        <tr><td>/admin/services</td><td>Admin</td><td>Services & pricing</td></tr>
+        <tr><td>/admin/availability</td><td>Staff</td><td>Set open time slots</td></tr>
+        <tr><td>/admin/drills</td><td>Staff</td><td>Create & manage drills</td></tr>
+        <tr><td>/admin/analytics</td><td>Staff</td><td>Insights & reports</td></tr>
+        <tr><td>/admin/media</td><td>Staff</td><td>Upload videos & images</td></tr>
+        <tr><td>/pricing</td><td>Public</td><td>View services & packages</td></tr>
+        <tr><td>/faq</td><td>Public</td><td>Common questions</td></tr>
+        <tr><td>/contact</td><td>Public</td><td>Get in touch</td></tr>
+        <tr><td>/about</td><td>Public</td><td>About PSP</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>PSP.Pro — Progression Over Perfection</p>
+    <p style="margin-top: 4px;">Questions? <a href="/contact">Contact support</a> or use the chat assistant.</p>
+  </div>
+</div>
+
+<script>
+  // Toggle section open/close
+  function toggleSection(header) {
+    header.parentElement.classList.toggle('open');
+  }
+
+  // Filter by role
+  function filterRole(role) {
+    // Update tabs
+    document.querySelectorAll('.role-tab').forEach(tab => tab.classList.remove('active'));
+    event.target.classList.add('active');
+
+    // Show/hide sections
+    document.querySelectorAll('[data-roles]').forEach(section => {
+      if (role === 'all' || section.dataset.roles.includes(role)) {
+        section.classList.add('visible');
+      } else {
+        section.classList.remove('visible');
+      }
+    });
+  }
+
+  // Show all on load
+  filterRole('all');
+</script>
+
+</body>
+</html>
