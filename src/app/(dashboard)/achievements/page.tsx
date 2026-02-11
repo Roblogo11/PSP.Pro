@@ -9,7 +9,8 @@ import {
   TrendingUp,
   Star,
   Clock,
-  Calendar
+  Calendar,
+  ClipboardCheck,
 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useUserStats } from '@/lib/hooks/use-user-stats'
@@ -47,6 +48,7 @@ export default function AchievementsPage() {
   // Calculate real values
   const completedSessions = stats?.totalSessions ?? 0
   const completedDrills = stats?.totalDrills ?? 0
+  const completedQuizzes = stats?.totalQuizzes ?? 0
   const currentStreak = stats?.currentStreak ?? 0
   const peakVelocity = stats?.recentVelocities?.length
     ? Math.max(...stats.recentVelocities.map(v => v.value))
@@ -138,6 +140,47 @@ export default function AchievementsPage() {
       color: 'orange',
       unlocked: peakVelocity >= 70,
     },
+    // Pop Quiz badges
+    {
+      id: 'quiz-beginner',
+      icon: ClipboardCheck,
+      title: 'Quiz Beginner',
+      description: 'Complete your first pop quiz',
+      progress: Math.min(completedQuizzes, 1),
+      maxProgress: 1,
+      color: 'green',
+      unlocked: completedQuizzes >= 1,
+    },
+    {
+      id: 'quiz-bronze',
+      icon: ClipboardCheck,
+      title: 'Quiz Bronze',
+      description: 'Complete 5 pop quizzes',
+      progress: Math.min(completedQuizzes, 5),
+      maxProgress: 5,
+      color: 'orange',
+      unlocked: completedQuizzes >= 5,
+    },
+    {
+      id: 'quiz-silver',
+      icon: ClipboardCheck,
+      title: 'Quiz Silver',
+      description: 'Complete 10 pop quizzes',
+      progress: Math.min(completedQuizzes, 10),
+      maxProgress: 10,
+      color: 'cyan',
+      unlocked: completedQuizzes >= 10,
+    },
+    {
+      id: 'quiz-gold',
+      icon: ClipboardCheck,
+      title: 'Quiz Gold',
+      description: 'Complete 20 pop quizzes',
+      progress: Math.min(completedQuizzes, 20),
+      maxProgress: 20,
+      color: 'orange',
+      unlocked: completedQuizzes >= 20,
+    },
   ]
 
   const unlockedCount = achievements.filter(a =>
@@ -225,7 +268,7 @@ export default function AchievementsPage() {
           <Zap className="w-12 h-12 text-cyan mx-auto mb-4" />
           <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Keep Pushing!</h3>
           <p className="text-cyan-700 dark:text-white max-w-2xl mx-auto">
-            You're making great progress! Complete drills, maintain your training streak, and
+            You're making great progress! Complete drills, ace pop quizzes, maintain your training streak, and
             improve your velocity to unlock more achievements.
           </p>
         </div>

@@ -88,9 +88,9 @@ const PAGE_SUGGESTIONS: Record<string, { label: string; query: string }[]> = {
     { label: 'How do I track progress?', query: 'course progress' },
   ],
   '/questionnaires': [
-    { label: 'What are check-ins?', query: 'what are check-ins' },
-    { label: 'How do I complete a quiz?', query: 'complete check-in' },
-    { label: 'Can I see my score?', query: 'check-in score' },
+    { label: 'What is Pop Quiz?', query: 'what is pop quiz' },
+    { label: 'How do I take a quiz?', query: 'complete quiz' },
+    { label: 'Can I see my score?', query: 'quiz score' },
   ],
   '/admin/courses': [
     { label: 'How do I create a course?', query: 'create course' },
@@ -98,9 +98,9 @@ const PAGE_SUGGESTIONS: Record<string, { label: string; query: string }[]> = {
     { label: 'How do I enroll athletes?', query: 'enroll athletes in course' },
   ],
   '/admin/questionnaires': [
-    { label: 'How do I create a check-in?', query: 'create check-in' },
-    { label: 'How do I assign to athletes?', query: 'assign check-in' },
-    { label: 'How do I see responses?', query: 'check-in responses' },
+    { label: 'How do I create a quiz?', query: 'create quiz' },
+    { label: 'How do I assign to athletes?', query: 'assign quiz' },
+    { label: 'How do I see responses?', query: 'quiz responses' },
   ],
   '/blog': [
     { label: 'What topics do you cover?', query: 'blog topics' },
@@ -296,9 +296,9 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['dashboard', 'locker', 'my account', 'my profile', 'athlete locker', 'home dashboard'],
     title: 'Your Athlete Locker',
-    response: 'The Athlete Locker is your personal dashboard — it adapts to your role:\n\n🏅 Athletes see:\n• Quick Stats — total sessions, avg velocity, drills completed, streak\n• Velocity Chart — your velocity trend over time\n• Next Session — upcoming booked session\n• Assigned Drills — coach-assigned training videos\n• Courses — video course library with progress tracking\n• Check-Ins — quizzes assigned by your coach\n• Achievements — badges you\'ve earned\n• Recent Activity — last sessions and completed drills\n• Game Stats Review — log and review game performance\n\n🧑‍🏫 Coaches/Admins see:\n• Quick Stats — total athletes, upcoming sessions, drills in library, pending bookings\n• Upcoming Sessions — next 4 sessions with athlete names and status\n• Quick Links — fast access to Athletes, Bookings, Drills, Courses, Check-Ins, Analytics, Media, Settings\n• Link to full Admin Panel for complete control\n\nAll data updates in real-time!',
+    response: 'The Athlete Locker is your personal dashboard — it adapts to your role:\n\n🏅 Athletes see:\n• Quick Stats — total sessions, avg velocity, drills completed, streak\n• Velocity Chart — your velocity trend over time\n• Next Session — upcoming booked session\n• Assigned Drills — coach-assigned training videos\n• Courses — video course library with progress tracking\n• Pop Quiz — game knowledge quizzes from your coach\n• Achievements — badges you\'ve earned\n• Recent Activity — last sessions and completed drills\n• Game Stats Review — log and review game performance\n\n🧑‍🏫 Coaches/Admins see:\n• Quick Stats — total athletes, upcoming sessions, drills in library, pending bookings\n• Upcoming Sessions — next 4 sessions with athlete names and status\n• Quick Links — fast access to Athletes, Bookings, Drills, Courses, Pop Quiz, Analytics, Media, Settings\n• Link to full Admin Panel for complete control\n\nAll data updates in real-time!',
     actions: [{ label: 'Go to Dashboard', href: '/locker' }],
-    followUp: ['How do courses work?', 'What are check-ins?', 'How do I book a session?'],
+    followUp: ['How do courses work?', 'What is Pop Quiz?', 'How do I book a session?'],
   },
 
   // ── DASHBOARD WALKTHROUGH ──
@@ -354,7 +354,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['achievement', 'achievements', 'badges', 'badge', 'unlock', 'reward', 'gamification', 'points'],
     title: 'Achievements & Badges',
-    response: 'Earn badges as you train! 9 achievements to unlock:\n\n🏅 First Session — Complete your first training session\n🏅 Drill Starter — Complete 10 drills\n🏅 Drill Collector — Complete 50 drills\n🔥 On Fire — Maintain a 3-day training streak\n🔥 Streak Master — Maintain a 7-day streak\n📅 Getting Started — Complete 5 sessions\n📅 Dedicated Athlete — Complete 25 sessions\n⚡ Velocity: 60 MPH — Reach 60 MPH throwing velocity\n⚡ Velocity: 70 MPH — Reach 70 MPH throwing velocity\n\nEach badge shows a progress bar so you can see how close you are. Points are earned for each unlock (10 pts each).',
+    response: 'Earn badges as you train! 13 achievements to unlock:\n\n🏅 First Session — Complete your first training session\n🏅 Drill Starter — Complete 10 drills\n🏅 Drill Collector — Complete 50 drills\n🔥 On Fire — Maintain a 3-day training streak\n🔥 Streak Master — Maintain a 7-day streak\n📅 Getting Started — Complete 5 sessions\n📅 Dedicated Athlete — Complete 25 sessions\n⚡ Velocity: 60 MPH — Reach 60 MPH throwing velocity\n⚡ Velocity: 70 MPH — Reach 70 MPH throwing velocity\n\n📝 Pop Quiz Badges:\n• Quiz Beginner — Complete your first quiz\n• Quiz Bronze — Complete 5 quizzes\n• Quiz Silver — Complete 10 quizzes\n• Quiz Gold — Complete 20 quizzes\n\nEach badge shows a progress bar so you can see how close you are. Points are earned for each unlock!',
     actions: [{ label: 'View Achievements', href: '/achievements' }],
   },
 
@@ -378,9 +378,9 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['admin', 'coach dashboard', 'manage athletes', 'coach view', 'admin panel', 'coach panel'],
     title: 'Coach/Admin Dashboard',
-    response: 'The Admin panel is your coaching command center:\n\n📊 Quick Stats — Active athletes, upcoming sessions, total drills, pending bookings\n\n🏋️ Core Tools:\n• Confirm Lessons — Confirm, edit, cancel bookings + book for athletes\n• Edit Lessons — Manage services, pricing, and video URLs\n• Athletes — View, create, edit, delete athlete profiles\n• Drills — Create drills, import from YouTube, assign to athletes\n• Courses — Build multi-lesson video courses, enroll athletes\n• Check-Ins — Create T/F quizzes, assign to athletes, view scores\n• Availability — Set your coaching schedule + edit slots\n• Media — Upload and manage content\n• Analytics — View performance data and trends\n\n💰 Stripe Settings (Admin only):\n• Toggle test/live payment mode\n• View payment status\n\nCoaches see only their athletes and sessions. Admins see everything.',
+    response: 'The Admin panel is your coaching command center:\n\n📊 Quick Stats — Active athletes, upcoming sessions, total drills, pending bookings\n\n🏋️ Core Tools:\n• Confirm Lessons — Confirm, edit, cancel bookings + book for athletes\n• Edit Lessons — Manage services, pricing, and video URLs\n• Athletes — View, create, edit, delete athlete profiles\n• Drills — Create drills, import from YouTube, assign to athletes\n• Courses — Build multi-lesson video courses, enroll athletes\n• Pop Quiz — Create T/F quizzes, assign to athletes, view scores\n• Availability — Set your coaching schedule + edit slots\n• Media — Upload and manage content\n• Analytics — View performance data and trends\n\n💰 Stripe Settings (Admin only):\n• Toggle test/live payment mode\n• View payment status\n\nCoaches see only their athletes and sessions. Admins see everything.',
     actions: [{ label: 'Go to Admin', href: '/admin' }],
-    followUp: ['How do I create a course?', 'How do I create check-ins?', 'How do I book for an athlete?'],
+    followUp: ['How do I create a course?', 'How do I create a quiz?', 'How do I book for an athlete?'],
     role: 'coach',
   },
 
@@ -388,7 +388,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['walk me through admin', 'admin walkthrough', 'admin page'],
     title: 'Admin Panel Walkthrough',
-    response: 'The Admin Control Center layout:\n\nTop — Welcome banner with quick start tips and your name.\n\nStats Row — 4 cards: Total Athletes, Upcoming Sessions, Training Drills, Pending Bookings (shows notification badge if any pending).\n\nUpcoming Sessions — List of your next 5 sessions with athlete name, date, time, and status.\n\nQuick Actions — 4 cards: Create Drill, Schedule Session, Add Athlete, Upload Video.\n\nPlatform Management — 6 cards linking to: Athlete Management, Courses, Session Schedule, Content Library, Analytics, Platform Settings.\n\nStripe Section (admin only) — Shows test/live payment mode with toggle switch.\n\nSidebar navigation:\n• Confirm Lessons — manage all bookings, edit notes, book for athletes\n• Edit Lessons — manage services and pricing\n• Athletes — athlete profiles and management\n• Drills — create and assign training videos\n• Courses — build multi-lesson video courses\n• Check-Ins — create and assign T/F quizzes\n• Media — upload and manage content\n• Analytics — performance data and trends',
+    response: 'The Admin Control Center layout:\n\nTop — Welcome banner with quick start tips and your name.\n\nStats Row — 4 cards: Total Athletes, Upcoming Sessions, Training Drills, Pending Bookings (shows notification badge if any pending).\n\nUpcoming Sessions — List of your next 5 sessions with athlete name, date, time, and status.\n\nQuick Actions — 4 cards: Create Drill, Schedule Session, Add Athlete, Upload Video.\n\nPlatform Management — 6 cards linking to: Athlete Management, Courses, Session Schedule, Content Library, Analytics, Platform Settings.\n\nStripe Section (admin only) — Shows test/live payment mode with toggle switch.\n\nSidebar navigation:\n• Confirm Lessons — manage all bookings, edit notes, book for athletes\n• Edit Lessons — manage services and pricing\n• Athletes — athlete profiles and management\n• Drills — create and assign training videos\n• Courses — build multi-lesson video courses\n• Pop Quiz — create and assign T/F quizzes\n• Media — upload and manage content\n• Analytics — performance data and trends',
     actions: [{ label: 'Go to Admin', href: '/admin' }],
     role: 'coach',
   },
@@ -508,7 +508,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['navigate', 'menu', 'sidebar', 'where do i find', 'how to find', 'navigation', 'pages', 'sitemap'],
     title: 'Site Navigation',
-    response: 'Here\'s how to get around PSP.Pro:\n\nPublic Pages (no login needed):\n• Home, About, Pricing, Blog, Contact, FAQ, Join the Team\n\nThe navigation adapts based on your login status:\n• Logged out — sidebar shows a "Login" link at the bottom\n• Logged in — sidebar shows "Your Dashboard" at the top (goes to /locker for athletes, /admin for coaches)\n\nAthlete Pages (login + membership required):\n• Athlete Locker — your main dashboard\n• Sessions — view/manage your bookings\n• Membership Training — browse training videos\n• Courses — video course library\n• Check-Ins — quizzes and assessments\n• Progress — track improvement\n• Achievements — earned badges\n• Buy Lessons — book new sessions\n• Settings — account management\n\nCoach/Admin Pages:\n• Admin Panel — main command center\n• Confirm Lessons — manage bookings\n• Edit Lessons — manage services & pricing\n• Athletes, Drills, Courses, Check-Ins, Media, Analytics\n\nCTAs across the site also adapt — members see "Book Now" buttons while visitors see "Join the Team."',
+    response: 'Here\'s how to get around PSP.Pro:\n\nPublic Pages (no login needed):\n• Home, About, Pricing, Blog, Contact, FAQ, Join the Team\n\nThe navigation adapts based on your login status:\n• Logged out — sidebar shows a "Login" link at the bottom\n• Logged in — sidebar shows "Your Dashboard" at the top (goes to /locker for athletes, /admin for coaches)\n\nAthlete Pages (login + membership required):\n• Athlete Locker — your main dashboard\n• Sessions — view/manage your bookings\n• Membership Training — browse training videos\n• Courses — video course library\n• Pop Quiz — game knowledge quizzes\n• Progress — track improvement\n• Achievements — earned badges\n• Buy Lessons — book new sessions\n• Settings — account management\n\nCoach/Admin Pages:\n• Admin Panel — main command center\n• Confirm Lessons — manage bookings\n• Edit Lessons — manage services & pricing\n• Athletes, Drills, Courses, Pop Quiz, Media, Analytics\n\nCTAs across the site also adapt — members see "Book Now" buttons while visitors see "Join the Team."',
     actions: [{ label: 'Home', href: '/' }, { label: 'Dashboard', href: '/locker' }],
   },
 
@@ -520,7 +520,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
     title: 'Video Courses',
     response: 'Video Courses are multi-lesson training programs you can watch at your own pace!\n\nHow it works:\n1. Go to Courses from your sidebar\n2. Browse the course library — filter by All, My Courses, or Available\n3. Each course card shows the title, lesson count, price, and your progress\n4. Free courses — click "Enroll Free" to get instant access\n5. Start watching! Lessons play right on the page\n\nProgress tracking:\n• A progress bar shows how many lessons you\'ve completed\n• Click "Mark Complete" after watching each lesson\n• Your progress is saved — come back anytime and pick up where you left off\n• The course auto-selects your first incomplete lesson\n\nSome courses include free preview lessons you can watch before enrolling!',
     actions: [{ label: 'Browse Courses', href: '/courses' }],
-    followUp: ['How do I track my progress?', 'What are check-ins?', 'How do drills work?'],
+    followUp: ['How do I track my progress?', 'What is Pop Quiz?', 'How do drills work?'],
     role: 'athlete',
   },
   {
@@ -537,7 +537,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
     title: 'Creating Video Courses (Coach Tool)',
     response: 'You can create multi-lesson video courses for your athletes:\n\n1. Go to Admin → Courses\n2. Click "Create Course"\n3. Fill in: title, description, thumbnail URL, category\n4. Set pricing: Free, One-Time ($), or Monthly ($/mo)\n5. Toggle "Included in Membership" if members get it free\n6. Save the course\n\nAdding lessons:\n1. Click "Lessons" (film icon) on the course card\n2. Add lessons with: title, video URL (YouTube/Vimeo/direct), description\n3. Toggle "Preview" to let non-enrolled users watch that lesson for free\n4. Use up/down arrows to reorder lessons\n\nEnrolling athletes:\n1. Click "Enroll" (users icon) on the course card\n2. Check the athletes you want to enroll\n3. Click "Save Enrollments" — they get instant access\n\nExample: Create a "Drill Bank" course with 28 videos, set it to Free, and toggle "Included in Membership."',
     actions: [{ label: 'Manage Courses', href: '/admin/courses' }],
-    followUp: ['How do I enroll athletes?', 'How do I create check-ins?', 'How do drills work?'],
+    followUp: ['How do I enroll athletes?', 'How do I create a quiz?', 'How do drills work?'],
     role: 'coach',
   },
   {
@@ -549,45 +549,45 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   },
 
   // ════════════════════════════════════════════════════════════
-  // ── CHECK-INS / QUESTIONNAIRES (ATHLETE) ──
+  // ── POP QUIZ (ATHLETE) ──
   // ════════════════════════════════════════════════════════════
   {
-    keywords: ['check-in', 'check in', 'checkin', 'questionnaire', 'quiz', 'what are check-ins', 'complete check-in', 'assessment'],
-    title: 'Check-Ins & Quizzes',
-    response: 'Check-Ins are quick True/False quizzes your coach assigns to you!\n\nHow it works:\n1. Go to Check-Ins from your sidebar\n2. You\'ll see stat cards for pending and completed check-ins\n3. Filter by All, Pending, or Completed\n4. Click "Take Quiz" on any pending check-in\n5. Answer each question True or False\n6. Click "Submit" when done\n\nAfter submitting:\n• You\'ll see your score right away (e.g., "4 of 5 correct — 80%")\n• Each question shows if you got it right (green) or wrong (red)\n• Your coach can also see your responses and score\n\nCheck-ins help coaches track your game knowledge and mental development!',
-    actions: [{ label: 'My Check-Ins', href: '/questionnaires' }],
-    followUp: ['Can I see my score?', 'How do courses work?', 'How do drills work?'],
+    keywords: ['pop quiz', 'quiz', 'quizzes', 'questionnaire', 'what is pop quiz', 'complete quiz', 'assessment', 'game iq', 'knowledge test'],
+    title: 'Pop Quiz',
+    response: 'Pop Quiz is where your coach tests your game knowledge with True/False questions!\n\nHow it works:\n1. Go to Pop Quiz from your sidebar\n2. You\'ll see stat cards for pending and completed quizzes\n3. Filter by All, Pending, or Completed\n4. Click "Take Quiz" on any pending quiz\n5. Answer each question True or False\n6. Click "Submit" when done\n\nAfter submitting:\n• You\'ll see your score right away (e.g., "4 of 5 correct — 80%")\n• Each question shows if you got it right (green) or wrong (red)\n• Your coach can also see your responses and score\n\nComplete quizzes to earn Pop Quiz badges — Beginner, Bronze, Silver, and Gold!',
+    actions: [{ label: 'Pop Quiz', href: '/questionnaires' }],
+    followUp: ['Can I see my score?', 'How do courses work?', 'What badges can I earn?'],
     role: 'athlete',
   },
   {
-    keywords: ['check-in score', 'quiz score', 'quiz result', 'my score', 'how did i do', 'see results'],
-    title: 'Check-In Scores',
-    response: 'After completing a check-in quiz:\n\n• Your score is shown immediately (e.g., "4 of 5 correct — 80%")\n• Green = correct answer, Red = wrong answer\n• You can click any completed check-in to review your answers\n• Your coach also sees your score and individual responses\n\nCompleted check-ins move to the "Completed" tab. You can always go back and review them!',
-    actions: [{ label: 'View Check-Ins', href: '/questionnaires' }],
+    keywords: ['quiz score', 'quiz result', 'my score', 'how did i do', 'see results'],
+    title: 'Quiz Scores',
+    response: 'After completing a pop quiz:\n\n• Your score is shown immediately (e.g., "4 of 5 correct — 80%")\n• Green = correct answer, Red = wrong answer\n• You can click any completed quiz to review your answers\n• Your coach also sees your score and individual responses\n\nCompleted quizzes move to the "Completed" tab. You can always go back and review them!\n\nBonus: Each quiz you complete counts toward your Pop Quiz badges (Beginner → Bronze → Silver → Gold).',
+    actions: [{ label: 'Pop Quiz', href: '/questionnaires' }],
     role: 'athlete',
   },
 
-  // ── CHECK-INS / QUESTIONNAIRES (COACH) ──
+  // ── POP QUIZ (COACH) ──
   {
-    keywords: ['create check-in', 'make questionnaire', 'create questionnaire', 'build quiz', 'create quiz', 'new check-in', 'manage check-ins'],
-    title: 'Creating Check-Ins (Coach Tool)',
-    response: 'You can create True/False quizzes and assign them to athletes:\n\n1. Go to Admin → Check-Ins\n2. Click "Create Check-In"\n3. Add a title and optional description\n4. Build your questions:\n   • Type each question\n   • Set the correct answer (True or False)\n   • Click "Add" to add it to the list\n5. Save the check-in\n\nExample questions:\n• "A pitcher should follow through toward the target" → True\n• "You should swing at every pitch" → False\n\nYou can add as many questions as you want. Edit or delete check-ins anytime from the management page.',
-    actions: [{ label: 'Manage Check-Ins', href: '/admin/questionnaires' }],
-    followUp: ['How do I assign check-ins?', 'How do I see responses?', 'How do I create a course?'],
+    keywords: ['create quiz', 'make quiz', 'create questionnaire', 'build quiz', 'new quiz', 'manage quizzes', 'pop quiz coach'],
+    title: 'Creating Pop Quizzes (Coach Tool)',
+    response: 'You can create True/False quizzes and assign them to athletes:\n\n1. Go to Admin → Pop Quiz\n2. Click "New Quiz"\n3. Add a title and optional description\n4. Build your questions:\n   • Type each question\n   • Set the correct answer (True or False)\n   • Click "Add" to add it to the list\n5. Save the quiz\n\nExample questions:\n• "A pitcher should follow through toward the target" → True\n• "You should swing at every pitch" → False\n\nYou can add as many questions as you want. Edit or delete quizzes anytime from the management page.\n\nAthletes earn Pop Quiz badges for completing quizzes (Beginner → Bronze → Silver → Gold)!',
+    actions: [{ label: 'Manage Quizzes', href: '/admin/questionnaires' }],
+    followUp: ['How do I assign a quiz?', 'How do I see responses?', 'How do I create a course?'],
     role: 'coach',
   },
   {
-    keywords: ['assign check-in', 'assign questionnaire', 'assign quiz', 'send quiz', 'give quiz to athlete'],
-    title: 'Assigning Check-Ins to Athletes',
-    response: 'To assign a check-in quiz to athletes:\n\n1. Go to Admin → Check-Ins\n2. Find the check-in you want to assign\n3. Click the person+ icon (Assign)\n4. Check the box next to each athlete\n5. Optionally set a due date and add notes\n6. Click "Assign"\n\nThe check-in appears immediately in the athlete\'s Check-Ins page as "Pending." They\'ll see any notes or due date you set.\n\nYou can assign the same check-in to multiple athletes at once!',
-    actions: [{ label: 'Manage Check-Ins', href: '/admin/questionnaires' }],
+    keywords: ['assign quiz', 'assign questionnaire', 'send quiz', 'give quiz to athlete'],
+    title: 'Assigning Pop Quizzes to Athletes',
+    response: 'To assign a pop quiz to athletes:\n\n1. Go to Admin → Pop Quiz\n2. Find the quiz you want to assign\n3. Click the person+ icon (Assign)\n4. Check the box next to each athlete\n5. Optionally set a due date and add notes\n6. Click "Assign"\n\nThe quiz appears immediately in the athlete\'s Pop Quiz page as "Pending." They\'ll see any notes or due date you set.\n\nYou can assign the same quiz to multiple athletes at once!',
+    actions: [{ label: 'Manage Quizzes', href: '/admin/questionnaires' }],
     role: 'coach',
   },
   {
-    keywords: ['check-in responses', 'quiz responses', 'see quiz results', 'athlete quiz score', 'view responses', 'check-in results'],
-    title: 'Viewing Check-In Responses',
-    response: 'To see how athletes did on a check-in:\n\n1. Go to Admin → Check-Ins\n2. Find the check-in\n3. Click the chart icon (Responses)\n4. You\'ll see each assigned athlete with:\n   • Completion status (Pending or Completed)\n   • Score (e.g., "4/5 — 80%")\n   • Date completed\n\nThis helps you track which athletes are keeping up with their assessments and how well they understand game concepts.',
-    actions: [{ label: 'View Check-Ins', href: '/admin/questionnaires' }],
+    keywords: ['quiz responses', 'see quiz results', 'athlete quiz score', 'view responses', 'quiz results'],
+    title: 'Viewing Quiz Responses',
+    response: 'To see how athletes did on a pop quiz:\n\n1. Go to Admin → Pop Quiz\n2. Find the quiz\n3. Click the chart icon (Responses)\n4. You\'ll see each assigned athlete with:\n   • Completion status (Pending or Completed)\n   • Score (e.g., "4/5 — 80%")\n   • Date completed\n\nThis helps you track which athletes are keeping up with their game knowledge and how well they understand concepts.',
+    actions: [{ label: 'View Quizzes', href: '/admin/questionnaires' }],
     role: 'coach',
   },
 
@@ -696,9 +696,9 @@ function findBestMatch(query: string, userRole: RoleFilter): KBEntry {
   // Role-aware fallback
   const roleName = userRole === 'coach' ? 'Coach' : userRole === 'athlete' ? 'Athlete' : 'Guest'
   const roleHint = userRole === 'coach'
-    ? '\n• Manage courses, drills & check-ins\n• Edit availability & bookings\n• Book sessions for athletes'
+    ? '\n• Manage courses, drills & pop quizzes\n• Edit availability & bookings\n• Book sessions for athletes'
     : userRole === 'athlete'
-    ? '\n• Your courses & video lessons\n• Check-ins & quizzes\n• Drills, progress & achievements'
+    ? '\n• Your courses & video lessons\n• Pop Quiz — test your game IQ\n• Drills, progress & achievements'
     : '\n• How to join PSP.Pro\n• Training programs & pricing\n• What to expect'
 
   return {
@@ -707,9 +707,9 @@ function findBestMatch(query: string, userRole: RoleFilter): KBEntry {
     response: `I can help you with:\n\n• Training programs & what sports we offer\n• Pricing, packages & how to save\n• Booking sessions step by step${roleHint}\n• Account settings & login help\n• Location, hours & contact info\n• Walk through any page on the site\n\nTry asking "walk me through the pricing page" or "how do I book a session" — I know every page inside and out!`,
     actions: QUICK_ACTIONS.map(a => ({ label: a.label, href: a.href })),
     followUp: userRole === 'coach'
-      ? ['How do I create a course?', 'How do I assign check-ins?', 'How do I book for an athlete?']
+      ? ['How do I create a course?', 'How do I create a quiz?', 'How do I book for an athlete?']
       : userRole === 'athlete'
-      ? ['How do courses work?', 'What are check-ins?', 'How do I book a session?']
+      ? ['How do courses work?', 'What is Pop Quiz?', 'How do I book a session?']
       : ['What sports do you train?', 'How do I get started?', 'Tell me about pricing'],
   }
 }
@@ -754,9 +754,9 @@ export function PSPAssistant() {
       setHasGreeted(true)
       const name = profile?.full_name?.split(' ')[0] || ''
       const greeting = userRole === 'coach'
-        ? `Hey${name ? ` ${name}` : ''}, Coach! I'm your PSP.Pro guide. Ask me anything about managing courses, bookings, drills, check-ins, or how any coach tool works!`
+        ? `Hey${name ? ` ${name}` : ''}, Coach! I'm your PSP.Pro guide. Ask me anything about managing courses, bookings, drills, pop quizzes, or how any coach tool works!`
         : userRole === 'athlete'
-        ? `Hey${name ? ` ${name}` : ''}! I'm your PSP.Pro guide. Ask me about your courses, drills, sessions, check-ins, progress, or anything else — I know every page inside and out!`
+        ? `Hey${name ? ` ${name}` : ''}! I'm your PSP.Pro guide. Ask me about your courses, drills, sessions, pop quizzes, progress, or anything else — I know every page inside and out!`
         : 'Hey there! I\'m your PSP.Pro guide. I know every page on this site inside and out — ask me anything about training, pricing, booking, or how to join the team!'
       setMessages([
         {

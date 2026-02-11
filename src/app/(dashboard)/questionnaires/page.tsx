@@ -144,10 +144,10 @@ export default function QuestionnairesPage() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
-          <span className="text-gradient-orange">Check-Ins</span>
+          Pop <span className="text-gradient-orange">Quiz</span>
         </h1>
         <p className="text-cyan-800 dark:text-white text-lg">
-          Complete questionnaires assigned by your coaches
+          Test your game knowledge with quizzes from your coaches
         </p>
       </div>
 
@@ -297,10 +297,10 @@ export default function QuestionnairesPage() {
           <div className="glass-card p-12 text-center">
             <ClipboardCheck className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
-              {filter === 'pending' ? 'All caught up!' : 'No check-ins yet'}
+              {filter === 'pending' ? 'All caught up!' : 'No quizzes yet'}
             </h3>
             <p className="text-cyan-700 dark:text-white/70">
-              {filter === 'pending' ? "You've completed all your questionnaires." : 'Your coaches will assign check-ins here.'}
+              {filter === 'pending' ? "You've aced all your quizzes!" : 'Your coaches will assign pop quizzes here.'}
             </p>
           </div>
         ) : (

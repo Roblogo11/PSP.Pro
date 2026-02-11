@@ -208,15 +208,15 @@ export default function AdminQuestionnairesPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
-            <span className="text-gradient-orange">Questionnaires</span>
+            Pop <span className="text-gradient-orange">Quiz</span>
           </h1>
           <p className="text-cyan-800 dark:text-white text-lg">
-            Create and assign check-ins for your athletes
+            Create and assign quizzes to test your athletes' game IQ
           </p>
         </div>
         <button onClick={openNewForm} className="btn-primary flex items-center gap-2 text-sm">
           <Plus className="w-4 h-4" />
-          New Questionnaire
+          New Quiz
         </button>
       </div>
 
@@ -224,9 +224,9 @@ export default function AdminQuestionnairesPage() {
       {questionnaires.length === 0 ? (
         <div className="glass-card p-12 text-center">
           <ClipboardCheck className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No questionnaires yet</h3>
-          <p className="text-cyan-700 dark:text-white/70 mb-4">Create true/false check-ins for your athletes.</p>
-          <button onClick={openNewForm} className="btn-primary">Create Questionnaire</button>
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No quizzes yet</h3>
+          <p className="text-cyan-700 dark:text-white/70 mb-4">Create true/false pop quizzes to test your athletes' game knowledge.</p>
+          <button onClick={openNewForm} className="btn-primary">Create Quiz</button>
         </div>
       ) : (
         <div className="space-y-4">
@@ -274,7 +274,7 @@ export default function AdminQuestionnairesPage() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                {editingQ ? 'Edit Questionnaire' : 'New Questionnaire'}
+                {editingQ ? 'Edit Quiz' : 'New Quiz'}
               </h3>
               <button onClick={() => setShowForm(false)} className="p-2 hover:bg-cyan-50/50 rounded-lg">
                 <X className="w-5 h-5 text-cyan-800 dark:text-white" />
@@ -289,7 +289,7 @@ export default function AdminQuestionnairesPage() {
                   required
                   value={formData.title}
                   onChange={e => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="e.g. Pre-Game Mental Check-In"
+                  placeholder="e.g. Pre-Game Knowledge Quiz"
                   className={inputClasses}
                 />
               </div>
@@ -401,7 +401,7 @@ export default function AdminQuestionnairesPage() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Assign Questionnaire</h3>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Assign Quiz</h3>
                 <p className="text-sm text-cyan-800 dark:text-white/70">{assignQ.title}</p>
               </div>
               <button onClick={() => setAssignQ(null)} className="p-2 hover:bg-cyan-50/50 rounded-lg">

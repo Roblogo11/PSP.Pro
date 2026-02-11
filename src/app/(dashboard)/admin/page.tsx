@@ -346,6 +346,32 @@ export default function AdminDashboard() {
         />
       </div>
 
+      {/* Quick Actions */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Quick Actions</h2>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+          {quickActions.map((action) => {
+            const Icon = action.icon
+            return (
+              <Link key={action.title} href={action.href}>
+                <div className="glass-card-hover p-4 md:p-6 group cursor-pointer h-full">
+                  <div
+                    className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center mb-3 md:mb-4 group-hover:shadow-glow-orange transition-all"
+                    style={{ backgroundColor: `${action.color}20`, borderColor: `${action.color}40` }}
+                  >
+                    <Icon className="w-5 h-5 md:w-6 md:h-6" style={{ color: action.color }} />
+                  </div>
+                  <h3 className="text-sm md:text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-orange transition-colors">
+                    {action.title}
+                  </h3>
+                  <p className="text-xs md:text-sm text-cyan-700 dark:text-white">{action.description}</p>
+                </div>
+              </Link>
+            )
+          })}
+        </div>
+      </div>
+
       {/* Quick Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-8">
         <div className="command-panel-active">
@@ -477,32 +503,6 @@ export default function AdminDashboard() {
             })}
           </div>
         )}
-      </div>
-
-      {/* Quick Actions */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-          {quickActions.map((action) => {
-            const Icon = action.icon
-            return (
-              <Link key={action.title} href={action.href}>
-                <div className="glass-card-hover p-4 md:p-6 group cursor-pointer h-full">
-                  <div
-                    className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center mb-3 md:mb-4 group-hover:shadow-glow-orange transition-all"
-                    style={{ backgroundColor: `${action.color}20`, borderColor: `${action.color}40` }}
-                  >
-                    <Icon className="w-5 h-5 md:w-6 md:h-6" style={{ color: action.color }} />
-                  </div>
-                  <h3 className="text-sm md:text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-orange transition-colors">
-                    {action.title}
-                  </h3>
-                  <p className="text-xs md:text-sm text-cyan-700 dark:text-white">{action.description}</p>
-                </div>
-              </Link>
-            )
-          })}
-        </div>
       </div>
 
       {/* Admin Sections */}

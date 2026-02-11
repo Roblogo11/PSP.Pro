@@ -47,7 +47,7 @@ const athleteNavItems: NavItem[] = [
   { label: 'My Lessons', mobileLabel: 'Lessons', href: '/sessions', icon: Calendar, color: 'text-purple-400', badgeKey: 'upcomingSessions' },
   { label: 'Buy Lessons', mobileLabel: 'Buy', href: '/booking', icon: Clock, color: 'text-blue-400', badgeKey: 'sessionsRemaining' },
   { label: 'Courses', mobileLabel: 'Courses', href: '/courses', icon: BookOpen, color: 'text-pink-400' },
-  { label: 'Check-Ins', mobileLabel: 'Check-In', href: '/questionnaires', icon: ClipboardCheck, color: 'text-emerald-400' },
+  { label: 'Pop Quiz', mobileLabel: 'Quiz', href: '/questionnaires', icon: ClipboardCheck, color: 'text-emerald-400' },
   { label: 'Settings', mobileLabel: 'Settings', href: '/settings', icon: Settings, color: 'text-cyan-600' },
 ]
 
@@ -58,7 +58,7 @@ const adminNavItems: NavItem[] = [
   { label: 'Manage Athletes', mobileLabel: 'Athletes', href: '/admin/athletes', icon: Users, color: 'text-cyan-400' },
   { label: 'Drills', mobileLabel: 'Drills', href: '/admin/drills', icon: Dumbbell, color: 'text-purple-400' },
   { label: 'Courses', mobileLabel: 'Courses', href: '/admin/courses', icon: BookOpen, color: 'text-pink-400' },
-  { label: 'Check-Ins', mobileLabel: 'Check-Ins', href: '/admin/questionnaires', icon: ClipboardCheck, color: 'text-emerald-400' },
+  { label: 'Pop Quiz', mobileLabel: 'Quiz', href: '/admin/questionnaires', icon: ClipboardCheck, color: 'text-emerald-400' },
   { label: 'Media', mobileLabel: 'Media', href: '/admin/media', icon: Video, color: 'text-pink-400' },
   { label: 'Analytics', mobileLabel: 'Stats', href: '/admin/analytics', icon: BarChart3, color: 'text-green-400' },
 ]

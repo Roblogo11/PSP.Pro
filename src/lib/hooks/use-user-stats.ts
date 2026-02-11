@@ -7,6 +7,7 @@ export interface UserStats {
   totalSessions: number
   avgVelocity: number | null
   totalDrills: number
+  totalQuizzes: number
   currentStreak: number
   nextSession: Date | null
   recentVelocities: Array<{ date: Date; value: number }>
@@ -49,6 +50,13 @@ export function useUserStats(userId: string | undefined) {
           .from('drill_completions')
           .select('*', { count: 'exact', head: true })
           .eq('user_id', userId)
+
+        // Fetch completed quiz count
+        const { count: quizzesCount } = await supabase
+          .from('assigned_questionnaires')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', userId)
+          .eq('completed', true)
 
         // Fetch recent velocity data (last 10 sessions)
         const { data: velocityData } = await supabase
@@ -113,6 +121,7 @@ export function useUserStats(userId: string | undefined) {
           totalSessions: sessionsCount || 0,
           avgVelocity,
           totalDrills: drillsCount || 0,
+          totalQuizzes: quizzesCount || 0,
           currentStreak,
           nextSession: nextSessionDate,
           recentVelocities,
