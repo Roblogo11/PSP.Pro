@@ -21,6 +21,8 @@ import {
   BarChart3,
   Shield,
   DollarSign,
+  BookOpen,
+  ClipboardCheck,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
@@ -44,6 +46,8 @@ const athleteNavItems: NavItem[] = [
   { label: 'Achievements', mobileLabel: 'Awards', href: '/achievements', icon: Trophy, color: 'text-yellow-400' },
   { label: 'My Lessons', mobileLabel: 'Lessons', href: '/sessions', icon: Calendar, color: 'text-purple-400', badgeKey: 'upcomingSessions' },
   { label: 'Buy Lessons', mobileLabel: 'Buy', href: '/booking', icon: Clock, color: 'text-blue-400', badgeKey: 'sessionsRemaining' },
+  { label: 'Courses', mobileLabel: 'Courses', href: '/courses', icon: BookOpen, color: 'text-pink-400' },
+  { label: 'Check-Ins', mobileLabel: 'Check-In', href: '/questionnaires', icon: ClipboardCheck, color: 'text-emerald-400' },
   { label: 'Settings', mobileLabel: 'Settings', href: '/settings', icon: Settings, color: 'text-cyan-600' },
 ]
 
@@ -53,6 +57,8 @@ const adminNavItems: NavItem[] = [
   { label: 'Edit Lessons', mobileLabel: 'Lessons', href: '/admin/services', icon: DollarSign, color: 'text-green-400' },
   { label: 'Manage Drills', mobileLabel: 'Drills', href: '/admin/drills', icon: Dumbbell, color: 'text-purple-400' },
   { label: 'Manage Athletes', mobileLabel: 'Athletes', href: '/admin/athletes', icon: Users, color: 'text-cyan-400' },
+  { label: 'Manage Courses', mobileLabel: 'Courses', href: '/admin/courses', icon: BookOpen, color: 'text-pink-400' },
+  { label: 'Questionnaires', mobileLabel: 'Quizzes', href: '/admin/questionnaires', icon: ClipboardCheck, color: 'text-emerald-400' },
   { label: 'Media', mobileLabel: 'Media', href: '/admin/media', icon: Video, color: 'text-pink-400' },
   { label: 'Analytics', mobileLabel: 'Stats', href: '/admin/analytics', icon: BarChart3, color: 'text-green-400' },
 ]
