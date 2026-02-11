@@ -411,7 +411,11 @@
         <span class="step-num">5</span>
         <span class="step-text">Click <strong>"Create Slot"</strong>. Athletes will now see this slot when booking.</span>
       </div>
-      <div class="tip">You can only see and manage your own slots. Delete a slot anytime if plans change.</div>
+      <div class="step">
+        <span class="step-num">6</span>
+        <span class="step-text">To <strong>edit an existing slot</strong>, click the pencil icon — change time, location, service, or max bookings.</span>
+      </div>
+      <div class="tip">You can only see and manage your own slots. If a slot has active bookings, you'll see a warning before editing. Delete a slot anytime if plans change.</div>
     </div>
   </div>
 
@@ -480,9 +484,17 @@
       </div>
       <div class="step">
         <span class="step-num">6</span>
-        <span class="step-text">For confirmed bookings: click <strong>Mark Complete</strong> after the session.</span>
+        <span class="step-text">For confirmed bookings: click <strong>Complete</strong> or <strong>No-Show</strong> after the session.</span>
       </div>
-      <div class="tip">Status colors — Green: confirmed, Yellow: pending, Red: cancelled, Blue: completed.</div>
+      <div class="step">
+        <span class="step-num">7</span>
+        <span class="step-text">Click <strong>"Edit"</strong> on any booking to add <strong>coach notes</strong> or <strong>internal notes</strong>, and change status.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">8</span>
+        <span class="step-text">Click <strong>"Book for Athlete"</strong> to schedule a lesson on behalf of an athlete — choose service, time slot, and payment method (on-site, use package, or complimentary).</span>
+      </div>
+      <div class="tip">Status colors — Green: confirmed, Yellow: pending, Red: cancelled, Blue: completed, Gray: no-show.</div>
     </div>
   </div>
 
@@ -517,6 +529,134 @@
     </div>
   </div>
 
+  <div class="section" data-roles="coach admin">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">🎬</span>
+      <span class="section-title">Create Video Courses</span>
+      <span class="section-badge badge-coach">Coach</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Go to <span class="path">Admin → Courses</span>.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text">Click <strong>"New Course"</strong> — enter a title, description, and thumbnail URL.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text">Choose <strong>pricing</strong>: Free, One-Time ($), or Monthly ($/mo). Check "Included for Members" if it comes with membership.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">Click <strong>"Lessons"</strong> on a course to add videos — paste YouTube/Vimeo URLs, add titles, and reorder with arrows.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <span class="step-text">Mark lessons as <strong>"Free Preview"</strong> so non-enrolled athletes can sample the content.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">6</span>
+        <span class="step-text">Click <strong>"Enroll"</strong> to add specific athletes to a course.</span>
+      </div>
+      <div class="tip">For the Drill Bank: create a free course with "Included for Members" checked, then add all 28 drill videos as lessons.</div>
+    </div>
+  </div>
+
+  <div class="section" data-roles="coach admin">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">✅</span>
+      <span class="section-title">Create & Assign Check-Ins</span>
+      <span class="section-badge badge-coach">Coach</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Go to <span class="path">Admin → Check-Ins</span>.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text">Click <strong>"New Questionnaire"</strong> — add a title, category, and description.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text"><strong>Add questions</strong> — type a question, toggle <strong>T/F</strong> for the correct answer, then click <strong>+</strong> to add.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">Click <strong>"Assign"</strong> to send it to athletes — pick athletes, set an optional due date, and add notes.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <span class="step-text">Click <strong>"Responses"</strong> to see who completed it and their scores.</span>
+      </div>
+      <div class="tip">Great for pre-game mental check-ins, recovery assessments, or knowledge quizzes after video courses.</div>
+    </div>
+  </div>
+
+  <div class="section" data-roles="player">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">🎬</span>
+      <span class="section-title">Video Courses</span>
+      <span class="section-badge badge-player">Player</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Click <span class="path">Courses</span> in the sidebar to see available video courses.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text">Filter by <strong>All / My Courses / Available</strong> to find what you're looking for.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text">Click <strong>"Enroll Free"</strong> on free courses, or <strong>"View Details"</strong> on paid ones.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">Watch lessons in order — the video player loads right on the page.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <span class="step-text">Click <strong>"Mark Complete"</strong> after watching each lesson — your progress bar tracks how far you've gotten.</span>
+      </div>
+      <div class="tip">Courses pick up where you left off — it auto-selects your next incomplete lesson.</div>
+    </div>
+  </div>
+
+  <div class="section" data-roles="player">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">✅</span>
+      <span class="section-title">Check-Ins (Questionnaires)</span>
+      <span class="section-badge badge-player">Player</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Click <span class="path">Check-Ins</span> in the sidebar to see quizzes your coach has assigned.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text">Filter by <strong>All / Pending / Completed</strong>.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text">Tap a check-in to start — answer <strong>True or False</strong> for each question.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">Click <strong>"Submit Answers"</strong> when done — you'll see your score and which answers were right or wrong.</span>
+      </div>
+      <div class="tip">You can review your answers anytime by clicking a completed check-in.</div>
+    </div>
+  </div>
+
   <!-- ==================== ADMIN SECTIONS ==================== -->
 
   <div class="section" data-roles="admin">
@@ -542,13 +682,14 @@
 
       <table class="quick-ref">
         <tr><th>Section</th><th>What It Does</th></tr>
-        <tr><td>Athletes</td><td>View, add, edit athlete profiles & stats</td></tr>
-        <tr><td>Bookings</td><td>Calendar + table view, confirm/cancel/complete</td></tr>
-        <tr><td>Services</td><td>Create/edit training services & pricing</td></tr>
-        <tr><td>Availability</td><td>Set time slots athletes can book</td></tr>
-        <tr><td>Drills</td><td>Create, edit, bulk import training drills</td></tr>
-        <tr><td>Analytics</td><td>Performance insights & revenue tracking</td></tr>
+        <tr><td>Confirm Lessons</td><td>Booking calendar + table, confirm/cancel/complete/no-show, book for athlete</td></tr>
+        <tr><td>Edit Lessons</td><td>Create/edit services, pricing & video URLs</td></tr>
+        <tr><td>Manage Athletes</td><td>View, add, edit athlete profiles & stats</td></tr>
+        <tr><td>Drills</td><td>Create, edit, bulk import, assign drills</td></tr>
+        <tr><td>Courses</td><td>Build video course bundles, manage lessons, enroll athletes</td></tr>
+        <tr><td>Check-Ins</td><td>Create T/F questionnaires, assign to athletes, view scores</td></tr>
         <tr><td>Media</td><td>Upload & manage videos and images</td></tr>
+        <tr><td>Analytics</td><td>Performance insights & revenue tracking</td></tr>
       </table>
     </div>
   </div>
@@ -575,10 +716,14 @@
       </div>
       <div class="step">
         <span class="step-num">4</span>
-        <span class="step-text">Toggle services <strong>active/inactive</strong> — inactive services won't appear in booking.</span>
+        <span class="step-text">Add a <strong>Video URL</strong> to any service (YouTube, Vimeo, or direct link) — a "Watch" button will appear on the Pricing page and booking flow.</span>
       </div>
       <div class="step">
         <span class="step-num">5</span>
+        <span class="step-text">Toggle services <strong>active/inactive</strong> — inactive services won't appear in booking.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">6</span>
         <span class="step-text">The <strong>Pricing page</strong> updates automatically — it pulls directly from your services in the database.</span>
       </div>
       <div class="tip">Training packages (5/10/20-packs) are managed separately in the training_packages table. Contact your developer to update package pricing.</div>
@@ -744,17 +889,21 @@
         <tr><td>/sessions</td><td>Players</td><td>View & manage sessions</td></tr>
         <tr><td>/booking</td><td>Players</td><td>Book new sessions</td></tr>
         <tr><td>/drills</td><td>Players</td><td>Browse & complete drills</td></tr>
+        <tr><td>/courses</td><td>Players</td><td>Video course library</td></tr>
+        <tr><td>/questionnaires</td><td>Players</td><td>Check-ins & quizzes</td></tr>
         <tr><td>/progress</td><td>Players</td><td>Performance charts & milestones</td></tr>
         <tr><td>/achievements</td><td>Players</td><td>Unlockable badges</td></tr>
         <tr><td>/settings</td><td>All</td><td>Profile & preferences</td></tr>
         <tr><td>/admin</td><td>Staff</td><td>Admin control center</td></tr>
-        <tr><td>/admin/athletes</td><td>Staff</td><td>Manage athletes</td></tr>
-        <tr><td>/admin/bookings</td><td>Staff</td><td>Booking calendar & table</td></tr>
-        <tr><td>/admin/services</td><td>Admin</td><td>Services & pricing</td></tr>
-        <tr><td>/admin/availability</td><td>Staff</td><td>Set open time slots</td></tr>
+        <tr><td>/admin/bookings</td><td>Staff</td><td>Booking calendar, edit, book for athlete</td></tr>
+        <tr><td>/admin/services</td><td>Staff</td><td>Services, pricing & video URLs</td></tr>
+        <tr><td>/admin/availability</td><td>Staff</td><td>Set & edit open time slots</td></tr>
+        <tr><td>/admin/athletes</td><td>Staff</td><td>Manage athlete profiles</td></tr>
         <tr><td>/admin/drills</td><td>Staff</td><td>Create & manage drills</td></tr>
-        <tr><td>/admin/analytics</td><td>Staff</td><td>Insights & reports</td></tr>
+        <tr><td>/admin/courses</td><td>Staff</td><td>Build video courses & enroll athletes</td></tr>
+        <tr><td>/admin/questionnaires</td><td>Staff</td><td>Create & assign check-ins</td></tr>
         <tr><td>/admin/media</td><td>Staff</td><td>Upload videos & images</td></tr>
+        <tr><td>/admin/analytics</td><td>Staff</td><td>Insights & reports</td></tr>
         <tr><td>/pricing</td><td>Public</td><td>View services & packages</td></tr>
         <tr><td>/faq</td><td>Public</td><td>Common questions</td></tr>
         <tr><td>/contact</td><td>Public</td><td>Get in touch</td></tr>

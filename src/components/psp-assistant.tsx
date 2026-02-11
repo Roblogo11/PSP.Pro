@@ -5,14 +5,18 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { MessageSquare, X, Send, Sparkles } from 'lucide-react'
+import { useUserRole } from '@/lib/hooks/use-user-role'
 
 // ─── Types ───────────────────────────────────────────────────
+type RoleFilter = 'all' | 'athlete' | 'coach' | 'visitor'
+
 interface KBEntry {
   keywords: string[]
   title: string
   response: string
   actions: { label: string; href: string }[]
   followUp?: string[]
+  role?: RoleFilter // which role sees this entry (default: 'all')
 }
 
 // ─── Quick Actions ───────────────────────────────────────────
@@ -77,6 +81,26 @@ const PAGE_SUGGESTIONS: Record<string, { label: string; query: string }[]> = {
     { label: 'Walk me through the admin panel', query: 'walk me through admin' },
     { label: 'How do I add an athlete?', query: 'add athlete' },
     { label: 'How do I manage bookings?', query: 'manage bookings' },
+  ],
+  '/courses': [
+    { label: 'How do courses work?', query: 'how do courses work' },
+    { label: 'How do I enroll?', query: 'enroll in course' },
+    { label: 'How do I track progress?', query: 'course progress' },
+  ],
+  '/questionnaires': [
+    { label: 'What are check-ins?', query: 'what are check-ins' },
+    { label: 'How do I complete a quiz?', query: 'complete check-in' },
+    { label: 'Can I see my score?', query: 'check-in score' },
+  ],
+  '/admin/courses': [
+    { label: 'How do I create a course?', query: 'create course' },
+    { label: 'How do I add lessons?', query: 'add lessons to course' },
+    { label: 'How do I enroll athletes?', query: 'enroll athletes in course' },
+  ],
+  '/admin/questionnaires': [
+    { label: 'How do I create a check-in?', query: 'create check-in' },
+    { label: 'How do I assign to athletes?', query: 'assign check-in' },
+    { label: 'How do I see responses?', query: 'check-in responses' },
   ],
   '/blog': [
     { label: 'What topics do you cover?', query: 'blog topics' },
@@ -272,9 +296,9 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['dashboard', 'locker', 'my account', 'my profile', 'athlete locker', 'home dashboard'],
     title: 'Your Athlete Locker',
-    response: 'The Athlete Locker is your personal dashboard — it adapts to your role:\n\n🏅 Athletes see:\n• Quick Stats — total sessions, avg velocity, drills completed, streak\n• Velocity Chart — your velocity trend over time\n• Next Session — upcoming booked session\n• Assigned Drills — coach-assigned training videos\n• Achievements — badges you\'ve earned\n• Recent Activity — last sessions and completed drills\n• Game Stats Review — log and review game performance\n\n🧑‍🏫 Coaches/Admins see:\n• Quick Stats — total athletes, upcoming sessions, drills in library, pending bookings\n• Upcoming Sessions — next 4 sessions with athlete names and status\n• Quick Links — fast access to Athletes, Bookings, Drills, Analytics, Media, Settings\n• Link to full Admin Panel for complete control\n\nAll data updates in real-time!',
+    response: 'The Athlete Locker is your personal dashboard — it adapts to your role:\n\n🏅 Athletes see:\n• Quick Stats — total sessions, avg velocity, drills completed, streak\n• Velocity Chart — your velocity trend over time\n• Next Session — upcoming booked session\n• Assigned Drills — coach-assigned training videos\n• Courses — video course library with progress tracking\n• Check-Ins — quizzes assigned by your coach\n• Achievements — badges you\'ve earned\n• Recent Activity — last sessions and completed drills\n• Game Stats Review — log and review game performance\n\n🧑‍🏫 Coaches/Admins see:\n• Quick Stats — total athletes, upcoming sessions, drills in library, pending bookings\n• Upcoming Sessions — next 4 sessions with athlete names and status\n• Quick Links — fast access to Athletes, Bookings, Drills, Courses, Check-Ins, Analytics, Media, Settings\n• Link to full Admin Panel for complete control\n\nAll data updates in real-time!',
     actions: [{ label: 'Go to Dashboard', href: '/locker' }],
-    followUp: ['How do drills work?', 'What are achievements?', 'How do I book a session?'],
+    followUp: ['How do courses work?', 'What are check-ins?', 'How do I book a session?'],
   },
 
   // ── DASHBOARD WALKTHROUGH ──
@@ -354,17 +378,19 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['admin', 'coach dashboard', 'manage athletes', 'coach view', 'admin panel', 'coach panel'],
     title: 'Coach/Admin Dashboard',
-    response: 'The Admin panel is your coaching command center:\n\n📊 Quick Stats — Active athletes, upcoming sessions, total drills, pending bookings\n\n🏋️ Core Tools:\n• Athletes — View, create, edit, delete athlete profiles\n• Bookings — Confirm, cancel, or complete bookings\n• Drills — Create drills, import from YouTube, assign to athletes\n• Services — Manage training types, pricing, and descriptions\n• Availability — Set your coaching schedule and time slots\n• Analytics — View performance data and trends\n\n💰 Stripe Settings (Admin only):\n• Toggle test/live payment mode\n• View payment status\n\nCoaches see only their athletes and sessions. Admins see everything.',
+    response: 'The Admin panel is your coaching command center:\n\n📊 Quick Stats — Active athletes, upcoming sessions, total drills, pending bookings\n\n🏋️ Core Tools:\n• Confirm Lessons — Confirm, edit, cancel bookings + book for athletes\n• Edit Lessons — Manage services, pricing, and video URLs\n• Athletes — View, create, edit, delete athlete profiles\n• Drills — Create drills, import from YouTube, assign to athletes\n• Courses — Build multi-lesson video courses, enroll athletes\n• Check-Ins — Create T/F quizzes, assign to athletes, view scores\n• Availability — Set your coaching schedule + edit slots\n• Media — Upload and manage content\n• Analytics — View performance data and trends\n\n💰 Stripe Settings (Admin only):\n• Toggle test/live payment mode\n• View payment status\n\nCoaches see only their athletes and sessions. Admins see everything.',
     actions: [{ label: 'Go to Admin', href: '/admin' }],
-    followUp: ['How do I add an athlete?', 'How do I manage bookings?', 'How do I create drills?'],
+    followUp: ['How do I create a course?', 'How do I create check-ins?', 'How do I book for an athlete?'],
+    role: 'coach',
   },
 
   // ── ADMIN WALKTHROUGH ──
   {
     keywords: ['walk me through admin', 'admin walkthrough', 'admin page'],
     title: 'Admin Panel Walkthrough',
-    response: 'The Admin Control Center layout:\n\nTop — Welcome banner with quick start tips and your name.\n\nStats Row — 4 cards: Total Athletes, Upcoming Sessions, Training Drills, Pending Bookings (shows notification badge if any pending).\n\nUpcoming Sessions — List of your next 5 sessions with athlete name, date, time, and status.\n\nQuick Actions — 4 cards: Create Drill, Schedule Session, Add Athlete, Upload Video.\n\nPlatform Management — 6 cards linking to: Athlete Management, Courses, Session Schedule, Content Library, Analytics, Platform Settings.\n\nStripe Section (admin only) — Shows test/live payment mode with toggle switch.\n\nUse the sidebar to navigate between all management pages.',
+    response: 'The Admin Control Center layout:\n\nTop — Welcome banner with quick start tips and your name.\n\nStats Row — 4 cards: Total Athletes, Upcoming Sessions, Training Drills, Pending Bookings (shows notification badge if any pending).\n\nUpcoming Sessions — List of your next 5 sessions with athlete name, date, time, and status.\n\nQuick Actions — 4 cards: Create Drill, Schedule Session, Add Athlete, Upload Video.\n\nPlatform Management — 6 cards linking to: Athlete Management, Courses, Session Schedule, Content Library, Analytics, Platform Settings.\n\nStripe Section (admin only) — Shows test/live payment mode with toggle switch.\n\nSidebar navigation:\n• Confirm Lessons — manage all bookings, edit notes, book for athletes\n• Edit Lessons — manage services and pricing\n• Athletes — athlete profiles and management\n• Drills — create and assign training videos\n• Courses — build multi-lesson video courses\n• Check-Ins — create and assign T/F quizzes\n• Media — upload and manage content\n• Analytics — performance data and trends',
     actions: [{ label: 'Go to Admin', href: '/admin' }],
+    role: 'coach',
   },
 
   // ── ADD ATHLETE (COACH) ──
@@ -373,38 +399,45 @@ const KNOWLEDGE_BASE: KBEntry[] = [
     title: 'Adding Athletes (Coach Tool)',
     response: 'To add an athlete:\n\n1. Go to Admin → Athletes\n2. Click "Add Athlete" button\n3. Fill in the form:\n   • Full Name (required)\n   • Email (required — used for their login)\n   • Sport dropdown\n   • Age\n   • Parent/Guardian info (if under 18)\n4. Click "Create"\n\nThe athlete gets an account with a temporary password. They can log in immediately and set their own password via the Reset Password flow.\n\nYou can also edit or delete athletes from the Athletes management page.',
     actions: [{ label: 'Athlete Management', href: '/admin/athletes' }],
+    role: 'coach',
   },
 
   // ── MANAGE BOOKINGS (COACH) ──
   {
     keywords: ['manage bookings', 'confirm booking', 'pending booking', 'booking management', 'approve booking'],
     title: 'Managing Bookings (Coach Tool)',
-    response: 'The Bookings page shows all session bookings:\n\nFilter tabs: All, Pending, Confirmed, Cancelled\n\nStats row: Total Bookings, Confirmed, Pending, Revenue\n\nEach booking shows: Athlete name, service, date/time, coach, amount, payment status, booking status.\n\nActions you can take:\n• Pending → "Confirm" or "Cancel"\n• Confirmed → "Mark Complete" (after session)\n• View payment status (paid, pending, failed)\n\nCoaches see only their own bookings. Admins see all.',
-    actions: [{ label: 'View Bookings', href: '/admin/bookings' }],
+    response: 'The Confirm Lessons page shows all session bookings:\n\nFilter tabs: All, Pending, Confirmed, Cancelled\n\nStats row: Total Bookings, Confirmed, Pending, Revenue\n\nEach booking shows: Athlete name, service, date/time, coach, amount, payment status, booking status.\n\nActions you can take:\n• Pending → "Confirm" or "Cancel"\n• Confirmed → "Mark Complete" or "No Show" (after session)\n• Edit → Add coach notes, internal notes, update status\n• "Book for Athlete" → Create a booking on behalf of any athlete (on-site payment, use package, or complimentary)\n\nCoaches see only their own bookings. Admins see all.',
+    actions: [{ label: 'Confirm Lessons', href: '/admin/bookings' }],
+    followUp: ['How do I book for an athlete?', 'How do I edit a booking?'],
+    role: 'coach',
   },
 
   // ── CREATE DRILLS (COACH) ──
   {
-    keywords: ['create drill', 'make drill', 'new drill', 'assign drill', 'assign course', 'import drill'],
+    keywords: ['create drill', 'make drill', 'new drill', 'assign drill', 'import drill'],
     title: 'Creating & Assigning Drills',
     response: 'Creating drills:\n1. Go to Admin → Drills\n2. Click "Create Drill"\n3. Add title, description, YouTube video URL, category, difficulty, duration, and tags\n4. Save the drill\n\nBulk import:\n• Go to Admin → Drills → Import\n• Upload a CSV with columns: title, description, youtube_url, category, difficulty, duration, tags, equipment, focus_areas\n• Download the template for the correct format\n\nAssigning drills:\n• Go to Admin → Athletes → select an athlete\n• Click "Assign Drills" and pick from your library\n• Assigned drills show up on the athlete\'s dashboard',
     actions: [{ label: 'Drill Management', href: '/admin/drills' }],
+    role: 'coach',
   },
 
   // ── SERVICES (COACH) ──
   {
     keywords: ['service', 'services', 'manage services', 'training type', 'add service', 'edit service'],
     title: 'Managing Services',
-    response: 'Services are the training types athletes book:\n\nFrom Admin → Services you can:\n• Create new services with name, description, price, duration, category, and max participants\n• Edit existing services\n• Toggle active/inactive (inactive services don\'t show on booking or pricing)\n• Link a Stripe price ID for payment processing\n\nCategories:\n• Individual — 1-on-1 sessions\n• Group — multi-athlete sessions\n• Package — session bundles (5/10/20-pack)\n• Specialty — video analysis, recovery, etc.\n\nPrices are in cents (e.g., 7500 = $75.00). These prices flow directly to the public Pricing page and the Booking page — update once, changes appear everywhere.',
-    actions: [{ label: 'Manage Services', href: '/admin/services' }],
+    response: 'Services are the training types athletes book:\n\nFrom Admin → Edit Lessons you can:\n• Create new services with name, description, price, duration, category, and max participants\n• Edit existing services\n• Add a Video URL (YouTube/Vimeo) — shows a play button on the Pricing page\n• Toggle active/inactive (inactive services don\'t show on booking or pricing)\n• Link a Stripe price ID for payment processing\n\nCategories:\n• Individual — 1-on-1 sessions\n• Group — multi-athlete sessions\n• Package — session bundles (5/10/20-pack)\n• Specialty — video analysis, recovery, etc.\n\nPrices are in cents (e.g., 7500 = $75.00). These prices flow directly to the public Pricing page and the Booking page — update once, changes appear everywhere.',
+    actions: [{ label: 'Edit Lessons', href: '/admin/services' }],
+    role: 'coach',
   },
 
   // ── AVAILABILITY (COACH) ──
   {
     keywords: ['availability', 'schedule', 'time slot', 'set hours', 'coaching hours', 'available times'],
     title: 'Setting Availability',
-    response: 'From Admin → Availability, you set when you\'re available for bookings:\n\n• Select a date\n• Add time slots (start time, end time)\n• Link a service to each slot\n• Set max bookings per slot (usually 1 for 1-on-1, more for groups)\n\nAthletes will only see time slots you\'ve marked as available when they go to book. Slots are automatically marked unavailable once booked.\n\nDefault hours: Mon-Fri 3PM-9PM, Saturday 9AM-5PM.',
+    response: 'From Admin → Availability, you set when you\'re available for bookings:\n\n• Select a date\n• Add time slots (start time, end time)\n• Link a service to each slot\n• Set max bookings per slot (usually 1 for 1-on-1, more for groups)\n\nEditing slots:\n• Click the pencil icon to edit a slot\'s time, location, or service\n• Slots with active bookings show a warning before editing\n• Delete empty slots you no longer need\n\nAthletes will only see time slots you\'ve marked as available when they go to book. Slots are automatically marked unavailable once booked.\n\nDefault hours: Mon-Fri 3PM-9PM, Saturday 9AM-5PM.',
     actions: [{ label: 'Set Availability', href: '/admin/availability' }],
+    followUp: ['How do I edit a slot?', 'How do I manage bookings?'],
+    role: 'coach',
   },
 
   // ── PRICING PAGE WALKTHROUGH ──
@@ -475,21 +508,155 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['navigate', 'menu', 'sidebar', 'where do i find', 'how to find', 'navigation', 'pages', 'sitemap'],
     title: 'Site Navigation',
-    response: 'Here\'s how to get around PSP.Pro:\n\nPublic Pages (no login needed):\n• Home, About, Pricing, Blog, Contact, FAQ, Join the Team\n\nThe navigation adapts based on your login status:\n• Logged out — sidebar shows a "Login" link at the bottom\n• Logged in — sidebar shows "Your Dashboard" at the top (goes to /locker for athletes, /admin for coaches)\n\nAthlete Pages (login + membership required):\n• Athlete Locker — your main dashboard\n• Sessions — view/manage your bookings\n• Membership Training — browse training videos\n• Progress — track improvement\n• Achievements — earned badges\n• Buy Lessons — book new sessions\n• Settings — account management\n\nCoach/Admin Pages:\n• Admin Panel — main command center\n• Athletes, Bookings, Drills, Services, Availability, Analytics\n\nCTAs across the site also adapt — members see "Book Now" buttons while visitors see "Join the Team."',
+    response: 'Here\'s how to get around PSP.Pro:\n\nPublic Pages (no login needed):\n• Home, About, Pricing, Blog, Contact, FAQ, Join the Team\n\nThe navigation adapts based on your login status:\n• Logged out — sidebar shows a "Login" link at the bottom\n• Logged in — sidebar shows "Your Dashboard" at the top (goes to /locker for athletes, /admin for coaches)\n\nAthlete Pages (login + membership required):\n• Athlete Locker — your main dashboard\n• Sessions — view/manage your bookings\n• Membership Training — browse training videos\n• Courses — video course library\n• Check-Ins — quizzes and assessments\n• Progress — track improvement\n• Achievements — earned badges\n• Buy Lessons — book new sessions\n• Settings — account management\n\nCoach/Admin Pages:\n• Admin Panel — main command center\n• Confirm Lessons — manage bookings\n• Edit Lessons — manage services & pricing\n• Athletes, Drills, Courses, Check-Ins, Media, Analytics\n\nCTAs across the site also adapt — members see "Book Now" buttons while visitors see "Join the Team."',
     actions: [{ label: 'Home', href: '/' }, { label: 'Dashboard', href: '/locker' }],
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── VIDEO COURSES (ATHLETE) ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['course', 'courses', 'video course', 'video lesson', 'watch course', 'enroll', 'enroll in course', 'how do courses work', 'course library', 'training course'],
+    title: 'Video Courses',
+    response: 'Video Courses are multi-lesson training programs you can watch at your own pace!\n\nHow it works:\n1. Go to Courses from your sidebar\n2. Browse the course library — filter by All, My Courses, or Available\n3. Each course card shows the title, lesson count, price, and your progress\n4. Free courses — click "Enroll Free" to get instant access\n5. Start watching! Lessons play right on the page\n\nProgress tracking:\n• A progress bar shows how many lessons you\'ve completed\n• Click "Mark Complete" after watching each lesson\n• Your progress is saved — come back anytime and pick up where you left off\n• The course auto-selects your first incomplete lesson\n\nSome courses include free preview lessons you can watch before enrolling!',
+    actions: [{ label: 'Browse Courses', href: '/courses' }],
+    followUp: ['How do I track my progress?', 'What are check-ins?', 'How do drills work?'],
+    role: 'athlete',
+  },
+  {
+    keywords: ['course progress', 'lesson complete', 'mark lesson complete', 'course percentage', 'how far am i'],
+    title: 'Course Progress',
+    response: 'Your course progress is tracked automatically:\n\n• Each course shows a progress bar (e.g., "3 of 8 lessons completed — 38%")\n• After watching a lesson, click "Mark Complete" to log it\n• You can also un-mark a lesson if you want to re-watch it\n• The course library shows your progress percentage on each enrolled course card\n• When you return to a course, it auto-selects your next incomplete lesson\n\nCompleting all lessons in a course = 100% — keep going!',
+    actions: [{ label: 'My Courses', href: '/courses' }],
+    role: 'athlete',
+  },
+
+  // ── VIDEO COURSES (COACH) ──
+  {
+    keywords: ['create course', 'make course', 'new course', 'build course', 'manage courses', 'course builder', 'add lessons to course'],
+    title: 'Creating Video Courses (Coach Tool)',
+    response: 'You can create multi-lesson video courses for your athletes:\n\n1. Go to Admin → Courses\n2. Click "Create Course"\n3. Fill in: title, description, thumbnail URL, category\n4. Set pricing: Free, One-Time ($), or Monthly ($/mo)\n5. Toggle "Included in Membership" if members get it free\n6. Save the course\n\nAdding lessons:\n1. Click "Lessons" (film icon) on the course card\n2. Add lessons with: title, video URL (YouTube/Vimeo/direct), description\n3. Toggle "Preview" to let non-enrolled users watch that lesson for free\n4. Use up/down arrows to reorder lessons\n\nEnrolling athletes:\n1. Click "Enroll" (users icon) on the course card\n2. Check the athletes you want to enroll\n3. Click "Save Enrollments" — they get instant access\n\nExample: Create a "Drill Bank" course with 28 videos, set it to Free, and toggle "Included in Membership."',
+    actions: [{ label: 'Manage Courses', href: '/admin/courses' }],
+    followUp: ['How do I enroll athletes?', 'How do I create check-ins?', 'How do drills work?'],
+    role: 'coach',
+  },
+  {
+    keywords: ['enroll athletes', 'enroll athletes in course', 'give access to course', 'add athletes to course'],
+    title: 'Enrolling Athletes in Courses',
+    response: 'To enroll athletes in a course:\n\n1. Go to Admin → Courses\n2. Find the course card\n3. Click the person+ icon (Enroll Athletes)\n4. Check the box next to each athlete you want to enroll\n5. Click "Save Enrollments"\n\nAthletes get instant access — the course shows up in their Courses page right away.\n\nYou can also see the enrollment count on each course card.\n\nFor free courses, athletes can also self-enroll by clicking "Enroll Free" on the course library page.',
+    actions: [{ label: 'Manage Courses', href: '/admin/courses' }],
+    role: 'coach',
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── CHECK-INS / QUESTIONNAIRES (ATHLETE) ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['check-in', 'check in', 'checkin', 'questionnaire', 'quiz', 'what are check-ins', 'complete check-in', 'assessment'],
+    title: 'Check-Ins & Quizzes',
+    response: 'Check-Ins are quick True/False quizzes your coach assigns to you!\n\nHow it works:\n1. Go to Check-Ins from your sidebar\n2. You\'ll see stat cards for pending and completed check-ins\n3. Filter by All, Pending, or Completed\n4. Click "Take Quiz" on any pending check-in\n5. Answer each question True or False\n6. Click "Submit" when done\n\nAfter submitting:\n• You\'ll see your score right away (e.g., "4 of 5 correct — 80%")\n• Each question shows if you got it right (green) or wrong (red)\n• Your coach can also see your responses and score\n\nCheck-ins help coaches track your game knowledge and mental development!',
+    actions: [{ label: 'My Check-Ins', href: '/questionnaires' }],
+    followUp: ['Can I see my score?', 'How do courses work?', 'How do drills work?'],
+    role: 'athlete',
+  },
+  {
+    keywords: ['check-in score', 'quiz score', 'quiz result', 'my score', 'how did i do', 'see results'],
+    title: 'Check-In Scores',
+    response: 'After completing a check-in quiz:\n\n• Your score is shown immediately (e.g., "4 of 5 correct — 80%")\n• Green = correct answer, Red = wrong answer\n• You can click any completed check-in to review your answers\n• Your coach also sees your score and individual responses\n\nCompleted check-ins move to the "Completed" tab. You can always go back and review them!',
+    actions: [{ label: 'View Check-Ins', href: '/questionnaires' }],
+    role: 'athlete',
+  },
+
+  // ── CHECK-INS / QUESTIONNAIRES (COACH) ──
+  {
+    keywords: ['create check-in', 'make questionnaire', 'create questionnaire', 'build quiz', 'create quiz', 'new check-in', 'manage check-ins'],
+    title: 'Creating Check-Ins (Coach Tool)',
+    response: 'You can create True/False quizzes and assign them to athletes:\n\n1. Go to Admin → Check-Ins\n2. Click "Create Check-In"\n3. Add a title and optional description\n4. Build your questions:\n   • Type each question\n   • Set the correct answer (True or False)\n   • Click "Add" to add it to the list\n5. Save the check-in\n\nExample questions:\n• "A pitcher should follow through toward the target" → True\n• "You should swing at every pitch" → False\n\nYou can add as many questions as you want. Edit or delete check-ins anytime from the management page.',
+    actions: [{ label: 'Manage Check-Ins', href: '/admin/questionnaires' }],
+    followUp: ['How do I assign check-ins?', 'How do I see responses?', 'How do I create a course?'],
+    role: 'coach',
+  },
+  {
+    keywords: ['assign check-in', 'assign questionnaire', 'assign quiz', 'send quiz', 'give quiz to athlete'],
+    title: 'Assigning Check-Ins to Athletes',
+    response: 'To assign a check-in quiz to athletes:\n\n1. Go to Admin → Check-Ins\n2. Find the check-in you want to assign\n3. Click the person+ icon (Assign)\n4. Check the box next to each athlete\n5. Optionally set a due date and add notes\n6. Click "Assign"\n\nThe check-in appears immediately in the athlete\'s Check-Ins page as "Pending." They\'ll see any notes or due date you set.\n\nYou can assign the same check-in to multiple athletes at once!',
+    actions: [{ label: 'Manage Check-Ins', href: '/admin/questionnaires' }],
+    role: 'coach',
+  },
+  {
+    keywords: ['check-in responses', 'quiz responses', 'see quiz results', 'athlete quiz score', 'view responses', 'check-in results'],
+    title: 'Viewing Check-In Responses',
+    response: 'To see how athletes did on a check-in:\n\n1. Go to Admin → Check-Ins\n2. Find the check-in\n3. Click the chart icon (Responses)\n4. You\'ll see each assigned athlete with:\n   • Completion status (Pending or Completed)\n   • Score (e.g., "4/5 — 80%")\n   • Date completed\n\nThis helps you track which athletes are keeping up with their assessments and how well they understand game concepts.',
+    actions: [{ label: 'View Check-Ins', href: '/admin/questionnaires' }],
+    role: 'coach',
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── EDIT AVAILABILITY (COACH) ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['edit availability', 'edit slot', 'change slot', 'modify availability', 'update time slot', 'edit time slot'],
+    title: 'Editing Availability Slots',
+    response: 'You can edit your existing availability slots:\n\n1. Go to Admin → Availability\n2. Find the slot you want to change\n3. Click the pencil (Edit) icon\n4. Update the start time, end time, location, or linked service\n5. Save changes\n\nImportant: If a slot has active bookings, you\'ll see a warning. Changing the time will affect booked athletes — consider reaching out to let them know.\n\nYou can also delete slots that have no bookings. Slots with active bookings cannot be deleted (cancel the bookings first).',
+    actions: [{ label: 'Manage Availability', href: '/admin/availability' }],
+    role: 'coach',
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── EDIT BOOKINGS (COACH) ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['edit booking', 'booking notes', 'coach notes', 'internal notes', 'add notes to booking', 'no show', 'no-show', 'mark no show'],
+    title: 'Editing Bookings & Notes',
+    response: 'You can edit bookings to add notes and update status:\n\n1. Go to Admin → Confirm Lessons\n2. Find the booking\n3. Click the pencil (Edit) icon\n4. You can update:\n   • Coach Notes — visible to the athlete (e.g., "Great session! Work on follow-through")\n   • Internal Notes — private, only coaches/admins see these\n   • Status — Confirm, Complete, or Cancel the booking\n5. Save changes\n\nNo-Shows:\n• Click the "No Show" button on any confirmed booking\n• This marks the session as missed and tracks attendance\n\nAll notes are saved and visible when you review past sessions.',
+    actions: [{ label: 'Manage Bookings', href: '/admin/bookings' }],
+    role: 'coach',
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── BOOK FOR ATHLETE (COACH) ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['book for athlete', 'create booking', 'admin booking', 'book on behalf', 'on-site payment', 'on site payment', 'comp booking', 'complimentary booking', 'manual booking'],
+    title: 'Booking for an Athlete (Coach Tool)',
+    response: 'You can create bookings on behalf of athletes:\n\n1. Go to Admin → Confirm Lessons\n2. Click "Book for Athlete"\n3. Select the athlete from the dropdown\n4. Pick an available slot (date + time)\n5. Select the service/training type\n6. Choose a payment method:\n   • Stripe — normal online payment\n   • On-Site — athlete pays in person (cash/card at facility)\n   • Use Package — deducts from athlete\'s active session pack\n   • Complimentary — free session (no charge)\n7. Add optional notes\n8. Click "Create Booking"\n\nThis is great for walk-ins, phone bookings, or giving comp sessions!',
+    actions: [{ label: 'Create Booking', href: '/admin/bookings' }],
+    followUp: ['How do I edit a booking?', 'How do I manage availability?'],
+    role: 'coach',
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── VIDEO ON SERVICES (COACH) ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['video url', 'service video', 'add video to service', 'training video on service', 'demo video'],
+    title: 'Adding Videos to Services',
+    response: 'You can attach a demo/promo video to any training service:\n\n1. Go to Admin → Edit Lessons (Services)\n2. Click Edit on any service\n3. Scroll to the "Video URL" field\n4. Paste a YouTube, Vimeo, or direct video link\n5. Save\n\nThe video will appear on the Pricing page as a play button. Athletes (and visitors) can watch it to see what the training looks like before booking!\n\nThis is great for showcasing your training style and helping athletes choose the right service.',
+    actions: [{ label: 'Edit Services', href: '/admin/services' }],
+    role: 'coach',
   },
 ]
 
 // ─── Smart Matching Engine ───────────────────────────────────
-function findBestMatch(query: string): KBEntry {
+function findBestMatch(query: string, userRole: RoleFilter): KBEntry {
   const q = query.toLowerCase().trim()
   const queryWords = q.split(/\s+/)
+
+  // Filter entries by role: show 'all' + entries matching user's role
+  const eligible = KNOWLEDGE_BASE.filter(entry => {
+    const r = entry.role || 'all'
+    if (r === 'all') return true
+    if (r === userRole) return true
+    // Coaches also see athlete content (they need to explain features to players)
+    if (userRole === 'coach' && r === 'athlete') return true
+    return false
+  })
 
   // Score each entry
   let bestScore = 0
   let bestMatch: KBEntry | null = null
 
-  for (const entry of KNOWLEDGE_BASE) {
+  for (const entry of eligible) {
     let score = 0
 
     for (const keyword of entry.keywords) {
@@ -511,6 +678,11 @@ function findBestMatch(query: string): KBEntry {
       score += 1
     }
 
+    // Boost entries matching the user's exact role
+    if (entry.role === userRole) {
+      score += 1
+    }
+
     if (score > bestScore) {
       bestScore = score
       bestMatch = entry
@@ -521,13 +693,24 @@ function findBestMatch(query: string): KBEntry {
     return bestMatch
   }
 
-  // Fallback
+  // Role-aware fallback
+  const roleName = userRole === 'coach' ? 'Coach' : userRole === 'athlete' ? 'Athlete' : 'Guest'
+  const roleHint = userRole === 'coach'
+    ? '\n• Manage courses, drills & check-ins\n• Edit availability & bookings\n• Book sessions for athletes'
+    : userRole === 'athlete'
+    ? '\n• Your courses & video lessons\n• Check-ins & quizzes\n• Drills, progress & achievements'
+    : '\n• How to join PSP.Pro\n• Training programs & pricing\n• What to expect'
+
   return {
     keywords: [],
-    title: 'How Can I Help?',
-    response: 'I can help you with:\n\n• Training programs & what sports we offer\n• Pricing, packages & how to save\n• Booking sessions step by step\n• Your dashboard, drills & progress\n• Account settings & login help\n• Coach/admin tools\n• Location, hours & contact info\n• Walk through any page on the site\n\nTry asking "walk me through the pricing page" or "how do I book a session" — I know every page inside and out!',
+    title: `How Can I Help, ${roleName}?`,
+    response: `I can help you with:\n\n• Training programs & what sports we offer\n• Pricing, packages & how to save\n• Booking sessions step by step${roleHint}\n• Account settings & login help\n• Location, hours & contact info\n• Walk through any page on the site\n\nTry asking "walk me through the pricing page" or "how do I book a session" — I know every page inside and out!`,
     actions: QUICK_ACTIONS.map(a => ({ label: a.label, href: a.href })),
-    followUp: ['What sports do you train?', 'How do I get started?', 'Tell me about pricing'],
+    followUp: userRole === 'coach'
+      ? ['How do I create a course?', 'How do I assign check-ins?', 'How do I book for an athlete?']
+      : userRole === 'athlete'
+      ? ['How do courses work?', 'What are check-ins?', 'How do I book a session?']
+      : ['What sports do you train?', 'How do I get started?', 'Tell me about pricing'],
   }
 }
 
@@ -540,6 +723,10 @@ export function PSPAssistant() {
   const inputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
+  const { profile, isCoach, isAdmin } = useUserRole()
+
+  // Determine role filter for KB matching
+  const userRole: RoleFilter = isCoach || isAdmin ? 'coach' : profile ? 'athlete' : 'visitor'
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -565,11 +752,17 @@ export function PSPAssistant() {
     setIsOpen(true)
     if (!hasGreeted) {
       setHasGreeted(true)
+      const name = profile?.full_name?.split(' ')[0] || ''
+      const greeting = userRole === 'coach'
+        ? `Hey${name ? ` ${name}` : ''}, Coach! I'm your PSP.Pro guide. Ask me anything about managing courses, bookings, drills, check-ins, or how any coach tool works!`
+        : userRole === 'athlete'
+        ? `Hey${name ? ` ${name}` : ''}! I'm your PSP.Pro guide. Ask me about your courses, drills, sessions, check-ins, progress, or anything else — I know every page inside and out!`
+        : 'Hey there! I\'m your PSP.Pro guide. I know every page on this site inside and out — ask me anything about training, pricing, booking, or how to join the team!'
       setMessages([
         {
           id: 'greeting',
           type: 'assistant',
-          content: 'Hey there! I\'m your PSP.Pro guide. I know every page on this site inside and out — ask me anything about training, pricing, booking, your dashboard, or how any feature works!',
+          content: greeting,
         },
       ])
     }
@@ -584,7 +777,7 @@ export function PSPAssistant() {
       content: query.trim(),
     }
 
-    const match = findBestMatch(query.trim())
+    const match = findBestMatch(query.trim(), userRole)
     const assistantMessage = {
       id: `assistant-${Date.now()}`,
       type: 'assistant',
