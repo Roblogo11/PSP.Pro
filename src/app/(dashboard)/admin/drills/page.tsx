@@ -420,14 +420,14 @@ export default function DrillsManagementPage() {
         <div>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
             {isAdmin ? (
-              <>Drill <span className="text-gradient-orange">Bank</span> <span className="text-cyan-800 dark:text-white text-2xl">(All)</span></>
+              <>Manage <span className="text-gradient-orange">Drills</span></>
             ) : (
               <>My <span className="text-gradient-orange">Drills</span></>
             )}
           </h1>
           <p className="text-cyan-800 dark:text-white text-lg">
             {isAdmin
-              ? 'Manage all training drills from all coaches'
+              ? 'Create and manage online training drills for members'
               : 'Create and manage your training drills'
             }
           </p>

@@ -231,29 +231,32 @@ export default function AthletesManagementPage() {
 
     setIsProcessing(true)
     try {
-      const supabase = createClient()
-
-      const { error } = await supabase
-        .from('profiles')
-        .update({
+      // Use API route with adminClient to bypass profiles RLS (id = auth.uid())
+      const response = await fetch('/api/admin/update-athlete', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          athlete_id: selectedAthlete.id,
           full_name: formData.full_name,
           athlete_type: formData.athlete_type,
-          age: formData.age ? parseInt(formData.age) : null,
-        })
-        .eq('id', selectedAthlete.id)
+          age: formData.age,
+        }),
+      })
 
-      if (error) throw error
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || 'Failed to update athlete')
 
       // Reload athletes
+      const supabase = createClient()
       const { data: athletesData } = await supabase
         .from('profiles')
-        .select('id, full_name, avatar_url, athlete_type, age, role, created_at, updated_at')
+        .select('id, full_name, email, avatar_url, athlete_type, age, role, created_at, updated_at')
         .eq('role', 'athlete')
         .order('full_name')
 
       const athletesWithSchema = (athletesData || []).map(athlete => ({
         ...athlete,
-        email: null
+        email: athlete.email || null
       }))
       setAthletes(athletesWithSchema)
       setEditModalOpen(false)

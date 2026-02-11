@@ -29,6 +29,7 @@ import { ThemeToggle } from '@/components/ui/theme-toggle'
 
 interface NavItem {
   label: string
+  subLabel?: string
   mobileLabel: string
   href: string
   icon: React.ElementType
@@ -38,7 +39,7 @@ interface NavItem {
 
 const athleteNavItems: NavItem[] = [
   { label: 'Dashboard', mobileLabel: 'Home', href: '/locker', icon: LayoutDashboard, color: 'text-orange-400' },
-  { label: 'Members Training', mobileLabel: 'Train', href: '/drills', icon: Dumbbell, color: 'text-cyan-400' },
+  { label: 'Drills', subLabel: '(members only)', mobileLabel: 'Drills', href: '/drills', icon: Dumbbell, color: 'text-cyan-400' },
   { label: 'My Lessons', mobileLabel: 'Lessons', href: '/sessions', icon: Calendar, color: 'text-purple-400', badgeKey: 'upcomingSessions' },
   { label: 'Progress', mobileLabel: 'Progress', href: '/progress', icon: TrendingUp, color: 'text-green-400' },
   { label: 'Achievements', mobileLabel: 'Awards', href: '/achievements', icon: Trophy, color: 'text-yellow-400' },
@@ -49,7 +50,7 @@ const athleteNavItems: NavItem[] = [
 const adminNavItems: NavItem[] = [
   { label: 'Admin Home', mobileLabel: 'Admin', href: '/admin', icon: Shield, color: 'text-red-400' },
   { label: 'Edit Lessons', mobileLabel: 'Lessons', href: '/admin/services', icon: DollarSign, color: 'text-green-400' },
-  { label: 'Courses', mobileLabel: 'Courses', href: '/admin/drills', icon: Dumbbell, color: 'text-purple-400' },
+  { label: 'Manage Drills', mobileLabel: 'Drills', href: '/admin/drills', icon: Dumbbell, color: 'text-purple-400' },
   { label: 'Manage Athletes', mobileLabel: 'Athletes', href: '/admin/athletes', icon: Users, color: 'text-cyan-400' },
   { label: 'Confirm Trainings', mobileLabel: 'Confirm', href: '/admin/bookings', icon: Calendar, color: 'text-blue-400', badgeKey: 'pendingBookings' },
   { label: 'Media', mobileLabel: 'Media', href: '/admin/media', icon: Video, color: 'text-pink-400' },
@@ -284,6 +285,7 @@ export function Sidebar() {
                         className="font-medium whitespace-nowrap overflow-hidden"
                       >
                         {item.label}
+                        {item.subLabel && <span className="text-[10px] ml-1 opacity-60 font-normal">{item.subLabel}</span>}
                       </motion.span>
                     )}
                   </AnimatePresence>
@@ -348,6 +350,7 @@ export function Sidebar() {
                             className="font-medium whitespace-nowrap overflow-hidden"
                           >
                             {item.label}
+                            {item.subLabel && <span className="text-[10px] ml-1 opacity-60 font-normal">{item.subLabel}</span>}
                           </motion.span>
                         )}
                       </AnimatePresence>
