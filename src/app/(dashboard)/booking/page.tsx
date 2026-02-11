@@ -67,7 +67,16 @@ export default function BookingPage() {
     const { data, error } = await supabase
       .from('available_slots')
       .select(`
-        *,
+        id,
+        coach_id,
+        service_id,
+        slot_date,
+        start_time,
+        end_time,
+        location,
+        max_bookings,
+        current_bookings,
+        is_available,
         coach:coach_id (full_name)
       `)
       .eq('slot_date', dateString)
@@ -77,7 +86,7 @@ export default function BookingPage() {
     if (data) {
       const slotsWithCoachNames = data.map(slot => ({
         ...slot,
-        coach_name: slot.coach?.full_name || 'Coach',
+        coach_name: (slot.coach as any)?.full_name || 'Coach',
       }))
       setTimeSlots(slotsWithCoachNames)
     }

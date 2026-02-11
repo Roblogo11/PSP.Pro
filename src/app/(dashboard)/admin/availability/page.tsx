@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Plus, Calendar, Clock, MapPin, Trash2, Loader2 } from 'lucide-react'
+import { Plus, Calendar, MapPin, Trash2, Loader2, Repeat } from 'lucide-react'
 
 export default function AvailabilityManagementPage() {
   const supabase = createClient()
@@ -15,7 +15,7 @@ export default function AvailabilityManagementPage() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
 
-  // Form state
+  // Form state — one form, with optional repeat
   const [formData, setFormData] = useState({
     serviceId: '',
     slotDate: '',
@@ -23,6 +23,9 @@ export default function AvailabilityManagementPage() {
     endTime: '',
     location: '',
     maxBookings: 1,
+    repeat: false,
+    repeatFrequency: 'weekly' as 'weekly' | 'monthly',
+    repeatCount: 4,
   })
 
   useEffect(() => {
@@ -33,7 +36,6 @@ export default function AvailabilityManagementPage() {
     init()
   }, [])
 
-  // Fetch slots when user is loaded
   useEffect(() => {
     if (user) {
       fetchSlots()
@@ -48,12 +50,15 @@ export default function AvailabilityManagementPage() {
   }
 
   const fetchServices = async () => {
-    const { data } = await supabase
+    const { data, error: fetchError } = await supabase
       .from('services')
-      .select('*')
+      .select('id, name')
       .eq('is_active', true)
       .order('name')
 
+    if (fetchError) {
+      console.error('Failed to fetch services:', fetchError)
+    }
     if (data) setServices(data)
   }
 
@@ -65,11 +70,19 @@ export default function AvailabilityManagementPage() {
       return
     }
 
-    // SECURITY FIX: Only fetch current user's slots
-    const { data } = await supabase
+    const { data, error: fetchError } = await supabase
       .from('available_slots')
       .select(`
-        *,
+        id,
+        coach_id,
+        service_id,
+        slot_date,
+        start_time,
+        end_time,
+        location,
+        max_bookings,
+        current_bookings,
+        is_available,
         service:service_id (name),
         coach:coach_id (full_name)
       `)
@@ -78,6 +91,10 @@ export default function AvailabilityManagementPage() {
       .order('slot_date', { ascending: true })
       .order('start_time', { ascending: true })
 
+    if (fetchError) {
+      console.error('Failed to fetch slots:', fetchError)
+      setError(`Failed to load time slots: ${fetchError.message}`)
+    }
     if (data) setSlots(data)
     setLoading(false)
   }
@@ -94,17 +111,32 @@ export default function AvailabilityManagementPage() {
 
     setSubmitting(true)
 
-    const { error: insertError } = await supabase.from('available_slots').insert({
-      coach_id: user.id,
-      service_id: formData.serviceId || null,
-      slot_date: formData.slotDate,
-      start_time: formData.startTime,
-      end_time: formData.endTime,
-      location: formData.location,
-      max_bookings: formData.maxBookings,
-      current_bookings: 0,
-      is_available: true,
-    })
+    // Build slot(s) to insert
+    const slotsToInsert: any[] = []
+    const baseDate = new Date(formData.slotDate + 'T00:00:00')
+    const totalSlots = formData.repeat ? formData.repeatCount : 1
+    const intervalDays = formData.repeatFrequency === 'weekly' ? 7 : 30
+
+    for (let i = 0; i < totalSlots; i++) {
+      const slotDate = new Date(baseDate)
+      slotDate.setDate(slotDate.getDate() + i * intervalDays)
+
+      slotsToInsert.push({
+        coach_id: user.id,
+        service_id: formData.serviceId || null,
+        slot_date: slotDate.toISOString().split('T')[0],
+        start_time: formData.startTime,
+        end_time: formData.endTime,
+        location: formData.location,
+        max_bookings: formData.maxBookings,
+        current_bookings: 0,
+        is_available: true,
+      })
+    }
+
+    const { error: insertError } = await supabase
+      .from('available_slots')
+      .insert(slotsToInsert)
 
     setSubmitting(false)
 
@@ -114,7 +146,12 @@ export default function AvailabilityManagementPage() {
       return
     }
 
-    setSuccess('Time slot created successfully!')
+    const count = slotsToInsert.length
+    setSuccess(
+      count === 1
+        ? 'Time slot created!'
+        : `${count} ${formData.repeatFrequency} time slots created!`
+    )
     setFormData({
       serviceId: '',
       slotDate: '',
@@ -122,10 +159,13 @@ export default function AvailabilityManagementPage() {
       endTime: '',
       location: '',
       maxBookings: 1,
+      repeat: false,
+      repeatFrequency: 'weekly',
+      repeatCount: 4,
     })
     setShowForm(false)
     fetchSlots()
-    setTimeout(() => setSuccess(null), 3000)
+    setTimeout(() => setSuccess(null), 4000)
   }
 
   const deleteSlot = async (slotId: string) => {
@@ -165,6 +205,8 @@ export default function AvailabilityManagementPage() {
     return `${formattedHour}:${minutes} ${ampm}`
   }
 
+  const inputClasses = "w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+
   return (
     <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8">
       {/* Header */}
@@ -196,7 +238,7 @@ export default function AvailabilityManagementPage() {
       {/* Add Slot Form */}
       {showForm && (
         <div className="command-panel p-6 mb-6">
-          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Create New Time Slot</h3>
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Create Time Slot</h3>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Service */}
             <div>
@@ -206,7 +248,7 @@ export default function AvailabilityManagementPage() {
               <select
                 value={formData.serviceId}
                 onChange={e => setFormData({ ...formData, serviceId: e.target.value })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className={inputClasses}
               >
                 <option value="">Any Service</option>
                 {services.map(service => (
@@ -226,7 +268,7 @@ export default function AvailabilityManagementPage() {
                 value={formData.slotDate}
                 onChange={e => setFormData({ ...formData, slotDate: e.target.value })}
                 min={new Date().toISOString().split('T')[0]}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className={inputClasses}
               />
             </div>
 
@@ -238,7 +280,7 @@ export default function AvailabilityManagementPage() {
                 required
                 value={formData.startTime}
                 onChange={e => setFormData({ ...formData, startTime: e.target.value })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className={inputClasses}
               />
             </div>
 
@@ -250,7 +292,7 @@ export default function AvailabilityManagementPage() {
                 required
                 value={formData.endTime}
                 onChange={e => setFormData({ ...formData, endTime: e.target.value })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className={inputClasses}
               />
             </div>
 
@@ -263,7 +305,7 @@ export default function AvailabilityManagementPage() {
                 value={formData.location}
                 onChange={e => setFormData({ ...formData, location: e.target.value })}
                 placeholder="e.g., PSP Training Facility"
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className={inputClasses + " placeholder-cyan-600"}
               />
             </div>
 
@@ -277,8 +319,52 @@ export default function AvailabilityManagementPage() {
                 max="20"
                 value={formData.maxBookings}
                 onChange={e => setFormData({ ...formData, maxBookings: parseInt(e.target.value) })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className={inputClasses}
               />
+            </div>
+
+            {/* Repeat Toggle */}
+            <div className="md:col-span-2 p-4 rounded-xl bg-cyan-50/30 border border-cyan-200/20">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.repeat}
+                  onChange={e => setFormData({ ...formData, repeat: e.target.checked })}
+                  className="w-5 h-5 rounded border-cyan-300 text-cyan focus:ring-cyan/50"
+                />
+                <Repeat className="w-4 h-4 text-cyan" />
+                <span className="text-sm font-medium text-slate-900 dark:text-white">
+                  Repeat this slot
+                </span>
+              </label>
+
+              {formData.repeat && (
+                <div className="mt-3 flex flex-wrap items-center gap-3 ml-8">
+                  <select
+                    value={formData.repeatFrequency}
+                    onChange={e => setFormData({ ...formData, repeatFrequency: e.target.value as 'weekly' | 'monthly' })}
+                    className="px-3 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                  >
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                  </select>
+                  <label className="text-sm text-cyan-800 dark:text-white">for</label>
+                  <select
+                    value={formData.repeatCount}
+                    onChange={e => setFormData({ ...formData, repeatCount: parseInt(e.target.value) })}
+                    className="px-3 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                  >
+                    {[2, 3, 4, 6, 8, 10, 12].map(n => (
+                      <option key={n} value={n}>{n} {formData.repeatFrequency === 'weekly' ? 'weeks' : 'months'}</option>
+                    ))}
+                  </select>
+                  {formData.slotDate && (
+                    <span className="text-xs text-cyan-800 dark:text-white/70">
+                      ({formData.repeatCount} slots total)
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Buttons */}
@@ -292,7 +378,12 @@ export default function AvailabilityManagementPage() {
               </button>
               <button type="submit" className="btn-primary flex items-center gap-2" disabled={submitting}>
                 {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
-                {submitting ? 'Creating...' : 'Create Slot'}
+                {submitting
+                  ? 'Creating...'
+                  : formData.repeat
+                    ? `Create ${formData.repeatCount} Slots`
+                    : 'Create Slot'
+                }
               </button>
             </div>
           </form>

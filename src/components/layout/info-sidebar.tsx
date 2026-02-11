@@ -45,8 +45,8 @@ const navItems: NavItem[] = [
 // Dashboard shortcuts shown in the mobile nav for logged-in users
 const dashboardShortcuts = [
   { label: 'Home', href: '/locker', icon: LayoutDashboard },
-  { label: 'Train', href: '/drills', icon: Dumbbell },
-  { label: 'Sessions', href: '/sessions', icon: Calendar },
+  { label: 'Training', href: '/drills', icon: Dumbbell },
+  { label: 'My Lessons', href: '/sessions', icon: Calendar },
   { label: 'Progress', href: '/progress', icon: TrendingUp },
 ]
 
