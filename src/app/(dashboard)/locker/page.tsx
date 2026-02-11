@@ -337,7 +337,7 @@ export default function AthleteLockerPage() {
                 Open Full Admin Panel
               </p>
               <p className="text-sm text-cyan-700 dark:text-white mt-1">
-                Manage services, availability, Stripe settings, and more
+                Lesson Builder, availability, Stripe settings, and more
               </p>
             </div>
           </Link>

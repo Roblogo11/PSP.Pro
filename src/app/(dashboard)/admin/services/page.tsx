@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Plus, Edit2, Trash2, DollarSign, Clock, Users, Save, X, Star, StarOff, ImageIcon, CheckCircle, Video } from 'lucide-react'
+import { Plus, Edit2, Trash2, DollarSign, Clock, Users, Save, X, Star, StarOff, ImageIcon, CheckCircle, Video, Check, AlertTriangle } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
 import { getCategoryColor as getCatColor, isGroupCategory, DEFAULT_CATEGORIES } from '@/lib/category-colors'
@@ -30,6 +30,13 @@ export default function ServicesManagerPage() {
   const [loading, setLoading] = useState(true)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [showNewForm, setShowNewForm] = useState(false)
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
+
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type })
+    setTimeout(() => setToast(null), 3000)
+  }
+
   const [formData, setFormData] = useState<Partial<Service>>({
     name: '',
     description: '',
@@ -126,6 +133,7 @@ export default function ServicesManagerPage() {
       }
 
       // Reload and reset
+      const wasEditing = !!editingId
       await loadServices()
       setEditingId(null)
       setShowNewForm(false)
@@ -139,17 +147,33 @@ export default function ServicesManagerPage() {
         is_active: true,
         stripe_price_id: '',
       })
+      showToast(wasEditing ? 'Lesson type updated!' : 'Lesson type created!')
     } catch (err: any) {
       console.error('Error saving service:', err)
-      alert(`Error: ${err.message}`)
+      showToast(`Error: ${err.message}`, 'error')
     }
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this service?')) return
-
     try {
       const supabase = createClient()
+
+      // Check for active bookings linked to this service
+      const { count, error: countError } = await supabase
+        .from('bookings')
+        .select('*', { count: 'exact', head: true })
+        .eq('service_id', id)
+        .in('status', ['confirmed', 'pending'])
+
+      if (countError) throw countError
+
+      if (count && count > 0) {
+        showToast(`Cannot delete — ${count} active booking${count > 1 ? 's' : ''} use this lesson type. Cancel or complete them first.`, 'error')
+        return
+      }
+
+      if (!confirm('Are you sure you want to delete this lesson type?')) return
+
       const { error } = await supabase
         .from('services')
         .delete()
@@ -157,9 +181,10 @@ export default function ServicesManagerPage() {
 
       if (error) throw error
       await loadServices()
+      showToast('Lesson type deleted')
     } catch (err: any) {
       console.error('Error deleting service:', err)
-      alert(`Error: ${err.message}`)
+      showToast(`Error: ${err.message}`, 'error')
     }
   }
 
@@ -260,19 +285,31 @@ export default function ServicesManagerPage() {
 
   return (
     <div className="px-3 py-4 md:p-6 max-w-7xl mx-auto">
+      {/* Toast */}
+      {toast && (
+        <div className={`fixed top-4 right-4 z-50 flex items-center gap-2 px-4 py-3 rounded-xl shadow-lg border transition-all animate-in slide-in-from-top-2 ${
+          toast.type === 'success'
+            ? 'bg-green-500/20 border-green-500/50 text-green-400'
+            : 'bg-red-500/20 border-red-500/50 text-red-400'
+        }`}>
+          {toast.type === 'success' ? <Check className="w-5 h-5" /> : <AlertTriangle className="w-5 h-5" />}
+          <span className="font-medium text-sm">{toast.message}</span>
+        </div>
+      )}
+
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-2">Services Manager</h1>
-            <p className="text-cyan-700 dark:text-white">Manage training sessions, packages, and pricing</p>
+            <h1 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-2">Lesson <span className="text-gradient-orange">Builder</span></h1>
+            <p className="text-cyan-700 dark:text-white">Create and manage your lesson types, pricing, and categories</p>
           </div>
           <button
             onClick={handleNew}
             className="btn-primary flex items-center gap-2"
           >
             <Plus className="w-5 h-5" />
-            New Service
+            New Lesson Type
           </button>
         </div>
 
@@ -296,14 +333,14 @@ export default function ServicesManagerPage() {
       {(showNewForm || editingId) && (
         <div className="glass-card p-6 mb-6 border-2 border-orange/50">
           <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
-            {editingId ? 'Edit Service' : 'New Service'}
+            {editingId ? 'Edit Lesson Type' : 'New Lesson Type'}
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Name */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-cyan-800 dark:text-white mb-2">
-                Service Name *
+                Lesson Name *
               </label>
               <input
                 type="text"
@@ -331,7 +368,7 @@ export default function ServicesManagerPage() {
             {/* Price */}
             <div>
               <label className="block text-sm font-medium text-cyan-800 dark:text-white mb-2">
-                Price (in cents) *
+                Price *
               </label>
               <input
                 type="number"
@@ -506,7 +543,7 @@ export default function ServicesManagerPage() {
               className="btn-primary flex items-center gap-2"
             >
               <Save className="w-5 h-5" />
-              Save Service
+              Save Lesson Type
             </button>
             <button
               onClick={handleCancel}
@@ -627,13 +664,13 @@ export default function ServicesManagerPage() {
 
       {services.length === 0 && !showNewForm && (
         <div className="text-center py-12 glass-card">
-          <p className="text-cyan-700 dark:text-white mb-4">No services yet. Create your first one!</p>
+          <p className="text-cyan-700 dark:text-white mb-4">No lesson types yet. Create your first one!</p>
           <button
             onClick={handleNew}
             className="btn-primary inline-flex items-center gap-2"
           >
             <Plus className="w-5 h-5" />
-            Create Service
+            Create Lesson Type
           </button>
         </div>
       )}

@@ -23,6 +23,7 @@ import {
 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import Image from 'next/image'
 
 export default function AdminBookingsPage() {
@@ -833,8 +834,15 @@ export default function AdminBookingsPage() {
             {/* Booking Details (read-only summary) */}
             <div className="grid grid-cols-2 gap-3 mb-6 p-4 rounded-xl bg-cyan-50/30 dark:bg-white/5 border border-cyan-200/20">
               <div>
-                <p className="text-xs text-cyan-700 dark:text-white/60">Service</p>
+                <p className="text-xs text-cyan-700 dark:text-white/60">Lesson Type</p>
                 <p className="text-sm font-semibold text-slate-900 dark:text-white">{editBooking.service?.name || '—'}</p>
+                <Link
+                  href="/admin/services"
+                  className="text-[10px] text-cyan hover:text-orange transition-colors underline underline-offset-2"
+                  onClick={() => setEditBooking(null)}
+                >
+                  Rename in Lesson Builder
+                </Link>
               </div>
               <div>
                 <p className="text-xs text-cyan-700 dark:text-white/60">Time</p>

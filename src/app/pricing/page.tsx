@@ -46,7 +46,7 @@ export default function PricingPage() {
 
   // Dynamic CTA based on auth state
   const ctaHref = (isCoach || isAdmin) ? '/admin/services' : profile ? '/booking' : '/get-started'
-  const ctaLabel = (isCoach || isAdmin) ? 'Manage Services' : profile ? 'Book Now' : 'Join the Team'
+  const ctaLabel = (isCoach || isAdmin) ? 'Lesson Builder' : profile ? 'Book Now' : 'Join the Team'
 
   useEffect(() => {
     async function fetchPricing() {
@@ -301,7 +301,7 @@ export default function PricingPage() {
                     )}
                     <Link href={ctaHref}>
                       <button className={idx === 0 ? 'btn-primary w-full' : cs.btnGhost}>
-                        {(isCoach || isAdmin) ? 'Manage Services' : `Book ${service.name}`}
+                        {(isCoach || isAdmin) ? 'Lesson Builder' : `Book ${service.name}`}
                       </button>
                     </Link>
                   </div>

@@ -37,6 +37,10 @@ ALTER TABLE public.questionnaires ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.assigned_questionnaires ENABLE ROW LEVEL SECURITY;
 
 -- Questionnaires: anyone authenticated can read published, staff can write
+DROP POLICY IF EXISTS "questionnaires_select" ON public.questionnaires;
+DROP POLICY IF EXISTS "questionnaires_insert" ON public.questionnaires;
+DROP POLICY IF EXISTS "questionnaires_update" ON public.questionnaires;
+DROP POLICY IF EXISTS "questionnaires_delete" ON public.questionnaires;
 CREATE POLICY "questionnaires_select" ON public.questionnaires FOR SELECT TO authenticated USING (true);
 CREATE POLICY "questionnaires_insert" ON public.questionnaires FOR INSERT TO authenticated
   WITH CHECK (
@@ -53,6 +57,10 @@ CREATE POLICY "questionnaires_delete" ON public.questionnaires FOR DELETE TO aut
   );
 
 -- Assigned Questionnaires: athletes can read/update own, staff can read/write all
+DROP POLICY IF EXISTS "assigned_q_select" ON public.assigned_questionnaires;
+DROP POLICY IF EXISTS "assigned_q_insert" ON public.assigned_questionnaires;
+DROP POLICY IF EXISTS "assigned_q_update" ON public.assigned_questionnaires;
+DROP POLICY IF EXISTS "assigned_q_delete" ON public.assigned_questionnaires;
 CREATE POLICY "assigned_q_select" ON public.assigned_questionnaires FOR SELECT TO authenticated
   USING (
     user_id = auth.uid()
