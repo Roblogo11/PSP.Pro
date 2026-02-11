@@ -10,6 +10,7 @@ export interface PricingService {
   category: string // 'individual' | 'group' | 'specialty'
   max_participants: number
   is_active: boolean
+  video_url?: string | null
 }
 
 export interface PricingPackage {

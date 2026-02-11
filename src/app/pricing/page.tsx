@@ -9,6 +9,7 @@ import { FunnelNav } from '@/components/navigation/funnel-nav'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { getCategoryTextColor, isGroupCategory } from '@/lib/category-colors'
+import { VideoPlayer } from '@/components/ui/video-player'
 import {
   DEFAULT_SERVICES,
   DEFAULT_PACKAGES,
@@ -55,7 +56,7 @@ export default function PricingPage() {
         const [servicesRes, packagesRes] = await Promise.all([
           supabase
             .from('services')
-            .select('id, name, description, duration_minutes, price_cents, category, max_participants, is_active')
+            .select('id, name, description, duration_minutes, price_cents, category, max_participants, is_active, video_url')
             .eq('is_active', true)
             .order('price_cents', { ascending: true }),
           supabase
@@ -292,6 +293,11 @@ export default function PricingPage() {
                           </li>
                         ))}
                       </ul>
+                    )}
+                    {service.video_url && (
+                      <div className="mb-4">
+                        <VideoPlayer url={service.video_url} title={service.name} thumbnail />
+                      </div>
                     )}
                     <Link href={ctaHref}>
                       <button className={idx === 0 ? 'btn-primary w-full' : cs.btnGhost}>

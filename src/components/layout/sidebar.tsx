@@ -49,7 +49,7 @@ const athleteNavItems: NavItem[] = [
 
 const adminNavItems: NavItem[] = [
   { label: 'Admin Home', mobileLabel: 'Admin', href: '/admin', icon: Shield, color: 'text-red-400' },
-  { label: 'Confirm Trainings', mobileLabel: 'Confirm', href: '/admin/bookings', icon: Calendar, color: 'text-blue-400', badgeKey: 'pendingBookings' },
+  { label: 'Confirm Lessons', mobileLabel: 'Confirm', href: '/admin/bookings', icon: Calendar, color: 'text-blue-400', badgeKey: 'pendingBookings' },
   { label: 'Edit Lessons', mobileLabel: 'Lessons', href: '/admin/services', icon: DollarSign, color: 'text-green-400' },
   { label: 'Manage Drills', mobileLabel: 'Drills', href: '/admin/drills', icon: Dumbbell, color: 'text-purple-400' },
   { label: 'Manage Athletes', mobileLabel: 'Athletes', href: '/admin/athletes', icon: Users, color: 'text-cyan-400' },

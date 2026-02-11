@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Plus, Calendar, MapPin, Trash2, Loader2, Repeat } from 'lucide-react'
+import { Plus, Calendar, MapPin, Trash2, Loader2, Repeat, Edit2, X, AlertTriangle } from 'lucide-react'
 
 export default function AvailabilityManagementPage() {
   const supabase = createClient()
@@ -14,6 +14,17 @@ export default function AvailabilityManagementPage() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+
+  // Edit modal state
+  const [editSlot, setEditSlot] = useState<any>(null)
+  const [editData, setEditData] = useState({
+    serviceId: '',
+    startTime: '',
+    endTime: '',
+    location: '',
+    maxBookings: 1,
+  })
+  const [editSubmitting, setEditSubmitting] = useState(false)
 
   // Form state — one form, with optional repeat
   const [formData, setFormData] = useState({
@@ -193,6 +204,49 @@ export default function AvailabilityManagementPage() {
     }
 
     setSuccess('Time slot deleted.')
+    fetchSlots()
+    setTimeout(() => setSuccess(null), 3000)
+  }
+
+  const openEditModal = (slot: any) => {
+    setEditSlot(slot)
+    setEditData({
+      serviceId: slot.service_id || '',
+      startTime: slot.start_time?.substring(0, 5) || '',
+      endTime: slot.end_time?.substring(0, 5) || '',
+      location: slot.location || '',
+      maxBookings: slot.max_bookings || 1,
+    })
+  }
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!editSlot) return
+
+    setEditSubmitting(true)
+    setError(null)
+
+    const { error: updateError } = await supabase
+      .from('available_slots')
+      .update({
+        service_id: editData.serviceId || null,
+        start_time: editData.startTime,
+        end_time: editData.endTime,
+        location: editData.location,
+        max_bookings: editData.maxBookings,
+      })
+      .eq('id', editSlot.id)
+
+    setEditSubmitting(false)
+
+    if (updateError) {
+      console.error('Failed to update slot:', updateError)
+      setError(`Failed to update time slot: ${updateError.message}`)
+      return
+    }
+
+    setSuccess('Time slot updated!')
+    setEditSlot(null)
     fetchSlots()
     setTimeout(() => setSuccess(null), 3000)
   }
@@ -467,19 +521,137 @@ export default function AvailabilityManagementPage() {
                   </div>
 
                   {/* Actions */}
-                  <button
-                    onClick={() => deleteSlot(slot.id)}
-                    className="p-2 hover:bg-red-500/20 rounded-lg transition-colors group"
-                    title="Delete slot"
-                  >
-                    <Trash2 className="w-5 h-5 text-cyan-800 dark:text-white group-hover:text-red-400" />
-                  </button>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => openEditModal(slot)}
+                      className="p-2 hover:bg-cyan/20 rounded-lg transition-colors group"
+                      title="Edit slot"
+                    >
+                      <Edit2 className="w-5 h-5 text-cyan-800 dark:text-white group-hover:text-cyan" />
+                    </button>
+                    <button
+                      onClick={() => deleteSlot(slot.id)}
+                      className="p-2 hover:bg-red-500/20 rounded-lg transition-colors group"
+                      title="Delete slot"
+                    >
+                      <Trash2 className="w-5 h-5 text-cyan-800 dark:text-white group-hover:text-red-400" />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {/* Edit Slot Modal */}
+      {editSlot && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setEditSlot(null)}>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-lg w-full p-6" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Edit Time Slot</h3>
+                <p className="text-sm text-cyan-800 dark:text-white/70">{formatDate(editSlot.slot_date)}</p>
+              </div>
+              <button onClick={() => setEditSlot(null)} className="p-2 hover:bg-cyan-50/50 rounded-lg transition-colors">
+                <X className="w-5 h-5 text-cyan-800 dark:text-white" />
+              </button>
+            </div>
+
+            {editSlot.current_bookings > 0 && (
+              <div className="mb-4 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-2">
+                <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-amber-300">
+                  This slot has {editSlot.current_bookings} active booking{editSlot.current_bookings > 1 ? 's' : ''}. Changes will affect those athletes.
+                </p>
+              </div>
+            )}
+
+            <form onSubmit={handleEditSubmit} className="space-y-4">
+              {/* Service */}
+              <div>
+                <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Service</label>
+                <select
+                  value={editData.serviceId}
+                  onChange={e => setEditData({ ...editData, serviceId: e.target.value })}
+                  className={inputClasses}
+                >
+                  <option value="">Any Service</option>
+                  {services.map(service => (
+                    <option key={service.id} value={service.id}>{service.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Start / End Time */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Start Time</label>
+                  <input
+                    type="time"
+                    required
+                    value={editData.startTime}
+                    onChange={e => setEditData({ ...editData, startTime: e.target.value })}
+                    className={inputClasses}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">End Time</label>
+                  <input
+                    type="time"
+                    required
+                    value={editData.endTime}
+                    onChange={e => setEditData({ ...editData, endTime: e.target.value })}
+                    className={inputClasses}
+                  />
+                </div>
+              </div>
+
+              {/* Location */}
+              <div>
+                <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Location</label>
+                <input
+                  type="text"
+                  required
+                  value={editData.location}
+                  onChange={e => setEditData({ ...editData, location: e.target.value })}
+                  className={inputClasses + " placeholder-cyan-600"}
+                />
+              </div>
+
+              {/* Max Bookings */}
+              <div>
+                <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Max Bookings</label>
+                <input
+                  type="number"
+                  required
+                  min={editSlot.current_bookings || 1}
+                  max={20}
+                  value={editData.maxBookings}
+                  onChange={e => setEditData({ ...editData, maxBookings: parseInt(e.target.value) })}
+                  className={inputClasses}
+                />
+                {editSlot.current_bookings > 0 && (
+                  <p className="text-xs text-cyan-700 dark:text-white/60 mt-1">
+                    Minimum {editSlot.current_bookings} (current bookings)
+                  </p>
+                )}
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-3 justify-end pt-2">
+                <button type="button" onClick={() => setEditSlot(null)} className="btn-ghost">
+                  Cancel
+                </button>
+                <button type="submit" className="btn-primary flex items-center gap-2" disabled={editSubmitting}>
+                  {editSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+                  {editSubmitting ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

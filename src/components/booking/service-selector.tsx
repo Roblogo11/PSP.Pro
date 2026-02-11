@@ -2,6 +2,7 @@
 
 import { Clock, DollarSign, Users } from 'lucide-react'
 import { getCategoryColorLight, isGroupCategory } from '@/lib/category-colors'
+import { VideoPlayer } from '@/components/ui/video-player'
 
 interface Service {
   id: string
@@ -11,6 +12,7 @@ interface Service {
   price_cents: number
   category: string
   max_participants: number
+  video_url?: string | null
 }
 
 interface ServiceSelectorProps {
@@ -82,6 +84,10 @@ export function ServiceSelector({ services, selectedServiceId, onSelectService }
                     <Users className="w-4 h-4 text-purple-400" />
                     <span>Max {service.max_participants}</span>
                   </div>
+                )}
+
+                {service.video_url && (
+                  <VideoPlayer url={service.video_url} title={service.name} thumbnail />
                 )}
               </div>
 

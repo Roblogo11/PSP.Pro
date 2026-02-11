@@ -15,6 +15,11 @@ import {
   ChevronRight,
   List,
   Grid3X3,
+  Edit2,
+  X,
+  Plus,
+  Loader2,
+  FileText,
 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
@@ -30,6 +35,26 @@ export default function AdminBookingsPage() {
   const [viewMode, setViewMode] = useState<'table' | 'calendar'>('calendar')
   const [calendarDate, setCalendarDate] = useState(new Date())
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
+
+  // Edit booking modal
+  const [editBooking, setEditBooking] = useState<any>(null)
+  const [editNotes, setEditNotes] = useState({ coach_notes: '', internal_notes: '' })
+  const [editSubmitting, setEditSubmitting] = useState(false)
+  const [editSuccess, setEditSuccess] = useState<string | null>(null)
+
+  // Book for athlete modal
+  const [showBookForAthlete, setShowBookForAthlete] = useState(false)
+  const [athletes, setAthletes] = useState<any[]>([])
+  const [availableSlots, setAvailableSlots] = useState<any[]>([])
+  const [services, setServices] = useState<any[]>([])
+  const [bookFormData, setBookFormData] = useState({
+    athleteId: '',
+    slotId: '',
+    serviceId: '',
+    paymentMethod: 'on_site' as 'on_site' | 'comp' | 'package',
+    notes: '',
+  })
+  const [bookSubmitting, setBookSubmitting] = useState(false)
 
   // Auth gate - redirect non-admin/coach users
   useEffect(() => {
@@ -69,6 +94,93 @@ export default function AdminBookingsPage() {
     }
 
     setLoading(false)
+  }
+
+  // Open edit modal
+  const openEditBooking = (booking: any) => {
+    setEditBooking(booking)
+    setEditNotes({
+      coach_notes: booking.coach_notes || '',
+      internal_notes: booking.internal_notes || '',
+    })
+    setEditSuccess(null)
+  }
+
+  // Save booking edits (notes + status)
+  const handleEditSave = async () => {
+    if (!editBooking) return
+    setEditSubmitting(true)
+
+    const { error } = await supabase
+      .from('bookings')
+      .update({
+        coach_notes: editNotes.coach_notes || null,
+        internal_notes: editNotes.internal_notes || null,
+      })
+      .eq('id', editBooking.id)
+
+    setEditSubmitting(false)
+
+    if (error) {
+      console.error('Failed to update booking:', error)
+      return
+    }
+
+    setEditSuccess('Booking updated!')
+    fetchBookings()
+    setTimeout(() => { setEditBooking(null); setEditSuccess(null) }, 1500)
+  }
+
+  // Fetch data for book-for-athlete modal
+  const openBookForAthlete = async () => {
+    setShowBookForAthlete(true)
+    setBookFormData({ athleteId: '', slotId: '', serviceId: '', paymentMethod: 'on_site', notes: '' })
+
+    const today = new Date()
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+
+    const [athleteRes, slotRes, serviceRes] = await Promise.all([
+      supabase.from('profiles').select('id, full_name').eq('role', 'athlete').order('full_name'),
+      supabase.from('available_slots').select('id, slot_date, start_time, end_time, location, service:service_id(name), current_bookings, max_bookings').eq('is_available', true).gte('slot_date', todayStr).order('slot_date').order('start_time'),
+      supabase.from('services').select('id, name, price_cents, duration_minutes').eq('is_active', true).order('name'),
+    ])
+
+    if (athleteRes.data) setAthletes(athleteRes.data)
+    if (slotRes.data) setAvailableSlots(slotRes.data)
+    if (serviceRes.data) setServices(serviceRes.data)
+  }
+
+  // Submit book-for-athlete
+  const handleBookForAthlete = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!bookFormData.athleteId || !bookFormData.slotId || !bookFormData.serviceId) return
+
+    setBookSubmitting(true)
+
+    try {
+      const response = await fetch('/api/admin/create-booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          athlete_id: bookFormData.athleteId,
+          slot_id: bookFormData.slotId,
+          service_id: bookFormData.serviceId,
+          payment_method: bookFormData.paymentMethod,
+          notes: bookFormData.notes,
+        }),
+      })
+
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || 'Failed to create booking')
+
+      setShowBookForAthlete(false)
+      fetchBookings()
+    } catch (err: any) {
+      console.error('Book for athlete error:', err)
+      alert(`Error: ${err.message}`)
+    } finally {
+      setBookSubmitting(false)
+    }
   }
 
   const updateBookingStatus = async (bookingId: string, newStatus: string) => {
@@ -218,15 +330,25 @@ export default function AdminBookingsPage() {
       <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
-            Confirm <span className="text-gradient-orange">Trainings</span>
+            Confirm <span className="text-gradient-orange">Lessons</span>
           </h1>
           <p className="text-cyan-800 dark:text-white text-lg">
-            Review and confirm training sessions booked by athletes
+            Review and confirm lessons booked by athletes
           </p>
         </div>
 
-        {/* View Toggle */}
-        <div className="flex items-center gap-2 glass-card p-1 rounded-xl self-start">
+        {/* Actions */}
+        <div className="flex items-center gap-3 self-start">
+          <button
+            onClick={openBookForAthlete}
+            className="btn-primary flex items-center gap-2 text-sm"
+          >
+            <Plus className="w-4 h-4" />
+            Book for Athlete
+          </button>
+
+          {/* View Toggle */}
+          <div className="flex items-center gap-2 glass-card p-1 rounded-xl">
           <button
             onClick={() => setViewMode('calendar')}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
@@ -249,6 +371,7 @@ export default function AdminBookingsPage() {
             <List className="w-4 h-4" />
             Table
           </button>
+          </div>
         </div>
       </div>
 
@@ -510,6 +633,13 @@ export default function AdminBookingsPage() {
 
                         {/* Quick Actions */}
                         <div className="flex gap-2 self-start">
+                          <button
+                            onClick={() => openEditBooking(booking)}
+                            className="px-3 py-1.5 bg-cyan/10 hover:bg-cyan/20 text-cyan rounded-lg text-xs font-semibold transition-colors flex items-center gap-1"
+                          >
+                            <Edit2 className="w-3 h-3" />
+                            Edit
+                          </button>
                           {booking.status === 'pending' && (
                             <>
                               <button
@@ -527,12 +657,20 @@ export default function AdminBookingsPage() {
                             </>
                           )}
                           {booking.status === 'confirmed' && (
-                            <button
-                              onClick={() => updateBookingStatus(booking.id, 'completed')}
-                              className="px-3 py-1.5 bg-cyan/20 hover:bg-cyan/30 text-cyan rounded-lg text-xs font-semibold transition-colors"
-                            >
-                              Complete
-                            </button>
+                            <>
+                              <button
+                                onClick={() => updateBookingStatus(booking.id, 'completed')}
+                                className="px-3 py-1.5 bg-cyan/20 hover:bg-cyan/30 text-cyan rounded-lg text-xs font-semibold transition-colors"
+                              >
+                                Complete
+                              </button>
+                              <button
+                                onClick={() => updateBookingStatus(booking.id, 'no-show')}
+                                className="px-3 py-1.5 bg-slate-500/20 hover:bg-slate-500/30 text-slate-400 rounded-lg text-xs font-semibold transition-colors"
+                              >
+                                No-Show
+                              </button>
+                            </>
                           )}
                         </div>
                       </div>
@@ -625,30 +763,47 @@ export default function AdminBookingsPage() {
                         </span>
                       </td>
                       <td className="py-4 px-4">
-                        {booking.status === 'pending' && (
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => updateBookingStatus(booking.id, 'confirmed')}
-                              className="px-3 py-1.5 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg text-xs font-semibold transition-colors"
-                            >
-                              Confirm
-                            </button>
-                            <button
-                              onClick={() => updateBookingStatus(booking.id, 'cancelled')}
-                              className="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg text-xs font-semibold transition-colors"
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        )}
-                        {booking.status === 'confirmed' && (
+                        <div className="flex gap-2 flex-wrap">
                           <button
-                            onClick={() => updateBookingStatus(booking.id, 'completed')}
-                            className="px-3 py-1.5 bg-cyan/20 hover:bg-cyan/30 text-cyan rounded-lg text-xs font-semibold transition-colors"
+                            onClick={() => openEditBooking(booking)}
+                            className="px-3 py-1.5 bg-cyan/10 hover:bg-cyan/20 text-cyan rounded-lg text-xs font-semibold transition-colors flex items-center gap-1"
                           >
-                            Mark Complete
+                            <Edit2 className="w-3 h-3" />
+                            Edit
                           </button>
-                        )}
+                          {booking.status === 'pending' && (
+                            <>
+                              <button
+                                onClick={() => updateBookingStatus(booking.id, 'confirmed')}
+                                className="px-3 py-1.5 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg text-xs font-semibold transition-colors"
+                              >
+                                Confirm
+                              </button>
+                              <button
+                                onClick={() => updateBookingStatus(booking.id, 'cancelled')}
+                                className="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg text-xs font-semibold transition-colors"
+                              >
+                                Cancel
+                              </button>
+                            </>
+                          )}
+                          {booking.status === 'confirmed' && (
+                            <>
+                              <button
+                                onClick={() => updateBookingStatus(booking.id, 'completed')}
+                                className="px-3 py-1.5 bg-cyan/20 hover:bg-cyan/30 text-cyan rounded-lg text-xs font-semibold transition-colors"
+                              >
+                                Complete
+                              </button>
+                              <button
+                                onClick={() => updateBookingStatus(booking.id, 'no-show')}
+                                className="px-3 py-1.5 bg-slate-500/20 hover:bg-slate-500/30 text-slate-400 rounded-lg text-xs font-semibold transition-colors"
+                              >
+                                No-Show
+                              </button>
+                            </>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -656,6 +811,234 @@ export default function AdminBookingsPage() {
               </table>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Edit Booking Modal */}
+      {editBooking && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setEditBooking(null)}>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-lg w-full p-6" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Edit Booking</h3>
+                <p className="text-sm text-cyan-800 dark:text-white/70">
+                  {editBooking.athlete?.full_name} &bull; {formatDate(editBooking.booking_date)}
+                </p>
+              </div>
+              <button onClick={() => setEditBooking(null)} className="p-2 hover:bg-cyan-50/50 rounded-lg">
+                <X className="w-5 h-5 text-cyan-800 dark:text-white" />
+              </button>
+            </div>
+
+            {/* Booking Details (read-only summary) */}
+            <div className="grid grid-cols-2 gap-3 mb-6 p-4 rounded-xl bg-cyan-50/30 dark:bg-white/5 border border-cyan-200/20">
+              <div>
+                <p className="text-xs text-cyan-700 dark:text-white/60">Service</p>
+                <p className="text-sm font-semibold text-slate-900 dark:text-white">{editBooking.service?.name || '—'}</p>
+              </div>
+              <div>
+                <p className="text-xs text-cyan-700 dark:text-white/60">Time</p>
+                <p className="text-sm font-semibold text-slate-900 dark:text-white">{formatTime(editBooking.start_time)} – {formatTime(editBooking.end_time)}</p>
+              </div>
+              <div>
+                <p className="text-xs text-cyan-700 dark:text-white/60">Status</p>
+                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-xs font-semibold border ${getStatusColor(editBooking.status)}`}>
+                  {getStatusIcon(editBooking.status)}
+                  <span className="capitalize">{editBooking.status}</span>
+                </span>
+              </div>
+              <div>
+                <p className="text-xs text-cyan-700 dark:text-white/60">Payment</p>
+                <p className={`text-sm font-semibold capitalize ${getPaymentStatusColor(editBooking.payment_status)}`}>
+                  {editBooking.payment_status} &bull; ${((editBooking.amount_cents || 0) / 100).toFixed(2)}
+                </p>
+              </div>
+            </div>
+
+            {/* Editable Notes */}
+            <div className="space-y-4">
+              <div>
+                <label className="flex items-center gap-2 text-sm font-medium text-cyan-700 dark:text-white mb-2">
+                  <FileText className="w-4 h-4" />
+                  Coach Notes
+                </label>
+                <textarea
+                  value={editNotes.coach_notes}
+                  onChange={e => setEditNotes({ ...editNotes, coach_notes: e.target.value })}
+                  placeholder="Add notes about this session..."
+                  rows={3}
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 resize-none"
+                />
+              </div>
+              <div>
+                <label className="flex items-center gap-2 text-sm font-medium text-cyan-700 dark:text-white mb-2">
+                  <FileText className="w-4 h-4" />
+                  Internal Notes <span className="text-xs text-cyan-600 dark:text-white/50">(admin only)</span>
+                </label>
+                <textarea
+                  value={editNotes.internal_notes}
+                  onChange={e => setEditNotes({ ...editNotes, internal_notes: e.target.value })}
+                  placeholder="Internal notes (not visible to athletes)..."
+                  rows={2}
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 resize-none"
+                />
+              </div>
+            </div>
+
+            {/* Quick Status Actions */}
+            <div className="mt-6 pt-4 border-t border-cyan-200/20">
+              <p className="text-xs font-semibold text-cyan-700 dark:text-white/60 mb-2">Quick Status Change</p>
+              <div className="flex flex-wrap gap-2">
+                {editBooking.status !== 'confirmed' && (
+                  <button onClick={() => { updateBookingStatus(editBooking.id, 'confirmed'); setEditBooking(null) }} className="px-3 py-1.5 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg text-xs font-semibold transition-colors">Confirm</button>
+                )}
+                {editBooking.status !== 'completed' && editBooking.status !== 'cancelled' && (
+                  <button onClick={() => { updateBookingStatus(editBooking.id, 'completed'); setEditBooking(null) }} className="px-3 py-1.5 bg-cyan/20 hover:bg-cyan/30 text-cyan rounded-lg text-xs font-semibold transition-colors">Complete</button>
+                )}
+                {editBooking.status !== 'no-show' && editBooking.status !== 'cancelled' && (
+                  <button onClick={() => { updateBookingStatus(editBooking.id, 'no-show'); setEditBooking(null) }} className="px-3 py-1.5 bg-slate-500/20 hover:bg-slate-500/30 text-slate-400 rounded-lg text-xs font-semibold transition-colors">No-Show</button>
+                )}
+                {editBooking.status !== 'cancelled' && (
+                  <button onClick={() => { updateBookingStatus(editBooking.id, 'cancelled'); setEditBooking(null) }} className="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg text-xs font-semibold transition-colors">Cancel</button>
+                )}
+              </div>
+            </div>
+
+            {editSuccess && (
+              <div className="mt-4 p-3 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm text-center">
+                {editSuccess}
+              </div>
+            )}
+
+            {/* Save / Close */}
+            <div className="flex gap-3 justify-end mt-6">
+              <button onClick={() => setEditBooking(null)} className="btn-ghost">Close</button>
+              <button onClick={handleEditSave} disabled={editSubmitting} className="btn-primary flex items-center gap-2">
+                {editSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+                {editSubmitting ? 'Saving...' : 'Save Notes'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Book for Athlete Modal */}
+      {showBookForAthlete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowBookForAthlete(false)}>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Book for Athlete</h3>
+                <p className="text-sm text-cyan-800 dark:text-white/70">Schedule a lesson on behalf of an athlete</p>
+              </div>
+              <button onClick={() => setShowBookForAthlete(false)} className="p-2 hover:bg-cyan-50/50 rounded-lg">
+                <X className="w-5 h-5 text-cyan-800 dark:text-white" />
+              </button>
+            </div>
+
+            <form onSubmit={handleBookForAthlete} className="space-y-4">
+              {/* Athlete */}
+              <div>
+                <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Athlete *</label>
+                <select
+                  required
+                  value={bookFormData.athleteId}
+                  onChange={e => setBookFormData({ ...bookFormData, athleteId: e.target.value })}
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                >
+                  <option value="">Select athlete...</option>
+                  {athletes.map(a => (
+                    <option key={a.id} value={a.id}>{a.full_name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Service */}
+              <div>
+                <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Service *</label>
+                <select
+                  required
+                  value={bookFormData.serviceId}
+                  onChange={e => setBookFormData({ ...bookFormData, serviceId: e.target.value })}
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                >
+                  <option value="">Select service...</option>
+                  {services.map(s => (
+                    <option key={s.id} value={s.id}>{s.name} — ${(s.price_cents / 100).toFixed(2)}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Available Slot */}
+              <div>
+                <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Time Slot *</label>
+                <select
+                  required
+                  value={bookFormData.slotId}
+                  onChange={e => setBookFormData({ ...bookFormData, slotId: e.target.value })}
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                >
+                  <option value="">Select time slot...</option>
+                  {availableSlots.map(slot => (
+                    <option key={slot.id} value={slot.id}>
+                      {new Date(slot.slot_date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                      {' '}
+                      {formatTime(slot.start_time)} – {formatTime(slot.end_time)}
+                      {slot.location ? ` @ ${slot.location}` : ''}
+                      {' '}({slot.current_bookings}/{slot.max_bookings} booked)
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Payment Method */}
+              <div>
+                <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Payment Method *</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { value: 'on_site', label: 'Pay On-Site', desc: 'Collect payment in person' },
+                    { value: 'package', label: 'Use Package', desc: 'Deduct from athlete\'s pack' },
+                    { value: 'comp', label: 'Complimentary', desc: 'Free session' },
+                  ].map(opt => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => setBookFormData({ ...bookFormData, paymentMethod: opt.value as any })}
+                      className={`p-3 rounded-xl text-center border transition-all ${
+                        bookFormData.paymentMethod === opt.value
+                          ? 'bg-orange/10 border-orange/50 text-orange'
+                          : 'bg-cyan-50/30 border-cyan-200/40 text-slate-700 dark:text-white hover:border-cyan/40'
+                      }`}
+                    >
+                      <p className="text-sm font-semibold">{opt.label}</p>
+                      <p className="text-[10px] mt-0.5 opacity-70">{opt.desc}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Notes */}
+              <div>
+                <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Notes (optional)</label>
+                <textarea
+                  value={bookFormData.notes}
+                  onChange={e => setBookFormData({ ...bookFormData, notes: e.target.value })}
+                  placeholder="Any notes about this booking..."
+                  rows={2}
+                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 resize-none"
+                />
+              </div>
+
+              {/* Submit */}
+              <div className="flex gap-3 justify-end pt-2">
+                <button type="button" onClick={() => setShowBookForAthlete(false)} className="btn-ghost">Cancel</button>
+                <button type="submit" disabled={bookSubmitting} className="btn-primary flex items-center gap-2">
+                  {bookSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+                  {bookSubmitting ? 'Creating...' : 'Create Booking'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

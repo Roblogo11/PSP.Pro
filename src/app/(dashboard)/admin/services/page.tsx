@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Plus, Edit2, Trash2, DollarSign, Clock, Users, Save, X, Star, StarOff, ImageIcon, CheckCircle } from 'lucide-react'
+import { Plus, Edit2, Trash2, DollarSign, Clock, Users, Save, X, Star, StarOff, ImageIcon, CheckCircle, Video } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
 import { getCategoryColor as getCatColor, isGroupCategory, DEFAULT_CATEGORIES } from '@/lib/category-colors'
@@ -20,6 +20,7 @@ interface Service {
   featured_on_homepage: boolean
   homepage_image_url: string | null
   homepage_order: number
+  video_url: string | null
 }
 
 export default function ServicesManagerPage() {
@@ -41,6 +42,7 @@ export default function ServicesManagerPage() {
     featured_on_homepage: false,
     homepage_image_url: '',
     homepage_order: 0,
+    video_url: '',
   })
 
   // Redirect if not admin, coach, or master_admin
@@ -453,6 +455,23 @@ export default function ServicesManagerPage() {
               </p>
             </div>
 
+            {/* Video URL */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-cyan-800 dark:text-white mb-2">
+                Video URL (optional)
+              </label>
+              <input
+                type="text"
+                value={formData.video_url || ''}
+                onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
+                className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                placeholder="https://youtube.com/watch?v=... or https://vimeo.com/..."
+              />
+              <p className="text-xs text-cyan-700 dark:text-white mt-1">
+                YouTube, Vimeo, or direct video URL. Shows on pricing page and booking flow.
+              </p>
+            </div>
+
             {/* Active Toggle */}
             <div className="flex items-center gap-3">
               <input
@@ -548,6 +567,12 @@ export default function ServicesManagerPage() {
                     <div className="flex items-center gap-2">
                       <Users className="w-4 h-4 text-purple-400" />
                       <span className="text-cyan-700 dark:text-white">Max {service.max_participants}</span>
+                    </div>
+                  )}
+                  {service.video_url && (
+                    <div className="flex items-center gap-2">
+                      <Video className="w-4 h-4 text-pink-400" />
+                      <span className="text-cyan-700 dark:text-white">Video</span>
                     </div>
                   )}
                 </div>
