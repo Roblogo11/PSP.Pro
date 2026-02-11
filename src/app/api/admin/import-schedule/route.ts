@@ -126,11 +126,10 @@ export async function POST(request: NextRequest) {
     }
 
     if (!serviceId) {
-      // Grab first active individual service
+      // Grab first active service (any category)
       const { data: svc } = await adminClient
         .from('services')
         .select('id, price_cents')
-        .eq('category', 'individual')
         .eq('is_active', true)
         .order('created_at', { ascending: true })
         .limit(1)

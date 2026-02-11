@@ -45,7 +45,7 @@ export default function HomePage() {
   const { theme } = useTheme()
   const footerHeadingColor = theme === 'dark' ? '#ffffff' : '#0f172a'
 
-  // Featured services from database
+  // Featured services from database — grouped dynamically by category
   const [featuredIndividual, setFeaturedIndividual] = useState<FeaturedService[]>([])
   const [featuredGroup, setFeaturedGroup] = useState<FeaturedService[]>([])
 
@@ -66,8 +66,10 @@ export default function HomePage() {
         }
 
         if (data) {
-          setFeaturedIndividual(data.filter(s => s.category === 'individual'))
-          setFeaturedGroup(data.filter(s => s.category === 'group'))
+          // Non-group categories go to "individual" section, group categories go to "group" section
+          const isGroup = (cat: string) => cat.toLowerCase().includes('group')
+          setFeaturedIndividual(data.filter(s => !isGroup(s.category)))
+          setFeaturedGroup(data.filter(s => isGroup(s.category)))
         }
       } catch (err) {
         console.error('Error fetching featured services:', err)

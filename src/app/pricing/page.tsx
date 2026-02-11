@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Zap, Users, Video, Activity, Package, CheckCircle, Award, Info, Rocket, Mail, ArrowRight, LayoutDashboard, Shield, RefreshCw } from 'lucide-react'
+import { Zap, Users, Package, CheckCircle, Award, Info, Rocket, Mail, ArrowRight, LayoutDashboard, Shield, RefreshCw, Dumbbell } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
+import { getCategoryTextColor, isGroupCategory } from '@/lib/category-colors'
 import {
   DEFAULT_SERVICES,
   DEFAULT_PACKAGES,
@@ -114,17 +115,21 @@ export default function PricingPage() {
     fetchMemberPackage()
   }, [profile?.id, isCoach, isAdmin])
 
-  // Group services by category
-  const individualServices = services.filter((s) => s.category === 'individual')
-  const groupServices = services.filter((s) => s.category === 'group')
-  const specialtyServices = services.filter((s) => s.category === 'specialty')
+  // Group services by category dynamically
+  const servicesByCategory = services.reduce<Record<string, PricingService[]>>((acc, s) => {
+    const cat = s.category || 'other'
+    if (!acc[cat]) acc[cat] = []
+    acc[cat].push(s)
+    return acc
+  }, {})
+  const categoryNames = Object.keys(servicesByCategory).sort()
 
   // Compute quick stats
-  const cheapestIndividual = individualServices.length > 0
-    ? Math.min(...individualServices.map((s) => s.price_cents))
+  const cheapestIndividual = services.length > 0
+    ? Math.min(...services.map((s) => s.price_cents))
     : 7500
-  const cheapestGroup = groupServices.length > 0
-    ? Math.min(...groupServices.map((s) => s.price_cents))
+  const cheapestGroup = services.filter(s => isGroupCategory(s.category)).length > 0
+    ? Math.min(...services.filter(s => isGroupCategory(s.category)).map((s) => s.price_cents))
     : 5000
   const maxSavings = packages.length > 0
     ? Math.max(
@@ -241,124 +246,65 @@ export default function PricingPage() {
         ))}
       </div>
 
-      {/* Online Course */}
-      {individualServices.length > 0 && (
-      <div className="command-panel mb-6">
-        <div className="flex items-center gap-3 mb-6">
-          <Zap className="w-8 h-8 text-orange" />
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Online Course</h2>
-        </div>
+      {/* Dynamic Service Sections — one per category */}
+      {categoryNames.filter(cat => cat !== 'package').map((category) => {
+        const catServices = servicesByCategory[category]
+        if (!catServices || catServices.length === 0) return null
+        const isGroup = isGroupCategory(category)
+        const catTextColor = getCategoryTextColor(category)
+        const displayName = category.charAt(0).toUpperCase() + category.slice(1)
 
-        <div className={`grid gap-6 ${individualServices.length >= 2 ? 'md:grid-cols-2' : ''}`}>
-          {individualServices.map((service, idx) => {
-            const colorKey: ColorKey = idx % 2 === 0 ? 'orange' : 'cyan'
-            const cs = colorStyles[colorKey]
-            const bullets = splitDescription(service.description)
-            return (
-              <div
-                key={service.id}
-                className={`p-6 bg-cyan-900/20 rounded-xl border ${cs.border} transition-all`}
-              >
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{service.name}</h3>
-                <div className="flex items-baseline gap-2 mb-4">
-                  <span className={`text-4xl font-bold ${cs.text}`}>
-                    {formatPrice(service.price_cents)}
-                  </span>
-                  <span className="text-slate-700 dark:text-slate-300">/ {service.duration_minutes} minutes</span>
-                </div>
-                {bullets.length > 0 && (
-                  <ul className="space-y-2 mb-6">
-                    {bullets.map((item, i) => (
-                      <li key={i} className="flex items-center gap-2">
-                        <CheckCircle className={`w-4 h-4 ${cs.check} flex-shrink-0`} />
-                        <span className="text-sm">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                <Link href={ctaHref}>
-                  <button className={idx === 0 ? 'btn-primary w-full' : cs.btnGhost}>
-                    {(isCoach || isAdmin) ? 'Manage Services' : `Book ${service.name}`}
-                  </button>
-                </Link>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-      )}
+        return (
+          <div key={category} className="command-panel mb-6">
+            <div className="flex items-center gap-3 mb-6">
+              {isGroup ? <Users className={`w-8 h-8 ${catTextColor}`} /> : <Dumbbell className={`w-8 h-8 ${catTextColor}`} />}
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{displayName} Training</h2>
+            </div>
 
-      {/* Group Training */}
-      {groupServices.length > 0 && (
-      <div className="command-panel mb-6">
-        <div className="flex items-center gap-3 mb-6">
-          <Users className="w-8 h-8 text-cyan" />
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Group Training</h2>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          {groupServices.map((service) => {
-            const bullets = splitDescription(service.description)
-            return (
-              <div key={service.id} className="p-6 bg-cyan-900/20 rounded-xl border border-cyan/20">
-                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{service.name}</h3>
-                <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-5xl font-bold text-cyan">
-                    {formatPrice(service.price_cents)}
-                  </span>
-                  <span>/ athlete &bull; {service.duration_minutes} minutes</span>
-                </div>
-                {service.max_participants > 1 && (
-                  <p className="mb-6">Max {service.max_participants} athletes per session</p>
-                )}
-
-                {bullets.length > 0 && (
-                  <div className={`grid gap-4 mb-6 ${bullets.length > 3 ? 'grid-cols-2' : ''}`}>
-                    <ul className="space-y-2">
-                      {bullets.slice(0, Math.ceil(bullets.length / 2)).map((item, i) => (
-                        <li key={i} className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-cyan flex-shrink-0" />
-                          <span className="text-sm">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    {bullets.length > 3 && (
-                      <ul className="space-y-2">
-                        {bullets.slice(Math.ceil(bullets.length / 2)).map((item, i) => (
+            <div className={`grid gap-6 ${catServices.length >= 2 ? 'md:grid-cols-2' : ''}`}>
+              {catServices.map((service, idx) => {
+                const colorKey: ColorKey = idx % 2 === 0 ? 'orange' : 'cyan'
+                const cs = colorStyles[colorKey]
+                const bullets = splitDescription(service.description)
+                return (
+                  <div
+                    key={service.id}
+                    className={`p-6 bg-cyan-900/20 rounded-xl border ${cs.border} transition-all`}
+                  >
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{service.name}</h3>
+                    <div className="flex items-baseline gap-2 mb-4">
+                      <span className={`text-4xl font-bold ${cs.text}`}>
+                        {formatPrice(service.price_cents)}
+                      </span>
+                      <span className="text-slate-700 dark:text-slate-300">
+                        {isGroup ? '/ athlete' : ''} &bull; {service.duration_minutes} minutes
+                      </span>
+                    </div>
+                    {isGroup && service.max_participants > 1 && (
+                      <p className="mb-4">Max {service.max_participants} athletes per session</p>
+                    )}
+                    {bullets.length > 0 && (
+                      <ul className="space-y-2 mb-6">
+                        {bullets.map((item, i) => (
                           <li key={i} className="flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-cyan flex-shrink-0" />
+                            <CheckCircle className={`w-4 h-4 ${cs.check} flex-shrink-0`} />
                             <span className="text-sm">{item}</span>
                           </li>
                         ))}
                       </ul>
                     )}
+                    <Link href={ctaHref}>
+                      <button className={idx === 0 ? 'btn-primary w-full' : cs.btnGhost}>
+                        {(isCoach || isAdmin) ? 'Manage Services' : `Book ${service.name}`}
+                      </button>
+                    </Link>
                   </div>
-                )}
-
-                <Link href={ctaHref}>
-                  <button className="btn-ghost w-full border-cyan/30 hover:border-cyan/50">
-                    {(isCoach || isAdmin) ? 'Manage Services' : profile ? 'Book Group Training' : 'Join Group Training'}
-                  </button>
-                </Link>
-              </div>
-            )
-          })}
-
-          {/* Group Training Image */}
-          <div className="relative rounded-xl overflow-hidden min-h-[300px]">
-            <Image
-              src="/images/Praticing Soccer Drills.jpg"
-              alt="PSP group training session"
-              fill
-              quality={80}
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
+                )
+              })}
+            </div>
           </div>
-        </div>
-      </div>
-      )}
+        )
+      })}
 
       {/* Training Packages */}
       {packages.length > 0 && (
@@ -433,43 +379,7 @@ export default function PricingPage() {
       </div>
       )}
 
-      {/* Specialty Services */}
-      {specialtyServices.length > 0 && (
-      <div className="command-panel mb-6">
-        <div className="flex items-center gap-3 mb-6">
-          <Video className="w-8 h-8 text-cyan" />
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Specialty Services</h2>
-        </div>
-
-        <div className={`grid gap-6 ${specialtyServices.length >= 2 ? 'md:grid-cols-2' : ''}`}>
-          {specialtyServices.map((service, idx) => {
-            const colorKey: ColorKey = idx % 2 === 0 ? 'orange' : 'cyan'
-            const cs = colorStyles[colorKey]
-            const IconComponent = idx % 2 === 0 ? Video : Activity
-            return (
-              <div key={service.id} className={`p-6 bg-cyan-900/20 rounded-xl border ${cs.borderStatic}`}>
-                <IconComponent className={`w-10 h-10 ${cs.text} mb-4`} />
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{service.name}</h3>
-                <div className="flex items-baseline gap-2 mb-4">
-                  <span className={`text-3xl font-bold ${cs.text}`}>
-                    {formatPrice(service.price_cents)}
-                  </span>
-                  <span className="text-slate-700 dark:text-slate-300">/ {service.duration_minutes} minutes</span>
-                </div>
-                {service.description && (
-                  <p className="mb-6">{service.description}</p>
-                )}
-                <Link href={ctaHref}>
-                  <button className={cs.btnGhost}>
-                    {(isCoach || isAdmin) ? 'Manage Services' : `Book ${service.name}`}
-                  </button>
-                </Link>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-      )}
+      {/* (Specialty and other categories are handled by the dynamic loop above) */}
 
       {/* Continue Exploring */}
       <div className="command-panel">

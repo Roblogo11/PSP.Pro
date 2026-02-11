@@ -113,18 +113,22 @@ export default function AvailabilityManagementPage() {
 
     // Build slot(s) to insert
     const slotsToInsert: any[] = []
-    const baseDate = new Date(formData.slotDate + 'T00:00:00')
+    // Parse date parts directly to avoid timezone shift (toISOString converts to UTC)
+    const [baseYear, baseMonth, baseDay] = formData.slotDate.split('-').map(Number)
     const totalSlots = formData.repeat ? formData.repeatCount : 1
     const intervalDays = formData.repeatFrequency === 'weekly' ? 7 : 30
 
     for (let i = 0; i < totalSlots; i++) {
-      const slotDate = new Date(baseDate)
-      slotDate.setDate(slotDate.getDate() + i * intervalDays)
+      const slotDate = new Date(baseYear, baseMonth - 1, baseDay + i * intervalDays)
+      // Format as YYYY-MM-DD without timezone conversion
+      const yyyy = slotDate.getFullYear()
+      const mm = String(slotDate.getMonth() + 1).padStart(2, '0')
+      const dd = String(slotDate.getDate()).padStart(2, '0')
 
       slotsToInsert.push({
         coach_id: user.id,
         service_id: formData.serviceId || null,
-        slot_date: slotDate.toISOString().split('T')[0],
+        slot_date: `${yyyy}-${mm}-${dd}`,
         start_time: formData.startTime,
         end_time: formData.endTime,
         location: formData.location,
@@ -134,9 +138,11 @@ export default function AvailabilityManagementPage() {
       })
     }
 
-    const { error: insertError } = await supabase
+    // Use upsert to skip duplicates instead of failing on unique constraint
+    const { data: insertedData, error: insertError } = await supabase
       .from('available_slots')
-      .insert(slotsToInsert)
+      .upsert(slotsToInsert, { onConflict: 'coach_id,slot_date,start_time', ignoreDuplicates: true })
+      .select('id')
 
     setSubmitting(false)
 
@@ -146,11 +152,14 @@ export default function AvailabilityManagementPage() {
       return
     }
 
-    const count = slotsToInsert.length
+    const created = insertedData?.length ?? slotsToInsert.length
+    const skipped = slotsToInsert.length - created
     setSuccess(
-      count === 1
-        ? 'Time slot created!'
-        : `${count} ${formData.repeatFrequency} time slots created!`
+      skipped > 0
+        ? `Created ${created} slot${created !== 1 ? 's' : ''} (${skipped} already existed)`
+        : created === 1
+          ? 'Time slot created!'
+          : `${created} ${formData.repeatFrequency} time slots created!`
     )
     setFormData({
       serviceId: '',

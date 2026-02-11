@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Plus, Edit2, Trash2, DollarSign, Clock, Users, Save, X, Star, StarOff, ImageIcon, CheckCircle } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
+import { getCategoryColor as getCatColor, isGroupCategory, DEFAULT_CATEGORIES } from '@/lib/category-colors'
 
 interface Service {
   id: string
@@ -241,15 +242,11 @@ export default function ServicesManagerPage() {
 
   const formatPrice = (cents: number) => `$${(cents / 100).toFixed(2)}`
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'individual': return 'bg-orange/20 text-orange border-orange/50'
-      case 'group': return 'bg-cyan/20 text-cyan border-cyan/50'
-      case 'package': return 'bg-purple-500/20 text-purple-400 border-purple-500/50'
-      case 'specialty': return 'bg-green-500/20 text-green-400 border-green-500/50'
-      default: return 'bg-cyan-600/20 text-cyan-600 border-cyan-600/50'
-    }
-  }
+  // Dynamic categories — derived from existing services + defaults
+  const existingCategories = [...new Set(services.map(s => s.category))].sort()
+  const allCategories = [...new Set([...existingCategories, ...DEFAULT_CATEGORIES])].sort()
+  const [customCategory, setCustomCategory] = useState('')
+  const [showCustomInput, setShowCustomInput] = useState(false)
 
   if (roleLoading || loading) {
     return (
@@ -365,16 +362,50 @@ export default function ServicesManagerPage() {
               <label className="block text-sm font-medium text-cyan-800 dark:text-white mb-2">
                 Category *
               </label>
-              <select
-                value={formData.category || 'individual'}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
-              >
-                <option value="individual">Individual</option>
-                <option value="group">Group</option>
-                <option value="package">Package</option>
-                <option value="specialty">Specialty</option>
-              </select>
+              {showCustomInput ? (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={customCategory}
+                    onChange={(e) => {
+                      setCustomCategory(e.target.value)
+                      setFormData({ ...formData, category: e.target.value.toLowerCase().trim() })
+                    }}
+                    placeholder="e.g. pitching, hitting, speed..."
+                    className="flex-1 px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={() => { setShowCustomInput(false); setCustomCategory('') }}
+                    className="px-3 py-2 rounded-xl bg-cyan-600/10 text-cyan-800 dark:text-white border border-cyan-600/30 hover:bg-cyan-600/20 transition-all text-sm"
+                  >
+                    Back
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <select
+                    value={formData.category || 'individual'}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    className="flex-1 px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                  >
+                    {allCategories.map(cat => (
+                      <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setShowCustomInput(true)}
+                    className="px-3 py-2 rounded-xl bg-orange/10 text-orange border border-orange/30 hover:bg-orange/20 transition-all text-sm whitespace-nowrap"
+                  >
+                    + New
+                  </button>
+                </div>
+              )}
+              <p className="text-xs text-cyan-700 dark:text-white/60 mt-1">
+                Choose existing or create a new training type
+              </p>
             </div>
 
             {/* Max Participants */}
@@ -483,7 +514,7 @@ export default function ServicesManagerPage() {
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-2">
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white">{service.name}</h3>
-                  <span className={`px-3 py-1 rounded-lg text-xs font-semibold uppercase border ${getCategoryColor(service.category)}`}>
+                  <span className={`px-3 py-1 rounded-lg text-xs font-semibold uppercase border ${getCatColor(service.category)}`}>
                     {service.category}
                   </span>
                   {service.featured_on_homepage && (
@@ -513,7 +544,7 @@ export default function ServicesManagerPage() {
                     <Clock className="w-4 h-4 text-cyan" />
                     <span className="text-cyan-700 dark:text-white">{service.duration_minutes} min</span>
                   </div>
-                  {service.category === 'group' && (
+                  {isGroupCategory(service.category) && (
                     <div className="flex items-center gap-2">
                       <Users className="w-4 h-4 text-purple-400" />
                       <span className="text-cyan-700 dark:text-white">Max {service.max_participants}</span>

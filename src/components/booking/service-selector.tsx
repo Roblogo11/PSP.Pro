@@ -1,6 +1,7 @@
 'use client'
 
 import { Clock, DollarSign, Users } from 'lucide-react'
+import { getCategoryColorLight, isGroupCategory } from '@/lib/category-colors'
 
 interface Service {
   id: string
@@ -23,18 +24,7 @@ export function ServiceSelector({ services, selectedServiceId, onSelectService }
     return `$${(cents / 100).toFixed(2)}`
   }
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'individual':
-        return 'bg-orange/10 text-orange border-orange/20'
-      case 'group':
-        return 'bg-cyan/10 text-cyan border-cyan/20'
-      case 'package':
-        return 'bg-purple-500/10 text-purple-400 border-purple-500/20'
-      default:
-        return 'bg-cyan-600/10 text-cyan-600 border-cyan-600/20'
-    }
-  }
+  const getCategoryColor = getCategoryColorLight
 
   return (
     <div className="space-y-4">
@@ -87,7 +77,7 @@ export function ServiceSelector({ services, selectedServiceId, onSelectService }
                   <span className="font-semibold">{formatPrice(service.price_cents)}</span>
                 </div>
 
-                {service.category === 'group' && (
+                {isGroupCategory(service.category) && (
                   <div className="flex items-center gap-1.5">
                     <Users className="w-4 h-4 text-purple-400" />
                     <span>Max {service.max_participants}</span>
