@@ -55,10 +55,10 @@ const adminNavItems: NavItem[] = [
   { label: 'Admin Home', mobileLabel: 'Admin', href: '/admin', icon: Shield, color: 'text-red-400' },
   { label: 'Confirm Lessons', mobileLabel: 'Confirm', href: '/admin/bookings', icon: Calendar, color: 'text-blue-400', badgeKey: 'pendingBookings' },
   { label: 'Edit Lessons', mobileLabel: 'Lessons', href: '/admin/services', icon: DollarSign, color: 'text-green-400' },
-  { label: 'Manage Drills', mobileLabel: 'Drills', href: '/admin/drills', icon: Dumbbell, color: 'text-purple-400' },
   { label: 'Manage Athletes', mobileLabel: 'Athletes', href: '/admin/athletes', icon: Users, color: 'text-cyan-400' },
-  { label: 'Manage Courses', mobileLabel: 'Courses', href: '/admin/courses', icon: BookOpen, color: 'text-pink-400' },
-  { label: 'Questionnaires', mobileLabel: 'Quizzes', href: '/admin/questionnaires', icon: ClipboardCheck, color: 'text-emerald-400' },
+  { label: 'Drills', mobileLabel: 'Drills', href: '/admin/drills', icon: Dumbbell, color: 'text-purple-400' },
+  { label: 'Courses', mobileLabel: 'Courses', href: '/admin/courses', icon: BookOpen, color: 'text-pink-400' },
+  { label: 'Check-Ins', mobileLabel: 'Check-Ins', href: '/admin/questionnaires', icon: ClipboardCheck, color: 'text-emerald-400' },
   { label: 'Media', mobileLabel: 'Media', href: '/admin/media', icon: Video, color: 'text-pink-400' },
   { label: 'Analytics', mobileLabel: 'Stats', href: '/admin/analytics', icon: BarChart3, color: 'text-green-400' },
 ]
