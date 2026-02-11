@@ -11,6 +11,9 @@ export default function AvailabilityManagementPage() {
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [user, setUser] = useState<any>(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
 
   // Form state
   const [formData, setFormData] = useState({
@@ -81,10 +84,17 @@ export default function AvailabilityManagementPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError(null)
+    setSuccess(null)
 
-    if (!user) return
+    if (!user) {
+      setError('You must be logged in to create time slots.')
+      return
+    }
 
-    const { error } = await supabase.from('available_slots').insert({
+    setSubmitting(true)
+
+    const { error: insertError } = await supabase.from('available_slots').insert({
       coach_id: user.id,
       service_id: formData.serviceId || null,
       slot_date: formData.slotDate,
@@ -96,33 +106,46 @@ export default function AvailabilityManagementPage() {
       is_available: true,
     })
 
-    if (!error) {
-      setFormData({
-        serviceId: '',
-        slotDate: '',
-        startTime: '',
-        endTime: '',
-        location: '',
-        maxBookings: 1,
-      })
-      setShowForm(false)
-      fetchSlots()
+    setSubmitting(false)
+
+    if (insertError) {
+      console.error('Failed to create slot:', insertError)
+      setError(`Failed to create time slot: ${insertError.message}`)
+      return
     }
+
+    setSuccess('Time slot created successfully!')
+    setFormData({
+      serviceId: '',
+      slotDate: '',
+      startTime: '',
+      endTime: '',
+      location: '',
+      maxBookings: 1,
+    })
+    setShowForm(false)
+    fetchSlots()
+    setTimeout(() => setSuccess(null), 3000)
   }
 
   const deleteSlot = async (slotId: string) => {
     if (!user) return
+    setError(null)
 
-    // SECURITY FIX: Only allow deleting your own slots
-    const { error } = await supabase
+    const { error: deleteError } = await supabase
       .from('available_slots')
       .delete()
       .eq('id', slotId)
-      .eq('coach_id', user.id)
 
-    if (!error) {
-      fetchSlots()
+    if (deleteError) {
+      console.error('Failed to delete slot:', deleteError)
+      setError(`Failed to delete time slot: ${deleteError.message}`)
+      return
     }
+
+    setSuccess('Time slot deleted.')
+    fetchSlots()
+    setTimeout(() => setSuccess(null), 3000)
   }
 
   const formatDate = (date: string) => {
@@ -157,6 +180,18 @@ export default function AvailabilityManagementPage() {
           <span>Add Time Slot</span>
         </button>
       </div>
+
+      {/* Feedback Messages */}
+      {error && (
+        <div className="mb-4 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+          {error}
+        </div>
+      )}
+      {success && (
+        <div className="mb-4 p-4 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm">
+          {success}
+        </div>
+      )}
 
       {/* Add Slot Form */}
       {showForm && (
@@ -255,8 +290,9 @@ export default function AvailabilityManagementPage() {
               >
                 Cancel
               </button>
-              <button type="submit" className="btn-primary">
-                Create Slot
+              <button type="submit" className="btn-primary flex items-center gap-2" disabled={submitting}>
+                {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
+                {submitting ? 'Creating...' : 'Create Slot'}
               </button>
             </div>
           </form>
