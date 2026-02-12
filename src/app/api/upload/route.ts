@@ -92,6 +92,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
+    // Sanitize category to prevent path traversal
+    const safeCategory = category.replace(/[^a-zA-Z0-9_\- ]/g, '_')
+    if (safeCategory !== category) {
+      return NextResponse.json({ error: 'Invalid category name' }, { status: 400 })
+    }
+
     // Validate gallery type
     const validTypes: GalleryType[] = ['photography', 'video', 'drone', 'podcast', 'media-production', 'motion-graphics', 'digital-builds', 'website-redesign']
     if (!validTypes.includes(galleryType)) {
@@ -109,6 +115,16 @@ export async function POST(request: NextRequest) {
       const mediaUrl = formData.get('mediaUrl') as string
       if (!mediaUrl) {
         return NextResponse.json({ error: 'Media URL is required' }, { status: 400 })
+      }
+
+      // Validate URL protocol to prevent javascript: or data: XSS
+      try {
+        const parsed = new URL(mediaUrl)
+        if (!['http:', 'https:'].includes(parsed.protocol)) {
+          return NextResponse.json({ error: 'Only http/https URLs are allowed' }, { status: 400 })
+        }
+      } catch {
+        return NextResponse.json({ error: 'Invalid URL format' }, { status: 400 })
       }
 
       const timestamp = Date.now()

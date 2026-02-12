@@ -14,12 +14,23 @@ export async function POST(request: NextRequest) {
       return new NextResponse(null, { status: 204 })
     }
 
-    // Verify user is authenticated
+    // Verify user is authenticated and is master_admin
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const adminClient = createAdminClient()
+    const { data: profile } = await adminClient
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (profile?.role !== 'master_admin') {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     const body = await request.json()
@@ -29,7 +40,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'tableName and recordId are required' }, { status: 400 })
     }
 
-    const adminClient = createAdminClient()
     const { error } = await adminClient
       .from('simulation_data_log')
       .insert({

@@ -42,8 +42,10 @@ export async function POST(request: NextRequest) {
       .eq('id', user.id)
       .single()
 
-    // Create Stripe checkout session
-    const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    // Create Stripe checkout session — validate origin to prevent open redirect
+    const allowedOrigins = [process.env.NEXT_PUBLIC_SITE_URL, 'http://localhost:3000', 'https://psp-pro.vercel.app'].filter(Boolean)
+    const requestOrigin = request.headers.get('origin')
+    const origin = requestOrigin && allowedOrigins.includes(requestOrigin) ? requestOrigin : (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000')
     const session = await createBookingCheckoutSession({
       serviceId: service.id,
       serviceName: service.name,

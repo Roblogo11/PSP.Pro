@@ -920,10 +920,10 @@ export function PSPAssistant() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="fixed inset-x-0 bottom-0 sm:inset-x-auto sm:left-auto sm:bottom-6 sm:right-6 z-[102] sm:w-[420px] h-[85vh] sm:h-auto sm:max-h-[700px] rounded-t-2xl sm:rounded-2xl overflow-hidden shadow-2xl command-panel flex flex-col"
+              className="fixed inset-x-0 bottom-0 sm:inset-x-auto sm:left-auto sm:bottom-6 sm:right-6 z-[102] sm:w-[420px] h-[85vh] sm:h-auto sm:max-h-[700px] rounded-t-2xl sm:rounded-2xl overflow-hidden shadow-2xl flex flex-col bg-slate-900 border border-white/10"
             >
               {/* Header */}
-              <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-cyan-200/40 bg-gradient-to-r from-orange/10 to-cyan/10">
+              <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-white/10 bg-gradient-to-r from-orange/10 to-cyan/10">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-orange" />
                   <span className="font-bold text-white">PSP.Pro Guide</span>
@@ -931,21 +931,21 @@ export function PSPAssistant() {
                 </div>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-1 rounded-lg hover:bg-white/10 transition-colors text-cyan-700 dark:text-white hover:text-white"
+                  className="p-1 rounded-lg hover:bg-white/10 transition-colors text-white/70 hover:text-white"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               {/* Quick Actions */}
-              <div className="flex-shrink-0 px-4 py-2.5 border-b border-white/5 bg-cyan-50/50">
+              <div className="flex-shrink-0 px-4 py-2.5 border-b border-white/5 bg-white/5">
                 <div className="flex flex-wrap gap-1.5">
                   {QUICK_ACTIONS.map((action, i) => (
                     <Link
                       key={i}
                       href={action.href}
                       onClick={() => setIsOpen(false)}
-                      className="px-2.5 py-1 rounded-full text-xs font-medium bg-cyan-50/50 hover:bg-orange/20 text-cyan-700 dark:text-white hover:text-orange transition-colors border border-cyan-200/40 hover:border-orange/50"
+                      className="px-2.5 py-1 rounded-full text-xs font-medium bg-white/10 hover:bg-orange/20 text-white/80 hover:text-orange transition-colors border border-white/10 hover:border-orange/50"
                     >
                       {action.label}
                     </Link>
@@ -965,7 +965,7 @@ export function PSPAssistant() {
                       </div>
                     ) : (
                       <div className="flex flex-col gap-2">
-                        <div className="max-w-[90%] px-3 py-2.5 rounded-2xl rounded-tl-sm bg-white/10 text-cyan-700 dark:text-white text-sm whitespace-pre-line leading-relaxed">
+                        <div className="max-w-[90%] px-3 py-2.5 rounded-2xl rounded-tl-sm bg-white/10 text-white/90 text-sm whitespace-pre-line leading-relaxed">
                           {msg.module?.title && (
                             <div className="font-bold text-white mb-1.5 text-sm">
                               {msg.module.title}
@@ -1011,13 +1011,13 @@ export function PSPAssistant() {
                 {/* Page-contextual suggestions (show only when no messages yet or after greeting) */}
                 {messages.length <= 1 && (
                   <div className="mt-2">
-                    <p className="text-xs text-cyan-700 dark:text-white/60 mb-2">Try asking:</p>
+                    <p className="text-xs text-white/50 mb-2">Try asking:</p>
                     <div className="flex flex-col gap-1.5">
                       {getSuggestions().map((s, i) => (
                         <button
                           key={i}
                           onClick={() => handleSuggestionClick(s.query)}
-                          className="text-left px-3 py-2 rounded-xl text-xs font-medium bg-white/5 hover:bg-orange/10 text-cyan-700 dark:text-white/80 hover:text-orange transition-all border border-white/10 hover:border-orange/30"
+                          className="text-left px-3 py-2 rounded-xl text-xs font-medium bg-white/5 hover:bg-orange/10 text-white/80 hover:text-orange transition-all border border-white/10 hover:border-orange/30"
                         >
                           {s.label}
                         </button>
@@ -1030,7 +1030,7 @@ export function PSPAssistant() {
               </div>
 
               {/* Input */}
-              <form onSubmit={handleSubmit} className="flex-shrink-0 px-4 py-3 border-t border-cyan-200/40 bg-cyan-50/50">
+              <form onSubmit={handleSubmit} className="flex-shrink-0 px-4 py-3 border-t border-white/10 bg-slate-800/50">
                 <div className="flex gap-2">
                   <input
                     ref={inputRef}
@@ -1038,7 +1038,7 @@ export function PSPAssistant() {
                     value={input}
                     onChange={e => setInput(e.target.value)}
                     placeholder="Ask anything about PSP.Pro..."
-                    className="flex-1 px-4 py-2 rounded-xl bg-cyan-50/50 border border-cyan-200/40 text-white placeholder:text-cyan-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50"
+                    className="flex-1 px-4 py-2 rounded-xl bg-white/10 border border-white/10 text-white placeholder:text-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50"
                   />
                   <button
                     type="submit"
@@ -1047,7 +1047,7 @@ export function PSPAssistant() {
                     <Send className="w-4 h-4" />
                   </button>
                 </div>
-                <p className="text-[10px] text-cyan-800 dark:text-white mt-2 text-center">
+                <p className="text-[10px] text-white/40 mt-2 text-center">
                   I know every page — try "walk me through" any feature
                 </p>
               </form>
