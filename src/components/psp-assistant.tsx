@@ -79,8 +79,9 @@ const PAGE_SUGGESTIONS: Record<string, { label: string; query: string }[]> = {
   ],
   '/admin': [
     { label: 'Walk me through the admin panel', query: 'walk me through admin' },
-    { label: 'How do I add an athlete?', query: 'add athlete' },
-    { label: 'How do I manage bookings?', query: 'manage bookings' },
+    { label: 'I\'m new — where do I start?', query: 'first time setup' },
+    { label: 'How do I book for an athlete?', query: 'book for athlete' },
+    { label: 'What\'s my daily workflow?', query: 'daily workflow' },
   ],
   '/courses': [
     { label: 'How do courses work?', query: 'how do courses work' },
@@ -101,6 +102,32 @@ const PAGE_SUGGESTIONS: Record<string, { label: string; query: string }[]> = {
     { label: 'How do I create a quiz?', query: 'create quiz' },
     { label: 'How do I assign to athletes?', query: 'assign quiz' },
     { label: 'How do I see responses?', query: 'quiz responses' },
+  ],
+  '/admin/bookings': [
+    { label: 'How do I confirm a booking?', query: 'manage bookings' },
+    { label: 'How do I book for an athlete?', query: 'book for athlete' },
+    { label: 'How do I add session notes?', query: 'edit booking' },
+    { label: 'How do I mark a session complete?', query: 'mark complete' },
+  ],
+  '/admin/availability': [
+    { label: 'How do I block time for a client?', query: 'block time' },
+    { label: 'How do I edit a time slot?', query: 'edit slot' },
+    { label: 'How do I set my hours?', query: 'availability' },
+  ],
+  '/admin/services': [
+    { label: 'How do I create a lesson type?', query: 'lesson builder' },
+    { label: 'How do I rename a lesson?', query: 'rename lesson' },
+    { label: 'How do I add a video?', query: 'video url' },
+  ],
+  '/admin/athletes': [
+    { label: 'How do I add an athlete?', query: 'add athlete' },
+    { label: 'How do I assign drills?', query: 'assign drill' },
+    { label: 'How do I view an athlete\'s profile?', query: 'manage athletes' },
+  ],
+  '/admin/drills': [
+    { label: 'How do I create a drill?', query: 'create drill' },
+    { label: 'How do I bulk import drills?', query: 'import drill' },
+    { label: 'How do I assign drills to athletes?', query: 'assign drill' },
   ],
   '/blog': [
     { label: 'What topics do you cover?', query: 'blog topics' },
@@ -206,7 +233,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['cancel', 'refund', 'reschedule', 'change session', 'move session', 'cancellation policy'],
     title: 'Cancellations & Rescheduling',
-    response: 'Our cancellation policy:\n\n• 24+ hours in advance → Full session credit\n• Less than 24 hours → Session forfeited\n\nHow to cancel or reschedule:\n1. Go to "My Sessions" from your dashboard\n2. Find the upcoming session you want to change\n3. Click "Cancel" or "Reschedule"\n4. Confirm in the popup\n\nCoaches can also reschedule from their Confirm Appointments panel.\n\nFor refund questions, reach out via the Contact page.',
+    response: 'Our cancellation policy:\n\n• 24+ hours in advance → Full session credit\n• Less than 24 hours → Session forfeited\n\nHow to cancel or reschedule:\n1. Go to "My Sessions" (sidebar → My Lessons) from your dashboard\n2. Find the upcoming session you want to change\n3. Click "Cancel" or "Reschedule"\n4. Confirm in the popup\n\nCoaches can also manage from their Calendar (Confirm/Book) page.\n\nFor refund questions, reach out via the Contact page.',
     actions: [{ label: 'My Sessions', href: '/sessions' }, { label: 'Contact Us', href: '/contact' }],
   },
 
@@ -376,9 +403,9 @@ const KNOWLEDGE_BASE: KBEntry[] = [
 
   // ── ADMIN PANEL ──
   {
-    keywords: ['admin', 'coach dashboard', 'manage athletes', 'coach view', 'admin panel', 'coach panel'],
+    keywords: ['admin', 'coach dashboard', 'manage athletes', 'coach view', 'admin panel', 'coach panel', 'control center'],
     title: 'Coach/Admin Dashboard',
-    response: 'The Admin panel is your coaching command center:\n\n📊 Quick Stats — Active athletes, upcoming sessions, total drills, pending bookings\n\n🏋️ Core Tools:\n• Confirm Lessons — Confirm, edit, cancel bookings + book for athletes\n• Lesson Builder — Create/rename lesson types, set pricing, and add video URLs\n• Athletes — View, create, edit, delete athlete profiles\n• Drills — Create drills, import from YouTube, assign to athletes\n• Courses — Build multi-lesson video courses, enroll athletes\n• Pop Quiz — Create T/F quizzes, assign to athletes, view scores\n• Availability — Set your coaching schedule + edit slots\n• Media — Upload and manage content\n• Analytics — View performance data and trends\n\n💰 Stripe Settings (Admin only):\n• Toggle test/live payment mode\n• View payment status\n\nCoaches see only their athletes and sessions. Admins see everything.',
+    response: 'The Admin panel is your coaching command center:\n\n📊 Quick Stats — Active athletes, upcoming sessions, total drills, pending bookings\n\n🏋️ Core Tools (sidebar navigation):\n• Calendar (Confirm/Book) — Confirm, edit, cancel bookings + book for athletes\n• Lesson Builder — Create/rename lesson types, set pricing, and add video URLs\n• Manage Athletes — View, create, edit, delete athlete profiles\n• Drills — Create drills, import from YouTube, assign to athletes\n• Courses — Build multi-lesson video courses, enroll athletes\n• Pop Quiz — Create T/F quizzes, assign to athletes, view scores\n• Media — Upload and manage content\n• Analytics — View performance data and trends\n\n🚀 Quick Actions on Admin Home:\n• "Book for Athlete" button (top right — always visible)\n• Create Drill, Schedule Session, Add Athlete, Upload Video cards\n\n💰 Stripe Settings (Admin only):\n• Toggle test/live payment mode\n• View payment status\n\nCoaches see only their athletes and sessions. Admins see everything.',
     actions: [{ label: 'Go to Admin', href: '/admin' }],
     followUp: ['How do I create a course?', 'How do I create a quiz?', 'How do I book for an athlete?'],
     role: 'coach',
@@ -386,10 +413,48 @@ const KNOWLEDGE_BASE: KBEntry[] = [
 
   // ── ADMIN WALKTHROUGH ──
   {
-    keywords: ['walk me through admin', 'admin walkthrough', 'admin page'],
+    keywords: ['walk me through admin', 'admin walkthrough', 'admin page', 'how to use admin'],
     title: 'Admin Panel Walkthrough',
-    response: 'The Admin Control Center layout:\n\nTop — Welcome banner with quick start tips and your name.\n\nStats Row — 4 cards: Total Athletes, Upcoming Sessions, Training Drills, Pending Bookings (shows notification badge if any pending).\n\nUpcoming Sessions — List of your next 5 sessions with athlete name, date, time, and status.\n\nQuick Actions — 4 cards: Create Drill, Schedule Session, Add Athlete, Upload Video.\n\nPlatform Management — 6 cards linking to: Athlete Management, Courses, Session Schedule, Content Library, Analytics, Platform Settings.\n\nStripe Section (admin only) — Shows test/live payment mode with toggle switch.\n\nSidebar navigation:\n• Confirm Lessons — manage all bookings, edit notes, book for athletes\n• Lesson Builder — create/rename lesson types and pricing\n• Athletes — athlete profiles and management\n• Drills — create and assign training videos\n• Courses — build multi-lesson video courses\n• Pop Quiz — create and assign T/F quizzes\n• Media — upload and manage content\n• Analytics — performance data and trends',
+    response: 'The Admin Control Center layout:\n\nHeader — "Admin Control Center" title with an orange "Book for Athlete" button (top right). Below that, a smart banner greets you by name and shows tips based on your current stats (pending bookings, athletes, drills).\n\nQuick Actions — 5 cards: Book for Athlete, Create Drill, Schedule Session, Add Athlete, Upload Video.\n\nQuick Stats — 4 cards: Total Athletes, Upcoming Sessions, Training Drills, Pending Bookings (badge if any pending).\n\nUpcoming Sessions — List of your next 5 sessions with athlete name, service, date, time, and status. Click any to go to the Calendar page.\n\nPlatform Management — 6 cards: Athlete Management, Courses, Session Schedule, Content Library, Analytics, Platform Settings.\n\nStripe Section (admin only) — Test/live payment mode toggle.\n\nSidebar navigation:\n• Calendar (Confirm/Book) — manage all bookings, edit notes, book for athletes\n• Lesson Builder — create/rename lesson types and pricing\n• Manage Athletes — athlete profiles and management\n• Drills — create and assign training videos\n• Courses — build multi-lesson video courses\n• Pop Quiz — create and assign T/F quizzes\n• Media — upload and manage content\n• Analytics — performance data and trends',
     actions: [{ label: 'Go to Admin', href: '/admin' }],
+    role: 'coach',
+  },
+
+  // ── COACH: FULL WALKTHROUGH — FIRST TIME SETUP ──
+  {
+    keywords: ['first time setup', 'getting started as coach', 'new coach', 'how to start', 'setup my account', 'what do i do first', 'where do i start', 'coach tutorial', 'coach guide', 'full walkthrough coach'],
+    title: 'Coach Getting Started Guide',
+    response: 'Welcome! Here\'s how to set up everything as a coach:\n\nStep 1: Create Your Lesson Types\nGo to Lesson Builder (sidebar). Click "Create Lesson Type" and add your services — 1-on-1 training, group sessions, etc. Set name, price, duration, and category.\n\nStep 2: Set Your Availability\nGo to Admin Home → "Schedule Session" (or sidebar → Availability page). Pick dates and time slots when you can coach. Link each slot to a lesson type.\n\nStep 3: Add Your Athletes\nGo to Manage Athletes. Click "Add Athlete" — enter their name, email, sport, and age. They get an account instantly.\n\nStep 4: Create Drills\nGo to Drills. Click "Create Drill" — add a YouTube video URL, title, description, difficulty. Or use Bulk Import with a CSV (180x faster!).\n\nStep 5: Assign Drills\nGo to Manage Athletes → select an athlete → "Assign Drills" → pick from your library.\n\nStep 6: Book Returning Clients\nFrom Admin Home, click "Book for Athlete" to manually book a session for a walk-in or existing client.\n\nThat\'s it! Your athletes can now log in, see their drills, book sessions, and track progress.',
+    actions: [{ label: 'Lesson Builder', href: '/admin/services' }, { label: 'Set Availability', href: '/admin/availability' }, { label: 'Manage Athletes', href: '/admin/athletes' }],
+    followUp: ['How do I book for an athlete?', 'How do I create a course?', 'Walk me through the admin panel'],
+    role: 'coach',
+  },
+
+  // ── COACH: DAILY WORKFLOW ──
+  {
+    keywords: ['daily workflow', 'day to day', 'routine', 'what should i do daily', 'daily tasks', 'coach routine', 'morning routine'],
+    title: 'Coach Daily Workflow',
+    response: 'Here\'s a typical coach workflow:\n\n1. Check Admin Home\nOpen /admin — your smart banner shows pending bookings and upcoming sessions at a glance.\n\n2. Confirm Pending Bookings\nClick "Calendar (Confirm/Book)" in the sidebar (or the pending badge). Confirm or decline new bookings.\n\n3. Review Today\'s Sessions\nThe Upcoming Sessions widget on Admin Home shows your next 5 sessions with athlete names and times.\n\n4. After Each Session\nGo to Calendar (Confirm/Book) → find the completed session → click Edit → add Coach Notes (athlete sees these) and Internal Notes (private). Mark as "Complete."\n\n5. Assign Follow-Up Drills\nGo to Manage Athletes → select the athlete → Assign Drills based on what you worked on.\n\n6. Book Walk-Ins\nClient shows up without a booking? Click "Book for Athlete" on Admin Home → select athlete, slot, and payment type (on-site, package, or comp).\n\n7. Check Analytics\nEnd of day, review Analytics for trends across your athletes.',
+    actions: [{ label: 'Admin Home', href: '/admin' }, { label: 'Calendar', href: '/admin/bookings' }],
+    followUp: ['How do I edit a booking?', 'How do I add coach notes?', 'How do I mark a session complete?'],
+    role: 'coach',
+  },
+
+  // ── COACH: MARK SESSION COMPLETE ──
+  {
+    keywords: ['mark complete', 'complete session', 'finish session', 'session done', 'after session', 'post session', 'session complete'],
+    title: 'Marking a Session Complete',
+    response: 'After a training session:\n\n1. Go to Calendar (Confirm/Book) in the sidebar\n2. Find the session (filter by "Confirmed" if needed)\n3. Click the pencil (Edit) icon on the booking\n4. Add Coach Notes — things the athlete did well, areas to improve (the athlete can see these!)\n5. Add Internal Notes — private thoughts, injury concerns, etc. (only you and admins see these)\n6. Change Status to "Completed"\n7. Save\n\nThe session now shows as completed in the athlete\'s Session History with your notes attached.\n\nIf the athlete didn\'t show up, click "No Show" instead — this tracks attendance.',
+    actions: [{ label: 'Calendar', href: '/admin/bookings' }],
+    role: 'coach',
+  },
+
+  // ── COACH: SIDEBAR NAVIGATION MAP ──
+  {
+    keywords: ['sidebar', 'navigation', 'menu items', 'where is', 'find page', 'coach menu', 'admin menu', 'admin sidebar'],
+    title: 'Coach Sidebar Navigation',
+    response: 'Your sidebar navigation (left side on desktop, bottom on mobile):\n\n• Admin Home — your command center with stats, sessions, and quick actions\n• Calendar (Confirm/Book) — all bookings: confirm, edit, cancel, book for athletes\n• Lesson Builder — create/manage lesson types, pricing, categories\n• Manage Athletes — view/create/edit athlete profiles\n• Drills — create, import, and manage training videos\n• Courses — build multi-lesson video course bundles\n• Pop Quiz — create T/F quizzes, assign to athletes, view scores\n• Media — upload and manage content files\n• Analytics — performance reports and trends\n\nTips:\n• Calendar has a badge showing pending bookings count\n• "Book for Athlete" is also available from Admin Home (orange button top right)\n• On mobile, swipe left/right to see all nav items',
+    actions: [{ label: 'Admin Home', href: '/admin' }],
     role: 'coach',
   },
 
@@ -404,11 +469,11 @@ const KNOWLEDGE_BASE: KBEntry[] = [
 
   // ── MANAGE BOOKINGS (COACH) ──
   {
-    keywords: ['manage bookings', 'confirm booking', 'pending booking', 'booking management', 'approve booking'],
-    title: 'Managing Bookings (Coach Tool)',
-    response: 'The Confirm Lessons page shows all session bookings:\n\nFilter tabs: All, Pending, Confirmed, Cancelled\n\nStats row: Total Bookings, Confirmed, Pending, Revenue\n\nEach booking shows: Athlete name, service, date/time, coach, amount, payment status, booking status.\n\nActions you can take:\n• Pending → "Confirm" or "Cancel"\n• Confirmed → "Mark Complete" or "No Show" (after session)\n• Edit → Add coach notes, internal notes, update status\n• "Book for Athlete" → Create a booking on behalf of any athlete (on-site payment, use package, or complimentary)\n\nCoaches see only their own bookings. Admins see all.',
-    actions: [{ label: 'Confirm Lessons', href: '/admin/bookings' }],
-    followUp: ['How do I book for an athlete?', 'How do I edit a booking?'],
+    keywords: ['manage bookings', 'confirm booking', 'pending booking', 'booking management', 'approve booking', 'calendar confirm', 'calendar book'],
+    title: 'Calendar (Confirm/Book)',
+    response: 'The Calendar page (sidebar: "Calendar (Confirm/Book)") is your booking command center:\n\nFilter tabs: All, Pending, Confirmed, Cancelled\n\nStats row: Total Bookings, Confirmed, Pending, Revenue\n\nEach booking shows: Athlete name, service, date/time, coach, amount, payment status, booking status.\n\nActions you can take:\n• Pending → "Confirm" or "Cancel"\n• Confirmed → "Mark Complete" or "No Show" (after session)\n• Edit → Add coach notes, internal notes, update status\n• "Book for Athlete" button (top of page) → Create a booking on behalf of any athlete\n\nPayment types when booking for athlete:\n• Stripe — normal online payment\n• On-Site — athlete pays in person\n• Use Package — deducts from athlete\'s session pack\n• Complimentary — free session\n\nCoaches see only their own bookings. Admins see all.',
+    actions: [{ label: 'Calendar', href: '/admin/bookings' }],
+    followUp: ['How do I book for an athlete?', 'How do I edit a booking?', 'How do I mark a session complete?'],
     role: 'coach',
   },
 
@@ -432,11 +497,11 @@ const KNOWLEDGE_BASE: KBEntry[] = [
 
   // ── AVAILABILITY (COACH) ──
   {
-    keywords: ['availability', 'schedule', 'time slot', 'set hours', 'coaching hours', 'available times'],
-    title: 'Setting Availability',
-    response: 'From Admin → Availability, you set when you\'re available for bookings:\n\n• Select a date\n• Add time slots (start time, end time)\n• Link a service to each slot\n• Set max bookings per slot (usually 1 for 1-on-1, more for groups)\n\nEditing slots:\n• Click the pencil icon to edit a slot\'s time, location, or service\n• Slots with active bookings show a warning before editing\n• Delete empty slots you no longer need\n\nAthletes will only see time slots you\'ve marked as available when they go to book. Slots are automatically marked unavailable once booked.\n\nDefault hours: Mon-Fri 3PM-9PM, Saturday 9AM-5PM.',
-    actions: [{ label: 'Set Availability', href: '/admin/availability' }],
-    followUp: ['How do I edit a slot?', 'How do I manage bookings?'],
+    keywords: ['availability', 'schedule', 'time slot', 'set hours', 'coaching hours', 'available times', 'block time', 'block slot', 'reserve time'],
+    title: 'Setting Availability & Blocking Time',
+    response: 'From Admin Home → "Schedule Session" quick action (or sidebar → Availability page):\n\nCreating time slots:\n1. Click "Add Time Slot"\n2. Select a service (lesson type)\n3. Pick a date and set start/end times\n4. Set location and max bookings (1 for 1-on-1, more for groups)\n5. Save — athletes can now see and book this slot\n\nBlocking time for existing clients:\nIf a client is already booked from your old system, use "Book for Athlete" to reserve the slot:\n• There\'s an orange tip banner at the top of the Availability page linking directly to it\n• Or click "Book for Athlete" on Admin Home\n• This books the slot AND blocks it so nobody else can take it\n\nEditing slots:\n• Click the pencil icon to edit time, location, or service\n• Slots with active bookings show a warning\n• Delete empty slots you no longer need\n\nDefault hours: Mon-Fri 3PM-9PM, Saturday 9AM-5PM.',
+    actions: [{ label: 'Set Availability', href: '/admin/availability' }, { label: 'Book for Athlete', href: '/admin/bookings?action=book' }],
+    followUp: ['How do I book for an athlete?', 'How do I edit a slot?', 'How do I manage bookings?'],
     role: 'coach',
   },
 
@@ -508,7 +573,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['navigate', 'menu', 'sidebar', 'where do i find', 'how to find', 'navigation', 'pages', 'sitemap'],
     title: 'Site Navigation',
-    response: 'Here\'s how to get around PSP.Pro:\n\nPublic Pages (no login needed):\n• Home, About, Pricing, Blog, Contact, FAQ, Join the Team\n\nThe navigation adapts based on your login status:\n• Logged out — sidebar shows a "Login" link at the bottom\n• Logged in — sidebar shows "Your Dashboard" at the top (goes to /locker for athletes, /admin for coaches)\n\nAthlete Pages (login + membership required):\n• Athlete Locker — your main dashboard\n• Sessions — view/manage your bookings\n• Membership Training — browse training videos\n• Courses — video course library\n• Pop Quiz — game knowledge quizzes\n• Progress — track improvement\n• Achievements — earned badges\n• Buy Lessons — book new sessions\n• Settings — account management\n\nCoach/Admin Pages:\n• Admin Panel — main command center\n• Confirm Lessons — manage bookings\n• Lesson Builder — manage services & pricing\n• Athletes, Drills, Courses, Pop Quiz, Media, Analytics\n\nCTAs across the site also adapt — members see "Book Now" buttons while visitors see "Join the Team."',
+    response: 'Here\'s how to get around PSP.Pro:\n\nPublic Pages (no login needed):\n• Home, About, Pricing, Blog, Contact, FAQ, Join the Team\n\nThe navigation adapts based on your login status:\n• Logged out — sidebar shows a "Login" link at the bottom\n• Logged in — sidebar shows "Your Dashboard" at the top (goes to /locker for athletes, /admin for coaches)\n\nAthlete Sidebar:\n• Dashboard — your main locker\n• Drills (members only) — browse training videos\n• Progress — track improvement\n• Achievements — earned badges\n• My Lessons — view/manage your bookings\n• Buy Lessons — book new sessions\n• Courses — video course library\n• Pop Quiz — game knowledge quizzes\n• Settings — account management\n\nCoach/Admin Sidebar:\n• Admin Home — command center with stats & quick actions\n• Calendar (Confirm/Book) — manage bookings, confirm, book for athletes\n• Lesson Builder — manage lesson types & pricing\n• Manage Athletes — athlete profiles\n• Drills — create and assign training videos\n• Courses — build video course bundles\n• Pop Quiz — create and assign quizzes\n• Media — upload content\n• Analytics — performance reports\n\nCTAs across the site adapt — members see "Book Now", visitors see "Join the Team."',
     actions: [{ label: 'Home', href: '/' }, { label: 'Dashboard', href: '/locker' }],
   },
 
@@ -608,8 +673,8 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['edit booking', 'booking notes', 'coach notes', 'internal notes', 'add notes to booking', 'no show', 'no-show', 'mark no show'],
     title: 'Editing Bookings & Notes',
-    response: 'You can edit bookings to add notes and update status:\n\n1. Go to Admin → Confirm Lessons\n2. Find the booking\n3. Click the pencil (Edit) icon\n4. You can update:\n   • Coach Notes — visible to the athlete (e.g., "Great session! Work on follow-through")\n   • Internal Notes — private, only coaches/admins see these\n   • Status — Confirm, Complete, or Cancel the booking\n5. Save changes\n\nNo-Shows:\n• Click the "No Show" button on any confirmed booking\n• This marks the session as missed and tracks attendance\n\nAll notes are saved and visible when you review past sessions.',
-    actions: [{ label: 'Manage Bookings', href: '/admin/bookings' }],
+    response: 'You can edit bookings to add notes and update status:\n\n1. Go to Calendar (Confirm/Book) in the sidebar\n2. Find the booking\n3. Click the pencil (Edit) icon\n4. You can update:\n   • Coach Notes — visible to the athlete (e.g., "Great session! Work on follow-through")\n   • Internal Notes — private, only coaches/admins see these\n   • Status — Confirm, Complete, or Cancel the booking\n5. Save changes\n\nNo-Shows:\n• Click the "No Show" button on any confirmed booking\n• This marks the session as missed and tracks attendance\n\nAll notes are saved and visible when you review past sessions.',
+    actions: [{ label: 'Calendar', href: '/admin/bookings' }],
     role: 'coach',
   },
 
@@ -619,8 +684,8 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['book for athlete', 'create booking', 'admin booking', 'book on behalf', 'on-site payment', 'on site payment', 'comp booking', 'complimentary booking', 'manual booking'],
     title: 'Booking for an Athlete (Coach Tool)',
-    response: 'You can create bookings on behalf of athletes:\n\n1. Go to Admin → Confirm Lessons\n2. Click "Book for Athlete"\n3. Select the athlete from the dropdown\n4. Pick an available slot (date + time)\n5. Select the service/training type\n6. Choose a payment method:\n   • Stripe — normal online payment\n   • On-Site — athlete pays in person (cash/card at facility)\n   • Use Package — deducts from athlete\'s active session pack\n   • Complimentary — free session (no charge)\n7. Add optional notes\n8. Click "Create Booking"\n\nThis is great for walk-ins, phone bookings, or giving comp sessions!',
-    actions: [{ label: 'Create Booking', href: '/admin/bookings' }],
+    response: 'You can create bookings on behalf of athletes — this also blocks the time slot so nobody else can take it!\n\nWhere to find it:\n• Admin Home → orange "Book for Athlete" button (top right)\n• Calendar (Confirm/Book) page → "Book for Athlete" button at top\n• Availability page → orange tip banner at top links here too\n• Coach Locker → "Book for Athlete" quick link\n\nHow it works:\n1. Click "Book for Athlete" from any of the locations above\n2. Select the athlete from the dropdown\n3. Pick an available slot (date + time)\n4. Select the service/training type\n5. Choose a payment method:\n   • Stripe — normal online payment\n   • On-Site — athlete pays in person (cash/card at facility)\n   • Use Package — deducts from athlete\'s active session pack\n   • Complimentary — free session (no charge)\n6. Add optional notes\n7. Click "Create Booking"\n\nThe time slot is immediately blocked — no one else can book that slot. Great for walk-ins, phone bookings, transferring clients from another system, or giving comp sessions!',
+    actions: [{ label: 'Book for Athlete', href: '/admin/bookings?action=book' }],
     followUp: ['How do I edit a booking?', 'How do I manage availability?'],
     role: 'coach',
   },
@@ -728,8 +793,14 @@ export function PSPAssistant() {
   // Determine role filter for KB matching
   const userRole: RoleFilter = isCoach || isAdmin ? 'coach' : profile ? 'athlete' : 'visitor'
 
+  // Smooth auto-scroll: always scroll to bottom when new messages arrive
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (messagesEndRef.current) {
+      // Use requestAnimationFrame for smoother scroll timing
+      requestAnimationFrame(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+      })
+    }
   }, [messages])
 
   useEffect(() => {
@@ -849,10 +920,10 @@ export function PSPAssistant() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="fixed bottom-4 left-2 right-2 sm:left-auto sm:bottom-6 sm:right-6 z-[102] sm:w-[420px] max-h-[calc(100vh-6rem)] sm:max-h-[600px] rounded-2xl overflow-hidden shadow-2xl command-panel"
+              className="fixed inset-x-0 bottom-0 sm:inset-x-auto sm:left-auto sm:bottom-6 sm:right-6 z-[102] sm:w-[420px] h-[85vh] sm:h-auto sm:max-h-[700px] rounded-t-2xl sm:rounded-2xl overflow-hidden shadow-2xl command-panel flex flex-col"
             >
               {/* Header */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-cyan-200/40 bg-gradient-to-r from-orange/10 to-cyan/10">
+              <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-cyan-200/40 bg-gradient-to-r from-orange/10 to-cyan/10">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-orange" />
                   <span className="font-bold text-white">PSP.Pro Guide</span>
@@ -867,7 +938,7 @@ export function PSPAssistant() {
               </div>
 
               {/* Quick Actions */}
-              <div className="px-4 py-2.5 border-b border-white/5 bg-cyan-50/50">
+              <div className="flex-shrink-0 px-4 py-2.5 border-b border-white/5 bg-cyan-50/50">
                 <div className="flex flex-wrap gap-1.5">
                   {QUICK_ACTIONS.map((action, i) => (
                     <Link
@@ -883,7 +954,7 @@ export function PSPAssistant() {
               </div>
 
               {/* Messages */}
-              <div className="h-[300px] overflow-y-auto px-4 py-3 space-y-3">
+              <div className="flex-1 min-h-0 overflow-y-auto px-4 py-3 space-y-3 scroll-smooth scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
                 {messages.map(msg => (
                   <div key={msg.id}>
                     {msg.type === 'user' ? (
@@ -894,9 +965,9 @@ export function PSPAssistant() {
                       </div>
                     ) : (
                       <div className="flex flex-col gap-2">
-                        <div className="max-w-[90%] px-3 py-2 rounded-2xl rounded-tl-sm bg-white/10 text-cyan-700 dark:text-white text-sm whitespace-pre-line">
+                        <div className="max-w-[90%] px-3 py-2.5 rounded-2xl rounded-tl-sm bg-white/10 text-cyan-700 dark:text-white text-sm whitespace-pre-line leading-relaxed">
                           {msg.module?.title && (
-                            <div className="font-bold text-white mb-1 text-sm">
+                            <div className="font-bold text-white mb-1.5 text-sm">
                               {msg.module.title}
                             </div>
                           )}
@@ -955,11 +1026,11 @@ export function PSPAssistant() {
                   </div>
                 )}
 
-                <div ref={messagesEndRef} />
+                <div ref={messagesEndRef} className="h-2" />
               </div>
 
               {/* Input */}
-              <form onSubmit={handleSubmit} className="px-4 py-3 border-t border-cyan-200/40 bg-cyan-50/50">
+              <form onSubmit={handleSubmit} className="flex-shrink-0 px-4 py-3 border-t border-cyan-200/40 bg-cyan-50/50">
                 <div className="flex gap-2">
                   <input
                     ref={inputRef}
