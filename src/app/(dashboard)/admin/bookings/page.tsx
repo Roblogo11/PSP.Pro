@@ -341,7 +341,7 @@ export default function AdminBookingsPage() {
       <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
-            Confirm <span className="text-gradient-orange">Lessons</span>
+            Calendar <span className="text-base md:text-lg font-semibold text-cyan-700 dark:text-white/60">(Confirm)</span>
           </h1>
           <p className="text-cyan-800 dark:text-white text-lg">
             Review and confirm lessons booked by athletes

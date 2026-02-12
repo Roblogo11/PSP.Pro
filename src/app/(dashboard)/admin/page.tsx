@@ -21,7 +21,7 @@ import { getLocalDateString } from '@/lib/utils/local-date'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
 import { Tooltip, InfoBanner } from '@/components/ui/tooltip'
-import { Lightbulb, AlertTriangle, CreditCard, ToggleLeft, ToggleRight, UserCircle, Trash2, Eye, Search, XCircle as XCircleIcon } from 'lucide-react'
+import { Lightbulb, AlertTriangle, CreditCard, ToggleLeft, ToggleRight, UserCircle, Trash2, Eye, Search, XCircle as XCircleIcon, UserPlus } from 'lucide-react'
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -247,6 +247,13 @@ export default function AdminDashboard() {
 
   const quickActions = [
     {
+      title: 'Book for Athlete',
+      description: 'Reserve a slot for a client',
+      icon: UserPlus,
+      href: '/admin/bookings?action=book',
+      color: '#F97316',
+    },
+    {
       title: 'Create Drill',
       description: 'Add new drill to library',
       icon: Dumbbell,
@@ -331,26 +338,45 @@ export default function AdminDashboard() {
     <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8 relative">
       {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
-          Admin <span className="text-gradient-orange">Control Center</span>
-        </h1>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2">
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white">
+            Admin <span className="text-gradient-orange">Control Center</span>
+          </h1>
+          <Link
+            href="/admin/bookings?action=book"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-orange hover:bg-orange/90 text-white rounded-xl font-semibold text-sm transition-all shadow-lg shadow-orange/20 hover:shadow-orange/30 whitespace-nowrap"
+          >
+            <UserPlus className="w-4 h-4" />
+            Book for Athlete
+          </Link>
+        </div>
         <p className="text-cyan-700 dark:text-white text-lg mb-4">
           Manage your athletes, drills, and content from one place
         </p>
 
-        {/* Welcome Guide */}
+        {/* Smart Welcome Guide */}
         <InfoBanner
-          title="Welcome to Your Command Center!"
-          description="Start by adding drills (bulk import is 180x faster!), then invite athletes, and approve their bookings. Everything updates in real-time."
+          title={`Hey ${profile?.full_name?.split(' ')[0] || 'Coach'}!`}
+          description={
+            stats.pendingBookings > 0
+              ? `You have ${stats.pendingBookings} pending booking${stats.pendingBookings === 1 ? '' : 's'} to confirm. ${stats.activeSessions > 0 ? `${stats.activeSessions} upcoming session${stats.activeSessions === 1 ? '' : 's'} on the calendar.` : 'Check your calendar to stay on track.'}`
+              : stats.totalDrills === 0
+              ? 'Get started by adding drills to your library (bulk import is 180x faster!), then invite athletes and set your availability.'
+              : stats.totalAthletes === 0
+              ? `You have ${stats.totalDrills} drill${stats.totalDrills === 1 ? '' : 's'} ready. Next step: invite athletes and set your availability to start booking sessions.`
+              : stats.activeSessions === 0
+              ? `${stats.totalAthletes} athlete${stats.totalAthletes === 1 ? '' : 's'} registered, ${stats.totalDrills} drill${stats.totalDrills === 1 ? '' : 's'} in the library. Set your availability to start booking sessions!`
+              : `${stats.totalAthletes} athlete${stats.totalAthletes === 1 ? '' : 's'}, ${stats.activeSessions} upcoming session${stats.activeSessions === 1 ? '' : 's'}, ${stats.totalDrills} drill${stats.totalDrills === 1 ? '' : 's'} in the library. Everything updates in real-time.`
+          }
           icon={<Lightbulb className="w-5 h-5" />}
-          color="blue"
+          color={stats.pendingBookings > 0 ? 'orange' : 'blue'}
         />
       </div>
 
       {/* Quick Actions */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4">
           {quickActions.map((action) => {
             const Icon = action.icon
             return (
