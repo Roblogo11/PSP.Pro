@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { getLocalDateString } from '@/lib/utils/local-date'
 
 export interface UserStats {
   totalSessions: number
@@ -39,7 +40,7 @@ export function useUserStats(userId: string | undefined) {
           .select('booking_date, start_time')
           .eq('athlete_id', userId)
           .in('status', ['confirmed', 'pending'])
-          .gte('booking_date', new Date().toISOString().split('T')[0])
+          .gte('booking_date', getLocalDateString())
           .order('booking_date', { ascending: true })
           .order('start_time', { ascending: true })
           .limit(1)
@@ -89,12 +90,12 @@ export function useUserStats(userId: string | undefined) {
 
           const dates = new Set(
             recentCompletions.map(c =>
-              new Date(c.completed_at).toISOString().split('T')[0]
+              getLocalDateString(new Date(c.completed_at))
             )
           )
 
           let checkDate = new Date(today)
-          while (dates.has(checkDate.toISOString().split('T')[0])) {
+          while (dates.has(getLocalDateString(checkDate))) {
             currentStreak++
             checkDate.setDate(checkDate.getDate() - 1)
           }

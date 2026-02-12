@@ -17,6 +17,7 @@ import {
   CheckCircle,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { getLocalDateString } from '@/lib/utils/local-date'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
 import { Tooltip, InfoBanner } from '@/components/ui/tooltip'
@@ -137,7 +138,7 @@ export default function AdminDashboard() {
           .from('bookings')
           .select('*', { count: 'exact', head: true })
           .in('status', ['confirmed', 'pending'])
-          .gte('booking_date', new Date().toISOString().split('T')[0])
+          .gte('booking_date', getLocalDateString())
 
         if (!isAdmin && profile?.id) {
           sessionsQuery = sessionsQuery.eq('coach_id', profile.id)
@@ -188,7 +189,7 @@ export default function AdminDashboard() {
     async function loadUpcomingSessions() {
       try {
         const supabase = createClient()
-        const today = new Date().toISOString().split('T')[0]
+        const today = getLocalDateString()
 
         // Coaches see only their sessions, admins see all
         let sessionsQuery = supabase

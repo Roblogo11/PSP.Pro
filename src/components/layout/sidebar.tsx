@@ -25,6 +25,7 @@ import {
   ClipboardCheck,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { getLocalDateString } from '@/lib/utils/local-date'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 
@@ -122,7 +123,7 @@ export function Sidebar() {
 
     async function fetchBadges() {
       const supabase = createClient()
-      const today = new Date().toISOString().split('T')[0]
+      const today = getLocalDateString()
       const counts: Record<string, number> = {}
 
       // Athlete-specific badges (skip for staff unless impersonating)

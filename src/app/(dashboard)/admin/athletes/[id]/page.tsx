@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { getLocalDateString } from '@/lib/utils/local-date'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import {
   ArrowLeft,
@@ -60,7 +61,7 @@ export default function AthleteDetailPage() {
 
   // Form state for new metric
   const [metricForm, setMetricForm] = useState({
-    test_date: new Date().toISOString().split('T')[0],
+    test_date: getLocalDateString(),
     throwing_velocity_mph: '',
     throwing_velocity_avg_mph: '',
     throwing_accuracy_percentage: '',
@@ -179,7 +180,7 @@ export default function AthleteDetailPage() {
 
       // Reset form
       setMetricForm({
-        test_date: new Date().toISOString().split('T')[0],
+        test_date: getLocalDateString(),
         throwing_velocity_mph: '',
         throwing_velocity_avg_mph: '',
         throwing_accuracy_percentage: '',

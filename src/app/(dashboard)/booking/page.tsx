@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { getLocalDateString } from '@/lib/utils/local-date'
 import { Calendar } from '@/components/booking/calendar'
 import { ServiceSelector } from '@/components/booking/service-selector'
 import { TimeSlotPicker } from '@/components/booking/time-slot-picker'
@@ -62,7 +63,7 @@ export default function BookingPage() {
     if (!selectedDate || !selectedServiceId) return
 
     setLoading(true)
-    const dateString = selectedDate.toISOString().split('T')[0]
+    const dateString = getLocalDateString(selectedDate)
 
     const { data, error } = await supabase
       .from('available_slots')
@@ -99,7 +100,7 @@ export default function BookingPage() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 
-    const dateString = selectedDate.toISOString().split('T')[0]
+    const dateString = getLocalDateString(selectedDate)
     const { data } = await supabase
       .from('bookings')
       .select('slot_id')
@@ -162,7 +163,7 @@ export default function BookingPage() {
           bookingData: {
             coachId: slot.coach_id,
             slotId: slot.id,
-            date: selectedDate.toISOString().split('T')[0],
+            date: getLocalDateString(selectedDate),
             startTime: slot.start_time,
             endTime: slot.end_time,
             durationMinutes: service.duration_minutes,

@@ -22,7 +22,7 @@ import {
   FileText,
 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -63,6 +63,16 @@ export default function AdminBookingsPage() {
       router.push('/locker')
     }
   }, [roleLoading, profile, isCoach, isAdmin, router])
+
+  // Auto-open "Book for Athlete" modal via ?action=book
+  const searchParams = useSearchParams()
+  useEffect(() => {
+    if (searchParams.get('action') === 'book' && !roleLoading && (isCoach || isAdmin)) {
+      setShowBookForAthlete(true)
+      // Clean URL without reload
+      window.history.replaceState(null, '', '/admin/bookings')
+    }
+  }, [searchParams, roleLoading, isCoach, isAdmin])
 
   useEffect(() => {
     if (!roleLoading && (isCoach || isAdmin)) {

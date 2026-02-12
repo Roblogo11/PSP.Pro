@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Plus, Calendar, MapPin, Trash2, Loader2, Repeat, Edit2, X, AlertTriangle } from 'lucide-react'
+import { getLocalDateString } from '@/lib/utils/local-date'
+import { Plus, Calendar, MapPin, Trash2, Loader2, Repeat, Edit2, X, AlertTriangle, UserPlus } from 'lucide-react'
+import Link from 'next/link'
 
 export default function AvailabilityManagementPage() {
   const supabase = createClient()
@@ -98,7 +100,7 @@ export default function AvailabilityManagementPage() {
         coach:coach_id (full_name)
       `)
       .eq('coach_id', user.id)
-      .gte('slot_date', new Date().toISOString().split('T')[0])
+      .gte('slot_date', getLocalDateString())
       .order('slot_date', { ascending: true })
       .order('start_time', { ascending: true })
 
@@ -298,6 +300,24 @@ export default function AvailabilityManagementPage() {
         </div>
       )}
 
+      {/* Tip: Book for Athlete */}
+      <Link href="/admin/bookings?action=book">
+        <div className="mb-6 p-4 rounded-xl bg-orange/10 border border-orange/30 flex items-center gap-3 hover:bg-orange/15 transition-all cursor-pointer group">
+          <div className="w-10 h-10 rounded-xl bg-orange/20 flex items-center justify-center flex-shrink-0">
+            <UserPlus className="w-5 h-5 text-orange" />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-slate-900 dark:text-white group-hover:text-orange transition-colors">
+              Need to reserve a slot for an existing client?
+            </p>
+            <p className="text-xs text-cyan-700 dark:text-white/70">
+              Use &quot;Book for Athlete&quot; to assign a time slot to a specific player and block it from public booking.
+            </p>
+          </div>
+          <span className="text-orange text-sm font-semibold whitespace-nowrap">Book Now &rarr;</span>
+        </div>
+      </Link>
+
       {/* Add Slot Form */}
       {showForm && (
         <div className="command-panel p-6 mb-6">
@@ -330,7 +350,7 @@ export default function AvailabilityManagementPage() {
                 required
                 value={formData.slotDate}
                 onChange={e => setFormData({ ...formData, slotDate: e.target.value })}
-                min={new Date().toISOString().split('T')[0]}
+                min={getLocalDateString()}
                 className={inputClasses}
               />
             </div>
