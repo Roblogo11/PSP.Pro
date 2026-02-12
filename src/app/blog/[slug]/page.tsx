@@ -157,8 +157,12 @@ export default function BlogPostPage() {
     return elements
   }
 
+  const escapeHtml = (str: string) =>
+    str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
   const formatInlineMarkdown = (text: string) => {
-    return text
+    // Escape HTML entities first to prevent XSS, then apply markdown formatting
+    return escapeHtml(text)
       .replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
       .replace(/\*(.+?)\*/g, '<em>$1</em>')
       .replace(/`(.+?)`/g, '<code class="bg-cyan-900/50 px-1.5 py-0.5 rounded text-cyan text-sm">$1</code>')

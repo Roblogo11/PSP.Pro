@@ -64,10 +64,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Generate a random temporary password (athlete will need to use "Forgot Password" to set their own)
+    const crypto = await import('crypto')
+    const tempPassword = crypto.randomBytes(16).toString('base64url') + '!Aa1'
+
     // Create the auth user with admin client (reuse from role check above)
     const { data: authData, error: createUserError } = await supabaseAdmin.auth.admin.createUser({
       email,
-      password: 'Welcome123!',
+      password: tempPassword,
       email_confirm: true,
       user_metadata: {
         full_name,

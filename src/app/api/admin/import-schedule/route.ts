@@ -163,11 +163,15 @@ export async function POST(request: NextRequest) {
       const emailSlug = customerName.toLowerCase().replace(/\s+/g, '.').replace(/[^a-z.]/g, '')
       const placeholderEmail = `${emailSlug}@psp.athlete`
 
+      // Generate random password (placeholder accounts use forgot-password flow)
+      const crypto = await import('crypto')
+      const tempPassword = crypto.randomBytes(16).toString('base64url') + '!Aa1'
+
       // Create auth user with placeholder email
       const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
         email: placeholderEmail,
         email_confirm: true,
-        password: 'Welcome123!',
+        password: tempPassword,
         user_metadata: { full_name: customerName },
       })
 

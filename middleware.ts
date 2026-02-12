@@ -13,6 +13,18 @@ export async function middleware(request: NextRequest) {
   response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
   response.headers.set('X-DNS-Prefetch-Control', 'on')
+  response.headers.set('Content-Security-Policy',
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.googletagmanager.com; " +
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+    "font-src 'self' https://fonts.gstatic.com; " +
+    "img-src 'self' data: blob: https: http:; " +
+    "media-src 'self' https: blob:; " +
+    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://www.google-analytics.com; " +
+    "frame-src https://js.stripe.com https://www.youtube.com https://player.vimeo.com; " +
+    "object-src 'none'; " +
+    "base-uri 'self';"
+  )
 
   return response
 }

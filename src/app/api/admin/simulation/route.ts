@@ -180,6 +180,18 @@ export async function DELETE() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    // Verify master_admin role
+    const roleCheckClient = createAdminClient()
+    const { data: roleProfile } = await roleCheckClient
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (roleProfile?.role !== 'master_admin') {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
     // Read simulation_id before clearing cookies
     const cookieHeader = (await import('next/headers')).cookies
     const cookieStore = await cookieHeader()

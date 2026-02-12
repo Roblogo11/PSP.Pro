@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { User, Mail, Lock, Calendar, Phone, UserPlus, Loader2 } from 'lucide-react'
+import { User, Mail, Calendar, Phone, UserPlus, Loader2 } from 'lucide-react'
 
 export default function CreateAthletePage() {
   const router = useRouter()
@@ -41,7 +41,7 @@ export default function CreateAthletePage() {
     const data = {
       email: formData.get('email') as string,
       full_name: formData.get('fullName') as string,
-      password: formData.get('password') as string || 'Welcome123!', // Default password
+      // Password is auto-generated server-side; athlete uses "Forgot Password" to set their own
       sports: selectedSports,
       age: parseInt(age, 10),
       parent_guardian_name: formData.get('parentGuardianName') as string,
@@ -147,21 +147,13 @@ export default function CreateAthletePage() {
           {/* Password */}
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-cyan-800 dark:text-white mb-2">
-              Initial Password
+              Password
             </label>
-            <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-700 dark:text-white" />
-              <input
-                id="password"
-                name="password"
-                type="text"
-                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
-                placeholder="Leave blank for default: Welcome123!"
-              />
+            <div className="p-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl">
+              <p className="text-sm text-cyan-700 dark:text-white">
+                A secure random password is generated automatically. The athlete should use <strong>"Forgot Password"</strong> on the login page to set their own password.
+              </p>
             </div>
-            <p className="mt-1 text-xs text-cyan-700 dark:text-white">
-              If left blank, default password will be: <strong>Welcome123!</strong>
-            </p>
           </div>
 
           {/* Sports Selection (Multi-Select) */}

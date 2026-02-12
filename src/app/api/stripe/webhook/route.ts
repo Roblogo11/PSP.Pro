@@ -40,9 +40,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ received: true })
   } catch (error: any) {
     console.error('Webhook error:', error)
-    // Always return 200 to prevent Stripe from retrying the webhook
-    // Signature verification failures still return 400 above
-    return NextResponse.json({ error: error.message }, { status: 200 })
+    // Return 500 so Stripe retries (3-day window with exponential backoff)
+    // This prevents lost bookings from transient DB failures
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
 
