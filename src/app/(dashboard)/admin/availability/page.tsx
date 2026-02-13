@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { getLocalDateString } from '@/lib/utils/local-date'
-import { Plus, Calendar, MapPin, Trash2, Loader2, Repeat, Edit2, X, AlertTriangle, UserPlus } from 'lucide-react'
+import { Plus, Calendar, MapPin, Trash2, Loader2, Repeat, Edit2, X, AlertTriangle, UserPlus, CheckSquare, Square } from 'lucide-react'
 import Link from 'next/link'
 
 export default function AvailabilityManagementPage() {
@@ -27,6 +27,20 @@ export default function AvailabilityManagementPage() {
     maxBookings: 1,
   })
   const [editSubmitting, setEditSubmitting] = useState(false)
+
+  // Bulk edit state
+  const [bulkMode, setBulkMode] = useState(false)
+  const [selectedSlotIds, setSelectedSlotIds] = useState<Set<string>>(new Set())
+  const [showBulkEditModal, setShowBulkEditModal] = useState(false)
+  const [bulkAction, setBulkAction] = useState<'edit' | 'delete'>('edit')
+  const [bulkEditData, setBulkEditData] = useState({
+    serviceId: '',
+    startTime: '',
+    endTime: '',
+    location: '',
+    maxBookings: '',
+  })
+  const [bulkSubmitting, setBulkSubmitting] = useState(false)
 
   // Form state — one form, with optional repeat
   const [formData, setFormData] = useState({
@@ -210,6 +224,126 @@ export default function AvailabilityManagementPage() {
     setTimeout(() => setSuccess(null), 3000)
   }
 
+  // Week filter
+  const [weekFilter, setWeekFilter] = useState<'all' | '1' | '2' | '3' | '4'>('all')
+
+  const getFilteredSlots = () => {
+    if (weekFilter === 'all') return slots
+    const weeksAhead = parseInt(weekFilter)
+    const now = new Date()
+    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const end = new Date(start)
+    end.setDate(end.getDate() + weeksAhead * 7)
+    return slots.filter(s => {
+      const d = new Date(s.slot_date + 'T12:00:00')
+      return d >= start && d < end
+    })
+  }
+
+  const filteredSlots = getFilteredSlots()
+
+  // Bulk edit helpers
+  const toggleSlotSelection = (slotId: string) => {
+    setSelectedSlotIds(prev => {
+      const next = new Set(prev)
+      if (next.has(slotId)) next.delete(slotId)
+      else next.add(slotId)
+      return next
+    })
+  }
+
+  const toggleSelectAll = () => {
+    if (selectedSlotIds.size === filteredSlots.length) {
+      setSelectedSlotIds(new Set())
+    } else {
+      setSelectedSlotIds(new Set(filteredSlots.map(s => s.id)))
+    }
+  }
+
+  const exitBulkMode = () => {
+    setBulkMode(false)
+    setSelectedSlotIds(new Set())
+    setShowBulkEditModal(false)
+  }
+
+  const openBulkAction = (action: 'edit' | 'delete') => {
+    setBulkAction(action)
+    setBulkEditData({ serviceId: '', startTime: '', endTime: '', location: '', maxBookings: '' })
+    setShowBulkEditModal(true)
+  }
+
+  const handleBulkEdit = async () => {
+    if (selectedSlotIds.size === 0) return
+    setBulkSubmitting(true)
+    setError(null)
+
+    const updates: any = {}
+    if (bulkEditData.serviceId) updates.service_id = bulkEditData.serviceId === '__none__' ? null : bulkEditData.serviceId
+    if (bulkEditData.startTime) updates.start_time = bulkEditData.startTime
+    if (bulkEditData.endTime) updates.end_time = bulkEditData.endTime
+    if (bulkEditData.location) updates.location = bulkEditData.location
+    if (bulkEditData.maxBookings) updates.max_bookings = parseInt(bulkEditData.maxBookings)
+
+    if (Object.keys(updates).length === 0) {
+      setBulkSubmitting(false)
+      setError('Fill in at least one field to update.')
+      return
+    }
+
+    const ids = Array.from(selectedSlotIds)
+    const { error: updateError } = await supabase
+      .from('available_slots')
+      .update(updates)
+      .in('id', ids)
+
+    setBulkSubmitting(false)
+
+    if (updateError) {
+      console.error('Bulk update error:', updateError)
+      setError(`Failed to update slots: ${updateError.message}`)
+      return
+    }
+
+    setSuccess(`Updated ${ids.length} slot${ids.length !== 1 ? 's' : ''}!`)
+    exitBulkMode()
+    fetchSlots()
+    setTimeout(() => setSuccess(null), 4000)
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedSlotIds.size === 0) return
+
+    const slotsWithBookings = slots.filter(s => selectedSlotIds.has(s.id) && s.current_bookings > 0)
+    if (slotsWithBookings.length > 0) {
+      const proceed = window.confirm(
+        `${slotsWithBookings.length} of your selected slots have active bookings. Deleting will affect those athletes. Continue?`
+      )
+      if (!proceed) return
+    }
+
+    setBulkSubmitting(true)
+    setError(null)
+
+    const ids = Array.from(selectedSlotIds)
+    const { error: deleteError } = await supabase
+      .from('available_slots')
+      .delete()
+      .in('id', ids)
+
+    setBulkSubmitting(false)
+
+    if (deleteError) {
+      console.error('Bulk delete error:', deleteError)
+      setError(`Failed to delete slots: ${deleteError.message}`)
+      return
+    }
+
+    setSuccess(`Deleted ${ids.length} slot${ids.length !== 1 ? 's' : ''}!`)
+    exitBulkMode()
+    fetchSlots()
+    setTimeout(() => setSuccess(null), 4000)
+  }
+
   const openEditModal = (slot: any) => {
     setEditSlot(slot)
     setEditData({
@@ -276,18 +410,94 @@ export default function AvailabilityManagementPage() {
   return (
     <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8">
       {/* Header */}
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
             Availability Management
           </h1>
           <p className="text-cyan-800 dark:text-white text-lg">Create and manage your available time slots</p>
         </div>
-        <button onClick={() => setShowForm(!showForm)} className="btn-primary flex items-center gap-2">
-          <Plus className="w-5 h-5" />
-          <span>Add Time Slot</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-3 self-start">
+          <button
+            onClick={() => bulkMode ? exitBulkMode() : setBulkMode(true)}
+            className={`flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl border transition-all ${
+              bulkMode
+                ? 'border-orange/50 bg-orange/10 text-orange'
+                : 'border-cyan-300/40 dark:border-white/10 bg-white/60 dark:bg-white/5 text-cyan-800 dark:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-white/10'
+            }`}
+          >
+            <CheckSquare className="w-4 h-4" />
+            {bulkMode ? 'Cancel Bulk' : 'Bulk Edit'}
+          </button>
+          <button onClick={() => setShowForm(!showForm)} className="btn-primary flex items-center gap-2">
+            <Plus className="w-5 h-5" />
+            <span>Add Time Slot</span>
+          </button>
+        </div>
       </div>
+
+      {/* Week Filter */}
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <span className="text-sm font-medium text-cyan-700 dark:text-white/70 mr-1">Show:</span>
+        {[
+          { value: 'all', label: 'All Upcoming' },
+          { value: '1', label: 'This Week' },
+          { value: '2', label: '2 Weeks' },
+          { value: '3', label: '3 Weeks' },
+          { value: '4', label: '4 Weeks' },
+        ].map(opt => (
+          <button
+            key={opt.value}
+            onClick={() => { setWeekFilter(opt.value as any); setSelectedSlotIds(new Set()) }}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              weekFilter === opt.value
+                ? 'bg-cyan text-white shadow-lg shadow-cyan/30'
+                : 'bg-cyan/5 text-cyan-700 dark:text-cyan-300 hover:bg-cyan/10 border border-cyan/20'
+            }`}
+          >
+            {opt.label}
+          </button>
+        ))}
+        <span className="text-xs text-cyan-700 dark:text-white/50 ml-2">
+          {filteredSlots.length} slot{filteredSlots.length !== 1 ? 's' : ''}
+        </span>
+      </div>
+
+      {/* Bulk Action Bar */}
+      {bulkMode && (
+        <div className="mb-4 p-3 rounded-xl bg-orange/5 border border-orange/20 flex flex-wrap items-center gap-3">
+          <button
+            onClick={toggleSelectAll}
+            className="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-white hover:text-orange transition-colors"
+          >
+            {selectedSlotIds.size === filteredSlots.length && filteredSlots.length > 0
+              ? <CheckSquare className="w-4 h-4 text-orange" />
+              : <Square className="w-4 h-4" />
+            }
+            {selectedSlotIds.size === filteredSlots.length && filteredSlots.length > 0 ? 'Deselect All' : 'Select All'}
+          </button>
+          <span className="text-xs text-cyan-700 dark:text-white/60">
+            {selectedSlotIds.size} selected
+          </span>
+          <div className="flex-1" />
+          <button
+            onClick={() => openBulkAction('edit')}
+            disabled={selectedSlotIds.size === 0}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan/10 text-cyan hover:bg-cyan/20 border border-cyan/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <Edit2 className="w-3.5 h-3.5" />
+            Edit Selected
+          </button>
+          <button
+            onClick={handleBulkDelete}
+            disabled={selectedSlotIds.size === 0 || bulkSubmitting}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {bulkSubmitting && bulkAction === 'delete' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+            Delete Selected
+          </button>
+        </div>
+      )}
 
       {/* Feedback Messages */}
       {error && (
@@ -481,23 +691,49 @@ export default function AvailabilityManagementPage() {
             <Loader2 className="w-8 h-8 text-orange mx-auto mb-4 animate-spin" />
             <p className="text-cyan-800 dark:text-white">Loading time slots...</p>
           </div>
-        ) : slots.length === 0 ? (
+        ) : filteredSlots.length === 0 ? (
           <div className="p-12 text-center">
             <Calendar className="w-16 h-16 text-cyan-700 dark:text-white mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Time Slots Yet</h3>
-            <p className="text-cyan-800 dark:text-white mb-4">
-              Create your first time slot to start accepting bookings.
-            </p>
-            <button onClick={() => setShowForm(true)} className="btn-primary inline-flex items-center gap-2">
-              <Plus className="w-5 h-5" />
-              <span>Add Time Slot</span>
-            </button>
+            {slots.length > 0 ? (
+              <>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Slots in This Range</h3>
+                <p className="text-cyan-800 dark:text-white mb-4">
+                  No time slots found within the selected timeframe. Try a different filter.
+                </p>
+                <button onClick={() => setWeekFilter('all')} className="btn-primary inline-flex items-center gap-2">
+                  Show All
+                </button>
+              </>
+            ) : (
+              <>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Time Slots Yet</h3>
+                <p className="text-cyan-800 dark:text-white mb-4">
+                  Create your first time slot to start accepting bookings.
+                </p>
+                <button onClick={() => setShowForm(true)} className="btn-primary inline-flex items-center gap-2">
+                  <Plus className="w-5 h-5" />
+                  <span>Add Time Slot</span>
+                </button>
+              </>
+            )}
           </div>
         ) : (
           <div className="divide-y divide-white/10">
-            {slots.map(slot => (
-              <div key={slot.id} className="p-4 hover:bg-cyan-50/50 transition-colors">
+            {filteredSlots.map(slot => (
+              <div key={slot.id} className={`p-4 hover:bg-cyan-50/50 transition-colors ${bulkMode && selectedSlotIds.has(slot.id) ? 'bg-orange/5' : ''}`}>
                 <div className="flex items-start justify-between gap-4">
+                  {/* Bulk checkbox */}
+                  {bulkMode && (
+                    <button
+                      onClick={() => toggleSlotSelection(slot.id)}
+                      className="mt-1 flex-shrink-0"
+                    >
+                      {selectedSlotIds.has(slot.id)
+                        ? <CheckSquare className="w-5 h-5 text-orange" />
+                        : <Square className="w-5 h-5 text-cyan-700 dark:text-white/50" />
+                      }
+                    </button>
+                  )}
                   <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-4">
                     {/* Date */}
                     <div className="flex items-start gap-2">
@@ -564,6 +800,106 @@ export default function AvailabilityManagementPage() {
           </div>
         )}
       </div>
+
+      {/* Bulk Edit Modal */}
+      {showBulkEditModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowBulkEditModal(false)}>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-lg w-full p-6" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Bulk Edit Slots</h3>
+                <p className="text-sm text-cyan-800 dark:text-white/70">
+                  Updating {selectedSlotIds.size} slot{selectedSlotIds.size !== 1 ? 's' : ''}. Only filled fields will be changed.
+                </p>
+              </div>
+              <button onClick={() => setShowBulkEditModal(false)} className="p-2 hover:bg-cyan-50/50 rounded-lg transition-colors">
+                <X className="w-5 h-5 text-cyan-800 dark:text-white" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {/* Service */}
+              <div>
+                <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Service <span className="text-xs text-white/50">(leave blank to skip)</span></label>
+                <select
+                  value={bulkEditData.serviceId}
+                  onChange={e => setBulkEditData({ ...bulkEditData, serviceId: e.target.value })}
+                  className={inputClasses}
+                >
+                  <option value="">— Don&apos;t change —</option>
+                  <option value="__none__">Any Service (clear)</option>
+                  {services.map(service => (
+                    <option key={service.id} value={service.id}>{service.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Start / End Time */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Start Time</label>
+                  <input
+                    type="time"
+                    value={bulkEditData.startTime}
+                    onChange={e => setBulkEditData({ ...bulkEditData, startTime: e.target.value })}
+                    className={inputClasses}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">End Time</label>
+                  <input
+                    type="time"
+                    value={bulkEditData.endTime}
+                    onChange={e => setBulkEditData({ ...bulkEditData, endTime: e.target.value })}
+                    className={inputClasses}
+                  />
+                </div>
+              </div>
+
+              {/* Location */}
+              <div>
+                <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Location</label>
+                <input
+                  type="text"
+                  value={bulkEditData.location}
+                  onChange={e => setBulkEditData({ ...bulkEditData, location: e.target.value })}
+                  placeholder="Leave blank to keep current"
+                  className={inputClasses + " placeholder-cyan-600 dark:placeholder-white/40"}
+                />
+              </div>
+
+              {/* Max Bookings */}
+              <div>
+                <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Max Bookings</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="20"
+                  value={bulkEditData.maxBookings}
+                  onChange={e => setBulkEditData({ ...bulkEditData, maxBookings: e.target.value })}
+                  placeholder="Leave blank to keep current"
+                  className={inputClasses + " placeholder-cyan-600 dark:placeholder-white/40"}
+                />
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-3 justify-end pt-2">
+                <button type="button" onClick={() => setShowBulkEditModal(false)} className="btn-ghost">
+                  Cancel
+                </button>
+                <button
+                  onClick={handleBulkEdit}
+                  disabled={bulkSubmitting}
+                  className="btn-primary flex items-center gap-2"
+                >
+                  {bulkSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+                  {bulkSubmitting ? 'Updating...' : `Update ${selectedSlotIds.size} Slots`}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Edit Slot Modal */}
       {editSlot && (
