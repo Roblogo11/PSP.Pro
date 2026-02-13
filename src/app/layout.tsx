@@ -10,6 +10,7 @@ import { AthleticOSBackground } from '@/components/athletic-os-background'
 import { StripeTestBanner } from '@/components/stripe-test-banner'
 import { SimulationBanner } from '@/components/simulation-banner'
 import { ImpersonationBanner } from '@/components/impersonation-banner'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -119,6 +120,7 @@ export default function RootLayout({
           <CommandPalette />
           <PSPAssistant />
           {children}
+          <SpeedInsights />
         </Providers>
       </body>
     </html>
