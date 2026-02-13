@@ -1100,7 +1100,7 @@ export default function AdminBookingsPage() {
                       className={`p-3 rounded-xl text-center border transition-all ${
                         bookFormData.paymentMethod === opt.value
                           ? 'bg-orange/10 border-orange/50 text-orange'
-                          : 'bg-cyan-50/30 border-cyan-200/40 text-slate-700 dark:text-white hover:border-cyan/40'
+                          : 'bg-cyan-50 dark:bg-slate-800 border-cyan-200/40 dark:border-white/10 text-slate-700 dark:text-white hover:border-cyan/40'
                       }`}
                     >
                       <p className="text-sm font-semibold">{opt.label}</p>

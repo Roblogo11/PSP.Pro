@@ -336,6 +336,11 @@
     color: #1e293b;
   }
 
+  html.dark select option {
+    background: #1e293b;
+    color: #f1f5f9;
+  }
+
   /* Bento Grid */
   .bento-grid {
     @apply grid gap-4 md:gap-6;
