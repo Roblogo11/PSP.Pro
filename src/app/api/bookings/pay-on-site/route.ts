@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { sendEmail } from '@/lib/email/send'
+import { getPayOnSiteBookingEmail, getCoachNewBookingEmail } from '@/lib/email/templates'
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,6 +38,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'This time slot is no longer available' }, { status: 400 })
     }
 
+    // Verify slot is in the future
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const slotDate = new Date(slot.slot_date + 'T12:00:00')
+    slotDate.setHours(0, 0, 0, 0)
+    if (slotDate < today) {
+      return NextResponse.json({ error: 'Cannot book a session in the past' }, { status: 400 })
+    }
+
     // Check for duplicate booking
     const { data: existing } = await adminClient
       .from('bookings')
@@ -52,12 +63,16 @@ export async function POST(request: NextRequest) {
     // Fetch service for price
     const { data: service, error: serviceError } = await adminClient
       .from('services')
-      .select('id, name, price_cents, duration_minutes')
+      .select('id, name, price_cents, duration_minutes, is_active')
       .eq('id', serviceId)
       .single()
 
     if (serviceError || !service) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 })
+    }
+
+    if (!service.is_active) {
+      return NextResponse.json({ error: 'This service is no longer available' }, { status: 400 })
     }
 
     // Create booking with pending status
@@ -95,6 +110,57 @@ export async function POST(request: NextRequest) {
         is_available: slot.current_bookings + 1 < slot.max_bookings,
       })
       .eq('id', slotId)
+
+    // Send emails (non-blocking — don't fail the booking)
+    try {
+      // Get athlete profile
+      const { data: athlete } = await adminClient
+        .from('profiles')
+        .select('email, full_name')
+        .eq('id', user.id)
+        .single()
+
+      // Get coach profile
+      const { data: coach } = await adminClient
+        .from('profiles')
+        .select('email, full_name')
+        .eq('id', coachId || slot.coach_id)
+        .single()
+
+      // Email to athlete
+      if (athlete?.email) {
+        const athleteEmail = getPayOnSiteBookingEmail({
+          athleteName: athlete.full_name || 'Athlete',
+          athleteEmail: athlete.email,
+          serviceName: service.name,
+          date,
+          startTime,
+          endTime,
+          coachName: coach?.full_name || 'Your Coach',
+          location: location || slot.location || 'PSP.Pro Facility',
+          amount: (service.price_cents / 100).toFixed(2),
+          confirmationId: booking.id,
+        })
+        await sendEmail({ to: athlete.email, ...athleteEmail })
+      }
+
+      // Email to coach
+      if (coach?.email) {
+        const coachEmail = getCoachNewBookingEmail({
+          coachName: coach.full_name || 'Coach',
+          athleteName: athlete?.full_name || 'An athlete',
+          serviceName: service.name,
+          date,
+          startTime,
+          endTime,
+          location: location || slot.location || 'PSP.Pro Facility',
+          paymentMethod: 'on_site',
+        })
+        await sendEmail({ to: coach.email, ...coachEmail })
+      }
+    } catch (emailErr) {
+      console.error('Failed to send booking emails:', emailErr)
+    }
 
     return NextResponse.json({
       success: true,

@@ -87,7 +87,15 @@ export async function DELETE(request: NextRequest) {
       })
     }
 
-    // For coaches: check if session has athletes or is in the past
+    // For coaches: verify they own this session
+    if (profile.role === 'coach' && session.coach_id !== user.id) {
+      return NextResponse.json(
+        { error: 'You can only manage your own sessions' },
+        { status: 403 }
+      )
+    }
+
+    // Check if session has athletes or is in the past
     const hasAthlete = !!session.athlete_id
 
     // Can delete directly if: no athlete AND not a past session
@@ -206,6 +214,14 @@ export async function GET(request: NextRequest) {
         requiresApproval: false,
         isMasterAdmin: true,
       })
+    }
+
+    // Coaches can only manage their own sessions
+    if (profile.role === 'coach' && session.coach_id !== user.id) {
+      return NextResponse.json(
+        { error: 'You can only manage your own sessions' },
+        { status: 403 }
+      )
     }
 
     // Coach can delete if no athlete and not past

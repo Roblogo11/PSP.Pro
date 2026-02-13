@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { sendEmail } from '@/lib/email/send'
+import { getBookingConfirmationEmail, getPayOnSiteBookingEmail } from '@/lib/email/templates'
 
 export async function POST(request: NextRequest) {
   try {
@@ -54,12 +56,16 @@ export async function POST(request: NextRequest) {
     // Fetch service details
     const { data: service, error: serviceError } = await adminClient
       .from('services')
-      .select('id, name, price_cents, duration_minutes')
+      .select('id, name, price_cents, duration_minutes, is_active')
       .eq('id', service_id)
       .single()
 
     if (serviceError || !service) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 })
+    }
+
+    if (!service.is_active) {
+      return NextResponse.json({ error: 'This service is inactive' }, { status: 400 })
     }
 
     // Determine amount and payment status
@@ -137,6 +143,53 @@ export async function POST(request: NextRequest) {
         is_available: slot.current_bookings + 1 < slot.max_bookings,
       })
       .eq('id', slot_id)
+
+    // Send confirmation email to athlete (non-blocking)
+    try {
+      const { data: athlete } = await adminClient
+        .from('profiles')
+        .select('email, full_name')
+        .eq('id', athlete_id)
+        .single()
+
+      const { data: coach } = await adminClient
+        .from('profiles')
+        .select('full_name')
+        .eq('id', slot.coach_id)
+        .single()
+
+      if (athlete?.email) {
+        const emailData = payment_method === 'on_site'
+          ? getPayOnSiteBookingEmail({
+              athleteName: athlete.full_name || 'Athlete',
+              athleteEmail: athlete.email,
+              serviceName: service.name,
+              date: slot.slot_date,
+              startTime: slot.start_time,
+              endTime: slot.end_time,
+              coachName: coach?.full_name || 'Your Coach',
+              location: slot.location || 'PSP.Pro Facility',
+              amount: (amountCents / 100).toFixed(2),
+              confirmationId: booking.id,
+            })
+          : getBookingConfirmationEmail({
+              athleteName: athlete.full_name || 'Athlete',
+              athleteEmail: athlete.email,
+              serviceName: service.name,
+              date: slot.slot_date,
+              startTime: slot.start_time,
+              endTime: slot.end_time,
+              coachName: coach?.full_name || 'Your Coach',
+              location: slot.location || 'PSP.Pro Facility',
+              amount: (amountCents / 100).toFixed(2),
+              confirmationId: booking.id,
+            })
+
+        await sendEmail({ to: athlete.email, ...emailData })
+      }
+    } catch (emailErr) {
+      console.error('Failed to send booking email:', emailErr)
+    }
 
     return NextResponse.json({
       success: true,
