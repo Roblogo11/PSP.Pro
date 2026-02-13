@@ -23,6 +23,7 @@ import {
   DollarSign,
   BookOpen,
   ClipboardCheck,
+  CalendarClock,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { getLocalDateString } from '@/lib/utils/local-date'
@@ -55,6 +56,7 @@ const athleteNavItems: NavItem[] = [
 const adminNavItems: NavItem[] = [
   { label: 'Admin Home', mobileLabel: 'Admin', href: '/admin', icon: Shield, color: 'text-red-400' },
   { label: 'Calendar', subLabel: '(Confirm/Book)', mobileLabel: 'Calendar', href: '/admin/bookings', icon: Calendar, color: 'text-blue-400', badgeKey: 'pendingBookings' },
+  { label: 'Schedule', subLabel: '(Availability)', mobileLabel: 'Schedule', href: '/admin/availability', icon: CalendarClock, color: 'text-sky-400' },
   { label: 'Lesson Builder', mobileLabel: 'Builder', href: '/admin/services', icon: DollarSign, color: 'text-green-400' },
   { label: 'Manage Athletes', mobileLabel: 'Athletes', href: '/admin/athletes', icon: Users, color: 'text-cyan-400' },
   { label: 'Drills', mobileLabel: 'Drills', href: '/admin/drills', icon: Dumbbell, color: 'text-purple-400' },

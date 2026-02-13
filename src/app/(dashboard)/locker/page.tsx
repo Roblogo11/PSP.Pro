@@ -210,23 +210,32 @@ export default function AthleteLockerPage() {
       { title: 'Drills', desc: `${coachStats.totalDrills} in library`, icon: Dumbbell, href: '/admin/drills', color: '#10B981' },
       { title: 'Analytics', desc: 'View reports', icon: BarChart3, href: '/admin/analytics', color: '#F59E0B' },
       { title: 'Media', desc: 'Videos & images', icon: Video, href: '/admin/media', color: '#8B5CF6' },
-      { title: 'Settings', desc: 'Availability & more', icon: SettingsIcon, href: '/admin/availability', color: '#6B7280' },
+      { title: 'Schedule', desc: 'Manage availability', icon: SettingsIcon, href: '/admin/availability', color: '#6B7280' },
     ]
 
     return (
       <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8 relative">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
-            Welcome back, <span className="text-gradient-orange">{firstName}</span>
-          </h1>
-          <p className="text-cyan-700 dark:text-white text-lg">
-            Here&apos;s a quick look at your team. Head to the{' '}
-            <Link href="/admin" className="text-orange hover:text-orange-400 font-semibold transition-colors">
-              Admin Panel
-            </Link>{' '}
-            for full control.
-          </p>
+        <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
+              Welcome back, <span className="text-gradient-orange">{firstName}</span>
+            </h1>
+            <p className="text-cyan-700 dark:text-white text-lg">
+              Here&apos;s a quick look at your team. Head to the{' '}
+              <Link href="/admin" className="text-orange hover:text-orange-400 font-semibold transition-colors">
+                Admin Panel
+              </Link>{' '}
+              for full control.
+            </p>
+          </div>
+          <Link
+            href="/admin/availability"
+            className="flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl border border-cyan-300/40 dark:border-white/10 bg-white/60 dark:bg-white/5 text-cyan-800 dark:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-white/10 transition-all self-start"
+          >
+            <SettingsIcon className="w-4 h-4" />
+            Manage Schedule
+          </Link>
         </div>
 
         {/* Quick Stats */}
