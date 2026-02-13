@@ -960,7 +960,7 @@ export default function AdminBookingsPage() {
                   onChange={e => setEditNotes({ ...editNotes, coach_notes: e.target.value })}
                   placeholder="Add notes about this session..."
                   rows={3}
-                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 resize-none"
+                  className="w-full px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan/50 resize-none"
                 />
               </div>
               <div>
@@ -973,7 +973,7 @@ export default function AdminBookingsPage() {
                   onChange={e => setEditNotes({ ...editNotes, internal_notes: e.target.value })}
                   placeholder="Internal notes (not visible to athletes)..."
                   rows={2}
-                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 resize-none"
+                  className="w-full px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan/50 resize-none"
                 />
               </div>
             </div>
@@ -1118,7 +1118,7 @@ export default function AdminBookingsPage() {
                   onChange={e => setBookFormData({ ...bookFormData, notes: e.target.value })}
                   placeholder="Any notes about this booking..."
                   rows={2}
-                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 resize-none"
+                  className="w-full px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan/50 resize-none"
                 />
               </div>
 
