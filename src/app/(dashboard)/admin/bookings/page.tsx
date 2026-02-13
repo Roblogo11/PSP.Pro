@@ -23,6 +23,7 @@ import {
   ArrowDownUp,
   ChevronDown,
   Settings,
+  ClipboardList,
 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -365,6 +366,13 @@ export default function AdminBookingsPage() {
           >
             <Settings className="w-4 h-4" />
             Manage Schedule
+          </Link>
+          <Link
+            href="/admin/requests"
+            className="flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl border border-cyan-300/40 dark:border-white/10 bg-white/60 dark:bg-white/5 text-cyan-800 dark:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-white/10 transition-all"
+          >
+            <ClipboardList className="w-4 h-4" />
+            Requests
           </Link>
           <button
             onClick={openBookForAthlete}
