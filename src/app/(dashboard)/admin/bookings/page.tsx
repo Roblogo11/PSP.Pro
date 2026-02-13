@@ -20,6 +20,7 @@ import {
   Plus,
   Loader2,
   FileText,
+  ArrowDownUp,
 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -36,6 +37,7 @@ export default function AdminBookingsPage() {
   const [viewMode, setViewMode] = useState<'table' | 'calendar'>('calendar')
   const [calendarDate, setCalendarDate] = useState(new Date())
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
+  const [listSortAsc, setListSortAsc] = useState(true) // true = nearest first
 
   // Edit booking modal
   const [editBooking, setEditBooking] = useState<any>(null)
@@ -438,258 +440,305 @@ export default function AdminBookingsPage() {
 
       {/* Calendar View */}
       {viewMode === 'calendar' && (
-        <div className="mb-6">
-          {/* Calendar Header */}
-          <div className="command-panel p-6 mb-4">
-            <div className="flex items-center justify-between mb-6">
-              <button
-                onClick={prevMonth}
-                className="p-2 rounded-lg hover:bg-cyan-50/50 transition-colors"
-              >
-                <ChevronLeft className="w-5 h-5 text-slate-600 dark:text-white" />
-              </button>
-              <div className="flex items-center gap-4">
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white">{monthLabel}</h2>
-                <button
-                  onClick={goToToday}
-                  className="px-3 py-1 text-xs font-semibold rounded-lg bg-cyan/10 text-cyan hover:bg-cyan/20 border border-cyan/20 transition-colors"
-                >
-                  Today
-                </button>
-              </div>
-              <button
-                onClick={nextMonth}
-                className="p-2 rounded-lg hover:bg-cyan-50/50 transition-colors"
-              >
-                <ChevronRight className="w-5 h-5 text-slate-600 dark:text-white" />
-              </button>
-            </div>
-
-            {/* Day Headers */}
-            <div className="grid grid-cols-7 gap-1 mb-2">
-              {dayNames.map(day => (
-                <div key={day} className="text-center text-xs font-semibold text-cyan-700 dark:text-cyan-300 py-2">
-                  {day}
+        <div className="mb-6 flex flex-col lg:flex-row gap-4">
+          {/* Active Bookings List (left on desktop, top on mobile) */}
+          <div className="lg:flex-[2] min-w-0">
+            <div className="command-panel p-4 md:p-6 lg:h-full lg:max-h-[calc(100vh-280px)] lg:overflow-y-auto">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  {selectedDay
+                    ? new Date(selectedDay + 'T12:00:00').toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric',
+                      })
+                    : 'Upcoming'}
+                </h3>
+                <div className="flex items-center gap-2">
+                  {!selectedDay && (
+                    <button
+                      onClick={() => setListSortAsc(!listSortAsc)}
+                      className="flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-semibold bg-cyan/10 hover:bg-cyan/20 text-cyan border border-cyan/20 transition-colors"
+                      title={listSortAsc ? 'Nearest first' : 'Furthest first'}
+                    >
+                      <ArrowDownUp className="w-3 h-3" />
+                      {listSortAsc ? 'Nearest' : 'Furthest'}
+                    </button>
+                  )}
+                  <span className="text-sm text-cyan-700 dark:text-cyan-300 font-medium">
+                    {selectedDay
+                      ? `${selectedDayBookings.length} booking${selectedDayBookings.length !== 1 ? 's' : ''}`
+                      : `${bookings.filter(b => b.booking_date >= todayKey && b.status !== 'cancelled').length} upcoming`
+                    }
+                  </span>
                 </div>
-              ))}
-            </div>
+              </div>
 
-            {/* Calendar Grid */}
-            <div className="grid grid-cols-7 gap-1">
-              {/* Empty cells for days before month starts */}
-              {Array.from({ length: firstDayOfWeek }).map((_, i) => (
-                <div key={`empty-${i}`} className="aspect-square p-1" />
-              ))}
+              {(() => {
+                // Show selected day's bookings, or upcoming bookings if no day selected
+                const sortDir = listSortAsc ? 1 : -1
+                const displayBookings = selectedDay
+                  ? selectedDayBookings.sort((a: any, b: any) => (a.start_time || '').localeCompare(b.start_time || ''))
+                  : bookings
+                      .filter(b => b.booking_date >= todayKey && b.status !== 'cancelled')
+                      .sort((a, b) => sortDir * (a.booking_date.localeCompare(b.booking_date) || (a.start_time || '').localeCompare(b.start_time || '')))
+                      .slice(0, 15)
 
-              {/* Day cells */}
-              {Array.from({ length: daysInMonth }).map((_, i) => {
-                const day = i + 1
-                const dateKey = makeDateKey(day)
-                const dayBookings = bookingsByDate[dateKey] || []
-                const isToday = dateKey === todayKey
-                const isSelected = dateKey === selectedDay
-                const hasBookings = dayBookings.length > 0
+                if (displayBookings.length === 0) {
+                  return (
+                    <div className="text-center py-8">
+                      <Calendar className="w-10 h-10 text-cyan-700 dark:text-cyan-500 mx-auto mb-2" />
+                      <p className="text-slate-600 dark:text-slate-400 text-sm">
+                        {selectedDay ? 'No bookings on this day' : 'No upcoming bookings'}
+                      </p>
+                    </div>
+                  )
+                }
+
+                // Group by date for upcoming view
+                let lastDate = ''
 
                 return (
-                  <button
-                    key={day}
-                    onClick={() => setSelectedDay(isSelected ? null : dateKey)}
-                    className={`
-                      aspect-square p-1 rounded-xl transition-all relative flex flex-col items-center overflow-hidden
-                      ${isSelected
-                        ? 'bg-orange/20 border-2 border-orange ring-2 ring-orange/30'
-                        : isToday
-                          ? 'bg-cyan/10 border border-cyan/30'
-                          : hasBookings
-                            ? 'hover:bg-cyan-50/50 border border-transparent hover:border-cyan-200/40'
-                            : 'hover:bg-cyan-50/30 border border-transparent'
-                      }
-                    `}
-                  >
-                    {/* PSP Logo watermark */}
-                    <div className={`absolute inset-0 flex items-center justify-center pointer-events-none ${
-                      hasBookings ? 'opacity-[0.08]' : 'opacity-[0.03]'
-                    }`}>
-                      <Image
-                        src="/images/PSP-black-300x99-1.png"
-                        alt=""
-                        width={40}
-                        height={13}
-                        className="dark:invert"
-                      />
-                    </div>
+                  <div className="space-y-2">
+                    {displayBookings.map((booking: any) => {
+                      const showDateHeader = !selectedDay && booking.booking_date !== lastDate
+                      if (!selectedDay) lastDate = booking.booking_date
 
-                    <span
-                      className={`
-                        text-sm font-medium mt-1 relative z-10
-                        ${isSelected
-                          ? 'text-orange font-bold'
-                          : isToday
-                            ? 'text-cyan font-bold'
-                            : 'text-slate-700 dark:text-slate-300'
-                        }
-                      `}
-                    >
-                      {day}
-                    </span>
+                      return (
+                        <div key={booking.id}>
+                          {showDateHeader && (
+                            <button
+                              onClick={() => setSelectedDay(booking.booking_date)}
+                              className="text-xs font-semibold text-cyan-600 dark:text-cyan-400 mt-3 first:mt-0 mb-1 flex items-center gap-1 hover:text-orange transition-colors"
+                            >
+                              <Calendar className="w-3 h-3" />
+                              {new Date(booking.booking_date + 'T12:00:00').toLocaleDateString('en-US', {
+                                weekday: 'short',
+                                month: 'short',
+                                day: 'numeric',
+                              })}
+                            </button>
+                          )}
+                          <div className="p-3 rounded-xl bg-cyan-50/30 dark:bg-white/5 border border-cyan-200/30 dark:border-white/10">
+                            {/* Row 1: Time + Athlete + Status */}
+                            <div className="flex items-center justify-between gap-2 mb-1.5">
+                              <div className="flex items-center gap-2 min-w-0">
+                                <Clock className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
+                                <span className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                                  {formatTime(booking.start_time)} – {formatTime(booking.end_time)}
+                                </span>
+                              </div>
+                              <span
+                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-semibold border flex-shrink-0 ${getStatusColor(
+                                  booking.status
+                                )}`}
+                              >
+                                <span className="capitalize">{booking.status}</span>
+                              </span>
+                            </div>
 
-                    {/* Booking dots */}
-                    {hasBookings && (
-                      <div className="flex flex-wrap justify-center gap-0.5 mt-auto mb-1 max-w-full px-0.5 relative z-10">
-                        {dayBookings.slice(0, 4).map((b: any, idx: number) => (
-                          <div
-                            key={idx}
-                            className={`w-1.5 h-1.5 rounded-full ${getStatusDot(b.status)}`}
-                          />
-                        ))}
-                        {dayBookings.length > 4 && (
-                          <span className="text-[8px] text-slate-500 dark:text-slate-400 font-bold leading-none">
-                            +{dayBookings.length - 4}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </button>
+                            {/* Row 2: Athlete + Service */}
+                            <div className="flex items-center justify-between gap-2 mb-2">
+                              <div className="flex items-center gap-1.5 min-w-0">
+                                <User className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
+                                <span className="text-sm text-slate-800 dark:text-slate-200 truncate">
+                                  {booking.athlete?.full_name || booking.athlete_name || 'Unknown'}
+                                </span>
+                              </div>
+                              <span className={`text-xs font-semibold flex-shrink-0 ${getPaymentStatusColor(booking.payment_status)}`}>
+                                ${((booking.amount_cents || 0) / 100).toFixed(2)}
+                              </span>
+                            </div>
+
+                            <p className="text-xs text-slate-600 dark:text-slate-400 mb-2 truncate">
+                              {booking.service?.name || booking.service_name || '—'}
+                            </p>
+
+                            {/* Actions */}
+                            <div className="flex flex-wrap gap-1.5">
+                              <button
+                                onClick={() => openEditBooking(booking)}
+                                className="px-2.5 py-1 bg-cyan/10 hover:bg-cyan/20 text-cyan rounded-lg text-[11px] font-semibold transition-colors flex items-center gap-1"
+                              >
+                                <Edit2 className="w-3 h-3" />
+                                Edit
+                              </button>
+                              {booking.status === 'pending' && (
+                                <>
+                                  <button
+                                    onClick={() => updateBookingStatus(booking.id, 'confirmed')}
+                                    className="px-2.5 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg text-[11px] font-semibold transition-colors"
+                                  >
+                                    Confirm
+                                  </button>
+                                  <button
+                                    onClick={() => updateBookingStatus(booking.id, 'cancelled')}
+                                    className="px-2.5 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg text-[11px] font-semibold transition-colors"
+                                  >
+                                    Cancel
+                                  </button>
+                                </>
+                              )}
+                              {booking.status === 'confirmed' && (
+                                <>
+                                  <button
+                                    onClick={() => updateBookingStatus(booking.id, 'completed')}
+                                    className="px-2.5 py-1 bg-cyan/20 hover:bg-cyan/30 text-cyan rounded-lg text-[11px] font-semibold transition-colors"
+                                  >
+                                    Complete
+                                  </button>
+                                  <button
+                                    onClick={() => updateBookingStatus(booking.id, 'no-show')}
+                                    className="px-2.5 py-1 bg-slate-500/20 hover:bg-slate-500/30 text-slate-400 rounded-lg text-[11px] font-semibold transition-colors"
+                                  >
+                                    No-Show
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
                 )
-              })}
-            </div>
-
-            {/* Legend */}
-            <div className="flex flex-wrap items-center gap-4 mt-4 pt-4 border-t border-cyan-200/40">
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Status:</span>
-              {[
-                { label: 'Confirmed', color: 'bg-green-400' },
-                { label: 'Pending', color: 'bg-orange' },
-                { label: 'Cancelled', color: 'bg-red-400' },
-                { label: 'Completed', color: 'bg-cyan' },
-              ].map(item => (
-                <div key={item.label} className="flex items-center gap-1.5">
-                  <div className={`w-2 h-2 rounded-full ${item.color}`} />
-                  <span className="text-xs text-slate-600 dark:text-slate-400">{item.label}</span>
-                </div>
-              ))}
+              })()}
             </div>
           </div>
 
-          {/* Selected Day Detail Panel */}
-          {selectedDay && (
-            <div className="command-panel p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                  {new Date(selectedDay + 'T12:00:00').toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric',
-                  })}
-                </h3>
-                <span className="text-sm text-cyan-700 dark:text-cyan-300 font-medium">
-                  {selectedDayBookings.length} booking{selectedDayBookings.length !== 1 ? 's' : ''}
-                </span>
+          {/* Calendar Panel (right on desktop, below on mobile) */}
+          <div className="lg:flex-[3] min-w-0">
+            <div className="command-panel p-4 md:p-6">
+              <div className="flex items-center justify-between mb-4 md:mb-6">
+                <button
+                  onClick={prevMonth}
+                  className="p-2 rounded-lg hover:bg-cyan-50/50 transition-colors"
+                >
+                  <ChevronLeft className="w-5 h-5 text-slate-600 dark:text-white" />
+                </button>
+                <div className="flex items-center gap-3">
+                  <h2 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white">{monthLabel}</h2>
+                  <button
+                    onClick={goToToday}
+                    className="px-3 py-1 text-xs font-semibold rounded-lg bg-cyan/10 text-cyan hover:bg-cyan/20 border border-cyan/20 transition-colors"
+                  >
+                    Today
+                  </button>
+                </div>
+                <button
+                  onClick={nextMonth}
+                  className="p-2 rounded-lg hover:bg-cyan-50/50 transition-colors"
+                >
+                  <ChevronRight className="w-5 h-5 text-slate-600 dark:text-white" />
+                </button>
               </div>
 
-              {selectedDayBookings.length === 0 ? (
-                <div className="text-center py-8">
-                  <Calendar className="w-10 h-10 text-cyan-700 dark:text-cyan-500 mx-auto mb-2" />
-                  <p className="text-slate-600 dark:text-slate-400">No bookings on this day</p>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {selectedDayBookings
-                    .sort((a: any, b: any) => (a.start_time || '').localeCompare(b.start_time || ''))
-                    .map((booking: any) => (
-                      <div
-                        key={booking.id}
-                        className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 p-4 rounded-xl bg-cyan-50/30 dark:bg-white/5 border border-cyan-200/30 dark:border-white/10"
-                      >
-                        {/* Time */}
-                        <div className="flex items-center gap-2 min-w-[140px]">
-                          <Clock className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
-                          <span className="text-sm font-semibold text-slate-900 dark:text-white">
-                            {formatTime(booking.start_time)} – {formatTime(booking.end_time)}
-                          </span>
-                        </div>
+              {/* Day Headers */}
+              <div className="grid grid-cols-7 gap-1 mb-2">
+                {dayNames.map(day => (
+                  <div key={day} className="text-center text-xs font-semibold text-cyan-700 dark:text-cyan-300 py-2">
+                    {day}
+                  </div>
+                ))}
+              </div>
 
-                        {/* Athlete */}
-                        <div className="flex items-center gap-2 min-w-[140px]">
-                          <User className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
-                          <span className="text-sm text-slate-800 dark:text-slate-200">
-                            {booking.athlete?.full_name || booking.athlete_name || 'Unknown'}
-                          </span>
-                        </div>
+              {/* Calendar Grid */}
+              <div className="grid grid-cols-7 gap-1">
+                {/* Empty cells for days before month starts */}
+                {Array.from({ length: firstDayOfWeek }).map((_, i) => (
+                  <div key={`empty-${i}`} className="aspect-square p-1" />
+                ))}
 
-                        {/* Service */}
-                        <div className="flex-1">
-                          <span className="text-sm text-slate-700 dark:text-slate-300">
-                            {booking.service?.name || booking.service_name || '—'}
-                          </span>
-                        </div>
+                {/* Day cells */}
+                {Array.from({ length: daysInMonth }).map((_, i) => {
+                  const day = i + 1
+                  const dateKey = makeDateKey(day)
+                  const dayBookings = bookingsByDate[dateKey] || []
+                  const isToday = dateKey === todayKey
+                  const isSelected = dateKey === selectedDay
+                  const hasBookings = dayBookings.length > 0
 
-                        {/* Amount */}
-                        <div className="min-w-[80px]">
-                          <span className={`text-sm font-semibold ${getPaymentStatusColor(booking.payment_status)}`}>
-                            ${((booking.amount_cents || 0) / 100).toFixed(2)}
-                          </span>
-                        </div>
-
-                        {/* Status Badge */}
-                        <span
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border self-start ${getStatusColor(
-                            booking.status
-                          )}`}
-                        >
-                          {getStatusIcon(booking.status)}
-                          <span className="capitalize">{booking.status}</span>
-                        </span>
-
-                        {/* Quick Actions */}
-                        <div className="flex gap-2 self-start">
-                          <button
-                            onClick={() => openEditBooking(booking)}
-                            className="px-3 py-1.5 bg-cyan/10 hover:bg-cyan/20 text-cyan rounded-lg text-xs font-semibold transition-colors flex items-center gap-1"
-                          >
-                            <Edit2 className="w-3 h-3" />
-                            Edit
-                          </button>
-                          {booking.status === 'pending' && (
-                            <>
-                              <button
-                                onClick={() => updateBookingStatus(booking.id, 'confirmed')}
-                                className="px-3 py-1.5 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg text-xs font-semibold transition-colors"
-                              >
-                                Confirm
-                              </button>
-                              <button
-                                onClick={() => updateBookingStatus(booking.id, 'cancelled')}
-                                className="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg text-xs font-semibold transition-colors"
-                              >
-                                Cancel
-                              </button>
-                            </>
-                          )}
-                          {booking.status === 'confirmed' && (
-                            <>
-                              <button
-                                onClick={() => updateBookingStatus(booking.id, 'completed')}
-                                className="px-3 py-1.5 bg-cyan/20 hover:bg-cyan/30 text-cyan rounded-lg text-xs font-semibold transition-colors"
-                              >
-                                Complete
-                              </button>
-                              <button
-                                onClick={() => updateBookingStatus(booking.id, 'no-show')}
-                                className="px-3 py-1.5 bg-slate-500/20 hover:bg-slate-500/30 text-slate-400 rounded-lg text-xs font-semibold transition-colors"
-                              >
-                                No-Show
-                              </button>
-                            </>
-                          )}
-                        </div>
+                  return (
+                    <button
+                      key={day}
+                      onClick={() => setSelectedDay(isSelected ? null : dateKey)}
+                      className={`
+                        aspect-square p-1 rounded-xl transition-all relative flex flex-col items-center overflow-hidden
+                        ${isSelected
+                          ? 'bg-orange/20 border-2 border-orange ring-2 ring-orange/30'
+                          : isToday
+                            ? 'bg-cyan/10 border border-cyan/30'
+                            : hasBookings
+                              ? 'hover:bg-cyan-50/50 border border-transparent hover:border-cyan-200/40'
+                              : 'hover:bg-cyan-50/30 border border-transparent'
+                        }
+                      `}
+                    >
+                      {/* PSP Logo watermark */}
+                      <div className={`absolute inset-0 flex items-center justify-center pointer-events-none ${
+                        hasBookings ? 'opacity-[0.08]' : 'opacity-[0.03]'
+                      }`}>
+                        <Image
+                          src="/images/PSP-black-300x99-1.png"
+                          alt=""
+                          width={40}
+                          height={13}
+                          className="dark:invert"
+                        />
                       </div>
-                    ))}
-                </div>
-              )}
+
+                      <span
+                        className={`
+                          text-sm font-medium mt-1 relative z-10
+                          ${isSelected
+                            ? 'text-orange font-bold'
+                            : isToday
+                              ? 'text-cyan font-bold'
+                              : 'text-slate-700 dark:text-slate-300'
+                          }
+                        `}
+                      >
+                        {day}
+                      </span>
+
+                      {/* Booking dots */}
+                      {hasBookings && (
+                        <div className="flex flex-wrap justify-center gap-0.5 mt-auto mb-1 max-w-full px-0.5 relative z-10">
+                          {dayBookings.slice(0, 4).map((b: any, idx: number) => (
+                            <div
+                              key={idx}
+                              className={`w-1.5 h-1.5 rounded-full ${getStatusDot(b.status)}`}
+                            />
+                          ))}
+                          {dayBookings.length > 4 && (
+                            <span className="text-[8px] text-slate-500 dark:text-slate-400 font-bold leading-none">
+                              +{dayBookings.length - 4}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+
+              {/* Legend */}
+              <div className="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t border-cyan-200/40">
+                <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Status:</span>
+                {[
+                  { label: 'Confirmed', color: 'bg-green-400' },
+                  { label: 'Pending', color: 'bg-orange' },
+                  { label: 'Cancelled', color: 'bg-red-400' },
+                  { label: 'Completed', color: 'bg-cyan' },
+                ].map(item => (
+                  <div key={item.label} className="flex items-center gap-1.5">
+                    <div className={`w-2 h-2 rounded-full ${item.color}`} />
+                    <span className="text-xs text-slate-600 dark:text-slate-400">{item.label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          )}
+          </div>
         </div>
       )}
 

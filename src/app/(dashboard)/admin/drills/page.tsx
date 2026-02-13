@@ -30,7 +30,7 @@ interface Drill {
   slug: string
   description: string | null
   instructions: string | null
-  video_url: string
+  youtube_url: string | null
   thumbnail_url: string | null
   tags: string[]
   category: string | null
@@ -162,8 +162,8 @@ export default function DrillsManagementPage() {
   })
 
   const handleCreateDrill = async () => {
-    if (!formData.title || !formData.video_url) {
-      alert('Please fill in required fields: Title and Video URL')
+    if (!formData.title) {
+      alert('Please fill in the required field: Title')
       return
     }
 
@@ -174,13 +174,29 @@ export default function DrillsManagementPage() {
       // Generate slug from title if not provided
       const slug = formData.slug || formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')
 
+      // Build insert payload — map video_url to youtube_url (DB column name)
+      const insertData: Record<string, any> = {
+        title: formData.title,
+        slug,
+        category: formData.category,
+        difficulty: formData.difficulty,
+        duration_seconds: formData.duration_seconds,
+        published: formData.published,
+        featured: formData.featured,
+        created_by: profile?.id,
+      }
+      // Video is optional — map to DB column name
+      if (formData.video_url) insertData.youtube_url = formData.video_url
+      if (formData.description) insertData.description = formData.description
+      if (formData.instructions) insertData.instructions = formData.instructions
+      if (formData.thumbnail_url) insertData.thumbnail_url = formData.thumbnail_url
+      if (formData.tags.length > 0) insertData.tags = formData.tags
+      if (formData.equipment_needed.length > 0) insertData.equipment_needed = formData.equipment_needed
+      if (formData.focus_areas.length > 0) insertData.focus_areas = formData.focus_areas
+
       const { error } = await supabase
         .from('drills')
-        .insert({
-          ...formData,
-          slug,
-          created_by: profile?.id, // Track who created this drill
-        })
+        .insert(insertData)
 
       if (error) throw error
 
@@ -209,9 +225,26 @@ export default function DrillsManagementPage() {
     try {
       const supabase = createClient()
 
+      // Build update payload — map video_url to youtube_url (DB column name)
+      const updateData: Record<string, any> = {
+        title: formData.title,
+        youtube_url: formData.video_url || null,
+        category: formData.category,
+        difficulty: formData.difficulty,
+        duration_seconds: formData.duration_seconds,
+        published: formData.published,
+        featured: formData.featured,
+        description: formData.description || null,
+        instructions: formData.instructions || null,
+        thumbnail_url: formData.thumbnail_url || null,
+        tags: formData.tags,
+        equipment_needed: formData.equipment_needed,
+        focus_areas: formData.focus_areas,
+      }
+
       const { error } = await supabase
         .from('drills')
-        .update(formData)
+        .update(updateData)
         .eq('id', selectedDrill.id)
 
       if (error) throw error
@@ -308,7 +341,7 @@ export default function DrillsManagementPage() {
       slug: drill.slug,
       description: drill.description || '',
       instructions: drill.instructions || '',
-      video_url: drill.video_url,
+      video_url: drill.youtube_url || '',
       thumbnail_url: drill.thumbnail_url || '',
       tags: drill.tags,
       category: drill.category || 'mechanics',
@@ -475,7 +508,7 @@ export default function DrillsManagementPage() {
             <Video className="w-6 h-6 text-cyan" />
             <span className="text-sm text-cyan-800 dark:text-white">Content</span>
           </div>
-          <p className="text-3xl font-bold text-slate-900 dark:text-white">{drills.filter(d => d.video_url).length}</p>
+          <p className="text-3xl font-bold text-slate-900 dark:text-white">{drills.filter(d => d.youtube_url).length}</p>
           <p className="text-sm text-cyan-800 dark:text-white">With Video</p>
         </div>
         <div className="command-panel-active">
@@ -710,7 +743,7 @@ export default function DrillsManagementPage() {
               {/* Video Source Toggle */}
               <div>
                 <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
-                  Video Source <span className="text-red-400">*</span>
+                  Video Source <span className="text-cyan-600 dark:text-cyan-400 text-xs font-normal">(optional)</span>
                 </label>
                 <div className="flex gap-2 mb-3">
                   <button
