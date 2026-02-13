@@ -21,6 +21,7 @@ import {
   Loader2,
   FileText,
   ArrowDownUp,
+  ChevronDown,
 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -38,6 +39,7 @@ export default function AdminBookingsPage() {
   const [calendarDate, setCalendarDate] = useState(new Date())
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
   const [listSortAsc, setListSortAsc] = useState(true) // true = nearest first
+  const [listExpanded, setListExpanded] = useState(false) // collapsed = show 2 bookings
 
   // Edit booking modal
   const [editBooking, setEditBooking] = useState<any>(null)
@@ -70,7 +72,7 @@ export default function AdminBookingsPage() {
   const searchParams = useSearchParams()
   useEffect(() => {
     if (searchParams.get('action') === 'book' && !roleLoading && (isCoach || isAdmin)) {
-      setShowBookForAthlete(true)
+      openBookForAthlete()
       // Clean URL without reload
       window.history.replaceState(null, '', '/admin/bookings')
     }
@@ -158,9 +160,13 @@ export default function AdminBookingsPage() {
       supabase.from('services').select('id, name, price_cents, duration_minutes').eq('is_active', true).order('name'),
     ])
 
-    if (athleteRes.data) setAthletes(athleteRes.data)
-    if (slotRes.data) setAvailableSlots(slotRes.data)
-    if (serviceRes.data) setServices(serviceRes.data)
+    if (athleteRes.error) console.error('Failed to load athletes:', athleteRes.error)
+    if (slotRes.error) console.error('Failed to load slots:', slotRes.error)
+    if (serviceRes.error) console.error('Failed to load services:', serviceRes.error)
+
+    setAthletes(athleteRes.data || [])
+    setAvailableSlots(slotRes.data || [])
+    setServices(serviceRes.data || [])
   }
 
   // Submit book-for-athlete
@@ -477,14 +483,13 @@ export default function AdminBookingsPage() {
               {(() => {
                 // Show selected day's bookings, or upcoming bookings if no day selected
                 const sortDir = listSortAsc ? 1 : -1
-                const displayBookings = selectedDay
+                const allDisplayBookings = selectedDay
                   ? selectedDayBookings.sort((a: any, b: any) => (a.start_time || '').localeCompare(b.start_time || ''))
                   : bookings
                       .filter(b => b.booking_date >= todayKey && b.status !== 'cancelled')
                       .sort((a, b) => sortDir * (a.booking_date.localeCompare(b.booking_date) || (a.start_time || '').localeCompare(b.start_time || '')))
-                      .slice(0, 15)
 
-                if (displayBookings.length === 0) {
+                if (allDisplayBookings.length === 0) {
                   return (
                     <div className="text-center py-8">
                       <Calendar className="w-10 h-10 text-cyan-700 dark:text-cyan-500 mx-auto mb-2" />
@@ -494,6 +499,13 @@ export default function AdminBookingsPage() {
                     </div>
                   )
                 }
+
+                // Collapse to 2 bookings by default (unless viewing a specific day or expanded)
+                const COLLAPSED_LIMIT = 2
+                const isCollapsible = !selectedDay && allDisplayBookings.length > COLLAPSED_LIMIT
+                const displayBookings = (!selectedDay && !listExpanded)
+                  ? allDisplayBookings.slice(0, COLLAPSED_LIMIT)
+                  : allDisplayBookings
 
                 // Group by date for upcoming view
                 let lastDate = ''
@@ -600,6 +612,20 @@ export default function AdminBookingsPage() {
                         </div>
                       )
                     })}
+
+                    {/* Show more / Show less toggle */}
+                    {isCollapsible && (
+                      <button
+                        onClick={() => setListExpanded(!listExpanded)}
+                        className="w-full mt-2 py-2 rounded-xl text-xs font-semibold text-cyan hover:text-orange bg-cyan/5 hover:bg-cyan/10 border border-cyan/20 transition-colors flex items-center justify-center gap-1"
+                      >
+                        <ChevronDown className={`w-3.5 h-3.5 transition-transform ${listExpanded ? 'rotate-180' : ''}`} />
+                        {listExpanded
+                          ? 'Show less'
+                          : `Show all ${allDisplayBookings.length} bookings`
+                        }
+                      </button>
+                    )}
                   </div>
                 )
               })()}
@@ -1011,7 +1037,7 @@ export default function AdminBookingsPage() {
                   required
                   value={bookFormData.athleteId}
                   onChange={e => setBookFormData({ ...bookFormData, athleteId: e.target.value })}
-                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                  className="w-full px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 >
                   <option value="">Select athlete...</option>
                   {athletes.map(a => (
@@ -1027,7 +1053,7 @@ export default function AdminBookingsPage() {
                   required
                   value={bookFormData.serviceId}
                   onChange={e => setBookFormData({ ...bookFormData, serviceId: e.target.value })}
-                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                  className="w-full px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 >
                   <option value="">Select service...</option>
                   {services.map(s => (
@@ -1043,7 +1069,7 @@ export default function AdminBookingsPage() {
                   required
                   value={bookFormData.slotId}
                   onChange={e => setBookFormData({ ...bookFormData, slotId: e.target.value })}
-                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                  className="w-full px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 >
                   <option value="">Select time slot...</option>
                   {availableSlots.map(slot => (

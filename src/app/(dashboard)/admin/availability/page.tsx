@@ -254,7 +254,8 @@ export default function AvailabilityManagementPage() {
   }
 
   const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('en-US', {
+    // Append T12:00:00 to prevent UTC midnight from shifting to previous day in US timezones
+    return new Date(date + 'T12:00:00').toLocaleDateString('en-US', {
       weekday: 'short',
       month: 'short',
       day: 'numeric',

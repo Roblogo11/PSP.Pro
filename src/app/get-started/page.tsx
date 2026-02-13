@@ -136,18 +136,39 @@ export default function GetStartedPage() {
 
           <div>
             <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
-              Primary Position *
+              Sport / Position *
             </label>
             <select
               value={formData.position}
               onChange={(e) => setFormData({ ...formData, position: e.target.value })}
               className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
             >
-              <option value="">Select Position</option>
-              <option value="pitcher">Pitcher</option>
-              <option value="catcher">Catcher</option>
-              <option value="infield">Infield</option>
-              <option value="outfield">Outfield</option>
+              <option value="">Select Sport &amp; Position</option>
+              <optgroup label="Softball">
+                <option value="softball-pitcher">Pitcher</option>
+                <option value="softball-catcher">Catcher</option>
+                <option value="softball-infield">Infield</option>
+                <option value="softball-outfield">Outfield</option>
+                <option value="softball-utility">Utility</option>
+              </optgroup>
+              <optgroup label="Baseball">
+                <option value="baseball-pitcher">Pitcher</option>
+                <option value="baseball-catcher">Catcher</option>
+                <option value="baseball-infield">Infield</option>
+                <option value="baseball-outfield">Outfield</option>
+                <option value="baseball-utility">Utility</option>
+              </optgroup>
+              <optgroup label="Soccer">
+                <option value="soccer-forward">Forward</option>
+                <option value="soccer-midfielder">Midfielder</option>
+                <option value="soccer-defender">Defender</option>
+                <option value="soccer-goalkeeper">Goalkeeper</option>
+              </optgroup>
+              <optgroup label="General Athletics">
+                <option value="general-speed-agility">Speed &amp; Agility</option>
+                <option value="general-strength">Strength &amp; Conditioning</option>
+                <option value="general-multi-sport">Multi-Sport Athlete</option>
+              </optgroup>
             </select>
           </div>
         </div>
