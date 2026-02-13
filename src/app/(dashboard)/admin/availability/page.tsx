@@ -271,7 +271,7 @@ export default function AvailabilityManagementPage() {
     return `${formattedHour}:${minutes} ${ampm}`
   }
 
-  const inputClasses = "w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+  const inputClasses = "w-full px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
 
   return (
     <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8">
@@ -427,7 +427,7 @@ export default function AvailabilityManagementPage() {
                   <select
                     value={formData.repeatFrequency}
                     onChange={e => setFormData({ ...formData, repeatFrequency: e.target.value as 'weekly' | 'monthly' })}
-                    className="px-3 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                    className="px-3 py-2 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50"
                   >
                     <option value="weekly">Weekly</option>
                     <option value="monthly">Monthly</option>
@@ -436,7 +436,7 @@ export default function AvailabilityManagementPage() {
                   <select
                     value={formData.repeatCount}
                     onChange={e => setFormData({ ...formData, repeatCount: parseInt(e.target.value) })}
-                    className="px-3 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                    className="px-3 py-2 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50"
                   >
                     {[2, 3, 4, 6, 8, 10, 12].map(n => (
                       <option key={n} value={n}>{n} {formData.repeatFrequency === 'weekly' ? 'weeks' : 'months'}</option>

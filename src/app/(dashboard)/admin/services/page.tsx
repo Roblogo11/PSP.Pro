@@ -346,7 +346,7 @@ export default function ServicesManagerPage() {
                 type="text"
                 value={formData.name || ''}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 placeholder="e.g., 1-on-1 Training Session"
               />
             </div>
@@ -360,7 +360,7 @@ export default function ServicesManagerPage() {
                 value={formData.description || ''}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 rows={3}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 placeholder="Brief description of the service..."
               />
             </div>
@@ -374,7 +374,7 @@ export default function ServicesManagerPage() {
                 type="number"
                 value={formData.price_cents || 0}
                 onChange={(e) => setFormData({ ...formData, price_cents: parseInt(e.target.value) })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 placeholder="7500 = $75.00"
               />
               <p className="text-xs text-cyan-700 dark:text-white mt-1">
@@ -391,7 +391,7 @@ export default function ServicesManagerPage() {
                 type="number"
                 value={formData.duration_minutes || 0}
                 onChange={(e) => setFormData({ ...formData, duration_minutes: parseInt(e.target.value) })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 placeholder="60"
               />
             </div>
@@ -411,7 +411,7 @@ export default function ServicesManagerPage() {
                       setFormData({ ...formData, category: e.target.value.toLowerCase().trim() })
                     }}
                     placeholder="e.g. pitching, hitting, speed..."
-                    className="flex-1 px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                    className="flex-1 px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan/50"
                     autoFocus
                   />
                   <button
@@ -427,7 +427,7 @@ export default function ServicesManagerPage() {
                   <select
                     value={formData.category || 'individual'}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="flex-1 px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                    className="flex-1 px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
                   >
                     {allCategories.map(cat => (
                       <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
@@ -456,7 +456,7 @@ export default function ServicesManagerPage() {
                 type="number"
                 value={formData.max_participants || 1}
                 onChange={(e) => setFormData({ ...formData, max_participants: parseInt(e.target.value) })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 placeholder="1"
               />
             </div>
@@ -470,7 +470,7 @@ export default function ServicesManagerPage() {
                 type="text"
                 value={formData.stripe_price_id || ''}
                 onChange={(e) => setFormData({ ...formData, stripe_price_id: e.target.value })}
-                className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 placeholder="price_xxxxxxxxxxxxx"
               />
             </div>
@@ -484,7 +484,7 @@ export default function ServicesManagerPage() {
                 type="text"
                 value={formData.homepage_image_url || ''}
                 onChange={(e) => setFormData({ ...formData, homepage_image_url: e.target.value })}
-                className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 placeholder="/images/my-photo.jpg"
               />
               <p className="text-xs text-cyan-700 dark:text-white mt-1">
@@ -501,7 +501,7 @@ export default function ServicesManagerPage() {
                 type="text"
                 value={formData.video_url || ''}
                 onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
-                className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan/50"
                 placeholder="https://youtube.com/watch?v=... or https://vimeo.com/..."
               />
               <p className="text-xs text-cyan-700 dark:text-white mt-1">
