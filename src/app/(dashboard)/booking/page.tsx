@@ -7,7 +7,7 @@ import { getLocalDateString } from '@/lib/utils/local-date'
 import { Calendar } from '@/components/booking/calendar'
 import { ServiceSelector } from '@/components/booking/service-selector'
 import { TimeSlotPicker } from '@/components/booking/time-slot-picker'
-import { CheckCircle2, ArrowRight, ArrowLeft, Loader2, CalendarDays } from 'lucide-react'
+import { CheckCircle2, ArrowRight, ArrowLeft, Loader2, CalendarDays, CreditCard, Wallet } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 
 type BookingStep = 'service' | 'date' | 'time' | 'confirm'
@@ -28,6 +28,7 @@ export default function BookingPage() {
   const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [bookedSlotIds, setBookedSlotIds] = useState<string[]>([])
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'on_site'>('card')
 
   // Check for canceled parameter
   const canceled = searchParams.get('canceled')
@@ -154,31 +155,57 @@ export default function BookingPage() {
         throw new Error('Service or slot not found')
       }
 
-      // Create checkout session
-      const response = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          serviceId: service.id,
-          bookingData: {
-            coachId: slot.coach_id,
+      if (paymentMethod === 'on_site') {
+        // Pay on site — create booking directly without Stripe
+        const response = await fetch('/api/bookings/pay-on-site', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            serviceId: service.id,
             slotId: slot.id,
             date: getLocalDateString(selectedDate),
             startTime: slot.start_time,
             endTime: slot.end_time,
             durationMinutes: service.duration_minutes,
             location: slot.location,
-          },
-        }),
-      })
+            coachId: slot.coach_id,
+          }),
+        })
 
-      const { url, error } = await response.json()
+        const data = await response.json()
 
-      if (error) throw new Error(error)
+        if (!response.ok || data.error) {
+          throw new Error(data.error || 'Failed to create booking')
+        }
 
-      // Redirect to Stripe Checkout
-      if (url) {
-        window.location.href = url
+        router.push('/booking/success?method=on_site')
+      } else {
+        // Pay online — Stripe Checkout
+        const response = await fetch('/api/stripe/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            serviceId: service.id,
+            bookingData: {
+              coachId: slot.coach_id,
+              slotId: slot.id,
+              date: getLocalDateString(selectedDate),
+              startTime: slot.start_time,
+              endTime: slot.end_time,
+              durationMinutes: service.duration_minutes,
+              location: slot.location,
+            },
+          }),
+        })
+
+        const { url, error } = await response.json()
+
+        if (error) throw new Error(error)
+
+        // Redirect to Stripe Checkout
+        if (url) {
+          window.location.href = url
+        }
       }
     } catch (error: any) {
       console.error('Booking error:', error)
@@ -344,6 +371,43 @@ export default function BookingPage() {
                     ${(selectedService.price_cents / 100).toFixed(2)}
                   </p>
                 </div>
+
+                {/* Payment Method Toggle */}
+                <div className="p-4 rounded-lg bg-cyan-50/50 border border-cyan-200/40">
+                  <p className="text-sm text-cyan-800 dark:text-white mb-3 font-semibold">Payment Method</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod('card')}
+                      className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all text-left ${
+                        paymentMethod === 'card'
+                          ? 'border-orange bg-orange/10 text-slate-900 dark:text-white'
+                          : 'border-white/10 bg-white/5 text-cyan-700 dark:text-cyan-300 hover:border-white/20'
+                      }`}
+                    >
+                      <CreditCard className="w-5 h-5 flex-shrink-0" />
+                      <div>
+                        <p className="font-semibold text-sm">Pay Online</p>
+                        <p className="text-xs opacity-70">Card via Stripe</p>
+                      </div>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod('on_site')}
+                      className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all text-left ${
+                        paymentMethod === 'on_site'
+                          ? 'border-orange bg-orange/10 text-slate-900 dark:text-white'
+                          : 'border-white/10 bg-white/5 text-cyan-700 dark:text-cyan-300 hover:border-white/20'
+                      }`}
+                    >
+                      <Wallet className="w-5 h-5 flex-shrink-0" />
+                      <div>
+                        <p className="font-semibold text-sm">Pay at Location</p>
+                        <p className="text-xs opacity-70">Cash or card on site</p>
+                      </div>
+                    </button>
+                  </div>
+                </div>
               </div>
 
               <button
@@ -358,6 +422,11 @@ export default function BookingPage() {
                     <Loader2 className="w-5 h-5 animate-spin" />
                     <span>Processing...</span>
                   </>
+                ) : paymentMethod === 'on_site' ? (
+                  <>
+                    <span>Confirm Booking</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </>
                 ) : (
                   <>
                     <span>Proceed to Payment</span>
@@ -367,7 +436,9 @@ export default function BookingPage() {
               </button>
 
               <p className="text-xs text-cyan-800 dark:text-white text-center mt-4">
-                You'll be redirected to Stripe to complete your payment securely
+                {paymentMethod === 'on_site'
+                  ? 'Your booking will be pending until confirmed. Please bring payment to your session.'
+                  : "You'll be redirected to Stripe to complete your payment securely"}
               </p>
             </div>
           )}

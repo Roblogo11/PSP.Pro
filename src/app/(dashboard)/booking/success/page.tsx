@@ -8,11 +8,16 @@ import { CheckCircle2, Calendar, ArrowRight, Loader2 } from 'lucide-react'
 export default function BookingSuccessPage() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('session_id')
+  const method = searchParams.get('method')
+  const isOnSite = method === 'on_site'
 
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(!isOnSite)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    // Pay on site — no Stripe verification needed
+    if (isOnSite) return
+
     if (!sessionId) {
       setError('No session ID found. Please try booking again.')
       setLoading(false)
@@ -36,7 +41,7 @@ export default function BookingSuccessPage() {
     }
 
     verifyPayment()
-  }, [sessionId])
+  }, [sessionId, isOnSite])
 
   if (loading) {
     return (
@@ -80,40 +85,73 @@ export default function BookingSuccessPage() {
 
           {/* Heading */}
           <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white mb-3">
-            Booking Confirmed! 🎉
+            {isOnSite ? 'Booking Submitted!' : 'Booking Confirmed! 🎉'}
           </h1>
           <p className="text-lg text-cyan-700 dark:text-white mb-8">
-            Your training session has been successfully booked and paid for.
+            {isOnSite
+              ? 'Your session is pending confirmation. Please bring payment to your session.'
+              : 'Your training session has been successfully booked and paid for.'}
           </p>
 
           {/* What's Next */}
           <div className="bg-cyan-50/50 border border-cyan-200/40 rounded-xl p-6 mb-8 text-left">
             <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">What happens next?</h2>
             <ul className="space-y-3 text-sm text-cyan-700 dark:text-white">
-              <li className="flex items-start gap-3">
-                <span className="w-6 h-6 bg-orange/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <span className="text-orange font-bold text-xs">1</span>
-                </span>
-                <span>
-                  <strong className="text-slate-900 dark:text-white">Confirmation Email:</strong> Check your inbox for a detailed booking confirmation with all session information.
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="w-6 h-6 bg-orange/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <span className="text-orange font-bold text-xs">2</span>
-                </span>
-                <span>
-                  <strong className="text-slate-900 dark:text-white">Calendar Sync:</strong> Add the session to your calendar to get reminders before your training.
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="w-6 h-6 bg-orange/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <span className="text-orange font-bold text-xs">3</span>
-                </span>
-                <span>
-                  <strong className="text-slate-900 dark:text-white">Show Up Ready:</strong> Arrive 10 minutes early with your training gear and a positive attitude!
-                </span>
-              </li>
+              {isOnSite ? (
+                <>
+                  <li className="flex items-start gap-3">
+                    <span className="w-6 h-6 bg-orange/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-orange font-bold text-xs">1</span>
+                    </span>
+                    <span>
+                      <strong className="text-slate-900 dark:text-white">Pending Confirmation:</strong> Your coach will review and confirm your booking shortly.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="w-6 h-6 bg-orange/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-orange font-bold text-xs">2</span>
+                    </span>
+                    <span>
+                      <strong className="text-slate-900 dark:text-white">Bring Payment:</strong> Please bring cash or a card to pay at the start of your session.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="w-6 h-6 bg-orange/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-orange font-bold text-xs">3</span>
+                    </span>
+                    <span>
+                      <strong className="text-slate-900 dark:text-white">Show Up Ready:</strong> Arrive 10 minutes early with your training gear and a positive attitude!
+                    </span>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="flex items-start gap-3">
+                    <span className="w-6 h-6 bg-orange/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-orange font-bold text-xs">1</span>
+                    </span>
+                    <span>
+                      <strong className="text-slate-900 dark:text-white">Confirmation Email:</strong> Check your inbox for a detailed booking confirmation with all session information.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="w-6 h-6 bg-orange/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-orange font-bold text-xs">2</span>
+                    </span>
+                    <span>
+                      <strong className="text-slate-900 dark:text-white">Calendar Sync:</strong> Add the session to your calendar to get reminders before your training.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="w-6 h-6 bg-orange/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-orange font-bold text-xs">3</span>
+                    </span>
+                    <span>
+                      <strong className="text-slate-900 dark:text-white">Show Up Ready:</strong> Arrive 10 minutes early with your training gear and a positive attitude!
+                    </span>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
 
@@ -136,7 +174,7 @@ export default function BookingSuccessPage() {
           </div>
 
           {/* Session ID */}
-          {sessionId && (
+          {sessionId && !isOnSite && (
             <p className="text-xs text-cyan-800 dark:text-white mt-6">
               Confirmation ID: <span className="font-mono">{sessionId.slice(0, 20)}...</span>
             </p>
