@@ -216,7 +216,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['book', 'schedule', 'appointment', 'reserve', 'buy lesson', 'how to book', 'buy', 'lesson'],
     title: 'How to Book a Session',
-    response: 'Booking is a simple 4-step process:\n\n1️⃣ Choose your training type\nPick from 1-on-1, group, or specialty sessions\n\n2️⃣ Select your date\nUse the calendar to pick a training day\n\n3️⃣ Pick a time slot\nSee available coaches and times\n\n4️⃣ Confirm & pay\nReview your booking and pay securely via Stripe\n\nAfter booking, you\'ll get a confirmation email and the session appears on your dashboard.\n\nAvailability: Mon-Fri 3PM-9PM, Sat 9AM-5PM',
+    response: 'Booking is a simple 4-step process:\n\n1️⃣ Choose your training type\nPick from 1-on-1, group, or specialty sessions\n\n2️⃣ Select your date\nUse the calendar to pick a training day\n\n3️⃣ Pick a time slot\nSee available coaches and times with location info\n\n4️⃣ Confirm & pay\nTwo options:\n• Pay with Card — secure Stripe checkout\n• Pay On-Site — reserve your spot now, pay in person at the facility\n\nAfter booking, you\'ll get a confirmation email automatically, and your coach gets notified too. The session appears on your dashboard right away.\n\nAvailability: Mon-Fri 3PM-9PM, Sat 9AM-5PM',
     actions: [{ label: 'Book Now', href: '/booking' }],
     followUp: ['Can I cancel or reschedule?', 'What payment methods do you accept?'],
   },
@@ -239,9 +239,9 @@ const KNOWLEDGE_BASE: KBEntry[] = [
 
   // ── PAYMENT ──
   {
-    keywords: ['payment', 'stripe', 'credit card', 'pay', 'checkout', 'payment method'],
+    keywords: ['payment', 'stripe', 'credit card', 'pay', 'checkout', 'payment method', 'pay on site', 'pay on-site', 'pay in person', 'cash'],
     title: 'Payment Information',
-    response: 'We use Stripe for secure payment processing.\n\n• Credit/debit cards accepted\n• Payment is collected at time of booking\n• All transactions are encrypted and secure\n• Receipts are emailed automatically\n\nAfter checkout, you\'re redirected to a confirmation page. Your booking shows up immediately on your dashboard.',
+    response: 'We offer two ways to pay when booking:\n\n💳 Pay with Card (Stripe)\n• Credit/debit cards accepted\n• Secure, encrypted checkout\n• Booking confirmed instantly\n• Confirmation email sent automatically\n\n🏟️ Pay On-Site\n• Reserve your spot without a card\n• Pay in person at the facility (cash or card)\n• Booking shows as "pending" until payment\n• You\'ll get an email reminder to bring payment\n\nBoth options send you a confirmation email, and your coach gets notified automatically. Your session appears on your dashboard right away.',
     actions: [{ label: 'Book a Session', href: '/booking' }],
   },
 
@@ -693,6 +693,38 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   // ════════════════════════════════════════════════════════════
   // ── VIDEO ON SERVICES (COACH) ──
   // ════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════
+  // ── AUTOMATED EMAILS ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['email notification', 'booking email', 'confirmation email', 'automated email', 'do i get an email', 'will i get notified', 'email confirmation'],
+    title: 'Automated Email Notifications',
+    response: 'PSP.Pro sends professional branded emails automatically — no manual follow-up needed!\n\nFor Athletes:\n• Booking Confirmation — sent after card payment with full session details, coach, location, and a link to your dashboard\n• Pay-on-Site Confirmation — sent when you book without a card, with a reminder to bring payment\n• Cancellation Notice — sent if a session is cancelled, with a link to rebook\n\nFor Coaches:\n• New Booking Alert — sent every time an athlete books a session, with their name, service, date/time, and payment method\n\nAll emails match the PSP.Pro brand design and include direct links to your dashboard.',
+    actions: [{ label: 'Book a Session', href: '/booking' }],
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── GALLERY / MEDIA (ATHLETE-FACING) ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['gallery', 'photos', 'media', 'images', 'pictures', 'training photos', 'highlight', 'highlights'],
+    title: 'Gallery & Media',
+    response: 'PSP.Pro has a media gallery organized by category:\n\n• Training Drills — instructional photos and clips\n• Athlete Progress — before/after and milestone shots\n• Facility — our training space and equipment\n• Session Highlights — action shots from sessions\n• Testimonials — athlete stories and results\n• Events — camps, clinics, and special events\n\nCoaches upload content regularly. Check back often for new training photos and videos!',
+    actions: [{ label: 'View Gallery', href: '/admin/media' }],
+    role: 'coach',
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── ANALYTICS (COACH) ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['analytics', 'revenue', 'reports', 'business stats', 'how much money', 'earnings', 'performance report', 'business analytics'],
+    title: 'Analytics Dashboard (Coach Tool)',
+    response: 'The Analytics page gives you a full business overview:\n\n📊 Key Metrics:\n• Total Revenue — all-time and filtered by period\n• Total Bookings — confirmed sessions\n• Active Athletes — athletes with recent activity\n• Completion Rate — percentage of booked sessions completed\n\n📈 Growth Indicators:\nEach metric shows period-over-period change (up or down arrow) so you can see trends.\n\n🔍 Time Filters:\n• Last 7 Days\n• Last 30 Days\n• Last 90 Days\n\n📋 Recent Bookings Table:\nShows athlete name, service, date, amount, and payment status.\n\nUse this to track your business growth, spot trends, and plan your schedule!',
+    actions: [{ label: 'View Analytics', href: '/admin/analytics' }],
+    role: 'coach',
+  },
+
   {
     keywords: ['video url', 'service video', 'add video to service', 'training video on service', 'demo video'],
     title: 'Adding Videos to Services',
