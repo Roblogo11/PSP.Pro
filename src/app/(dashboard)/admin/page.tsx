@@ -309,12 +309,12 @@ export default function AdminDashboard() {
       stat: `${stats.activeSessions} Upcoming`,
     },
     {
-      title: 'Content Library',
-      description: 'Videos, images, and media',
+      title: 'Content Hub',
+      description: 'Blog posts, videos, and media',
       icon: Video,
       href: '/admin/media',
       color: '#8B5CF6',
-      stat: 'Manage Files',
+      stat: 'Manage Content',
     },
     {
       title: 'Analytics',

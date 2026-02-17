@@ -1,17 +1,160 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { Calendar, Clock, ArrowLeft, Share2, BookOpen } from 'lucide-react'
+import { Calendar, Clock, ArrowLeft, Share2, BookOpen, Loader2 } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
+import { createClient } from '@/lib/supabase/client'
 import { getBlogPostBySlug, BLOG_POSTS } from '@/lib/blog-posts'
+
+interface BlogPostData {
+  id: string
+  title: string
+  slug: string
+  excerpt: string | null
+  content: string
+  category: string
+  thumbnail_url: string | null
+  published: boolean
+  featured: boolean
+  read_time: string
+  created_at: string
+}
 
 export default function BlogPostPage() {
   const params = useParams()
   const slug = params.slug as string
-  const post = getBlogPostBySlug(slug)
 
-  if (!post) {
+  const [post, setPost] = useState<BlogPostData | null>(null)
+  const [relatedPosts, setRelatedPosts] = useState<BlogPostData[]>([])
+  const [loading, setLoading] = useState(true)
+  const [notFound, setNotFound] = useState(false)
+
+  useEffect(() => {
+    async function fetchPost() {
+      try {
+        const supabase = createClient()
+
+        // Fetch the post by slug
+        const { data: postData, error: postError } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .eq('slug', slug)
+          .eq('published', true)
+          .single()
+
+        if (postError || !postData) {
+          // Fallback to static data
+          const staticPost = getBlogPostBySlug(slug)
+          if (staticPost) {
+            setPost({
+              id: staticPost.id,
+              title: staticPost.title,
+              slug: staticPost.slug,
+              excerpt: staticPost.excerpt,
+              content: staticPost.content,
+              category: staticPost.category,
+              thumbnail_url: staticPost.thumbnail,
+              published: true,
+              featured: false,
+              read_time: staticPost.readTime,
+              created_at: staticPost.date,
+            })
+            // Static related posts
+            const staticRelated = BLOG_POSTS
+              .filter(p => p.category === staticPost.category && p.id !== staticPost.id)
+              .slice(0, 2)
+            if (staticRelated.length < 2) {
+              const others = BLOG_POSTS
+                .filter(p => p.id !== staticPost.id && !staticRelated.find(r => r.id === p.id))
+                .slice(0, 2 - staticRelated.length)
+              staticRelated.push(...others)
+            }
+            setRelatedPosts(staticRelated.map(p => ({
+              id: p.id,
+              title: p.title,
+              slug: p.slug,
+              excerpt: p.excerpt,
+              content: '',
+              category: p.category,
+              thumbnail_url: p.thumbnail,
+              published: true,
+              featured: false,
+              read_time: p.readTime,
+              created_at: p.date,
+            })))
+          } else {
+            setNotFound(true)
+          }
+          setLoading(false)
+          return
+        }
+
+        setPost(postData)
+
+        // Fetch related posts (same category, excluding current)
+        const { data: related } = await supabase
+          .from('blog_posts')
+          .select('id, title, slug, excerpt, content, category, thumbnail_url, published, featured, read_time, created_at')
+          .eq('published', true)
+          .neq('id', postData.id)
+          .order('created_at', { ascending: false })
+          .limit(4)
+
+        if (related && related.length > 0) {
+          // Prefer same category
+          const sameCategory = related.filter(r => r.category === postData.category).slice(0, 2)
+          const others = related.filter(r => r.category !== postData.category)
+          const finalRelated = [...sameCategory]
+          if (finalRelated.length < 2) {
+            finalRelated.push(...others.slice(0, 2 - finalRelated.length))
+          }
+          setRelatedPosts(finalRelated)
+        }
+      } catch (err) {
+        console.error('Failed to fetch blog post:', err)
+        // Fallback to static
+        const staticPost = getBlogPostBySlug(slug)
+        if (staticPost) {
+          setPost({
+            id: staticPost.id,
+            title: staticPost.title,
+            slug: staticPost.slug,
+            excerpt: staticPost.excerpt,
+            content: staticPost.content,
+            category: staticPost.category,
+            thumbnail_url: staticPost.thumbnail,
+            published: true,
+            featured: false,
+            read_time: staticPost.readTime,
+            created_at: staticPost.date,
+          })
+        } else {
+          setNotFound(true)
+        }
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPost()
+  }, [slug])
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen">
+        <InfoSidebar />
+        <main className="flex-1 p-4 md:p-8 pb-24 lg:pb-8">
+          <div className="flex items-center justify-center py-32">
+            <Loader2 className="w-8 h-8 text-orange animate-spin" />
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  if (notFound || !post) {
     return (
       <div className="flex min-h-screen">
         <InfoSidebar />
@@ -32,19 +175,6 @@ export default function BlogPostPage() {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
     return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-  }
-
-  // Find related posts (same category, excluding current)
-  const relatedPosts = BLOG_POSTS
-    .filter(p => p.category === post.category && p.id !== post.id)
-    .slice(0, 2)
-
-  // If not enough related posts in same category, fill with others
-  if (relatedPosts.length < 2) {
-    const others = BLOG_POSTS
-      .filter(p => p.id !== post.id && !relatedPosts.find(r => r.id === p.id))
-      .slice(0, 2 - relatedPosts.length)
-    relatedPosts.push(...others)
   }
 
   // Render markdown-style content to JSX
@@ -161,7 +291,6 @@ export default function BlogPostPage() {
     str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
 
   const formatInlineMarkdown = (text: string) => {
-    // Escape HTML entities first to prevent XSS, then apply markdown formatting
     return escapeHtml(text)
       .replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
       .replace(/\*(.+?)\*/g, '<em>$1</em>')
@@ -195,24 +324,26 @@ export default function BlogPostPage() {
             <div className="flex items-center gap-4 text-sm text-cyan-800 dark:text-gray-400">
               <div className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
-                <span>{formatDate(post.date)}</span>
+                <span>{formatDate(post.created_at)}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Clock className="w-4 h-4" />
-                <span>{post.readTime}</span>
+                <span>{post.read_time}</span>
               </div>
             </div>
           </div>
 
           {/* Hero Image */}
-          <div className="relative aspect-video rounded-2xl overflow-hidden mb-10">
-            <img
-              src={post.thumbnail}
-              alt={post.title}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-navy/50 to-transparent" />
-          </div>
+          {post.thumbnail_url && (
+            <div className="relative aspect-video rounded-2xl overflow-hidden mb-10">
+              <img
+                src={post.thumbnail_url}
+                alt={post.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-navy/50 to-transparent" />
+            </div>
+          )}
 
           {/* Article Content */}
           <div className="prose-custom">
@@ -246,7 +377,7 @@ export default function BlogPostPage() {
                     <div className="glass-card-hover overflow-hidden group">
                       <div className="relative aspect-video overflow-hidden">
                         <img
-                          src={related.thumbnail}
+                          src={related.thumbnail_url || '/images/psp pitcher.jpg'}
                           alt={related.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />

@@ -209,7 +209,7 @@ export default function AthleteLockerPage() {
       { title: 'Bookings', desc: `${coachStats.pendingBookings} pending`, icon: Calendar, href: '/admin/bookings', color: '#00B4D8' },
       { title: 'Drills', desc: `${coachStats.totalDrills} in library`, icon: Dumbbell, href: '/admin/drills', color: '#10B981' },
       { title: 'Analytics', desc: 'View reports', icon: BarChart3, href: '/admin/analytics', color: '#F59E0B' },
-      { title: 'Media', desc: 'Videos & images', icon: Video, href: '/admin/media', color: '#8B5CF6' },
+      { title: 'Content', desc: 'Blog & media', icon: Video, href: '/admin/media', color: '#8B5CF6' },
       { title: 'Schedule', desc: 'Manage availability', icon: SettingsIcon, href: '/admin/availability', color: '#6B7280' },
     ]
 

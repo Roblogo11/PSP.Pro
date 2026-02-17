@@ -525,7 +525,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['blog', 'article', 'tips', 'read', 'news', 'content', 'training tips'],
     title: 'Blog & Training Tips',
-    response: 'Our blog covers topics to help you improve:\n\n• Pitching mechanics breakdowns\n• Hitting drills you can do at home\n• Speed training: first-step quickness\n• Nutrition for athletes\n• Mental game strategies\n• Injury prevention\n\nThe blog page shows a featured post at the top, followed by a grid of recent articles. Each post has a category tag, read time, and date.\n\nClick any post to read the full article with embedded images and step-by-step instructions.\n\nYou can also sign up for our newsletter at the bottom of the blog page!',
+    response: 'Our blog covers topics to help you improve:\n\n• Pitching mechanics breakdowns\n• Hitting drills you can do at home\n• Speed training: first-step quickness\n• Nutrition for athletes\n• Mental game strategies\n• Injury prevention\n\nThe blog page shows a featured post at the top, followed by a grid of recent articles. Each post has a category tag, read time, and date.\n\nClick any post to read the full article with embedded images and step-by-step instructions.\n\nCoaches can create and manage blog posts from the Content Hub (Admin → Content). You can also sign up for our newsletter at the bottom of the blog page!',
     actions: [{ label: 'Read Blog', href: '/blog' }],
   },
 
@@ -707,10 +707,10 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   // ── GALLERY / MEDIA (ATHLETE-FACING) ──
   // ════════════════════════════════════════════════════════════
   {
-    keywords: ['gallery', 'photos', 'media', 'images', 'pictures', 'training photos', 'highlight', 'highlights'],
-    title: 'Gallery & Media',
-    response: 'PSP.Pro has a media gallery organized by category:\n\n• Training Drills — instructional photos and clips\n• Athlete Progress — before/after and milestone shots\n• Facility — our training space and equipment\n• Session Highlights — action shots from sessions\n• Testimonials — athlete stories and results\n• Events — camps, clinics, and special events\n\nCoaches upload content regularly. Check back often for new training photos and videos!',
-    actions: [{ label: 'View Gallery', href: '/admin/media' }],
+    keywords: ['gallery', 'photos', 'media', 'images', 'pictures', 'training photos', 'highlight', 'highlights', 'content hub'],
+    title: 'Content Hub',
+    response: 'The Content Hub is your one-stop dashboard for managing all content on PSP.Pro:\n\n**Blog Posts tab:**\n• Create, edit, and publish blog articles\n• Toggle posts between Draft and Published\n• Set categories, thumbnails, and featured status\n• Content supports Markdown formatting\n\n**Media Gallery tab:**\n• Training Drills — instructional photos and clips\n• Athlete Progress — before/after and milestone shots\n• Facility — our training space and equipment\n• Session Highlights — action shots from sessions\n• Testimonials — athlete stories and results\n• Events — camps, clinics, and special events\n\nFind it in your sidebar under "Content" or go to Admin → Content Hub.',
+    actions: [{ label: 'Content Hub', href: '/admin/media' }],
     role: 'coach',
   },
 

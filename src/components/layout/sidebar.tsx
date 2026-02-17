@@ -23,7 +23,7 @@ import {
   DollarSign,
   BookOpen,
   ClipboardCheck,
-  ImageIcon,
+  Newspaper,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { getLocalDateString } from '@/lib/utils/local-date'
@@ -61,8 +61,7 @@ const adminNavItems: NavItem[] = [
   { label: 'Drills', mobileLabel: 'Drills', href: '/admin/drills', icon: Dumbbell, color: 'text-purple-400' },
   { label: 'Courses', mobileLabel: 'Courses', href: '/admin/courses', icon: BookOpen, color: 'text-pink-400' },
   { label: 'Pop Quiz', mobileLabel: 'Quiz', href: '/admin/questionnaires', icon: ClipboardCheck, color: 'text-emerald-400' },
-  { label: 'Media', mobileLabel: 'Media', href: '/admin/media', icon: Video, color: 'text-pink-400' },
-  { label: 'Images', mobileLabel: 'Images', href: '/admin/images', icon: ImageIcon, color: 'text-amber-400' },
+  { label: 'Content', mobileLabel: 'Content', href: '/admin/media', icon: Newspaper, color: 'text-pink-400' },
   { label: 'Analytics', mobileLabel: 'Stats', href: '/admin/analytics', icon: BarChart3, color: 'text-green-400' },
 ]
 
