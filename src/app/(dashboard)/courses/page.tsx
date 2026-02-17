@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { BookOpen, Video, Play, Lock, CheckCircle, Loader2 } from 'lucide-react'
+import { BookOpen, Video, Play, CheckCircle, Loader2 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import Link from 'next/link'
 
@@ -226,19 +226,10 @@ export default function CoursesPage() {
                     </button>
                   </Link>
                 ) : (
-                  course.pricing_type === 'free' || course.included_in_membership ? (
-                    <button onClick={() => handleEnroll(course.id)} className="btn-primary w-full flex items-center justify-center gap-2">
-                      <BookOpen className="w-4 h-4" />
-                      Enroll Free
-                    </button>
-                  ) : (
-                    <Link href={`/courses/${course.slug}`}>
-                      <button className="btn-ghost w-full flex items-center justify-center gap-2 border border-orange/30 text-orange hover:bg-orange/10">
-                        <Lock className="w-4 h-4" />
-                        View Details
-                      </button>
-                    </Link>
-                  )
+                  <button onClick={() => handleEnroll(course.id)} className="btn-primary w-full flex items-center justify-center gap-2">
+                    <BookOpen className="w-4 h-4" />
+                    {course.pricing_type === 'free' || course.included_in_membership ? 'Enroll Free' : 'Enroll Now'}
+                  </button>
                 )}
               </div>
             </div>

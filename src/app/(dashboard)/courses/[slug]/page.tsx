@@ -188,10 +188,10 @@ export default function CourseDetailPage() {
             )}
           </div>
 
-          {!enrolled && (course.pricing_type === 'free' || course.included_in_membership) && (
+          {!enrolled && (
             <button onClick={handleEnroll} className="btn-primary flex items-center gap-2">
               <BookOpen className="w-4 h-4" />
-              Enroll Free
+              {course.pricing_type === 'free' || course.included_in_membership ? 'Enroll Free' : 'Enroll Now'}
             </button>
           )}
         </div>
