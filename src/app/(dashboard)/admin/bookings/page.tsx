@@ -158,7 +158,12 @@ export default function AdminBookingsPage() {
 
     const [athleteRes, slotRes, serviceRes] = await Promise.all([
       supabase.from('profiles').select('id, full_name').eq('role', 'athlete').order('full_name'),
-      supabase.from('available_slots').select('id, slot_date, start_time, end_time, location, service:service_id(name), current_bookings, max_bookings').eq('is_available', true).gte('slot_date', todayStr).order('slot_date').order('start_time'),
+      (() => {
+        let query = supabase.from('available_slots').select('id, slot_date, start_time, end_time, location, service:service_id(name), coach:coach_id(full_name), current_bookings, max_bookings').eq('is_available', true).gte('slot_date', todayStr)
+        // Coaches only see their own slots; admins see all
+        if (isCoach && !isAdmin && profile?.id) query = query.eq('coach_id', profile.id)
+        return query.order('slot_date').order('start_time')
+      })(),
       supabase.from('services').select('id, name, price_cents, duration_minutes').eq('is_active', true).order('name'),
     ])
 
@@ -1078,26 +1083,65 @@ export default function AdminBookingsPage() {
                 </select>
               </div>
 
-              {/* Available Slot */}
+              {/* Available Slot — grouped by date */}
               <div>
                 <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Time Slot *</label>
-                <select
-                  required
-                  value={bookFormData.slotId}
-                  onChange={e => setBookFormData({ ...bookFormData, slotId: e.target.value })}
-                  className="w-full px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50"
-                >
-                  <option value="">Select time slot...</option>
-                  {availableSlots.map(slot => (
-                    <option key={slot.id} value={slot.id}>
-                      {new Date(slot.slot_date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
-                      {' '}
-                      {formatTime(slot.start_time)} – {formatTime(slot.end_time)}
-                      {slot.location ? ` @ ${slot.location}` : ''}
-                      {' '}({slot.current_bookings}/{slot.max_bookings} booked)
-                    </option>
-                  ))}
-                </select>
+                {availableSlots.length === 0 ? (
+                  <p className="text-sm text-slate-500 dark:text-white/50 italic">No available slots</p>
+                ) : (
+                  <div className="max-h-60 overflow-y-auto rounded-xl border border-cyan-200/40 dark:border-white/10 bg-cyan-50/50 dark:bg-slate-800/50 p-2 space-y-3">
+                    {Object.entries(
+                      availableSlots.reduce((groups: Record<string, typeof availableSlots>, slot) => {
+                        const key = slot.slot_date
+                        if (!groups[key]) groups[key] = []
+                        groups[key].push(slot)
+                        return groups
+                      }, {} as Record<string, typeof availableSlots>)
+                    ).map(([date, slots]) => (
+                      <div key={date}>
+                        <p className="text-xs font-semibold text-cyan-700 dark:text-cyan-400 mb-1.5 px-1 sticky top-0 bg-cyan-50/90 dark:bg-slate-800/90 backdrop-blur-sm py-1 rounded">
+                          {new Date(date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
+                        </p>
+                        <div className="grid grid-cols-2 gap-1.5">
+                          {(slots as any[]).map((slot: any) => {
+                            const isFull = slot.current_bookings >= slot.max_bookings
+                            const isSelected = bookFormData.slotId === slot.id
+                            return (
+                              <button
+                                key={slot.id}
+                                type="button"
+                                disabled={isFull}
+                                onClick={() => setBookFormData({ ...bookFormData, slotId: slot.id })}
+                                className={`p-2 rounded-lg text-left text-xs transition-all border ${
+                                  isSelected
+                                    ? 'bg-orange/10 border-orange/50 ring-1 ring-orange/30'
+                                    : isFull
+                                      ? 'bg-slate-100 dark:bg-slate-700/50 border-transparent opacity-50 cursor-not-allowed'
+                                      : 'bg-white dark:bg-slate-800 border-cyan-200/30 dark:border-white/5 hover:border-cyan/40 cursor-pointer'
+                                }`}
+                              >
+                                <p className={`font-semibold ${isSelected ? 'text-orange' : 'text-slate-900 dark:text-white'}`}>
+                                  {formatTime(slot.start_time)} – {formatTime(slot.end_time)}
+                                </p>
+                                {isAdmin && slot.coach?.full_name && (
+                                  <p className="text-[10px] text-cyan-600 dark:text-cyan-400/70 mt-0.5 truncate">{slot.coach.full_name}</p>
+                                )}
+                                {slot.location && (
+                                  <p className="text-[10px] text-slate-500 dark:text-white/50 mt-0.5 truncate">{slot.location}</p>
+                                )}
+                                <p className={`text-[10px] mt-0.5 ${isFull ? 'text-red-400' : 'text-slate-400 dark:text-white/40'}`}>
+                                  {isFull ? 'Full' : `${slot.current_bookings}/${slot.max_bookings} booked`}
+                                </p>
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {/* Hidden required input for form validation */}
+                <input type="text" required value={bookFormData.slotId} className="sr-only" tabIndex={-1} onChange={() => {}} />
               </div>
 
               {/* Payment Method */}
