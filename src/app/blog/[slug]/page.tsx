@@ -158,7 +158,7 @@ export default function BlogPostPage() {
   }
 
   const escapeHtml = (str: string) =>
-    str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+    str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
 
   const formatInlineMarkdown = (text: string) => {
     // Escape HTML entities first to prevent XSS, then apply markdown formatting

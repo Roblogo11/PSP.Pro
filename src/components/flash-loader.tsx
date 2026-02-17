@@ -10,7 +10,7 @@ const LOGO_PATH = '/images/PSP-black-300x99-1.png'
 // Timing thresholds
 const SHOW_DELAY = 150 // Show loader if navigation takes longer than 150ms
 const MIN_SHOW_TIME = 400 // If loader shows, keep it visible for at least 400ms
-const MAX_SHOW_TIME = 4000 // Never show loader longer than 4 seconds
+const MAX_SHOW_TIME = 3000 // Never show loader longer than 3 seconds
 
 // Exit transition - fast snap
 const exitTransition = {

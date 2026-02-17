@@ -92,11 +92,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    // Sanitize category to prevent path traversal
+    // Sanitize category to prevent path traversal — use safeCategory everywhere after this
     const safeCategory = category.replace(/[^a-zA-Z0-9_\- ]/g, '_')
     if (safeCategory !== category) {
       return NextResponse.json({ error: 'Invalid category name' }, { status: 400 })
     }
+    // Use sanitized value for all downstream operations
+    const validatedCategory = safeCategory
 
     // Validate gallery type
     const validTypes: GalleryType[] = ['photography', 'video', 'drone', 'podcast', 'media-production', 'motion-graphics', 'digital-builds', 'website-redesign']
@@ -128,14 +130,14 @@ export async function POST(request: NextRequest) {
       }
 
       const timestamp = Date.now()
-      const fileKey = `${galleryType}/${category}/url-${timestamp}`
+      const fileKey = `${galleryType}/${validatedCategory}/url-${timestamp}`
 
       const newItem: GalleryItem = {
         id: fileKey,
         filename: title || 'Linked Media',
         url: mediaUrl,
         thumbnail: mediaUrl,
-        category,
+        category: validatedCategory,
         type: 'url',
         uploadDate: new Date().toISOString(),
         title: title || 'Linked Media',
@@ -149,8 +151,8 @@ export async function POST(request: NextRequest) {
       galleries[galleryType].items.push(newItem)
 
       // Update categories
-      if (!galleries[galleryType].categories.includes(category)) {
-        galleries[galleryType].categories.push(category)
+      if (!galleries[galleryType].categories.includes(validatedCategory)) {
+        galleries[galleryType].categories.push(validatedCategory)
         galleries[galleryType].categories.sort()
       }
 
@@ -184,7 +186,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create directories
-    const uploadDir = path.join(process.cwd(), 'public', 'media', galleryType, category)
+    const uploadDir = path.join(process.cwd(), 'public', 'media', galleryType, validatedCategory)
     const thumbsDir = path.join(uploadDir, 'thumbs')
 
     if (!fs.existsSync(uploadDir)) {
@@ -229,15 +231,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Add to galleries.json
-    const fileKey = `${galleryType}/${category}/${filename}`
+    const fileKey = `${galleryType}/${validatedCategory}/${filename}`
     const newItem: GalleryItem = {
       id: fileKey,
       filename,
-      url: `/media/${galleryType}/${category}/${filename}`,
+      url: `/media/${galleryType}/${validatedCategory}/${filename}`,
       thumbnail: isImage
-        ? `/media/${galleryType}/${category}/thumbs/${filename}`
-        : `/media/${galleryType}/${category}/${filename}`,
-      category,
+        ? `/media/${galleryType}/${validatedCategory}/thumbs/${filename}`
+        : `/media/${galleryType}/${validatedCategory}/${filename}`,
+      category: validatedCategory,
       type: isImage ? 'image' : 'video',
       uploadDate: new Date().toISOString(),
       title: title || filename,
@@ -252,8 +254,8 @@ export async function POST(request: NextRequest) {
     galleries[galleryType].items.push(newItem)
 
     // Update categories
-    if (!galleries[galleryType].categories.includes(category)) {
-      galleries[galleryType].categories.push(category)
+    if (!galleries[galleryType].categories.includes(validatedCategory)) {
+      galleries[galleryType].categories.push(validatedCategory)
       galleries[galleryType].categories.sort()
     }
 
@@ -262,8 +264,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       filename,
-      url: `/media/${galleryType}/${category}/${filename}`,
-      thumbnail: isImage ? `/media/${galleryType}/${category}/thumbs/${filename}` : null
+      url: `/media/${galleryType}/${validatedCategory}/${filename}`,
+      thumbnail: isImage ? `/media/${galleryType}/${validatedCategory}/thumbs/${filename}` : null
     })
 
   } catch (error) {

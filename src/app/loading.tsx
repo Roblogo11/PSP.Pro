@@ -1,11 +1,23 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
+const MAX_SHOW_TIME = 3000 // Force hide after 3 seconds
+
 export default function Loading() {
+  const [visible, setVisible] = useState(true)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(false), MAX_SHOW_TIME)
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (!visible) return null
+
   return (
     <div
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center"
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center transition-opacity duration-300"
       style={{
         background: 'linear-gradient(135deg, #004663 0%, #006687 25%, #0088AB 50%, #006687 75%, #004663 100%)',
       }}

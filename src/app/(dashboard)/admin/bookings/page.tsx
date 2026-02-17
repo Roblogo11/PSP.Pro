@@ -1123,8 +1123,8 @@ export default function AdminBookingsPage() {
                                 <p className={`font-semibold ${isSelected ? 'text-orange' : 'text-slate-900 dark:text-white'}`}>
                                   {formatTime(slot.start_time)} – {formatTime(slot.end_time)}
                                 </p>
-                                {isAdmin && slot.coach?.full_name && (
-                                  <p className="text-[10px] text-cyan-600 dark:text-cyan-400/70 mt-0.5 truncate">{slot.coach.full_name}</p>
+                                {slot.coach?.full_name && (
+                                  <p className="text-[10px] text-cyan-600 dark:text-cyan-400/70 mt-0.5 truncate font-medium">{slot.coach.full_name}</p>
                                 )}
                                 {slot.location && (
                                   <p className="text-[10px] text-slate-500 dark:text-white/50 mt-0.5 truncate">{slot.location}</p>
