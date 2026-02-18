@@ -177,6 +177,18 @@ export default function BlogPostPage() {
     return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
   }
 
+  // Extract YouTube video ID from various URL formats
+  const getYouTubeId = (url: string): string | null => {
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|&v=))([^#&?]{11})/)
+    return match ? match[1] : null
+  }
+
+  // Extract Vimeo video ID
+  const getVimeoId = (url: string): string | null => {
+    const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/)
+    return match ? match[1] : null
+  }
+
   // Render markdown-style content to JSX
   const renderContent = (content: string) => {
     const lines = content.split('\n')
@@ -231,6 +243,63 @@ export default function BlogPostPage() {
         continue
       } else if (inTable) {
         flushTable()
+      }
+
+      // Video embed: [video](https://youtube.com/...) or [video](https://vimeo.com/...)
+      const videoMatch = line.match(/^\[video\]\((.+?)\)$/)
+      if (videoMatch) {
+        const url = videoMatch[1]
+        const ytId = getYouTubeId(url)
+        const vimeoId = getVimeoId(url)
+        if (ytId) {
+          elements.push(
+            <div key={i} className="relative aspect-video rounded-xl overflow-hidden my-8">
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${ytId}`}
+                title="YouTube video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full"
+              />
+            </div>
+          )
+          continue
+        }
+        if (vimeoId) {
+          elements.push(
+            <div key={i} className="relative aspect-video rounded-xl overflow-hidden my-8">
+              <iframe
+                src={`https://player.vimeo.com/video/${vimeoId}`}
+                title="Vimeo video"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full"
+              />
+            </div>
+          )
+          continue
+        }
+      }
+
+      // Image: ![alt text](url)
+      const imgMatch = line.match(/^!\[([^\]]*)\]\((.+?)\)$/)
+      if (imgMatch) {
+        const alt = imgMatch[1]
+        const src = imgMatch[2]
+        elements.push(
+          <figure key={i} className="my-8">
+            <img
+              src={src}
+              alt={alt}
+              className="w-full rounded-xl"
+              loading="lazy"
+            />
+            {alt && alt !== src && (
+              <figcaption className="text-center text-gray-500 text-sm mt-2">{alt}</figcaption>
+            )}
+          </figure>
+        )
+        continue
       }
 
       // Headings

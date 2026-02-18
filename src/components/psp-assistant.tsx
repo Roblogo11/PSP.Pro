@@ -129,6 +129,12 @@ const PAGE_SUGGESTIONS: Record<string, { label: string; query: string }[]> = {
     { label: 'How do I bulk import drills?', query: 'import drill' },
     { label: 'How do I assign drills to athletes?', query: 'assign drill' },
   ],
+  '/admin/media': [
+    { label: 'How do I create a blog post?', query: 'create blog post' },
+    { label: 'How do I add images or GIFs?', query: 'add image to blog' },
+    { label: 'How do I embed a YouTube video?', query: 'embed video blog' },
+    { label: 'What is the Content Hub?', query: 'content hub' },
+  ],
   '/blog': [
     { label: 'What topics do you cover?', query: 'blog topics' },
     { label: 'Training tips?', query: 'training tips' },
@@ -523,9 +529,9 @@ const KNOWLEDGE_BASE: KBEntry[] = [
 
   // ── BLOG ──
   {
-    keywords: ['blog', 'article', 'tips', 'read', 'news', 'content', 'training tips'],
+    keywords: ['blog', 'article', 'tips', 'read', 'news', 'content', 'training tips', 'blog topics'],
     title: 'Blog & Training Tips',
-    response: 'Our blog covers topics to help you improve:\n\n• Pitching mechanics breakdowns\n• Hitting drills you can do at home\n• Speed training: first-step quickness\n• Nutrition for athletes\n• Mental game strategies\n• Injury prevention\n\nThe blog page shows a featured post at the top, followed by a grid of recent articles. Each post has a category tag, read time, and date.\n\nClick any post to read the full article with embedded images and step-by-step instructions.\n\nCoaches can create and manage blog posts from the Content Hub (Admin → Content). You can also sign up for our newsletter at the bottom of the blog page!',
+    response: 'Our blog covers topics to help you level up:\n\n• Pitching mechanics breakdowns\n• Hitting drills you can do at home\n• Speed training: first-step quickness\n• Nutrition for athletes\n• Mental game strategies\n• Injury prevention\n\nThe blog page shows a featured post at the top, followed by a grid of recent articles. Each post has a category tag, read time, and date.\n\nClick any post to read the full article — posts can include images, GIFs, and embedded YouTube/Vimeo videos!\n\nCoaches can create and manage blog posts from the Content Hub (Admin → Content). You can also sign up for our newsletter at the bottom of the blog page!',
     actions: [{ label: 'Read Blog', href: '/blog' }],
   },
 
@@ -709,8 +715,28 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['gallery', 'photos', 'media', 'images', 'pictures', 'training photos', 'highlight', 'highlights', 'content hub'],
     title: 'Content Hub',
-    response: 'The Content Hub is your one-stop dashboard for managing all content on PSP.Pro:\n\n**Blog Posts tab:**\n• Create, edit, and publish blog articles\n• Toggle posts between Draft and Published\n• Set categories, thumbnails, and featured status\n• Content supports Markdown formatting\n\n**Media Gallery tab:**\n• Training Drills — instructional photos and clips\n• Athlete Progress — before/after and milestone shots\n• Facility — our training space and equipment\n• Session Highlights — action shots from sessions\n• Testimonials — athlete stories and results\n• Events — camps, clinics, and special events\n\nFind it in your sidebar under "Content" or go to Admin → Content Hub.',
+    response: 'The Content Hub is your one-stop dashboard for managing all content on PSP.Pro:\n\n**Blog Posts tab:**\n• Create, edit, and publish blog articles\n• Upload images and GIFs directly into posts (max 5MB each)\n• Embed YouTube or Vimeo videos inline with one click\n• Upload or paste a thumbnail image for each post\n• Toggle posts between Draft and Published\n• Set categories, thumbnails, and featured status\n• Content supports Markdown formatting\n\n**Media Gallery tab:**\n• Training Drills — instructional photos and clips\n• Athlete Progress — before/after and milestone shots\n• Facility — our training space and equipment\n• Session Highlights — action shots from sessions\n• Testimonials — athlete stories and results\n• Events — camps, clinics, and special events\n\nFind it in your sidebar under "Content" or go to Admin → Content Hub.',
     actions: [{ label: 'Content Hub', href: '/admin/media' }],
+    role: 'coach',
+  },
+
+  // ── BLOG MEDIA (COACH) — How to add images/videos to blog posts ──
+  {
+    keywords: ['blog image', 'blog photo', 'blog video', 'add image to blog', 'add photo to blog', 'add video to blog', 'embed video blog', 'upload image blog', 'blog gif', 'blog thumbnail', 'blog media', 'add picture to post', 'insert image', 'insert video'],
+    title: 'Adding Images & Videos to Blog Posts',
+    response: 'You can add rich media directly to your blog posts!\n\n📸 Adding Images/GIFs:\n1. Open the blog editor (Content Hub → Blog tab → New Post or Edit)\n2. Click the "Add Image" button in the toolbar above the content area\n3. Pick a JPG, PNG, GIF, or WebP file (max 5MB)\n4. The image uploads and auto-inserts into your content at the cursor position\n5. GIFs keep their animation!\n\n🎥 Embedding Videos:\n1. Click the "Embed Video" button in the toolbar\n2. Paste a YouTube or Vimeo URL\n3. The video embeds inline — readers see a full video player on the published post\n\n🖼️ Thumbnail Image:\n• Click "Upload Thumbnail" to upload a cover image for the post\n• Or paste a URL in the text field\n• The thumbnail shows on the blog listing page and at the top of the article\n\nTips:\n• Images are auto-optimized (resized to 1200px wide, compressed)\n• You can also type Markdown manually: ![alt text](/media/blog/image.jpg)\n• For videos, type: [video](https://youtube.com/watch?v=...)',
+    actions: [{ label: 'Content Hub', href: '/admin/media' }],
+    followUp: ['How do I create a blog post?', 'What is the Content Hub?'],
+    role: 'coach',
+  },
+
+  // ── CREATING A BLOG POST (COACH) ──
+  {
+    keywords: ['create blog', 'write blog', 'new blog post', 'publish blog', 'blog post', 'write article', 'create article', 'how to blog'],
+    title: 'Creating a Blog Post',
+    response: 'To create a blog post:\n\n1. Go to Admin → Content Hub (or sidebar → Content)\n2. Make sure you\'re on the "Blog Posts" tab\n3. Click the orange "New Post" button\n4. Fill in the form:\n   • Title — auto-generates the URL slug\n   • Category — Pitching, Hitting, Recovery, Speed & Agility, Nutrition, Mental Game, Strength, Coaching Tips, or General\n   • Read Time — e.g., "5 min read"\n   • Thumbnail — upload an image or paste a URL\n   • Excerpt — short summary shown on the blog listing page\n   • Content — write using Markdown with the media toolbar\n5. Use the toolbar to add images (Add Image button) or embed YouTube/Vimeo videos (Embed Video button)\n6. Toggle "Published" when you\'re ready to go live (or keep as Draft)\n7. Toggle "Featured" to highlight the post at the top of the blog page\n8. Click "Create Post"\n\nYour post is live at /blog/your-slug-here!\n\nMarkdown tips:\n• ## for headings\n• **bold** for emphasis\n• - for bullet points\n• 1. for numbered lists',
+    actions: [{ label: 'Content Hub', href: '/admin/media' }, { label: 'View Blog', href: '/blog' }],
+    followUp: ['How do I add images to a blog post?', 'How do I embed a video?'],
     role: 'coach',
   },
 
@@ -733,6 +759,36 @@ const KNOWLEDGE_BASE: KBEntry[] = [
     role: 'coach',
   },
 ]
+
+// ─── Hype Coach Tone Enhancer ─────────────────────────────────
+// Adds motivational coach energy to responses
+const HYPE_OPENERS = [
+  'Great question!',
+  'Love that you asked!',
+  'Let\'s break it down!',
+  'Here we go!',
+  'Oh yeah, I got you!',
+  'Let\'s get into it!',
+  'Glad you asked!',
+  'Alright, let\'s work!',
+]
+
+const HYPE_CLOSERS = [
+  '\n\nLet\'s get after it! Progression Over Perfection!',
+  '\n\nYou got this! Progression Over Perfection!',
+  '\n\nLet\'s go! Progression Over Perfection!',
+  '\n\nNow let\'s make it happen!',
+  '\n\nKeep grinding — Progression Over Perfection!',
+  '\n\nThat\'s how we do it at PSP!',
+]
+
+function addCoachHype(response: string): string {
+  // Use a simple hash of the response to pick consistent but varied openers/closers
+  const hash = response.length + response.charCodeAt(0)
+  const opener = HYPE_OPENERS[hash % HYPE_OPENERS.length]
+  const closer = HYPE_CLOSERS[hash % HYPE_CLOSERS.length]
+  return `${opener} ${response}${closer}`
+}
 
 // ─── Smart Matching Engine ───────────────────────────────────
 function findBestMatch(query: string, userRole: RoleFilter): KBEntry {
@@ -791,17 +847,17 @@ function findBestMatch(query: string, userRole: RoleFilter): KBEntry {
   }
 
   // Role-aware fallback
-  const roleName = userRole === 'coach' ? 'Coach' : userRole === 'athlete' ? 'Athlete' : 'Guest'
+  const roleName = userRole === 'coach' ? 'Coach' : userRole === 'athlete' ? 'Athlete' : ''
   const roleHint = userRole === 'coach'
-    ? '\n• Manage courses, drills & pop quizzes\n• Edit availability & bookings\n• Book sessions for athletes'
+    ? '\n• Manage courses, drills & pop quizzes\n• Edit availability & bookings\n• Book sessions for athletes\n• Create blog posts with images & videos'
     : userRole === 'athlete'
     ? '\n• Your courses & video lessons\n• Pop Quiz — test your game IQ\n• Drills, progress & achievements'
     : '\n• How to join PSP.Pro\n• Training programs & pricing\n• What to expect'
 
   return {
     keywords: [],
-    title: `How Can I Help, ${roleName}?`,
-    response: `I can help you with:\n\n• Training programs & what sports we offer\n• Pricing, packages & how to save\n• Booking sessions step by step${roleHint}\n• Account settings & login help\n• Location, hours & contact info\n• Walk through any page on the site\n\nTry asking "walk me through the pricing page" or "how do I book a session" — I know every page inside and out!`,
+    title: `Let's Figure This Out${roleName ? `, ${roleName}` : ''}!`,
+    response: `No worries — I got you! Here's what I can help with:\n\n• Training programs & what sports we offer\n• Pricing, packages & how to save big\n• Booking sessions step by step${roleHint}\n• Account settings & login help\n• Location, hours & contact info\n• Walk through ANY page on the site\n\nTry asking "walk me through the pricing page" or "how do I book a session" — I know every page inside and out! Let's get after it!`,
     actions: QUICK_ACTIONS.map(a => ({ label: a.label, href: a.href })),
     followUp: userRole === 'coach'
       ? ['How do I create a course?', 'How do I create a quiz?', 'How do I book for an athlete?']
@@ -857,10 +913,10 @@ export function PSPAssistant() {
       setHasGreeted(true)
       const name = profile?.full_name?.split(' ')[0] || ''
       const greeting = userRole === 'coach'
-        ? `Hey${name ? ` ${name}` : ''}, Coach! I'm your PSP.Pro guide. Ask me anything about managing courses, bookings, drills, pop quizzes, or how any coach tool works!`
+        ? `What's up${name ? ` ${name}` : ''}, Coach! I'm your PSP Guide — think of me as your digital assistant coach. Need help with bookings, drills, courses, quizzes, the blog, or anything on this platform? Let's get it done! Progression Over Perfection!`
         : userRole === 'athlete'
-        ? `Hey${name ? ` ${name}` : ''}! I'm your PSP.Pro guide. Ask me about your courses, drills, sessions, pop quizzes, progress, or anything else — I know every page inside and out!`
-        : 'Hey there! I\'m your PSP.Pro guide. I know every page on this site inside and out — ask me anything about training, pricing, booking, or how to join the team!'
+        ? `Let's GO${name ? ` ${name}` : ''}! I'm your PSP Guide — here to help you crush your training goals. Ask me about your drills, sessions, courses, quizzes, progress tracking, or literally anything. I know every corner of this platform. Let's work!`
+        : 'What\'s up! Welcome to PSP.Pro — where it\'s all about Progression Over Perfection! I\'m your PSP Guide and I know this entire platform inside and out. Ask me about training programs, pricing, how to join the team, or anything else. Let\'s get you started!'
       setMessages([
         {
           id: 'greeting',
@@ -881,10 +937,11 @@ export function PSPAssistant() {
     }
 
     const match = findBestMatch(query.trim(), userRole)
+    const hypedResponse = addCoachHype(match.response)
     const assistantMessage = {
       id: `assistant-${Date.now()}`,
       type: 'assistant',
-      content: match.response,
+      content: hypedResponse,
       module: match,
     }
 

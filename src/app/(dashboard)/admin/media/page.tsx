@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { createClient } from '@/lib/supabase/client'
@@ -8,7 +8,8 @@ import {
   Search, Filter, Trash2, Edit2, ExternalLink,
   Image as ImageIcon, Video, Link2, Star, X, Check,
   HardDrive, Cloud, Database, ChevronDown, Home, Loader2,
-  Plus, Eye, EyeOff, FileText, Newspaper, LayoutGrid
+  Plus, Eye, EyeOff, FileText, Newspaper, LayoutGrid,
+  Upload, Youtube
 } from 'lucide-react'
 
 // ─── Blog Types ─────────────────────────────────────────────
@@ -212,6 +213,9 @@ function BlogTab({ profile }: { profile: { id: string; full_name?: string | null
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null)
   const [isCreating, setIsCreating] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const contentRef = useRef<HTMLTextAreaElement>(null)
+  const thumbnailInputRef = useRef<HTMLInputElement>(null)
   const [postForm, setPostForm] = useState({
     title: '',
     slug: '',
@@ -388,6 +392,76 @@ function BlogTab({ profile }: { profile: { id: string; full_name?: string | null
       console.error('Delete error:', err)
       setError('Failed to delete post')
     }
+  }
+
+  // Insert text at cursor position in content textarea
+  const insertAtCursor = (text: string) => {
+    const textarea = contentRef.current
+    if (!textarea) {
+      setPostForm(prev => ({ ...prev, content: prev.content + '\n' + text }))
+      return
+    }
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
+    const before = postForm.content.substring(0, start)
+    const after = postForm.content.substring(end)
+    const needsNewline = before.length > 0 && !before.endsWith('\n') ? '\n' : ''
+    const newContent = before + needsNewline + text + '\n' + after
+    setPostForm(prev => ({ ...prev, content: newContent }))
+    // Restore focus after state update
+    setTimeout(() => {
+      textarea.focus()
+      const newPos = start + needsNewline.length + text.length + 1
+      textarea.setSelectionRange(newPos, newPos)
+    }, 0)
+  }
+
+  // Upload image for blog content
+  const handleImageUpload = async (file: File, isThumbnail: boolean = false) => {
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image too large (max 5MB)')
+      return
+    }
+    const ext = file.name.split('.').pop()?.toLowerCase()
+    if (!ext || !['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
+      setError('Invalid file type. Use JPG, PNG, GIF, or WebP')
+      return
+    }
+
+    setUploading(true)
+    setError('')
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      const res = await fetch('/api/blog/upload', { method: 'POST', body: formData })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Upload failed')
+
+      if (isThumbnail) {
+        setPostForm(prev => ({ ...prev, thumbnail_url: data.url }))
+      } else {
+        insertAtCursor(`![${file.name}](${data.url})`)
+      }
+    } catch (err: any) {
+      setError(err.message || 'Image upload failed')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  // Prompt for YouTube URL and insert embed
+  const handleYouTubeEmbed = () => {
+    const url = prompt('Paste a YouTube or Vimeo video URL:')
+    if (!url) return
+
+    // Validate it looks like a video URL
+    const isYouTube = url.includes('youtube.com') || url.includes('youtu.be')
+    const isVimeo = url.includes('vimeo.com')
+    if (!isYouTube && !isVimeo) {
+      setError('Please paste a valid YouTube or Vimeo URL')
+      return
+    }
+    insertAtCursor(`[video](${url})`)
   }
 
   const publishedCount = posts.filter(p => p.published).length
@@ -689,19 +763,58 @@ function BlogTab({ profile }: { profile: { id: string; full_name?: string | null
                   </div>
                 </div>
 
-                {/* Thumbnail URL */}
+                {/* Thumbnail */}
                 <div>
                   <label className="text-sm font-medium text-gray-300 mb-1.5 block">
-                    Thumbnail URL
-                    <span className="text-gray-500 font-normal ml-2">e.g. /images/psp pitcher.jpg</span>
+                    Thumbnail Image
                   </label>
-                  <input
-                    type="text"
-                    value={postForm.thumbnail_url}
-                    onChange={(e) => setPostForm(prev => ({ ...prev, thumbnail_url: e.target.value }))}
-                    placeholder="/images/my-image.jpg"
-                    className="w-full px-4 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-cyan"
-                  />
+                  <div className="flex items-center gap-3">
+                    {postForm.thumbnail_url ? (
+                      <div className="relative w-20 h-14 bg-gray-700 rounded overflow-hidden flex-shrink-0">
+                        <img
+                          src={postForm.thumbnail_url}
+                          alt="Thumbnail"
+                          className="w-full h-full object-cover"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setPostForm(prev => ({ ...prev, thumbnail_url: '' }))}
+                          className="absolute -top-1 -right-1 w-5 h-5 bg-red-600 rounded-full flex items-center justify-center"
+                        >
+                          <X className="w-3 h-3 text-white" />
+                        </button>
+                      </div>
+                    ) : null}
+                    <button
+                      type="button"
+                      onClick={() => thumbnailInputRef.current?.click()}
+                      disabled={uploading}
+                      className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded border border-gray-600 transition text-sm"
+                    >
+                      <Upload className="w-4 h-4" />
+                      {postForm.thumbnail_url ? 'Change' : 'Upload Thumbnail'}
+                    </button>
+                    <span className="text-gray-500 text-xs">or</span>
+                    <input
+                      type="text"
+                      value={postForm.thumbnail_url}
+                      onChange={(e) => setPostForm(prev => ({ ...prev, thumbnail_url: e.target.value }))}
+                      placeholder="Paste URL..."
+                      className="flex-1 px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-cyan text-sm"
+                    />
+                    <input
+                      ref={thumbnailInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/gif,image/webp"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) handleImageUpload(file, true)
+                        e.target.value = ''
+                      }}
+                    />
+                  </div>
                 </div>
 
                 {/* Excerpt */}
@@ -722,12 +835,50 @@ function BlogTab({ profile }: { profile: { id: string; full_name?: string | null
                     Content
                     <span className="text-gray-500 font-normal ml-2">Supports Markdown (## headings, **bold**, - lists)</span>
                   </label>
+                  {/* Media Toolbar */}
+                  <div className="flex items-center gap-2 mb-2 p-2 bg-gray-700/50 rounded-t border border-gray-600 border-b-0">
+                    <label
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-medium transition cursor-pointer ${
+                        uploading
+                          ? 'bg-gray-600 text-gray-400 cursor-wait'
+                          : 'bg-cyan-900/50 hover:bg-cyan-900 text-cyan border border-cyan/30'
+                      }`}
+                    >
+                      {uploading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <ImageIcon className="w-4 h-4" />
+                      )}
+                      {uploading ? 'Uploading...' : 'Add Image'}
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/gif,image/webp"
+                        className="hidden"
+                        disabled={uploading}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0]
+                          if (file) handleImageUpload(file, false)
+                          e.target.value = ''
+                        }}
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      onClick={handleYouTubeEmbed}
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-red-900/50 hover:bg-red-900 text-red-400 border border-red-500/30 rounded text-sm font-medium transition"
+                    >
+                      <Youtube className="w-4 h-4" />
+                      Embed Video
+                    </button>
+                    <span className="text-gray-500 text-xs ml-auto">Images: max 5MB | Videos: YouTube/Vimeo links</span>
+                  </div>
                   <textarea
+                    ref={contentRef}
                     value={postForm.content}
                     onChange={(e) => setPostForm(prev => ({ ...prev, content: e.target.value }))}
                     rows={12}
-                    placeholder="Write your blog post content here...&#10;&#10;## Use Markdown Headings&#10;&#10;- And bullet points&#10;- **Bold text** for emphasis"
-                    className="w-full px-4 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:border-cyan resize-y font-mono text-sm"
+                    placeholder="Write your blog post content here...&#10;&#10;## Use Markdown Headings&#10;&#10;- And bullet points&#10;- **Bold text** for emphasis&#10;&#10;Add images with the toolbar above, or type:&#10;![alt text](/media/blog/image.jpg)&#10;&#10;Embed videos:&#10;[video](https://youtube.com/watch?v=...)"
+                    className="w-full px-4 py-2 bg-gray-700 text-white rounded-b border border-gray-600 focus:outline-none focus:border-cyan resize-y font-mono text-sm"
                   />
                 </div>
 
