@@ -107,47 +107,86 @@ export default function OrgLandingPage({ params }: { params: Promise<{ slug: str
         </div>
       </header>
 
+      {/* ── ESPN-style color accent bar ── */}
+      <div className="h-1 w-full" style={{ background: `linear-gradient(90deg, ${primary}, ${secondary})` }} />
+
       {/* ── Hero ── */}
-      <section className="relative py-24 px-4 overflow-hidden">
-        {/* Gradient background using org colors */}
-        <div className="absolute inset-0 opacity-20"
-          style={{
-            background: `radial-gradient(ellipse at 30% 50%, ${primary}40, transparent 60%),
-                        radial-gradient(ellipse at 70% 50%, ${secondary}30, transparent 60%)`
-          }} />
-        <div className="relative max-w-4xl mx-auto text-center space-y-6">
-          {org.tagline && (
-            <p className="text-sm font-semibold uppercase tracking-widest" style={{ color: secondary }}>
-              {org.tagline}
-            </p>
-          )}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight">
-            {heroHeadline}
-          </h1>
-          <p className="text-lg text-white/70 max-w-2xl mx-auto leading-relaxed">
-            {heroSub}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-            <Link
-              href={`/booking?org=${org.id}`}
-              className="px-8 py-4 rounded-2xl font-bold text-white text-lg flex items-center gap-2 justify-center transition-opacity hover:opacity-90"
-              style={{ backgroundColor: primary }}
-            >
-              Book a Session <ArrowRight className="w-5 h-5" />
-            </Link>
-            {org.allow_self_signup && (
-              <Link
-                href={`/get-started?org=${org.id}`}
-                className="px-8 py-4 rounded-2xl font-semibold text-white/80 border border-white/20 hover:border-white/40 transition-colors"
-              >
-                Join the Team
-              </Link>
-            )}
+      <section className="relative py-20 px-4 overflow-hidden">
+        {/* Watermark logo behind hero */}
+        {org.logo_url && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={org.logo_url}
+              alt=""
+              aria-hidden
+              className="w-72 h-72 object-contain opacity-[0.04] blur-sm"
+            />
           </div>
-          {/* Sport focus badge */}
-          <div className="flex items-center justify-center gap-2 pt-2">
-            <Zap className="w-4 h-4" style={{ color: secondary }} />
-            <span className="text-sm text-white/50">{sports}</span>
+        )}
+        {/* Color glow blobs */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: `radial-gradient(ellipse at 20% 50%, ${primary}25, transparent 55%),
+                       radial-gradient(ellipse at 80% 50%, ${secondary}18, transparent 55%)`
+        }} />
+
+        <div className="relative max-w-5xl mx-auto">
+          {/* ESPN-style upper label */}
+          <div className="flex items-center gap-3 mb-6">
+            <div className="h-6 w-1 rounded-full" style={{ backgroundColor: primary }} />
+            <p className="text-xs font-black uppercase tracking-[0.2em]" style={{ color: primary }}>
+              {sports}
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-10 items-center">
+            <div className="space-y-6">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.05] tracking-tight">
+                {heroHeadline}
+              </h1>
+              <p className="text-lg text-white/65 leading-relaxed max-w-lg">
+                {heroSub}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link
+                  href={`/booking?org=${org.id}`}
+                  className="px-8 py-4 rounded-xl font-black text-white text-base flex items-center gap-2 justify-center transition-opacity hover:opacity-90"
+                  style={{ backgroundColor: primary }}
+                >
+                  Book a Session <ArrowRight className="w-5 h-5" />
+                </Link>
+                {org.allow_self_signup && (
+                  <Link
+                    href={`/get-started?org=${org.id}`}
+                    className="px-8 py-4 rounded-xl font-bold text-white/80 border border-white/15 hover:border-white/35 transition-colors text-base text-center"
+                  >
+                    Join the Team
+                  </Link>
+                )}
+              </div>
+            </div>
+
+            {/* Right — big logo or stat card */}
+            <div className="hidden lg:flex items-center justify-center">
+              {org.logo_url ? (
+                <div className="relative">
+                  <div className="absolute inset-0 rounded-3xl blur-2xl opacity-30" style={{ backgroundColor: primary }} />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={org.logo_url}
+                    alt={org.name}
+                    className="relative w-56 h-56 object-contain drop-shadow-2xl"
+                  />
+                </div>
+              ) : (
+                <div
+                  className="w-48 h-48 rounded-3xl flex items-center justify-center font-black text-white text-8xl shadow-2xl"
+                  style={{ backgroundColor: primary }}
+                >
+                  {org.name.charAt(0)}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>

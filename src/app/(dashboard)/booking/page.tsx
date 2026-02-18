@@ -30,12 +30,22 @@ export default function BookingPage() {
   const [submitting, setSubmitting] = useState(false)
   const [bookedSlotIds, setBookedSlotIds] = useState<string[]>([])
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'on_site'>('card')
+  const [orgContext, setOrgContext] = useState<{ name: string; logo_url: string | null; primary_color: string; secondary_color: string; tagline: string | null; slug: string } | null>(null)
 
   // Check for URL params
   const canceled = searchParams.get('canceled')
   const preselectedServiceId = searchParams.get('service')
   const preselectedCoachId = searchParams.get('coach')
   const orgId = searchParams.get('org')
+
+  // Fetch org context if ?org= param present
+  useEffect(() => {
+    if (!orgId) return
+    fetch(`/api/org/${orgId}`)
+      .then(r => r.json())
+      .then(data => { if (data.org) setOrgContext(data.org) })
+      .catch(() => {})
+  }, [orgId])
 
   // Fetch services on mount
   useEffect(() => {
@@ -261,6 +271,49 @@ export default function BookingPage() {
 
   return (
     <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8">
+
+      {/* Org Context Banner */}
+      {orgContext && (
+        <div
+          className="mb-6 rounded-2xl p-4 flex items-center gap-4 border"
+          style={{
+            background: `linear-gradient(135deg, ${orgContext.primary_color}18, ${orgContext.secondary_color}10)`,
+            borderColor: `${orgContext.primary_color}30`,
+          }}
+        >
+          {/* Logo or letter avatar */}
+          <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-white flex items-center justify-center shadow-sm">
+            {orgContext.logo_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={orgContext.logo_url} alt={orgContext.name} className="w-full h-full object-contain" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center font-black text-xl text-white" style={{ backgroundColor: orgContext.primary_color }}>
+                {orgContext.name.charAt(0)}
+              </div>
+            )}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-bold text-base truncate" style={{ color: orgContext.primary_color }}>
+              {orgContext.name}
+            </p>
+            {orgContext.tagline && (
+              <p className="text-sm truncate" style={{ color: orgContext.secondary_color }}>
+                {orgContext.tagline}
+              </p>
+            )}
+          </div>
+          <a
+            href={`/org/${orgContext.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-medium whitespace-nowrap flex-shrink-0 opacity-60 hover:opacity-100 transition-opacity"
+            style={{ color: orgContext.primary_color }}
+          >
+            View page ↗
+          </a>
+        </div>
+      )}
+
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">

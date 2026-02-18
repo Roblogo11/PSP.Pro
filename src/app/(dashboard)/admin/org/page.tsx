@@ -9,6 +9,7 @@ import {
   ExternalLink, Loader2, ChevronRight, Settings, AlertCircle,
   Copy, Trash2, UserPlus, Shield, Zap,
 } from 'lucide-react'
+import { LogoColorExtractor } from '@/components/org/logo-color-extractor'
 
 interface Org {
   id: string
@@ -498,68 +499,113 @@ export default function OrgPage() {
 
               {/* ── Branding Tab ── */}
               {activeTab === 'branding' && (
-                <div className="glass-card p-6">
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                    <Palette className="w-4 h-4 text-cyan-500" /> White-Label Branding
-                  </h3>
-                  <form onSubmit={handleSaveBranding} className="space-y-5">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-1">Org Name</label>
-                        <input value={brandingForm.name || ''} onChange={e => setBrandingForm(f => ({ ...f, name: e.target.value }))} className="input-field w-full" />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-1">Tagline</label>
-                        <input value={brandingForm.tagline || ''} onChange={e => setBrandingForm(f => ({ ...f, tagline: e.target.value }))} className="input-field w-full" placeholder="Your motto here" />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Primary Color</label>
-                        <div className="flex items-center gap-3">
-                          <input type="color" value={brandingForm.primary_color || '#f97316'} onChange={e => setBrandingForm(f => ({ ...f, primary_color: e.target.value }))} className="w-12 h-12 rounded-xl cursor-pointer border-2 border-cyan-200/40" />
-                          <div>
-                            <p className="text-sm font-mono text-slate-900 dark:text-white">{brandingForm.primary_color}</p>
-                            <p className="text-xs text-cyan-700 dark:text-white/50">Buttons, highlights</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Secondary Color</label>
-                        <div className="flex items-center gap-3">
-                          <input type="color" value={brandingForm.secondary_color || '#06b6d4'} onChange={e => setBrandingForm(f => ({ ...f, secondary_color: e.target.value }))} className="w-12 h-12 rounded-xl cursor-pointer border-2 border-cyan-200/40" />
-                          <div>
-                            <p className="text-sm font-mono text-slate-900 dark:text-white">{brandingForm.secondary_color}</p>
-                            <p className="text-xs text-cyan-700 dark:text-white/50">Accents, links</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                <div className="space-y-4">
+                  {/* Logo + Auto Color Extractor */}
+                  <div className="glass-card p-6">
+                    <h3 className="font-semibold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
+                      <Zap className="w-4 h-4 text-cyan-500" /> Logo → Auto Color Scan
+                    </h3>
+                    <p className="text-xs text-cyan-700 dark:text-white/50 mb-4">
+                      Drop your logo URL or upload it — we'll scan the colors and let you pick your brand palette in one click.
+                    </p>
+                    <LogoColorExtractor
+                      currentLogoUrl={selectedOrg.logo_url}
+                      currentPrimary={brandingForm.primary_color || selectedOrg.primary_color}
+                      currentSecondary={brandingForm.secondary_color || selectedOrg.secondary_color}
+                      onApply={async (logoUrl, primary, secondary) => {
+                        setSavingBranding(true)
+                        try {
+                          const res = await fetch(`/api/org/${selectedOrg.id}`, {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ logo_url: logoUrl, primary_color: primary, secondary_color: secondary }),
+                          })
+                          const data = await res.json()
+                          if (!res.ok) { toastError(data.error); return }
+                          toastSuccess('Logo + colors saved!')
+                          setBrandingForm(f => ({ ...f, primary_color: primary, secondary_color: secondary }))
+                          setSelectedOrg(data.org)
+                        } catch { toastError('Failed to save') }
+                        finally { setSavingBranding(false) }
+                      }}
+                    />
+                  </div>
 
-                    {/* Preview */}
-                    <div className="rounded-xl border border-cyan-200/30 overflow-hidden">
-                      <div className="p-3 text-xs text-cyan-700 dark:text-white/50 bg-slate-50 dark:bg-slate-800/50 font-medium">Preview</div>
-                      <div className="p-4 flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold" style={{ backgroundColor: brandingForm.primary_color }}>
-                          {selectedOrg.name.charAt(0)}
+                  {/* Manual text fields */}
+                  <div className="glass-card p-6">
+                    <h3 className="font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                      <Palette className="w-4 h-4 text-cyan-500" /> Name, Tagline & Copy
+                    </h3>
+                    <form onSubmit={handleSaveBranding} className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-1">Org Name</label>
+                          <input value={brandingForm.name || ''} onChange={e => setBrandingForm(f => ({ ...f, name: e.target.value }))} className="input-field w-full" />
                         </div>
                         <div>
-                          <p className="font-bold" style={{ color: brandingForm.primary_color }}>{brandingForm.name || selectedOrg.name}</p>
-                          <p className="text-sm" style={{ color: brandingForm.secondary_color }}>{brandingForm.tagline || 'Your tagline'}</p>
+                          <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-1">Tagline</label>
+                          <input value={brandingForm.tagline || ''} onChange={e => setBrandingForm(f => ({ ...f, tagline: e.target.value }))} className="input-field w-full" placeholder="Train hard. Play harder." />
                         </div>
-                        <button className="ml-auto px-4 py-2 rounded-lg text-white text-sm font-semibold" style={{ backgroundColor: brandingForm.primary_color }}>
-                          Book Now
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-1">Hero Headline</label>
+                          <input value={(brandingForm as any).hero_headline || ''} onChange={e => setBrandingForm(f => ({ ...f, hero_headline: e.target.value }))} className="input-field w-full" placeholder={`Train with ${selectedOrg.name}`} />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-1">Hero Subheadline</label>
+                          <input value={(brandingForm as any).hero_subheadline || ''} onChange={e => setBrandingForm(f => ({ ...f, hero_subheadline: e.target.value }))} className="input-field w-full" placeholder="Elite coaching tailored to your goals." />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-1">About Text</label>
+                        <textarea
+                          rows={3}
+                          value={(brandingForm as any).about_text || ''}
+                          onChange={e => setBrandingForm(f => ({ ...f, about_text: e.target.value }))}
+                          className="input-field w-full resize-none"
+                          placeholder="Tell athletes who you are and what makes your coaching different..."
+                        />
+                      </div>
+
+                      {/* Fine-tune colors manually */}
+                      <div className="grid grid-cols-2 gap-4 pt-2 border-t border-cyan-200/20">
+                        <div>
+                          <label className="block text-xs font-medium text-cyan-700 dark:text-white/60 mb-2 uppercase tracking-wider">Fine-tune Primary</label>
+                          <div className="flex items-center gap-2">
+                            <input type="color" value={brandingForm.primary_color || '#f97316'} onChange={e => setBrandingForm(f => ({ ...f, primary_color: e.target.value }))} className="w-10 h-10 rounded-lg cursor-pointer border border-cyan-200/40" />
+                            <span className="text-xs font-mono text-slate-500 dark:text-white/50">{brandingForm.primary_color}</span>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-cyan-700 dark:text-white/60 mb-2 uppercase tracking-wider">Fine-tune Secondary</label>
+                          <div className="flex items-center gap-2">
+                            <input type="color" value={brandingForm.secondary_color || '#06b6d4'} onChange={e => setBrandingForm(f => ({ ...f, secondary_color: e.target.value }))} className="w-10 h-10 rounded-lg cursor-pointer border border-cyan-200/40" />
+                            <span className="text-xs font-mono text-slate-500 dark:text-white/50">{brandingForm.secondary_color}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end pt-1">
+                        <button type="submit" disabled={savingBranding} className="btn-primary flex items-center gap-2">
+                          {savingBranding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                          Save Branding
                         </button>
                       </div>
-                    </div>
+                    </form>
+                  </div>
 
-                    <div className="flex justify-end">
-                      <button type="submit" disabled={savingBranding} className="btn-primary flex items-center gap-2">
-                        {savingBranding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                        Save Branding
-                      </button>
+                  {/* Org page link */}
+                  <div className="glass-card p-4 flex items-center gap-3">
+                    <Globe className="w-4 h-4 text-cyan-500 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-cyan-700 dark:text-white/60">Your public org page</p>
+                      <p className="text-sm font-mono text-slate-900 dark:text-white truncate">propersports.pro/org/{selectedOrg.slug}</p>
                     </div>
-                  </form>
+                    <a href={`/org/${selectedOrg.slug}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-cyan-500 hover:text-cyan-400 whitespace-nowrap">
+                      Preview <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
                 </div>
               )}
 
