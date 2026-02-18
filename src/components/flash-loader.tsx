@@ -77,11 +77,12 @@ export function FlashLoader() {
       const href = anchor.getAttribute('href')
       if (!href) return
 
-      // Only internal navigation (not external, not hash, not same page)
+      // Only show loader when navigating TO the homepage
+      const isHomepage = href === '/' || href === ''
       const isInternal = href.startsWith('/') && !href.startsWith('//')
       const isSamePage = href === pathname || href.startsWith('#')
 
-      if (isInternal && !isSamePage) {
+      if (isInternal && !isSamePage && isHomepage) {
         // Clear any existing timers
         if (showTimerRef.current) clearTimeout(showTimerRef.current)
         if (hideTimerRef.current) clearTimeout(hideTimerRef.current)

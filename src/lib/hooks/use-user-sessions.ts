@@ -48,23 +48,6 @@ export function useUserSessions(userId: string | undefined) {
 
         if (error) throw error
 
-        // Also fetch completed sessions with notes
-        const { data: completedSessions } = await supabase
-          .from('sessions')
-          .select(`
-            id,
-            session_date,
-            session_time,
-            status,
-            notes,
-            peak_velocity,
-            video_url,
-            coach:coach_id(full_name, avatar_url),
-            service:service_id(name)
-          `)
-          .eq('athlete_id', userId)
-          .eq('status', 'completed')
-
         // Transform bookings to UserSession format
         const transformedBookings: UserSession[] = (bookings || []).map(booking => {
           const sessionDate = new Date(booking.booking_date)
@@ -85,31 +68,10 @@ export function useUserSessions(userId: string | undefined) {
           }
         })
 
-        // Add completed sessions with notes
-        const transformedCompleted: UserSession[] = (completedSessions || []).map(session => ({
-          id: session.id,
-          type: (session.service as any as { name: string } | null)?.name || 'Training Session',
-          date: new Date(session.session_date),
-          time: session.session_time,
-          coach: (session.coach as any as { full_name: string; avatar_url: string } | null)?.full_name || 'Coach',
-          coachPhoto: (session.coach as any as { full_name: string; avatar_url: string } | null)?.avatar_url || null,
-          location: 'PSP Training Center',
-          status: 'completed' as const,
-          hasVideo: !!session.video_url,
-          notes: session.notes,
-          peakVelocity: session.peak_velocity,
-        }))
-
-        // Merge and dedupe
-        const allSessions = [...transformedBookings, ...transformedCompleted]
-        const uniqueSessions = Array.from(
-          new Map(allSessions.map(s => [s.id, s])).values()
-        )
-
         // Sort by date (newest first)
-        uniqueSessions.sort((a, b) => b.date.getTime() - a.date.getTime())
+        transformedBookings.sort((a, b) => b.date.getTime() - a.date.getTime())
 
-        setSessions(uniqueSessions)
+        setSessions(transformedBookings)
       } catch (error) {
         console.error('Error loading sessions:', error)
         setSessions([])

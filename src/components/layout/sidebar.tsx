@@ -25,6 +25,7 @@ import {
   ClipboardCheck,
   Newspaper,
   Medal,
+  Building2,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { getLocalDateString } from '@/lib/utils/local-date'
@@ -65,6 +66,7 @@ const adminNavItems: NavItem[] = [
   { label: 'Pop Quiz', mobileLabel: 'Quiz', href: '/admin/questionnaires', icon: ClipboardCheck, color: 'text-emerald-400' },
   { label: 'Content', mobileLabel: 'Content', href: '/admin/media', icon: Newspaper, color: 'text-pink-400' },
   { label: 'Analytics', mobileLabel: 'Stats', href: '/admin/analytics', icon: BarChart3, color: 'text-green-400' },
+  { label: 'Organizations', mobileLabel: 'Orgs', href: '/admin/org', icon: Building2, color: 'text-indigo-400' },
 ]
 
 export function Sidebar() {

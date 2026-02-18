@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { TrendingUp, Target, Zap, Activity, Award, Trophy, CheckCircle2, AlertCircle } from 'lucide-react'
 import { VelocityProgressChart, MultiMetricChart } from '@/components/dashboard/velocity-progress-chart'
 import { useUserRole } from '@/lib/hooks/use-user-role'
@@ -41,12 +41,12 @@ export default function ProgressPage() {
   }, [entries])
 
   // Auto-select sport tab based on detected sport or profile athlete_type
-  useState(() => {
+  useEffect(() => {
     const sport = detectedSport || (profile as any)?.athlete_type
     if (sport && SPORT_METRICS[sport]) {
       setSportTab(sport)
     }
-  })
+  }, [detectedSport, profile])
 
   if (loading) {
     return (

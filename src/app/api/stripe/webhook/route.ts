@@ -65,6 +65,40 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
 
     if (result.created) {
       console.log('Webhook created booking:', result.bookingId)
+
+      // Record split payout ledger entry if this was a Connect split payment
+      if (metadata.connect_account_id && metadata.platform_fee_cents && result.bookingId) {
+        try {
+          const grossAmount = session.amount_total || 0
+          const platformFee = parseInt(metadata.platform_fee_cents)
+          const coachAmount = grossAmount - platformFee
+
+          // Find the coach's payout account for this connect account
+          const { data: payoutAccount } = await supabase
+            .from('coach_payout_accounts')
+            .select('id, coach_id')
+            .eq('stripe_account_id', metadata.connect_account_id)
+            .maybeSingle()
+
+          if (payoutAccount) {
+            await supabase.from('coach_payouts').insert({
+              booking_id: result.bookingId,
+              coach_id: payoutAccount.coach_id,
+              payout_account_id: payoutAccount.id,
+              gross_amount_cents: grossAmount,
+              platform_fee_cents: platformFee,
+              coach_amount_cents: coachAmount,
+              stripe_payment_intent_id: session.payment_intent as string,
+              status: 'transferred',
+              transferred_at: new Date().toISOString(),
+            })
+            console.log('Payout ledger entry created for booking:', result.bookingId)
+          }
+        } catch (err) {
+          console.error('Failed to create payout ledger entry:', err)
+          // Non-fatal — booking already created, don't fail the webhook
+        }
+      }
     } else if (result.reason === 'already_exists') {
       console.log('Booking already exists for session:', session.id)
     } else {

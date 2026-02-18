@@ -60,6 +60,7 @@ export function getStripeLiveInstance(): Stripe {
 }
 
 // Utility function to create a checkout session for booking payment
+// Supports Stripe Connect split payments when stripeConnectAccountId is provided
 export async function createBookingCheckoutSession({
   serviceId,
   serviceName,
@@ -69,6 +70,8 @@ export async function createBookingCheckoutSession({
   bookingData,
   successUrl,
   cancelUrl,
+  stripeConnectAccountId,
+  coachRevenuePercent,
 }: {
   serviceId: string
   serviceName: string
@@ -78,6 +81,8 @@ export async function createBookingCheckoutSession({
   bookingData: any
   successUrl: string
   cancelUrl: string
+  stripeConnectAccountId?: string
+  coachRevenuePercent?: number
 }) {
   const stripeInstance = await getStripe()
 
@@ -85,7 +90,14 @@ export async function createBookingCheckoutSession({
   const cookieStore = await cookies()
   const simulationId = cookieStore.get('simulation_id')?.value
 
-  const session = await stripeInstance.checkout.sessions.create({
+  // Calculate platform fee for Connect split (if applicable)
+  // Platform keeps (100 - coachRevenuePercent)% — transferred to coach's account
+  const platformFeePercent = coachRevenuePercent !== undefined ? (100 - coachRevenuePercent) : null
+  const applicationFeeAmount = platformFeePercent !== null
+    ? Math.round(priceInCents * (platformFeePercent / 100))
+    : undefined
+
+  const sessionParams: Stripe.Checkout.SessionCreateParams = {
     payment_method_types: ['card'],
     line_items: [
       {
@@ -109,10 +121,23 @@ export async function createBookingCheckoutSession({
       service_id: serviceId,
       athlete_id: athleteId,
       booking_data: JSON.stringify(bookingData),
+      ...(stripeConnectAccountId && { connect_account_id: stripeConnectAccountId }),
+      ...(applicationFeeAmount !== undefined && { platform_fee_cents: applicationFeeAmount.toString() }),
       ...(simulationId && { simulation_id: simulationId }),
     },
-  })
+  }
 
+  // Add Stripe Connect split payment if coach has connected account
+  if (stripeConnectAccountId && applicationFeeAmount !== undefined) {
+    sessionParams.payment_intent_data = {
+      application_fee_amount: applicationFeeAmount,
+      transfer_data: {
+        destination: stripeConnectAccountId,
+      },
+    }
+  }
+
+  const session = await stripeInstance.checkout.sessions.create(sessionParams)
   return session
 }
 

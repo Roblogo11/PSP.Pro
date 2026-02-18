@@ -16,6 +16,7 @@ import {
   BarChart3,
   Clock,
   CheckCircle,
+  Building2,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { getLocalDateString } from '@/lib/utils/local-date'
@@ -324,6 +325,14 @@ export default function AdminDashboard() {
       href: '/admin/analytics',
       color: '#F59E0B',
       stat: 'View Reports',
+    },
+    {
+      title: 'Organizations',
+      description: 'Multi-tenant orgs & payouts',
+      icon: Building2,
+      href: '/admin/org',
+      color: '#6366f1',
+      stat: 'Manage Orgs',
     },
     {
       title: 'Platform Settings',
