@@ -277,7 +277,7 @@ export default function LeaderboardsPage() {
         </button>
       </div>
 
-      {/* Leaderboard Table */}
+      {/* Leaderboard */}
       <div className="command-panel">
         {loading ? (
           <div className="flex items-center justify-center py-16">
@@ -293,103 +293,146 @@ export default function LeaderboardsPage() {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-cyan-200/40">
-                  <th className="text-left py-3 px-4 text-xs font-bold text-cyan-700 dark:text-white uppercase tracking-wider">Rank</th>
-                  <th className="text-left py-3 px-4 text-xs font-bold text-cyan-700 dark:text-white uppercase tracking-wider">Athlete</th>
-                  <th className="text-left py-3 px-4 text-xs font-bold text-cyan-700 dark:text-white uppercase tracking-wider">Region</th>
-                  <th className="text-right py-3 px-4 text-xs font-bold text-cyan-700 dark:text-white uppercase tracking-wider">
-                    {currentMetricDef?.label || 'Value'}
-                  </th>
-                  <th className="text-center py-3 px-4 text-xs font-bold text-cyan-700 dark:text-white uppercase tracking-wider">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {leaderboard.map((entry, index) => {
-                  const isMe = entry.athleteId === profile?.id
-                  const rankColors = [
-                    'text-yellow-400',  // Gold
-                    'text-gray-300',    // Silver
-                    'text-orange-600',  // Bronze
-                  ]
+          <>
+            {/* ── Mobile card list (< md) ── */}
+            <div className="md:hidden divide-y divide-cyan-200/20">
+              {leaderboard.map((entry, index) => {
+                const isMe = entry.athleteId === profile?.id
+                const rankColors = ['text-yellow-400', 'text-gray-300', 'text-orange-600']
+                const medalColor = rankColors[index] || 'text-slate-400'
 
-                  return (
-                    <tr
-                      key={entry.athleteId}
-                      className={`border-b border-cyan-200/20 transition-colors ${
-                        isMe ? 'bg-orange/10' : 'hover:bg-white/5'
-                      }`}
-                    >
-                      {/* Rank */}
-                      <td className="py-4 px-4">
-                        <div className={`text-lg font-bold ${rankColors[index] || 'text-slate-900 dark:text-white'}`}>
-                          {index < 3 ? (
-                            <div className="flex items-center gap-1">
-                              <Medal className="w-5 h-5" />
-                              {index + 1}
-                            </div>
-                          ) : (
-                            index + 1
-                          )}
+                return (
+                  <div
+                    key={entry.athleteId}
+                    className={`flex items-center gap-3 px-4 py-3 ${isMe ? 'bg-orange/10' : ''}`}
+                  >
+                    {/* Rank */}
+                    <div className={`w-8 text-center font-bold text-base flex-shrink-0 ${medalColor}`}>
+                      {index < 3 ? <Medal className="w-5 h-5 mx-auto" /> : index + 1}
+                    </div>
+
+                    {/* Avatar */}
+                    <div className="relative w-9 h-9 rounded-full overflow-hidden border-2 border-orange/30 bg-gradient-to-br from-cyan to-orange flex-shrink-0">
+                      {entry.avatarUrl ? (
+                        <Image src={entry.avatarUrl} alt={entry.athleteName} fill sizes="36px" className="object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-white font-bold text-sm">
+                          {entry.athleteName.charAt(0)}
                         </div>
-                      </td>
+                      )}
+                    </div>
 
-                      {/* Athlete */}
-                      <td className="py-4 px-4">
-                        <div className="flex items-center gap-3">
-                          <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-orange/30 bg-gradient-to-br from-cyan to-orange flex-shrink-0">
-                            {entry.avatarUrl ? (
-                              <Image src={entry.avatarUrl} alt={entry.athleteName} fill sizes="40px" className="object-cover" />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-white font-bold">
-                                {entry.athleteName.charAt(0)}
-                              </div>
-                            )}
-                          </div>
-                          <div>
-                            <p className={`font-semibold ${isMe ? 'text-orange' : 'text-slate-900 dark:text-white'}`}>
-                              {entry.athleteName}
-                              {isMe && <span className="text-xs ml-2 text-orange">(You)</span>}
-                            </p>
-                            <p className="text-xs text-cyan-700 dark:text-white">
-                              {new Date(entry.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
+                    {/* Name + region */}
+                    <div className="flex-1 min-w-0">
+                      <p className={`font-semibold text-sm truncate ${isMe ? 'text-orange' : 'text-slate-900 dark:text-white'}`}>
+                        {entry.athleteName}{isMe && <span className="text-xs ml-1 text-orange">(You)</span>}
+                      </p>
+                      <p className="text-xs text-cyan-700 dark:text-white/50 truncate">
+                        {entry.region || 'No region'} · {new Date(entry.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                      </p>
+                    </div>
 
-                      {/* Region */}
-                      <td className="py-4 px-4">
-                        <span className="text-sm text-cyan-700 dark:text-white">{entry.region || '—'}</span>
-                      </td>
-
-                      {/* Value */}
-                      <td className="py-4 px-4 text-right">
-                        <span className="text-lg font-bold text-gradient-orange">
-                          {entry.value} {currentMetricDef?.unit || ''}
+                    {/* Value + badge */}
+                    <div className="text-right flex-shrink-0">
+                      <p className="font-bold text-base text-gradient-orange">
+                        {entry.value}<span className="text-xs font-normal ml-0.5">{currentMetricDef?.unit || ''}</span>
+                      </p>
+                      {entry.verified ? (
+                        <span className="inline-flex items-center gap-0.5 text-[9px] font-semibold text-green-400">
+                          <CheckCircle2 className="w-2.5 h-2.5" /> PSP Verified
                         </span>
-                      </td>
+                      ) : (
+                        <span className="inline-flex items-center gap-0.5 text-[9px] font-semibold text-gray-400">
+                          <AlertCircle className="w-2.5 h-2.5" /> Self-Rep.
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
 
-                      {/* Verified Status */}
-                      <td className="py-4 px-4 text-center">
-                        {entry.verified ? (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-green-400 bg-green-500/10 px-2 py-1 rounded-full">
-                            <CheckCircle2 className="w-3 h-3" /> Verified
+            {/* ── Desktop table (≥ md) ── */}
+            <div className="hidden md:block">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-cyan-200/40">
+                    <th className="text-left py-3 px-4 text-xs font-bold text-cyan-700 dark:text-white uppercase tracking-wider">Rank</th>
+                    <th className="text-left py-3 px-4 text-xs font-bold text-cyan-700 dark:text-white uppercase tracking-wider">Athlete</th>
+                    <th className="text-left py-3 px-4 text-xs font-bold text-cyan-700 dark:text-white uppercase tracking-wider">Region</th>
+                    <th className="text-right py-3 px-4 text-xs font-bold text-cyan-700 dark:text-white uppercase tracking-wider">
+                      {currentMetricDef?.label || 'Value'}
+                    </th>
+                    <th className="text-center py-3 px-4 text-xs font-bold text-cyan-700 dark:text-white uppercase tracking-wider">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {leaderboard.map((entry, index) => {
+                    const isMe = entry.athleteId === profile?.id
+                    const rankColors = ['text-yellow-400', 'text-gray-300', 'text-orange-600']
+
+                    return (
+                      <tr
+                        key={entry.athleteId}
+                        className={`border-b border-cyan-200/20 transition-colors ${isMe ? 'bg-orange/10' : 'hover:bg-white/5'}`}
+                      >
+                        <td className="py-4 px-4">
+                          <div className={`text-lg font-bold ${rankColors[index] || 'text-slate-900 dark:text-white'}`}>
+                            {index < 3 ? (
+                              <div className="flex items-center gap-1">
+                                <Medal className="w-5 h-5" />{index + 1}
+                              </div>
+                            ) : index + 1}
+                          </div>
+                        </td>
+                        <td className="py-4 px-4">
+                          <div className="flex items-center gap-3">
+                            <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-orange/30 bg-gradient-to-br from-cyan to-orange flex-shrink-0">
+                              {entry.avatarUrl ? (
+                                <Image src={entry.avatarUrl} alt={entry.athleteName} fill sizes="40px" className="object-cover" />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-white font-bold">
+                                  {entry.athleteName.charAt(0)}
+                                </div>
+                              )}
+                            </div>
+                            <div>
+                              <p className={`font-semibold ${isMe ? 'text-orange' : 'text-slate-900 dark:text-white'}`}>
+                                {entry.athleteName}
+                                {isMe && <span className="text-xs ml-2 text-orange">(You)</span>}
+                              </p>
+                              <p className="text-xs text-cyan-700 dark:text-white/60">
+                                {new Date(entry.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-4 px-4">
+                          <span className="text-sm text-cyan-700 dark:text-white">{entry.region || '—'}</span>
+                        </td>
+                        <td className="py-4 px-4 text-right">
+                          <span className="text-lg font-bold text-gradient-orange">
+                            {entry.value} {currentMetricDef?.unit || ''}
                           </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-gray-400 bg-gray-500/10 px-2 py-1 rounded-full">
-                            <AlertCircle className="w-3 h-3" /> Self-Reported
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
+                        </td>
+                        <td className="py-4 px-4 text-center">
+                          {entry.verified ? (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-green-400 bg-green-500/10 px-2 py-1 rounded-full">
+                              <CheckCircle2 className="w-3 h-3" /> Verified
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-gray-400 bg-gray-500/10 px-2 py-1 rounded-full">
+                              <AlertCircle className="w-3 h-3" /> Self-Reported
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>
