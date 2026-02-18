@@ -24,6 +24,7 @@ import {
   BookOpen,
   ClipboardCheck,
   Newspaper,
+  Medal,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { getLocalDateString } from '@/lib/utils/local-date'
@@ -46,6 +47,7 @@ const athleteNavItems: NavItem[] = [
   { label: 'Drills', subLabel: '(members only)', mobileLabel: 'Drills', href: '/drills', icon: Dumbbell, color: 'text-cyan-400' },
   { label: 'Progress', mobileLabel: 'Progress', href: '/progress', icon: TrendingUp, color: 'text-green-400' },
   { label: 'Achievements', mobileLabel: 'Awards', href: '/achievements', icon: Trophy, color: 'text-yellow-400' },
+  { label: 'Leaderboards', mobileLabel: 'Ranks', href: '/leaderboards', icon: Medal, color: 'text-amber-400' },
   { label: 'My Lessons', mobileLabel: 'Lessons', href: '/sessions', icon: Calendar, color: 'text-purple-400', badgeKey: 'upcomingSessions' },
   { label: 'Buy Lessons', mobileLabel: 'Buy', href: '/booking', icon: Clock, color: 'text-blue-400', badgeKey: 'sessionsRemaining' },
   { label: 'Courses', mobileLabel: 'Courses', href: '/courses', icon: BookOpen, color: 'text-pink-400' },

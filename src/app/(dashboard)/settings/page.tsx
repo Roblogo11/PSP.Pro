@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { User, Bell, Lock, CreditCard, Mail, Phone, MapPin, Save, Check } from 'lucide-react'
+import { User, Bell, Lock, CreditCard, Mail, Phone, MapPin, Save, Check, Medal } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 
@@ -16,6 +16,8 @@ export default function SettingsPage() {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [location, setLocation] = useState('')
+  const [leaderboardOptIn, setLeaderboardOptIn] = useState(false)
+  const [region, setRegion] = useState('')
 
   // Notification preferences
   const [notifications, setNotifications] = useState({
@@ -43,13 +45,15 @@ export default function SettingsPage() {
       const supabase = createClient()
       const { data } = await supabase
         .from('profiles')
-        .select('phone, location, notification_preferences')
+        .select('phone, location, notification_preferences, leaderboard_opt_in, region')
         .eq('id', profile.id)
         .single()
 
       if (data) {
         setPhone(data.phone || '')
         setLocation(data.location || '')
+        setLeaderboardOptIn(data.leaderboard_opt_in || false)
+        setRegion(data.region || '')
         if (data.notification_preferences) {
           setNotifications(data.notification_preferences)
         }
@@ -75,6 +79,8 @@ export default function SettingsPage() {
           full_name: fullName,
           phone: phone,
           location: location,
+          leaderboard_opt_in: leaderboardOptIn,
+          region: region || null,
           updated_at: new Date().toISOString(),
         })
         .eq('id', profile.id)
@@ -257,6 +263,47 @@ export default function SettingsPage() {
                     placeholder="City, State"
                     className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white focus:border-orange focus:outline-none transition-colors"
                   />
+                </div>
+
+                {/* Leaderboard Section */}
+                <div className="pt-4 mt-4 border-t border-cyan-200/40">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Medal className="w-5 h-5 text-orange" />
+                    <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Leaderboard Settings</h3>
+                  </div>
+
+                  <div className="flex items-center justify-between p-4 bg-cyan-900/20 rounded-xl mb-4">
+                    <div>
+                      <h4 className="font-semibold text-slate-900 dark:text-white mb-1">Show on Leaderboards</h4>
+                      <p className="text-sm text-cyan-800 dark:text-white">Display your best metrics on regional leaderboards</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={leaderboardOptIn}
+                        onChange={(e) => setLeaderboardOptIn(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-cyan-800/30 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange"></div>
+                    </label>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-semibold text-cyan-700 dark:text-white mb-2 flex items-center gap-2">
+                      <MapPin className="w-4 h-4" />
+                      Region / Area Code
+                    </label>
+                    <input
+                      type="text"
+                      value={region}
+                      onChange={(e) => setRegion(e.target.value)}
+                      placeholder="e.g., 757, Hampton Roads, VA"
+                      className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white focus:border-orange focus:outline-none transition-colors"
+                    />
+                    <p className="text-xs text-cyan-800 dark:text-white mt-1">
+                      Used for regional leaderboard filtering
+                    </p>
+                  </div>
                 </div>
 
                 <div className="pt-4">

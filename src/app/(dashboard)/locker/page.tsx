@@ -16,6 +16,8 @@ import {
   ArrowRight,
   Settings as SettingsIcon,
   UserPlus,
+  BookOpen,
+  RotateCcw,
 } from 'lucide-react'
 import { VelocityChart } from '@/components/dashboard/velocity-chart'
 import { NextSessionCard } from '@/components/dashboard/next-session-card'
@@ -38,12 +40,30 @@ interface AssignedDrill {
   video_url: string
 }
 
+interface EnrolledCourse {
+  id: string
+  title: string
+  slug: string
+  thumbnail_url: string | null
+  totalLessons: number
+  completedLessons: number
+}
+
+interface LastBooking {
+  serviceId: string
+  serviceName: string
+  coachId: string
+  coachName: string
+}
+
 export default function AthleteLockerPage() {
   const router = useRouter()
   const { profile, isCoach, isAdmin, isImpersonating, impersonatedUserId, impersonatedUserName, loading: profileLoading } = useUserRole()
   const effectiveUserId = impersonatedUserId || profile?.id
   const { stats, loading: statsLoading } = useUserStats(effectiveUserId)
   const [assignedDrills, setAssignedDrills] = useState<AssignedDrill[]>([])
+  const [enrolledCourses, setEnrolledCourses] = useState<EnrolledCourse[]>([])
+  const [lastBooking, setLastBooking] = useState<LastBooking | null>(null)
 
   // Coach/admin stats
   const [coachStats, setCoachStats] = useState({
@@ -80,6 +100,111 @@ export default function AthleteLockerPage() {
     }
 
     fetchAssignedDrills()
+  }, [effectiveUserId, isCoach, isAdmin, isImpersonating])
+
+  // Fetch enrolled courses (athlete view only)
+  useEffect(() => {
+    const showAthleteView = isImpersonating || (!isCoach && !isAdmin)
+    if (!effectiveUserId || !showAthleteView) return
+
+    async function fetchCourses() {
+      const supabase = createClient()
+
+      // Get enrollments
+      const { data: enrollments } = await supabase
+        .from('course_enrollments')
+        .select('course_id')
+        .eq('athlete_id', effectiveUserId!)
+
+      if (!enrollments || enrollments.length === 0) return
+
+      const courseIds = enrollments.map(e => e.course_id)
+
+      // Get course details
+      const { data: courses } = await supabase
+        .from('courses')
+        .select('id, title, slug, thumbnail_url')
+        .in('id', courseIds)
+        .eq('is_active', true)
+        .limit(3)
+
+      if (!courses) return
+
+      // Get lesson counts per course
+      const { data: lessons } = await supabase
+        .from('course_lessons')
+        .select('id, course_id')
+        .in('course_id', courseIds)
+
+      // Get completed lessons
+      const { data: progress } = await supabase
+        .from('lesson_progress')
+        .select('lesson_id')
+        .eq('athlete_id', effectiveUserId!)
+        .eq('completed', true)
+
+      const lessonCountMap: Record<string, number> = {}
+      for (const l of (lessons || [])) {
+        lessonCountMap[l.course_id] = (lessonCountMap[l.course_id] || 0) + 1
+      }
+
+      const completedLessonIds = new Set((progress || []).map(p => p.lesson_id))
+      const lessonToCourse: Record<string, string> = {}
+      for (const l of (lessons || [])) {
+        lessonToCourse[l.id] = l.course_id
+      }
+
+      const completedPerCourse: Record<string, number> = {}
+      for (const lid of completedLessonIds) {
+        const cid = lessonToCourse[lid]
+        if (cid) completedPerCourse[cid] = (completedPerCourse[cid] || 0) + 1
+      }
+
+      setEnrolledCourses(courses.map(c => ({
+        id: c.id,
+        title: c.title,
+        slug: c.slug,
+        thumbnail_url: c.thumbnail_url,
+        totalLessons: lessonCountMap[c.id] || 0,
+        completedLessons: completedPerCourse[c.id] || 0,
+      })))
+    }
+
+    fetchCourses()
+  }, [effectiveUserId, isCoach, isAdmin, isImpersonating])
+
+  // Fetch last completed booking for quick rebook
+  useEffect(() => {
+    const showAthleteView = isImpersonating || (!isCoach && !isAdmin)
+    if (!effectiveUserId || !showAthleteView) return
+
+    async function fetchLastBooking() {
+      const supabase = createClient()
+      const { data } = await supabase
+        .from('bookings')
+        .select(`
+          service_id,
+          coach_id,
+          service:service_id(name),
+          coach:coach_id(full_name)
+        `)
+        .eq('athlete_id', effectiveUserId!)
+        .eq('status', 'completed')
+        .order('booking_date', { ascending: false })
+        .limit(1)
+        .single()
+
+      if (data) {
+        setLastBooking({
+          serviceId: data.service_id,
+          serviceName: (data.service as any)?.name || 'Training Session',
+          coachId: data.coach_id,
+          coachName: (data.coach as any)?.full_name || 'Coach',
+        })
+      }
+    }
+
+    fetchLastBooking()
   }, [effectiveUserId, isCoach, isAdmin, isImpersonating])
 
   // Fetch coach/admin quick stats + upcoming sessions
@@ -470,6 +595,93 @@ export default function AthleteLockerPage() {
       {/* Review Game Stats */}
       <div className="mb-6">
         <ReviewGameStats />
+      </div>
+
+      {/* Quick Rebook Card */}
+      {lastBooking && !isImpersonating && (
+        <div className="command-panel mb-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-orange/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <RotateCcw className="w-6 h-6 text-orange" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-bold text-slate-900 dark:text-white">Book Again</h3>
+              <p className="text-sm text-cyan-700 dark:text-white truncate">
+                {lastBooking.serviceName} with {lastBooking.coachName}
+              </p>
+            </div>
+            <Link href={`/booking?service=${lastBooking.serviceId}&coach=${lastBooking.coachId}`}>
+              <button className="btn-primary text-sm px-4 py-2 whitespace-nowrap">
+                Rebook
+              </button>
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Your Courses Section */}
+      <div className="command-panel mb-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <BookOpen className="w-6 h-6 text-orange" />
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Your Courses</h2>
+          </div>
+          <Link href="/courses">
+            <button className="text-sm text-cyan-700 dark:text-white hover:text-orange transition-colors">View All</button>
+          </Link>
+        </div>
+
+        {enrolledCourses.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {enrolledCourses.map((course) => {
+              const progressPct = course.totalLessons > 0
+                ? Math.round((course.completedLessons / course.totalLessons) * 100)
+                : 0
+              return (
+                <Link key={course.id} href={`/courses/${course.slug}`}>
+                  <div className="glass-card-hover group cursor-pointer overflow-hidden">
+                    <div className="relative h-32 bg-cyan-900 overflow-hidden">
+                      {course.thumbnail_url ? (
+                        <img
+                          src={course.thumbnail_url}
+                          alt={course.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-cyan-900 to-orange/20">
+                          <BookOpen className="w-10 h-10 text-orange/50" />
+                        </div>
+                      )}
+                      {/* Progress bar overlay */}
+                      {progressPct > 0 && (
+                        <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-black/30">
+                          <div className="h-full bg-orange rounded-r-full transition-all" style={{ width: `${progressPct}%` }} />
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-3">
+                      <h3 className="font-bold text-sm text-slate-900 dark:text-white group-hover:text-orange transition-colors line-clamp-1">
+                        {course.title}
+                      </h3>
+                      <div className="flex items-center justify-between mt-1 text-xs text-cyan-700 dark:text-white">
+                        <span>{course.completedLessons}/{course.totalLessons} lessons</span>
+                        <span className="text-orange font-semibold">{progressPct}%</span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <BookOpen className="w-10 h-10 text-cyan-700 dark:text-white mx-auto mb-3" />
+            <p className="text-cyan-700 dark:text-white mb-3">No courses enrolled yet</p>
+            <Link href="/courses">
+              <button className="btn-ghost text-sm">Explore Training Courses</button>
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Assigned Drills Section */}

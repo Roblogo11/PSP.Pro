@@ -30,13 +30,26 @@ export default function BookingPage() {
   const [bookedSlotIds, setBookedSlotIds] = useState<string[]>([])
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'on_site'>('card')
 
-  // Check for canceled parameter
+  // Check for URL params
   const canceled = searchParams.get('canceled')
+  const preselectedServiceId = searchParams.get('service')
+  const preselectedCoachId = searchParams.get('coach')
 
   // Fetch services on mount
   useEffect(() => {
     fetchServices()
   }, [])
+
+  // Auto-select service from URL param after services load
+  useEffect(() => {
+    if (preselectedServiceId && services.length > 0 && !selectedServiceId) {
+      const match = services.find(s => s.id === preselectedServiceId)
+      if (match) {
+        setSelectedServiceId(match.id)
+        setCurrentStep('date')
+      }
+    }
+  }, [preselectedServiceId, services, selectedServiceId])
 
   // Fetch time slots when date is selected
   useEffect(() => {
@@ -66,7 +79,7 @@ export default function BookingPage() {
     setLoading(true)
     const dateString = getLocalDateString(selectedDate)
 
-    const { data, error } = await supabase
+    let query = supabase
       .from('available_slots')
       .select(`
         id,
@@ -84,6 +97,13 @@ export default function BookingPage() {
       .eq('slot_date', dateString)
       .eq('is_available', true)
       .order('start_time', { ascending: true })
+
+    // Filter by coach if pre-selected via URL param
+    if (preselectedCoachId) {
+      query = query.eq('coach_id', preselectedCoachId)
+    }
+
+    const { data, error } = await query
 
     if (data) {
       const slotsWithCoachNames = data.map(slot => ({

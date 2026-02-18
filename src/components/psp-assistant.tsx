@@ -484,6 +484,46 @@ const KNOWLEDGE_BASE: KBEntry[] = [
     role: 'coach',
   },
 
+  // ── COACH EARNINGS DASHBOARD ──
+  {
+    keywords: ['earnings', 'my earnings', 'coach earnings', 'revenue', 'my revenue', 'how much earned', 'income', 'analytics coach'],
+    title: 'Coach Earnings Dashboard',
+    response: 'The Analytics page shows your personal earnings and performance data!\n\nAs a Coach, the page is scoped to YOUR data only:\n• Total Revenue — only from YOUR sessions (paid bookings)\n• Total Bookings — sessions assigned to you\n• Active Athletes — athletes who booked with you\n• Completion Rate — your session completion %\n\nCharts included:\n📊 Monthly Revenue — bar chart showing last 6 months of earnings\n📈 Revenue Trend — line chart of your earnings over time\n🥧 Booking Status — pie chart of confirmed vs completed vs cancelled\n💰 Revenue by Service — breakdown of which lesson types earn the most\n👥 Top Athletes by Revenue — which athletes spend the most with you\n\nTime range selector: Last 7 days, 30 days, or 90 days.\n\nAdmins see platform-wide data instead of coach-scoped data.',
+    actions: [{ label: 'My Earnings', href: '/admin/analytics' }],
+    followUp: ['How much have I earned this month?', 'Which service type earns the most?', 'How do I see my booking stats?'],
+    role: 'coach',
+  },
+
+  // ── PROGRESS & TROPHY CASE (ATHLETE) ──
+  {
+    keywords: ['progress', 'trophy case', 'personal records', 'performance chart', 'metric trends', 'my stats', 'how am I doing', 'improvement'],
+    title: 'Progress & Trophy Case',
+    response: 'Your Progress page is your personal trophy case!\n\nStat cards at the top: Peak Velocity, Avg Velocity, Sessions Completed, Drills Completed.\n\nSport-Specific Performance Charts:\n• Select your sport tab (Softball / Basketball / Soccer / Athleticism)\n• See multi-metric trend lines showing your improvement over time\n• Softball defaults: Exit Velocity + Bat Speed + Throwing Velocity\n• Basketball defaults: 3-Point % + Vertical Jump + Free Throw %\n• Soccer defaults: Sprint Speed + Shot Power + Passing Accuracy\n• Athleticism defaults: 40-Yard Dash + Vertical Jump + Broad Jump\n\nPersonal Records section shows your best value for each metric with:\n• The date it was recorded\n• Verified badge (PSP Verified vs Self-Reported)\n\nMilestones timeline tracks:\n• First training session\n• Peak velocity personal best\n• Session count milestones (5, 10, 25, 50, 100)\n• Drill milestones (10, 25, 50)\n• Training streaks\n• Top personal records from your sport metrics',
+    actions: [{ label: 'View Progress', href: '/progress' }],
+    followUp: ['What are my personal records?', 'How do I switch sports?', 'What does PSP Verified mean?'],
+    role: 'athlete',
+  },
+
+  // ── LEADERBOARDS (ATHLETE) ──
+  {
+    keywords: ['leaderboard', 'leaderboards', 'rankings', 'rank', 'compare', 'how do I rank', 'top athletes', 'regional', 'opt in leaderboard'],
+    title: 'Regional Leaderboards',
+    response: 'PSP Regional Leaderboards let you see how you stack up against other athletes!\n\nHow to opt in:\n1. Go to Settings → scroll to "Leaderboard Settings"\n2. Toggle "Show on Leaderboards" ON\n3. Enter your Region / Area Code (e.g., "757", "Hampton Roads")\n4. Save — your best metrics will now appear on the leaderboard\n\nLeaderboard features:\n🏅 Sport tabs: Softball, Basketball, Soccer, Athleticism\n📊 Metric selector: Choose which stat to rank (e.g., Exit Velocity, 3-Point %)\n🌎 Region filter: Compare athletes in your area\n✅ "Verified Only" toggle: Filter to show only PSP Verified metrics\n\nRanking shows: Rank, Name, Region, Best Value, Verified status.\n\nTop 3 athletes get gold/silver/bronze medal icons. Your own row is highlighted in orange.\n\nOnly opted-in athletes appear. Your data is private until you choose to share it.',
+    actions: [{ label: 'View Leaderboards', href: '/leaderboards' }, { label: 'Settings', href: '/settings' }],
+    followUp: ['How do I opt in to leaderboards?', 'Can I see only verified scores?', 'How do I set my region?'],
+    role: 'athlete',
+  },
+
+  // ── QUICK BOOKING (ATHLETE) ──
+  {
+    keywords: ['quick book', 'rebook', 'book again', 'fast booking', 'one tap', 'repeat session', 'recent services'],
+    title: 'Quick Booking & Rebook',
+    response: 'PSP makes rebooking super fast!\n\nQuick Rebook from Dashboard:\n• On your Locker (Dashboard) page, look for the "Book Again" card\n• It shows your last completed session (service + coach)\n• Click "Rebook" to go straight to the booking page with that service and coach pre-selected\n\nRecent Services on Booking Page:\n• When you go to Book a Session, you\'ll see a "Quick Rebook" row at the top\n• It shows your last 3 booked services as quick-pick cards\n• Click one to skip the service selection step entirely\n\nURL Shortcuts:\n• /booking?service=ID — pre-selects a specific service\n• /booking?service=ID&coach=ID — pre-selects service AND filters time slots to that coach\n\nThe full 4-step booking flow (Service → Date → Time → Confirm) still works normally — these shortcuts just help you skip steps you\'ve already decided on!',
+    actions: [{ label: 'Book a Session', href: '/booking' }],
+    followUp: ['How do I book a session?', 'Can I rebook the same coach?', 'How does pay-on-site work?'],
+    role: 'athlete',
+  },
+
   // ── MANAGE BOOKINGS (COACH) ──
   {
     keywords: ['manage bookings', 'confirm booking', 'pending booking', 'booking management', 'approve booking', 'calendar confirm', 'calendar book'],
