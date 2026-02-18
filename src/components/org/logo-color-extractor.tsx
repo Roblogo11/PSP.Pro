@@ -142,19 +142,14 @@ export function LogoColorExtractor({
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
 
-  const extractFromUrl = useCallback((url: string) => {
-    if (!url) return
-    setExtracting(true)
-    setError('')
-    setColors([])
-
+  const runExtraction = useCallback((proxyUrl: string, originalUrl: string) => {
     const img = new window.Image()
-    img.crossOrigin = 'anonymous'
+    // No crossOrigin needed — our proxy returns Access-Control-Allow-Origin: *
 
     img.onload = () => {
       try {
         const canvas = canvasRef.current!
-        const size = 120 // downsample for speed
+        const size = 120
         canvas.width = size
         canvas.height = size
         const ctx = canvas.getContext('2d')!
@@ -162,28 +157,38 @@ export function LogoColorExtractor({
         const imageData = ctx.getImageData(0, 0, size, size).data
         const extracted = extractDominantColors(imageData)
         if (extracted.length === 0) {
-          setError('Could not extract colors — try a different image.')
+          setError('Could not extract colors — image may be too dark, too light, or mostly transparent. Try a different logo.')
         } else {
           setColors(extracted)
-          // Auto-set primary/secondary to top 2
           if (extracted[0]) setPrimary(extracted[0].hex)
           if (extracted[1]) setSecondary(extracted[1].hex)
         }
-      } catch {
-        setError('CORS error — image must allow cross-origin access.')
+      } catch (e: any) {
+        setError('Color extraction failed: ' + (e?.message || 'unknown error'))
       } finally {
         setExtracting(false)
       }
     }
 
     img.onerror = () => {
-      setError('Could not load image. Check the URL and try again.')
+      setError('Could not load image through proxy. Make sure the URL points directly to an image file (JPG, PNG, SVG, WebP).')
       setExtracting(false)
     }
 
-    img.src = url
-    setLogoUrl(url)
+    img.src = proxyUrl
+    setLogoUrl(originalUrl)
   }, [])
+
+  const extractFromUrl = useCallback((url: string) => {
+    if (!url) return
+    setExtracting(true)
+    setError('')
+    setColors([])
+
+    // Route through server proxy to bypass CORS
+    const proxyUrl = `/api/org/proxy-image?url=${encodeURIComponent(url)}`
+    runExtraction(proxyUrl, url)
+  }, [runExtraction])
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -235,22 +240,28 @@ export function LogoColorExtractor({
 
       {/* URL input */}
       {mode === 'url' && (
-        <div className="flex gap-2">
-          <input
-            type="url"
-            value={urlInput}
-            onChange={e => setUrlInput(e.target.value)}
-            placeholder="https://yourteam.com/logo.png"
-            className="input-field flex-1 text-sm"
-          />
-          <button
-            onClick={() => extractFromUrl(urlInput)}
-            disabled={extracting || !urlInput}
-            className="btn-primary flex items-center gap-2 whitespace-nowrap"
-          >
-            {extracting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
-            Scan
-          </button>
+        <div className="space-y-1.5">
+          <div className="flex gap-2">
+            <input
+              type="url"
+              value={urlInput}
+              onChange={e => setUrlInput(e.target.value)}
+              placeholder="https://yourteam.com/logo.png"
+              className="input-field flex-1 text-sm"
+            />
+            <button
+              onClick={() => extractFromUrl(urlInput)}
+              disabled={extracting || !urlInput}
+              className="btn-primary flex items-center gap-2 whitespace-nowrap"
+            >
+              {extracting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
+              Scan
+            </button>
+          </div>
+          <p className="text-xs text-slate-500 dark:text-white/40">
+            Must be a <strong>direct image URL</strong> ending in .png, .jpg, .svg, or .webp — not a webpage.{' '}
+            <span className="text-slate-400 dark:text-white/30">Tip: right-click your logo on any website → &quot;Copy image address&quot;</span>
+          </p>
         </div>
       )}
 

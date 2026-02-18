@@ -717,9 +717,11 @@ export default function OrgPage() {
                         <Shield className="w-4 h-4" /> Danger Zone
                       </h4>
                       <button onClick={async () => {
-                        if (!confirm(`Deactivate "${selectedOrg.name}"? Athletes won't be able to access it.`)) return
+                        if (!confirm(`⚠️ Deactivate "${selectedOrg.name}"?\n\nThis will hide the org and its public landing page from athletes.`)) return
+                        if (!confirm(`Are you absolutely sure?\n\nType OK to confirm — this will immediately take "${selectedOrg.name}" offline.`)) return
                         const res = await fetch(`/api/org/${selectedOrg.id}`, { method: 'DELETE' })
                         if (res.ok) { toastSuccess('Org deactivated'); loadOrgs() }
+                        else toastError('Failed to deactivate org')
                       }} className="flex items-center gap-2 text-sm text-red-500 hover:text-red-600 font-medium">
                         <Trash2 className="w-4 h-4" /> Deactivate Organization
                       </button>
