@@ -33,12 +33,14 @@ ALTER TABLE simulation_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE simulation_data_log ENABLE ROW LEVEL SECURITY;
 
 -- Allow master admins to manage their own simulation sessions
+DROP POLICY IF EXISTS "master_admin_manage_sessions" ON simulation_sessions;
 CREATE POLICY "master_admin_manage_sessions" ON simulation_sessions
   FOR ALL
   USING (admin_id = auth.uid())
   WITH CHECK (admin_id = auth.uid());
 
 -- Allow master admins to manage their own simulation data logs
+DROP POLICY IF EXISTS "master_admin_manage_data_log" ON simulation_data_log;
 CREATE POLICY "master_admin_manage_data_log" ON simulation_data_log
   FOR ALL
   USING (

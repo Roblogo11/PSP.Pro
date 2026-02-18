@@ -38,6 +38,8 @@ export function useUserSessions(userId: string | undefined) {
             booking_date,
             start_time,
             status,
+            coach_notes,
+            location,
             service:service_id(name),
             coach:coach_id(full_name, avatar_url)
           `)
@@ -75,10 +77,10 @@ export function useUserSessions(userId: string | undefined) {
             time: booking.start_time,
             coach: (booking.coach as any as { full_name: string; avatar_url: string } | null)?.full_name || 'Coach',
             coachPhoto: (booking.coach as any as { full_name: string; avatar_url: string } | null)?.avatar_url || null,
-            location: 'PSP Training Center',
+            location: (booking as any).location || 'PSP Training Center',
             status: booking.status === 'cancelled' ? 'cancelled' : (isUpcoming ? 'upcoming' : 'completed'),
             hasVideo: false,
-            notes: null,
+            notes: (booking as any).coach_notes || null,
             peakVelocity: null,
           }
         })

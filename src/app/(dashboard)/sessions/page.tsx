@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation'
 import { Calendar, Clock, MapPin, Video, CheckCircle2, XCircle, AlertCircle, X } from 'lucide-react'
 import { format } from 'date-fns'
 import { createClient } from '@/lib/supabase/client'
-import { PLACEHOLDER_IMAGES } from '@/lib/placeholder-images'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useUserSessions } from '@/lib/hooks/use-user-sessions'
 
@@ -189,9 +188,12 @@ export default function SessionsPage() {
 
             {session.notes && (
               <div className="mt-4 pt-4 border-t border-white/5">
-                <p className="text-sm text-cyan-700 dark:text-white">
-                  <span className="font-semibold text-slate-900 dark:text-white">Notes:</span> {session.notes}
-                </p>
+                <div className="flex items-start gap-2">
+                  <div className="px-2 py-0.5 bg-green-500/10 border border-green-500/20 rounded-full flex-shrink-0 mt-0.5">
+                    <span className="text-[10px] font-semibold text-green-400">Coach Feedback</span>
+                  </div>
+                  <p className="text-sm text-cyan-700 dark:text-white">{session.notes}</p>
+                </div>
               </div>
             )}
 
