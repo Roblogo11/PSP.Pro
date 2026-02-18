@@ -121,8 +121,9 @@ const PAGE_SUGGESTIONS: Record<string, { label: string; query: string }[]> = {
   ],
   '/admin/athletes': [
     { label: 'How do I add an athlete?', query: 'add athlete' },
+    { label: 'How do I log performance metrics?', query: 'log metrics' },
+    { label: 'What sport metrics are tracked?', query: 'sport metrics' },
     { label: 'How do I assign drills?', query: 'assign drill' },
-    { label: 'How do I view an athlete\'s profile?', query: 'manage athletes' },
   ],
   '/admin/drills': [
     { label: 'How do I create a drill?', query: 'create drill' },
@@ -473,11 +474,21 @@ const KNOWLEDGE_BASE: KBEntry[] = [
     role: 'coach',
   },
 
+  // ── SPORT-SPECIFIC METRICS (COACH) ──
+  {
+    keywords: ['metrics', 'performance data', 'log metrics', 'track metrics', 'athlete stats', 'sport metrics', 'verified metrics', 'self reported', 'exit velocity', 'throwing velocity', 'bat speed', 'vertical jump', 'quick log', 'session metrics', 'performance tracking', 'softball metrics', 'basketball metrics', 'soccer metrics', 'athleticism', 'sport data'],
+    title: 'Sport-Specific Metrics System',
+    response: 'PSP has a full sport-specific metrics system with 60 tracked metrics:\n\n\u26BE Softball (15): Exit Velocity, Overhand Throw Velocity, Pitching Velocity, Pop Time, Home-to-1B, Spin Rate, Strike %, Contact %, Launch Angle, Bat Speed, Glove-to-Throw Exchange, Catch Radius, Baserunning Acceleration, Off-Speed Command, Infield Velocity\n\n\uD83C\uDFC0 Basketball (15): 3-Point %, Free Throw %, Lane Agility, Max Vertical Reach, Effective FG%, Assist-to-Turnover Ratio, Lateral Slide Speed, Reaction Time, Dribble Velocity, Defensive Rebound Rate, Block/Steal Rate, Box-to-Box Sprint, Hand Size, Catch-and-Shoot Release, Perimeter Defensive Rating\n\n\u26BD Soccer (15): Passing Accuracy, First Touch Efficiency, Shot Power, Successful Dribbles (1v1), Distance Covered, Sprints per Game, Cross Accuracy, Aerial Duel Win %, Recovery Speed, Tackle Success, Interceptions per 90, Shot-on-Goal %, Decision-Making Speed, Goalie Save %, Distribution Accuracy\n\n\uD83C\uDFCB\uFE0F Athleticism (15): 10-Yard Split, 40-Yard Dash, Vertical Jump, Pro Agility 5-10-5, Broad Jump, 3-Cone Drill, Medicine Ball Toss, Wing Span, Beep Test, Max Pull-Ups, Grip Strength, Deadlift (Relative BW), T-Test, Body Fat %, Resting Heart Rate\n\nHow to log metrics:\n1. Go to Admin \u2192 Athletes \u2192 click an athlete\n2. Click "Add Performance Data"\n3. Select the sport tab (Softball/Basketball/Soccer/Athleticism)\n4. Enter metric values + toggle PSP Verified or Self-Reported\n5. Save!\n\nQuick Log from Sessions:\n\u2022 Go to Calendar \u2192 Edit a confirmed/completed booking\n\u2022 Click "Log Session Metrics" \u2014 pre-fills athlete and session link\n\u2022 Quick-entry mode shows top 5 metrics per sport + 3 athleticism metrics\n\nVerification Badges:\n\u2022 \u2705 PSP Verified \u2014 Coach recorded with verified equipment\n\u2022 \u26AA Self-Reported \u2014 Athlete/parent reported the data\n\nHistory tab lets you filter by sport to see trends over time.',
+    actions: [{ label: 'Manage Athletes', href: '/admin/athletes' }, { label: 'Calendar', href: '/admin/bookings' }],
+    followUp: ['How do I log metrics from a session?', 'What are verified badges?', 'How do I view an athlete\'s performance history?'],
+    role: 'coach',
+  },
+
   // ── MANAGE BOOKINGS (COACH) ──
   {
     keywords: ['manage bookings', 'confirm booking', 'pending booking', 'booking management', 'approve booking', 'calendar confirm', 'calendar book'],
     title: 'Calendar (Confirm/Book)',
-    response: 'The Calendar page (sidebar: "Calendar (Confirm/Book)") is your booking command center:\n\nFilter tabs: All, Pending, Confirmed, Cancelled\n\nStats row: Total Bookings, Confirmed, Pending, Revenue\n\nEach booking shows: Athlete name, service, date/time, coach, amount, payment status, booking status.\n\nActions you can take:\n• Pending → "Confirm" or "Cancel"\n• Confirmed → "Mark Complete" or "No Show" (after session)\n• Edit → Add coach notes, internal notes, update status\n• "Book for Athlete" button (top of page) → Create a booking on behalf of any athlete\n\nPayment types when booking for athlete:\n• Stripe — normal online payment\n• On-Site — athlete pays in person\n• Use Package — deducts from athlete\'s session pack\n• Complimentary — free session\n\nCoaches see only their own bookings. Admins see all.',
+    response: 'The Calendar page (sidebar: "Calendar (Confirm/Book)") is your booking command center:\n\nFilter tabs: All, Pending, Confirmed, Cancelled\n\nStats row: Total Bookings, Confirmed, Pending, Revenue\n\nEach booking shows: Athlete name, service, date/time, coach, amount, payment status, booking status.\n\nActions you can take:\n• Pending → "Confirm" or "Cancel"\n• Confirmed → "Mark Complete", "No Show", or "Log Metrics"\n• Edit → Add coach notes, internal notes, update status\n• Log Session Metrics → On confirmed/completed bookings, click the orange "Metrics" button or open Edit and click "Log Session Metrics" to record sport-specific performance data linked to that session\n• "Book for Athlete" button (top of page) → Create a booking on behalf of any athlete\n\nPayment types when booking for athlete:\n• Stripe — normal online payment\n• On-Site — athlete pays in person\n• Use Package — deducts from athlete\'s session pack\n• Complimentary — free session\n\nCoaches see only their own bookings. Admins see all.',
     actions: [{ label: 'Calendar', href: '/admin/bookings' }],
     followUp: ['How do I book for an athlete?', 'How do I edit a booking?', 'How do I mark a session complete?'],
     role: 'coach',

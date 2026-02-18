@@ -24,11 +24,62 @@ import {
   ChevronDown,
   Settings,
   ClipboardList,
+  Activity,
+  CheckCircle2,
+  AlertCircle as AlertCircleOutline,
+  Save,
 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { getLocalDateString } from '@/lib/utils/local-date'
+
+// ─── Quick Metric Templates (top 5 per sport for quick logging) ────
+interface QuickMetricDef {
+  key: string
+  label: string
+  unit: string
+  placeholder: string
+  step?: string
+  dbColumn?: string
+}
+
+const QUICK_METRICS: Record<string, QuickMetricDef[]> = {
+  softball: [
+    { key: 'exit_velocity', label: 'Exit Velocity', unit: 'mph', placeholder: '88.5', dbColumn: 'exit_velocity_mph' },
+    { key: 'overhand_throw_velocity', label: 'Throw Velocity', unit: 'mph', placeholder: '62.0', dbColumn: 'throwing_velocity_mph' },
+    { key: 'bat_speed', label: 'Bat Speed', unit: 'mph', placeholder: '65.0', dbColumn: 'bat_speed_mph' },
+    { key: 'pitching_velocity', label: 'Pitching Velocity', unit: 'mph', placeholder: '58.0' },
+    { key: 'home_to_first', label: 'Home-to-1B', unit: 'sec', placeholder: '2.90', step: '0.01', dbColumn: 'home_to_first_seconds' },
+  ],
+  basketball: [
+    { key: 'three_pt_pct', label: '3-Point %', unit: '%', placeholder: '35.0' },
+    { key: 'free_throw_pct', label: 'Free Throw %', unit: '%', placeholder: '75.0' },
+    { key: 'lane_agility', label: 'Lane Agility', unit: 'sec', placeholder: '11.50', step: '0.01' },
+    { key: 'max_vertical_reach', label: 'Vertical Reach', unit: 'in', placeholder: '108.0' },
+    { key: 'reaction_time', label: 'Reaction Time', unit: 'ms', placeholder: '250' },
+  ],
+  soccer: [
+    { key: 'passing_accuracy', label: 'Passing Accuracy', unit: '%', placeholder: '82.0' },
+    { key: 'shot_power', label: 'Shot Power', unit: 'mph', placeholder: '65.0' },
+    { key: 'first_touch', label: 'First Touch', unit: '%', placeholder: '88.0' },
+    { key: 'tackle_success', label: 'Tackle Success', unit: '%', placeholder: '72.0' },
+    { key: 'distance_covered', label: 'Distance Covered', unit: 'mi', placeholder: '6.2' },
+  ],
+}
+
+const QUICK_ATHLETICISM: QuickMetricDef[] = [
+  { key: 'ten_yard_split', label: '10-Yard Split', unit: 'sec', placeholder: '1.65', step: '0.01', dbColumn: 'ten_yard_split_seconds' },
+  { key: 'vertical_jump', label: 'Vertical Jump', unit: 'in', placeholder: '28.5', dbColumn: 'vertical_jump_inches' },
+  { key: 'broad_jump', label: 'Broad Jump', unit: 'in', placeholder: '95.0', dbColumn: 'broad_jump_inches' },
+]
+
+const QUICK_SPORT_TABS = [
+  { key: 'softball', label: 'Softball', emoji: '\u26BE' },
+  { key: 'basketball', label: 'Basketball', emoji: '\uD83C\uDFC0' },
+  { key: 'soccer', label: 'Soccer', emoji: '\u26BD' },
+]
 
 export default function AdminBookingsPage() {
   const supabase = createClient()
@@ -62,6 +113,14 @@ export default function AdminBookingsPage() {
     notes: '',
   })
   const [bookSubmitting, setBookSubmitting] = useState(false)
+
+  // Quick Log Metrics modal
+  const [logMetricsBooking, setLogMetricsBooking] = useState<any>(null)
+  const [logMetricsSport, setLogMetricsSport] = useState('softball')
+  const [logMetricsValues, setLogMetricsValues] = useState<Record<string, string>>({})
+  const [logMetricsNotes, setLogMetricsNotes] = useState('')
+  const [logMetricsSubmitting, setLogMetricsSubmitting] = useState(false)
+  const [logMetricsVerified, setLogMetricsVerified] = useState(true)
 
   // Auth gate - redirect non-admin/coach users
   useEffect(() => {
@@ -206,6 +265,93 @@ export default function AdminBookingsPage() {
       alert(`Error: ${err.message}`)
     } finally {
       setBookSubmitting(false)
+    }
+  }
+
+  // Open Quick Log Metrics modal
+  const openLogMetrics = async (booking: any) => {
+    setLogMetricsBooking(booking)
+    setLogMetricsValues({})
+    setLogMetricsNotes('')
+    setLogMetricsVerified(true)
+
+    // Detect athlete's sport from profile
+    try {
+      const { data: athleteProfile } = await supabase
+        .from('profiles')
+        .select('athlete_type')
+        .eq('id', booking.athlete_id)
+        .single()
+
+      if (athleteProfile?.athlete_type) {
+        const t = athleteProfile.athlete_type.toLowerCase()
+        if (t.includes('basketball') || t.includes('hoops')) setLogMetricsSport('basketball')
+        else if (t.includes('soccer') || t.includes('football') || t.includes('futbol')) setLogMetricsSport('soccer')
+        else setLogMetricsSport('softball')
+      } else {
+        setLogMetricsSport('softball')
+      }
+    } catch {
+      setLogMetricsSport('softball')
+    }
+  }
+
+  // Save Quick Log Metrics
+  const handleSaveQuickMetrics = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!logMetricsBooking || !profile) return
+
+    setLogMetricsSubmitting(true)
+    try {
+      const metricData: Record<string, any> = {
+        athlete_id: logMetricsBooking.athlete_id,
+        recorded_by: profile.id,
+        session_id: logMetricsBooking.id,
+        test_date: logMetricsBooking.booking_date,
+        notes: logMetricsNotes || null,
+      }
+
+      const jsonMetrics: Record<string, number> = {}
+      const sportDefs = QUICK_METRICS[logMetricsSport] || []
+      const allDefs = [...sportDefs, ...QUICK_ATHLETICISM]
+
+      allDefs.forEach((def) => {
+        const val = logMetricsValues[def.key]
+        if (val && val !== '') {
+          const num = parseFloat(val)
+          if (!isNaN(num)) {
+            if (def.dbColumn) metricData[def.dbColumn] = num
+            jsonMetrics[def.key] = num
+          }
+        }
+      })
+
+      // Only save if at least one metric was entered
+      if (Object.keys(jsonMetrics).length === 0) {
+        alert('Please enter at least one metric value.')
+        setLogMetricsSubmitting(false)
+        return
+      }
+
+      metricData.custom_metrics = {
+        sport: logMetricsSport,
+        verified: logMetricsVerified,
+        metrics: jsonMetrics,
+      }
+
+      const { error } = await supabase
+        .from('athlete_performance_metrics')
+        .insert(metricData)
+
+      if (error) throw error
+
+      setLogMetricsBooking(null)
+      alert('Metrics saved successfully!')
+    } catch (error: any) {
+      console.error('Error saving quick metrics:', error)
+      alert(`Error saving metrics: ${error.message}`)
+    } finally {
+      setLogMetricsSubmitting(false)
     }
   }
 
@@ -628,6 +774,15 @@ export default function AdminBookingsPage() {
                                   </button>
                                 </>
                               )}
+                              {(booking.status === 'confirmed' || booking.status === 'completed') && (
+                                <button
+                                  onClick={() => openLogMetrics(booking)}
+                                  className="px-2.5 py-1 bg-orange/20 hover:bg-orange/30 text-orange rounded-lg text-[11px] font-semibold transition-colors flex items-center gap-1"
+                                >
+                                  <Activity className="w-3 h-3" />
+                                  Metrics
+                                </button>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -910,6 +1065,15 @@ export default function AdminBookingsPage() {
                               </button>
                             </>
                           )}
+                          {(booking.status === 'confirmed' || booking.status === 'completed') && (
+                            <button
+                              onClick={() => openLogMetrics(booking)}
+                              className="px-3 py-1.5 bg-orange/20 hover:bg-orange/30 text-orange rounded-lg text-xs font-semibold transition-colors flex items-center gap-1"
+                            >
+                              <Activity className="w-3 h-3" />
+                              Metrics
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -999,6 +1163,19 @@ export default function AdminBookingsPage() {
               </div>
             </div>
 
+            {/* Log Metrics Button */}
+            {(editBooking.status === 'confirmed' || editBooking.status === 'completed') && (
+              <div className="mt-6 pt-4 border-t border-cyan-200/20">
+                <button
+                  onClick={() => { openLogMetrics(editBooking); setEditBooking(null) }}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-orange/20 to-cyan/20 border border-orange/30 text-orange hover:from-orange/30 hover:to-cyan/30 font-semibold text-sm transition-all"
+                >
+                  <Activity className="w-4 h-4" />
+                  Log Session Metrics
+                </button>
+              </div>
+            )}
+
             {/* Quick Status Actions */}
             <div className="mt-6 pt-4 border-t border-cyan-200/20">
               <p className="text-xs font-semibold text-cyan-700 dark:text-white/60 mb-2">Quick Status Change</p>
@@ -1032,6 +1209,140 @@ export default function AdminBookingsPage() {
                 {editSubmitting ? 'Saving...' : 'Save Notes'}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Quick Log Metrics Modal */}
+      {logMetricsBooking && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setLogMetricsBooking(null)}>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Activity className="w-5 h-5 text-orange" />
+                  Log Session Metrics
+                </h3>
+                <p className="text-sm text-cyan-800 dark:text-white/70">
+                  {logMetricsBooking.athlete?.full_name || logMetricsBooking.athlete_name} &bull; {formatDate(logMetricsBooking.booking_date)}
+                </p>
+              </div>
+              <button onClick={() => setLogMetricsBooking(null)} className="p-2 hover:bg-cyan-50/50 rounded-lg">
+                <X className="w-5 h-5 text-cyan-800 dark:text-white" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveQuickMetrics} className="space-y-5">
+              {/* Verified Toggle */}
+              <button
+                type="button"
+                onClick={() => setLogMetricsVerified(!logMetricsVerified)}
+                className={`w-full px-4 py-2.5 rounded-xl border font-medium flex items-center justify-center gap-2 transition-colors text-sm ${
+                  logMetricsVerified
+                    ? 'bg-green-500/20 border-green-500/40 text-green-400 hover:bg-green-500/30'
+                    : 'bg-gray-500/20 border-gray-500/40 text-gray-400 hover:bg-gray-500/30'
+                }`}
+              >
+                {logMetricsVerified ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4" />
+                    PSP Verified
+                  </>
+                ) : (
+                  <>
+                    <AlertCircleOutline className="w-4 h-4" />
+                    Self-Reported
+                  </>
+                )}
+              </button>
+
+              {/* Sport Tabs */}
+              <div className="flex gap-2">
+                {QUICK_SPORT_TABS.map((tab) => (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    onClick={() => setLogMetricsSport(tab.key)}
+                    className={`flex-1 px-3 py-2 rounded-xl text-sm font-medium transition-all ${
+                      logMetricsSport === tab.key
+                        ? 'bg-orange text-white shadow-lg shadow-orange/25'
+                        : 'bg-cyan-50/50 dark:bg-white/5 text-cyan-800 dark:text-white hover:bg-white/10 border border-cyan-200/40'
+                    }`}
+                  >
+                    {tab.emoji} {tab.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Sport Metrics */}
+              <div>
+                <h4 className="text-sm font-semibold text-cyan-700 dark:text-white mb-2">
+                  {QUICK_SPORT_TABS.find(t => t.key === logMetricsSport)?.emoji} Sport Metrics
+                </h4>
+                <div className="grid grid-cols-2 gap-3">
+                  {(QUICK_METRICS[logMetricsSport] || []).map((def) => (
+                    <div key={def.key}>
+                      <label className="block text-xs text-cyan-800 dark:text-white/80 mb-1">
+                        {def.label} <span className="text-cyan-600 dark:text-gray-500">({def.unit})</span>
+                      </label>
+                      <input
+                        type="number"
+                        step={def.step || '0.1'}
+                        value={logMetricsValues[def.key] || ''}
+                        onChange={(e) => setLogMetricsValues(prev => ({ ...prev, [def.key]: e.target.value }))}
+                        className="w-full px-3 py-2 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                        placeholder={def.placeholder}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Athleticism Quick Metrics */}
+              <div>
+                <h4 className="text-sm font-semibold text-cyan-700 dark:text-white mb-2">
+                  {'\uD83C\uDFCB\uFE0F'} Athleticism
+                </h4>
+                <div className="grid grid-cols-3 gap-3">
+                  {QUICK_ATHLETICISM.map((def) => (
+                    <div key={def.key}>
+                      <label className="block text-xs text-cyan-800 dark:text-white/80 mb-1">
+                        {def.label} <span className="text-cyan-600 dark:text-gray-500">({def.unit})</span>
+                      </label>
+                      <input
+                        type="number"
+                        step={def.step || '0.1'}
+                        value={logMetricsValues[def.key] || ''}
+                        onChange={(e) => setLogMetricsValues(prev => ({ ...prev, [def.key]: e.target.value }))}
+                        className="w-full px-3 py-2 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                        placeholder={def.placeholder}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Notes */}
+              <div>
+                <label className="block text-xs font-medium text-cyan-700 dark:text-white mb-1">Session Notes</label>
+                <textarea
+                  value={logMetricsNotes}
+                  onChange={(e) => setLogMetricsNotes(e.target.value)}
+                  placeholder="Quick notes about this session..."
+                  rows={2}
+                  className="w-full px-3 py-2 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan/50 resize-none text-sm"
+                />
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-3 justify-end">
+                <button type="button" onClick={() => setLogMetricsBooking(null)} className="btn-ghost">Cancel</button>
+                <button type="submit" disabled={logMetricsSubmitting} className="btn-primary flex items-center gap-2">
+                  {logMetricsSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  {logMetricsSubmitting ? 'Saving...' : 'Save Metrics'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
