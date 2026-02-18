@@ -8,6 +8,7 @@ import { GoogleReviews } from '@/components/google-reviews'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
 import { useUserRole } from '@/lib/hooks/use-user-role'
+import { toastError } from '@/lib/toast'
 
 export default function ContactPage() {
   const { profile, isCoach, isAdmin } = useUserRole()
@@ -40,7 +41,7 @@ export default function ContactPage() {
 
       setSubmitted(true)
     } catch {
-      alert('Something went wrong. Please email us directly at info@propersports.pro')
+      toastError('Something went wrong. Please email us directly at info@propersports.pro')
     } finally {
       setLoading(false)
     }

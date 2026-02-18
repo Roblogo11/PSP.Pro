@@ -21,8 +21,8 @@ const inter = Inter({
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 5,
+  userScalable: true,
   themeColor: '#07070a',
 }
 
@@ -113,13 +113,22 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen min-h-[100dvh]" suppressHydrationWarning>
         <Providers>
+          {/* Skip link for keyboard navigation — WCAG 2.4.1 */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:px-4 focus:py-2 focus:bg-orange focus:text-white focus:rounded-lg focus:font-semibold focus:text-sm focus:outline-none focus:ring-2 focus:ring-white"
+          >
+            Skip to main content
+          </a>
           <SimulationBanner />
           <ImpersonationBanner />
           <StripeTestBanner />
           <AthleticOSBackground />
           <CommandPalette />
           <PSPAssistant />
-          {children}
+          <main id="main-content">
+            {children}
+          </main>
           <SpeedInsights />
         </Providers>
       </body>

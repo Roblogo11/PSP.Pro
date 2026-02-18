@@ -9,6 +9,7 @@ import { format } from 'date-fns'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useUserSessions } from '@/lib/hooks/use-user-sessions'
+import { toastSuccess, toastError } from '@/lib/toast'
 
 export default function SessionsPage() {
   const router = useRouter()
@@ -78,13 +79,13 @@ export default function SessionsPage() {
       setSelectedSession(null)
 
       // Page will auto-refresh via the hook
-      alert('Session cancelled successfully. Refund will be processed within 3-5 business days.')
+      toastSuccess('Session cancelled successfully. Refund will be processed within 3-5 business days.')
 
       // Force page reload to show updated data
       window.location.reload()
     } catch (error: any) {
       console.error('Error cancelling session:', error)
-      alert('Failed to cancel session. Please contact support.')
+      toastError('Failed to cancel session. Please contact support.')
     } finally {
       setIsProcessing(false)
     }

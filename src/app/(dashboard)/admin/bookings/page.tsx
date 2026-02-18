@@ -34,6 +34,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getLocalDateString } from '@/lib/utils/local-date'
+import { toastSuccess, toastError } from '@/lib/toast'
 
 // ─── Quick Metric Templates (top 5 per sport for quick logging) ────
 interface QuickMetricDef {
@@ -262,7 +263,7 @@ export default function AdminBookingsPage() {
       fetchBookings()
     } catch (err: any) {
       console.error('Book for athlete error:', err)
-      alert(`Error: ${err.message}`)
+      toastError(`Error: ${err.message}`)
     } finally {
       setBookSubmitting(false)
     }
@@ -328,7 +329,7 @@ export default function AdminBookingsPage() {
 
       // Only save if at least one metric was entered
       if (Object.keys(jsonMetrics).length === 0) {
-        alert('Please enter at least one metric value.')
+        toastError('Please enter at least one metric value.')
         setLogMetricsSubmitting(false)
         return
       }
@@ -346,10 +347,10 @@ export default function AdminBookingsPage() {
       if (error) throw error
 
       setLogMetricsBooking(null)
-      alert('Metrics saved successfully!')
+      toastSuccess('Metrics saved successfully!')
     } catch (error: any) {
       console.error('Error saving quick metrics:', error)
-      alert(`Error saving metrics: ${error.message}`)
+      toastError(`Error saving metrics: ${error.message}`)
     } finally {
       setLogMetricsSubmitting(false)
     }
@@ -1087,7 +1088,7 @@ export default function AdminBookingsPage() {
 
       {/* Edit Booking Modal */}
       {editBooking && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setEditBooking(null)}>
+        <div role="dialog" aria-modal="true" aria-label="Edit Booking" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setEditBooking(null)}>
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-lg w-full p-6" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -1096,7 +1097,7 @@ export default function AdminBookingsPage() {
                   {editBooking.athlete?.full_name} &bull; {formatDate(editBooking.booking_date)}
                 </p>
               </div>
-              <button onClick={() => setEditBooking(null)} className="p-2 hover:bg-cyan-50/50 rounded-lg">
+              <button aria-label="Close" onClick={() => setEditBooking(null)} className="p-2 hover:bg-cyan-50/50 rounded-lg">
                 <X className="w-5 h-5 text-cyan-800 dark:text-white" />
               </button>
             </div>
@@ -1215,7 +1216,7 @@ export default function AdminBookingsPage() {
 
       {/* Quick Log Metrics Modal */}
       {logMetricsBooking && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setLogMetricsBooking(null)}>
+        <div role="dialog" aria-modal="true" aria-label="Log Metrics" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setLogMetricsBooking(null)}>
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -1227,7 +1228,7 @@ export default function AdminBookingsPage() {
                   {logMetricsBooking.athlete?.full_name || logMetricsBooking.athlete_name} &bull; {formatDate(logMetricsBooking.booking_date)}
                 </p>
               </div>
-              <button onClick={() => setLogMetricsBooking(null)} className="p-2 hover:bg-cyan-50/50 rounded-lg">
+              <button aria-label="Close" onClick={() => setLogMetricsBooking(null)} className="p-2 hover:bg-cyan-50/50 rounded-lg">
                 <X className="w-5 h-5 text-cyan-800 dark:text-white" />
               </button>
             </div>
@@ -1349,14 +1350,14 @@ export default function AdminBookingsPage() {
 
       {/* Book for Athlete Modal */}
       {showBookForAthlete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowBookForAthlete(false)}>
+        <div role="dialog" aria-modal="true" aria-label="Book for Athlete" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowBookForAthlete(false)}>
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white">Book for Athlete</h3>
                 <p className="text-sm text-cyan-800 dark:text-white/70">Schedule a lesson on behalf of an athlete</p>
               </div>
-              <button onClick={() => setShowBookForAthlete(false)} className="p-2 hover:bg-cyan-50/50 rounded-lg">
+              <button aria-label="Close" onClick={() => setShowBookForAthlete(false)} className="p-2 hover:bg-cyan-50/50 rounded-lg">
                 <X className="w-5 h-5 text-cyan-800 dark:text-white" />
               </button>
             </div>

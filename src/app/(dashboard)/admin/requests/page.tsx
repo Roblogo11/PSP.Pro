@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { toastSuccess, toastError } from '@/lib/toast'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import {
   CheckCircle,
@@ -93,14 +94,14 @@ export default function RequestsPage() {
       const data = await response.json()
 
       if (response.ok) {
-        alert(`✅ Request ${action}d successfully!${data.executed ? '\nAction executed.' : ''}`)
+        toastSuccess(`Request ${action}d successfully!${data.executed ? ' Action executed.' : ''}`)
         loadRequests()
       } else {
         throw new Error(data.error || 'Failed to review request')
       }
     } catch (error: any) {
       console.error('Review error:', error)
-      alert(`Error: ${error.message}`)
+      toastError(`Error: ${error.message}`)
     } finally {
       setProcessingId(null)
     }

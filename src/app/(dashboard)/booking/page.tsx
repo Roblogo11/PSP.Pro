@@ -9,6 +9,7 @@ import { ServiceSelector } from '@/components/booking/service-selector'
 import { TimeSlotPicker } from '@/components/booking/time-slot-picker'
 import { CheckCircle2, ArrowRight, ArrowLeft, Loader2, CalendarDays, CreditCard, Wallet } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
+import { toastError } from '@/lib/toast'
 
 type BookingStep = 'service' | 'date' | 'time' | 'confirm'
 
@@ -229,7 +230,7 @@ export default function BookingPage() {
       }
     } catch (error: any) {
       console.error('Booking error:', error)
-      alert(error.message || 'Failed to create booking. Please try again.')
+      toastError(error.message || 'Failed to create booking. Please try again.')
     } finally {
       setSubmitting(false)
     }

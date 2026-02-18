@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { User, Bell, Lock, CreditCard, Mail, Phone, MapPin, Save, Check, Medal } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
+import { toastError } from '@/lib/toast'
 
 export default function SettingsPage() {
   const { profile, loading: profileLoading, isImpersonating } = useUserRole()
@@ -99,7 +100,7 @@ export default function SettingsPage() {
       setTimeout(() => setSaveSuccess(false), 3000)
     } catch (error: any) {
       console.error('Error saving profile:', error)
-      alert('Failed to save changes: ' + error.message)
+      toastError('Failed to save changes: ' + error.message)
     } finally {
       setSaving(false)
     }
@@ -128,7 +129,7 @@ export default function SettingsPage() {
       setTimeout(() => setSaveSuccess(false), 3000)
     } catch (error: any) {
       console.error('Error saving notifications:', error)
-      alert('Failed to save notification preferences')
+      toastError('Failed to save notification preferences')
     } finally {
       setSaving(false)
     }

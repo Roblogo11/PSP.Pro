@@ -79,13 +79,16 @@ export function VideoPlayer({ url, title, thumbnail = false }: VideoPlayerProps)
 
         {showModal && (
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={title || 'Video player'}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
             onClick={() => setShowModal(false)}
           >
             <div className="max-w-3xl w-full" onClick={e => e.stopPropagation()}>
               <div className="flex justify-between items-center mb-2">
                 {title && <p className="text-white font-semibold">{title}</p>}
-                <button onClick={() => setShowModal(false)} className="text-white hover:text-orange transition-colors ml-auto">
+                <button onClick={() => setShowModal(false)} aria-label="Close video" className="text-white hover:text-orange transition-colors ml-auto">
                   <X className="w-6 h-6" />
                 </button>
               </div>

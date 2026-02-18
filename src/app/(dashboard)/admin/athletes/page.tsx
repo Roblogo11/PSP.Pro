@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { toastError } from '@/lib/toast'
 import Link from 'next/link'
 import {
   Users,
@@ -173,7 +174,7 @@ export default function AthletesManagementPage() {
 
   const handleCreateAthlete = async () => {
     if (!formData.full_name || !formData.email) {
-      alert('Please fill in required fields: Full Name and Email')
+      toastError('Please fill in required fields: Full Name and Email')
       return
     }
 
@@ -220,7 +221,7 @@ export default function AthletesManagementPage() {
       showSuccess('Athlete created successfully! They can now log in with their email.')
     } catch (error: any) {
       console.error('Error creating athlete:', error)
-      alert(`Failed to create athlete: ${error.message}`)
+      toastError(`Failed to create athlete: ${error.message}`)
     } finally {
       setIsProcessing(false)
     }
@@ -265,7 +266,7 @@ export default function AthletesManagementPage() {
       showSuccess('Athlete updated successfully!')
     } catch (error: any) {
       console.error('Error updating athlete:', error)
-      alert(`Failed to update athlete: ${error.message}`)
+      toastError(`Failed to update athlete: ${error.message}`)
     } finally {
       setIsProcessing(false)
     }
@@ -292,7 +293,7 @@ export default function AthletesManagementPage() {
       showSuccess('Athlete deleted successfully!')
     } catch (error: any) {
       console.error('Error deleting athlete:', error)
-      alert(`Failed to delete athlete: ${error.message}`)
+      toastError(`Failed to delete athlete: ${error.message}`)
     } finally {
       setIsProcessing(false)
     }

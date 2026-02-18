@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { toastError } from '@/lib/toast'
 import { Upload, Download, FileText, CheckCircle, XCircle, AlertCircle, ArrowLeft } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
@@ -102,7 +103,7 @@ export default function BulkDrillImportPage() {
       setResults({ success: successCount, failed: failedCount, errors })
       setShowResults(true)
     } catch (error: any) {
-      alert(`Failed to process file: ${error.message}`)
+      toastError(`Failed to process file: ${error.message}`)
     } finally {
       setImporting(false)
     }

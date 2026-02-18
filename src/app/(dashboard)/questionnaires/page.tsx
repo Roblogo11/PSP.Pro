@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { ClipboardCheck, CheckCircle, XCircle, Clock, Loader2, ChevronRight } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
+import { toastError } from '@/lib/toast'
 
 interface Question {
   text: string
@@ -78,7 +79,7 @@ export default function QuestionnairesPage() {
     const questions = activeAssignment.questionnaire.questions
     const allAnswered = questions.every((_, idx) => answers[idx] !== undefined)
     if (!allAnswered) {
-      alert('Please answer all questions before submitting.')
+      toastError('Please answer all questions before submitting.')
       return
     }
 
@@ -104,7 +105,7 @@ export default function QuestionnairesPage() {
       .eq('id', activeAssignment.id)
 
     if (error) {
-      alert(`Error: ${error.message}`)
+      toastError(`Error: ${error.message}`)
       setSubmittingQuiz(false)
       return
     }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { toastError } from '@/lib/toast'
 import { createClient } from '@/lib/supabase/client'
 import {
   Plus, Edit2, Trash2, X, Loader2, ClipboardCheck, Users,
@@ -119,7 +120,7 @@ export default function AdminQuestionnairesPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.title.trim() || questions.length === 0) {
-      alert('Please add a title and at least one question.')
+      toastError('Please add a title and at least one question.')
       return
     }
 
@@ -134,10 +135,10 @@ export default function AdminQuestionnairesPage() {
 
     if (editingQ) {
       const { error } = await supabase.from('questionnaires').update(payload).eq('id', editingQ.id)
-      if (error) { alert(`Error: ${error.message}`); setSubmitting(false); return }
+      if (error) { toastError(`Error: ${error.message}`); setSubmitting(false); return }
     } else {
       const { error } = await supabase.from('questionnaires').insert({ ...payload, created_by: profile?.id })
-      if (error) { alert(`Error: ${error.message}`); setSubmitting(false); return }
+      if (error) { toastError(`Error: ${error.message}`); setSubmitting(false); return }
     }
 
     setSubmitting(false)
@@ -174,7 +175,7 @@ export default function AdminQuestionnairesPage() {
     }))
 
     const { error } = await supabase.from('assigned_questionnaires').insert(inserts)
-    if (error) { alert(`Error: ${error.message}`); setAssignSubmitting(false); return }
+    if (error) { toastError(`Error: ${error.message}`); setAssignSubmitting(false); return }
 
     setAssignSubmitting(false)
     setAssignQ(null)
@@ -270,13 +271,13 @@ export default function AdminQuestionnairesPage() {
 
       {/* Create/Edit Modal */}
       {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowForm(false)}>
+        <div role="dialog" aria-modal="true" aria-label={editingQ ? 'Edit Quiz' : 'New Quiz'} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowForm(false)}>
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-slate-900 dark:text-white">
                 {editingQ ? 'Edit Quiz' : 'New Quiz'}
               </h3>
-              <button onClick={() => setShowForm(false)} className="p-2 hover:bg-cyan-50/50 rounded-lg">
+              <button onClick={() => setShowForm(false)} aria-label="Close form" className="p-2 hover:bg-cyan-50/50 rounded-lg">
                 <X className="w-5 h-5 text-cyan-800 dark:text-white" />
               </button>
             </div>
@@ -331,7 +332,7 @@ export default function AdminQuestionnairesPage() {
                       <span className={`px-2 py-0.5 rounded-lg text-xs font-semibold ${q.correct_answer ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
                         {q.correct_answer ? 'True' : 'False'}
                       </span>
-                      <button type="button" onClick={() => removeQuestion(idx)} className="p-1 hover:bg-red-500/20 rounded">
+                      <button type="button" onClick={() => removeQuestion(idx)} aria-label="Remove question" className="p-1 hover:bg-red-500/20 rounded">
                         <X className="w-4 h-4 text-red-400" />
                       </button>
                     </div>
@@ -397,14 +398,14 @@ export default function AdminQuestionnairesPage() {
 
       {/* Assign Modal */}
       {assignQ && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setAssignQ(null)}>
+        <div role="dialog" aria-modal="true" aria-label="Assign Quiz" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setAssignQ(null)}>
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white">Assign Quiz</h3>
                 <p className="text-sm text-cyan-800 dark:text-white/70">{assignQ.title}</p>
               </div>
-              <button onClick={() => setAssignQ(null)} className="p-2 hover:bg-cyan-50/50 rounded-lg">
+              <button onClick={() => setAssignQ(null)} aria-label="Close" className="p-2 hover:bg-cyan-50/50 rounded-lg">
                 <X className="w-5 h-5 text-cyan-800 dark:text-white" />
               </button>
             </div>
@@ -469,14 +470,14 @@ export default function AdminQuestionnairesPage() {
 
       {/* View Responses Modal */}
       {viewQ && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setViewQ(null)}>
+        <div role="dialog" aria-modal="true" aria-label="Responses" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setViewQ(null)}>
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white">Responses</h3>
                 <p className="text-sm text-cyan-800 dark:text-white/70">{viewQ.title}</p>
               </div>
-              <button onClick={() => setViewQ(null)} className="p-2 hover:bg-cyan-50/50 rounded-lg">
+              <button onClick={() => setViewQ(null)} aria-label="Close" className="p-2 hover:bg-cyan-50/50 rounded-lg">
                 <X className="w-5 h-5 text-cyan-800 dark:text-white" />
               </button>
             </div>

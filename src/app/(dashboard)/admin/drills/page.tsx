@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { toastError } from '@/lib/toast'
 import Link from 'next/link'
 import {
   Dumbbell,
@@ -163,7 +164,7 @@ export default function DrillsManagementPage() {
 
   const handleCreateDrill = async () => {
     if (!formData.title) {
-      alert('Please fill in the required field: Title')
+      toastError('Please fill in the required field: Title')
       return
     }
 
@@ -212,7 +213,7 @@ export default function DrillsManagementPage() {
       showSuccess('Drill created successfully!')
     } catch (error: any) {
       console.error('Error creating drill:', error)
-      alert(`Failed to create drill: ${error.message}`)
+      toastError(`Failed to create drill: ${error.message}`)
     } finally {
       setIsProcessing(false)
     }
@@ -262,7 +263,7 @@ export default function DrillsManagementPage() {
       showSuccess('Drill updated successfully!')
     } catch (error: any) {
       console.error('Error updating drill:', error)
-      alert(`Failed to update drill: ${error.message}`)
+      toastError(`Failed to update drill: ${error.message}`)
     } finally {
       setIsProcessing(false)
     }
@@ -288,7 +289,7 @@ export default function DrillsManagementPage() {
       showSuccess('Drill deleted successfully!')
     } catch (error: any) {
       console.error('Error deleting drill:', error)
-      alert(`Failed to delete drill: ${error.message}`)
+      toastError(`Failed to delete drill: ${error.message}`)
     } finally {
       setIsProcessing(false)
     }
@@ -296,7 +297,7 @@ export default function DrillsManagementPage() {
 
   const handleAssignDrill = async () => {
     if (!selectedDrill || selectedAthletes.length === 0) {
-      alert('Please select at least one athlete')
+      toastError('Please select at least one athlete')
       return
     }
 
@@ -328,7 +329,7 @@ export default function DrillsManagementPage() {
       showSuccess(`Drill assigned to ${selectedAthletes.length} athlete${selectedAthletes.length > 1 ? 's' : ''}!`)
     } catch (error: any) {
       console.error('Error assigning drill:', error)
-      alert(`Failed to assign drill: ${error.message}`)
+      toastError(`Failed to assign drill: ${error.message}`)
     } finally {
       setIsProcessing(false)
     }

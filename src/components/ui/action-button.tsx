@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { toastSuccess, toastError } from '@/lib/toast'
 import { Trash2, AlertCircle, Loader2, FileText } from 'lucide-react'
 import { usePermissions } from '@/lib/hooks/use-permissions'
 import type { PermissionAction } from '@/lib/hooks/use-permissions'
@@ -69,19 +70,19 @@ export function ActionButton({
       if (!response.ok) {
         // Check if it requires approval
         if (data.requiresApproval) {
-          alert(
-            `This action requires master admin approval.\nReason: ${data.reason}\n\nUse "Request Deletion" instead.`
+          toastError(
+            `This action requires master admin approval. Reason: ${data.reason}. Use "Request Deletion" instead.`
           )
           return
         }
         throw new Error(data.error || 'Failed to delete')
       }
 
-      alert('Deleted successfully!')
+      toastSuccess('Deleted successfully!')
       onSuccess?.()
     } catch (error: any) {
       console.error('Delete error:', error)
-      alert(`Error: ${error.message}`)
+      toastError(`Error: ${error.message}`)
     } finally {
       setLoading(false)
       setShowConfirm(false)
@@ -109,13 +110,11 @@ export function ActionButton({
         throw new Error(data.error || 'Failed to submit request')
       }
 
-      alert(
-        '✅ Deletion request submitted!\n\nA master admin will review your request.'
-      )
+      toastSuccess('Deletion request submitted. A master admin will review your request.')
       onSuccess?.()
     } catch (error: any) {
       console.error('Request error:', error)
-      alert(`Error: ${error.message}`)
+      toastError(`Error: ${error.message}`)
     } finally {
       setLoading(false)
       setShowConfirm(false)

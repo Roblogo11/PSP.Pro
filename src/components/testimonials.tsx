@@ -190,8 +190,11 @@ export function Testimonials() {
           {TESTIMONIALS.slice(0, 3).map((testimonial) => (
             <div
               key={testimonial.id}
+              role="button"
+              tabIndex={0}
               className="glass-card p-6 cursor-pointer hover:scale-105 transition-transform"
               onClick={() => setCurrentIndex(testimonial.id - 1)}
+              onKeyDown={(e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setCurrentIndex(testimonial.id - 1) } }}
             >
               <div className="flex items-center gap-1 mb-3">
                 {Array.from({ length: testimonial.rating }).map((_, i) => (

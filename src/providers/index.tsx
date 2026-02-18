@@ -6,6 +6,7 @@ import { MotionProvider } from './motion-provider'
 import { NavProvider } from '@/components/navigation/nav-context'
 import { ThemeProvider } from '@/lib/contexts/theme-context'
 import { FlashLoader } from '@/components/flash-loader'
+import { AnnounceProvider } from '@/components/ui/announce'
 
 interface ProvidersProps {
   children: ReactNode
@@ -19,7 +20,9 @@ export function Providers({ children }: ProvidersProps) {
           <Suspense fallback={null}>
             <FlashLoader />
           </Suspense>
-          <MotionProvider>{children}</MotionProvider>
+          <AnnounceProvider>
+            <MotionProvider>{children}</MotionProvider>
+          </AnnounceProvider>
         </NavProvider>
       </Web3Provider>
     </ThemeProvider>

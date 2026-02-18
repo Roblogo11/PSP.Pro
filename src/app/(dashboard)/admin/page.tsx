@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { toastSuccess, toastError } from '@/lib/toast'
 import Link from 'next/link'
 import {
   Users,
@@ -772,15 +773,15 @@ function SimulationPanel() {
       if (res.ok) {
         const data = await res.json()
         const totalCleaned = Object.values(data.summary as Record<string, number>).reduce((a, b) => a + b, 0)
-        alert(
-          `Cleanup complete!\n\n` +
+        toastSuccess(
+          `Cleanup complete! ` +
           `${totalCleaned} record${totalCleaned === 1 ? '' : 's'} deleted` +
-          (data.stripeRefunds > 0 ? `\n${data.stripeRefunds} Stripe refund${data.stripeRefunds === 1 ? '' : 's'} processed` : '')
+          (data.stripeRefunds > 0 ? `. ${data.stripeRefunds} Stripe refund${data.stripeRefunds === 1 ? '' : 's'} processed` : '')
         )
         window.location.reload()
       }
     } catch {
-      alert('Cleanup failed. Please try again.')
+      toastError('Cleanup failed. Please try again.')
     } finally {
       setCleaningUp(null)
     }

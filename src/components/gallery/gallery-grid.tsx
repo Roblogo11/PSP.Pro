@@ -113,7 +113,10 @@ export function GalleryGrid({ items, columns = 3 }: GalleryGridProps) {
         {items.map((item, index) => (
           <div
             key={item.id}
+            role="button"
+            tabIndex={0}
             onClick={() => handleItemClick(item, index)}
+            onKeyDown={(e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleItemClick(item, index) } }}
             className="group relative aspect-square bg-gray-800 rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-105"
           >
             {item.type === 'image' ? (

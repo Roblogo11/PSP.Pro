@@ -207,9 +207,9 @@ export function Lightbox({
 
       {/* Click outside to close */}
       <div
+        role="presentation"
         className="absolute inset-0 -z-10"
         onClick={onClose}
-        aria-label="Close lightbox"
       />
     </div>,
     document.body

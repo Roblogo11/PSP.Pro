@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Plus, Edit2, Trash2, DollarSign, Clock, Users, Save, X, Star, StarOff, ImageIcon, CheckCircle, Video, Check, AlertTriangle } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
+import { toastError } from '@/lib/toast'
 import { getCategoryColor as getCatColor, isGroupCategory, DEFAULT_CATEGORIES } from '@/lib/category-colors'
 
 interface Service {
@@ -242,7 +243,7 @@ export default function ServicesManagerPage() {
       await loadServices()
     } catch (err: any) {
       console.error('Error toggling featured:', err)
-      alert(`Error: ${err.message}`)
+      toastError(err.message)
     }
   }
 
@@ -263,7 +264,7 @@ export default function ServicesManagerPage() {
       await loadServices()
     } catch (err: any) {
       console.error('Error toggling active:', err)
-      alert(`Error: ${err.message}`)
+      toastError(err.message)
     }
   }
 

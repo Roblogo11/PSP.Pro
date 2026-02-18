@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
+import { toastError } from '@/lib/toast'
 
 interface CourseLesson {
   id?: string
@@ -139,10 +140,10 @@ export default function AdminCoursesPage() {
 
     if (editingCourse) {
       const { error } = await supabase.from('courses').update(payload).eq('id', editingCourse.id)
-      if (error) { alert(`Error: ${error.message}`); setSubmitting(false); return }
+      if (error) { toastError(error.message); setSubmitting(false); return }
     } else {
       const { error } = await supabase.from('courses').insert({ ...payload, created_by: profile?.id })
-      if (error) { alert(`Error: ${error.message}`); setSubmitting(false); return }
+      if (error) { toastError(error.message); setSubmitting(false); return }
     }
 
     setSubmitting(false)
@@ -182,7 +183,7 @@ export default function AdminCoursesPage() {
       sort_order: lessons.length,
     })
 
-    if (error) { alert(`Error: ${error.message}`); setLessonSubmitting(false); return }
+    if (error) { toastError(error.message); setLessonSubmitting(false); return }
 
     setLessonForm({ title: '', video_url: '', description: '', duration_seconds: 0, is_preview: false })
     setLessonSubmitting(false)
@@ -234,7 +235,7 @@ export default function AdminCoursesPage() {
     }))
 
     const { error } = await supabase.from('course_enrollments').upsert(inserts, { onConflict: 'athlete_id,course_id' })
-    if (error) { alert(`Error: ${error.message}`); setEnrollSubmitting(false); return }
+    if (error) { toastError(error.message); setEnrollSubmitting(false); return }
 
     setEnrollSubmitting(false)
     setEnrollCourse(null)
@@ -345,13 +346,13 @@ export default function AdminCoursesPage() {
 
       {/* Create/Edit Course Modal */}
       {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowForm(false)}>
+        <div role="dialog" aria-modal="true" aria-label="Course Form" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowForm(false)}>
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-slate-900 dark:text-white">
                 {editingCourse ? 'Edit Course' : 'New Course'}
               </h3>
-              <button onClick={() => setShowForm(false)} className="p-2 hover:bg-cyan-50/50 rounded-lg">
+              <button onClick={() => setShowForm(false)} aria-label="Close form" className="p-2 hover:bg-cyan-50/50 rounded-lg">
                 <X className="w-5 h-5 text-cyan-800 dark:text-white" />
               </button>
             </div>
@@ -476,14 +477,14 @@ export default function AdminCoursesPage() {
 
       {/* Lesson Manager Modal */}
       {managingCourse && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setManagingCourse(null)}>
+        <div role="dialog" aria-modal="true" aria-label="Manage Lessons" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setManagingCourse(null)}>
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white">Manage Lessons</h3>
                 <p className="text-sm text-cyan-800 dark:text-white/70">{managingCourse.title}</p>
               </div>
-              <button onClick={() => setManagingCourse(null)} className="p-2 hover:bg-cyan-50/50 rounded-lg">
+              <button onClick={() => setManagingCourse(null)} aria-label="Close" className="p-2 hover:bg-cyan-50/50 rounded-lg">
                 <X className="w-5 h-5 text-cyan-800 dark:text-white" />
               </button>
             </div>
@@ -504,13 +505,13 @@ export default function AdminCoursesPage() {
                       <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-[10px] font-semibold rounded-lg border border-green-500/30">Preview</span>
                     )}
                     <div className="flex items-center gap-1">
-                      <button onClick={() => moveLesson(idx, 'up')} disabled={idx === 0} className="p-1 hover:bg-cyan/20 rounded disabled:opacity-30">
+                      <button onClick={() => moveLesson(idx, 'up')} disabled={idx === 0} aria-label="Move lesson up" className="p-1 hover:bg-cyan/20 rounded disabled:opacity-30">
                         <ChevronUp className="w-4 h-4 text-cyan-800 dark:text-white" />
                       </button>
-                      <button onClick={() => moveLesson(idx, 'down')} disabled={idx === lessons.length - 1} className="p-1 hover:bg-cyan/20 rounded disabled:opacity-30">
+                      <button onClick={() => moveLesson(idx, 'down')} disabled={idx === lessons.length - 1} aria-label="Move lesson down" className="p-1 hover:bg-cyan/20 rounded disabled:opacity-30">
                         <ChevronDown className="w-4 h-4 text-cyan-800 dark:text-white" />
                       </button>
-                      <button onClick={() => deleteLesson(lesson.id!)} className="p-1 hover:bg-red-500/20 rounded">
+                      <button onClick={() => deleteLesson(lesson.id!)} aria-label="Delete lesson" className="p-1 hover:bg-red-500/20 rounded">
                         <Trash2 className="w-4 h-4 text-red-400" />
                       </button>
                     </div>
@@ -573,14 +574,14 @@ export default function AdminCoursesPage() {
 
       {/* Enroll Athletes Modal */}
       {enrollCourse && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setEnrollCourse(null)}>
+        <div role="dialog" aria-modal="true" aria-label="Enroll Athletes" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setEnrollCourse(null)}>
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white">Enroll Athletes</h3>
                 <p className="text-sm text-cyan-800 dark:text-white/70">{enrollCourse.title}</p>
               </div>
-              <button onClick={() => setEnrollCourse(null)} className="p-2 hover:bg-cyan-50/50 rounded-lg">
+              <button onClick={() => setEnrollCourse(null)} aria-label="Close" className="p-2 hover:bg-cyan-50/50 rounded-lg">
                 <X className="w-5 h-5 text-cyan-800 dark:text-white" />
               </button>
             </div>

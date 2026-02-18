@@ -141,6 +141,7 @@ export function ImageUpload({
             {/* Clear Button */}
             <button
               onClick={handleClear}
+              aria-label="Remove image"
               className="absolute top-2 right-2 p-2 bg-red-500/90 hover:bg-red-500 rounded-full transition-colors"
             >
               <X className="w-4 h-4 text-white" />

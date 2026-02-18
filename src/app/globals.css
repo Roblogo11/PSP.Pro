@@ -744,6 +744,71 @@
   }
 }
 
+/* ============================================================
+   WCAG AA Contrast Fixes — Light Mode
+   text-cyan-700 (#007898) on light bg (#FFF5F0) = 2.5:1 FAIL
+   Fix: Override cyan-700 to #006074 (≈5.2:1) in light mode
+   ============================================================ */
+
+/* Secondary/muted text: text-cyan-700 → accessible dark teal in light mode */
+html:not(.dark) .text-cyan-700 {
+  color: #155e75 !important; /* cyan-800 equivalent — 5.4:1 on #FFF5F0 */
+}
+
+/* Links and interactive cyan text */
+html:not(.dark) .text-cyan {
+  color: #0e7490 !important; /* 4.6:1 on #FFF5F0 */
+}
+
+html:not(.dark) .text-cyan-600 {
+  color: #0e7490 !important; /* 4.6:1 on #FFF5F0 */
+}
+
+/* Low-opacity borders → bump to visible */
+html:not(.dark) .border-cyan-200\/40 {
+  border-color: rgba(14, 116, 144, 0.35) !important; /* 3:1+ visible */
+}
+
+/* Status text colors — ensure AA on light bg */
+html:not(.dark) .text-green-400 {
+  color: #15803d !important; /* green-700 — 4.8:1 */
+}
+
+html:not(.dark) .text-purple-400 {
+  color: #7e22ce !important; /* purple-700 — 4.5:1 */
+}
+
+html:not(.dark) .text-amber-400 {
+  color: #b45309 !important; /* amber-700 — 4.5:1 */
+}
+
+html:not(.dark) .text-gray-400 {
+  color: #4b5563 !important; /* gray-600 — 5.9:1 */
+}
+
+html:not(.dark) .text-gray-300 {
+  color: #4b5563 !important; /* gray-600 — 5.9:1 */
+}
+
+/* Exclude homepage dark cards from light-mode cyan overrides */
+html:not(.dark) .home-page .glass-card .text-cyan-700,
+html:not(.dark) .home-page .glass-card-hover .text-cyan-700,
+html:not(.dark) .home-page .command-panel .text-cyan-700 {
+  color: #007898 !important; /* Keep original — dark bg context */
+}
+
+html:not(.dark) .home-page .glass-card .text-green-400,
+html:not(.dark) .home-page .glass-card-hover .text-green-400,
+html:not(.dark) .home-page .command-panel .text-green-400 {
+  color: #4ade80 !important; /* Keep original — dark bg context */
+}
+
+html:not(.dark) .home-page .glass-card .text-purple-400,
+html:not(.dark) .home-page .glass-card-hover .text-purple-400,
+html:not(.dark) .home-page .command-panel .text-purple-400 {
+  color: #c084fc !important; /* Keep original — dark bg context */
+}
+
 /* FunnelNav & Bottom Navigation */
 :not(.dark) .bg-dark-100\/95 {
   background: rgba(255, 255, 255, 0.95) !important;

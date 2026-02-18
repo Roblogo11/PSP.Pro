@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import { toastError } from '@/lib/toast'
 import { createClient } from '@/lib/supabase/client'
 import { getLocalDateString } from '@/lib/utils/local-date'
 import { useUserRole } from '@/lib/hooks/use-user-role'
@@ -326,7 +327,7 @@ export default function AthleteDetailPage() {
       resetForm()
     } catch (error: any) {
       console.error('Error saving metric:', error)
-      alert(`Error saving metric: ${error.message}`)
+      toastError(`Error saving metric: ${error.message}`)
     } finally {
       setSaving(false)
     }
@@ -346,7 +347,7 @@ export default function AthleteDetailPage() {
       setMetrics(metrics.filter((m) => m.id !== metricId))
     } catch (error: any) {
       console.error('Error deleting metric:', error)
-      alert(`Error deleting metric: ${error.message}`)
+      toastError(`Error deleting metric: ${error.message}`)
     }
   }
 

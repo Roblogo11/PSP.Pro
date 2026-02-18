@@ -1296,13 +1296,13 @@ function MediaTab({ isAdmin }: { isAdmin: boolean }) {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <button onClick={() => handleEdit(item)} className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded transition" title="Edit">
+                        <button onClick={() => handleEdit(item)} className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded transition" title="Edit" aria-label="Edit media">
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <a href={item.url} target="_blank" rel="noopener noreferrer" className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded transition" title="View">
                           <ExternalLink className="w-4 h-4" />
                         </a>
-                        <button onClick={() => setDeletingItem(item)} className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded transition" title="Delete">
+                        <button onClick={() => setDeletingItem(item)} className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded transition" title="Delete" aria-label="Delete media">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>

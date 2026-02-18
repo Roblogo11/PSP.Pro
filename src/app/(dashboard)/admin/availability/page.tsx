@@ -814,7 +814,7 @@ export default function AvailabilityManagementPage() {
 
       {/* Bulk Edit Modal */}
       {showBulkEditModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowBulkEditModal(false)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Bulk Edit Schedule" onClick={() => setShowBulkEditModal(false)}>
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-lg w-full p-6" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -823,7 +823,7 @@ export default function AvailabilityManagementPage() {
                   Updating {selectedSlotIds.size} slot{selectedSlotIds.size !== 1 ? 's' : ''}. Only filled fields will be changed.
                 </p>
               </div>
-              <button onClick={() => setShowBulkEditModal(false)} className="p-2 hover:bg-cyan-50/50 rounded-lg transition-colors">
+              <button onClick={() => setShowBulkEditModal(false)} aria-label="Close" className="p-2 hover:bg-cyan-50/50 rounded-lg transition-colors">
                 <X className="w-5 h-5 text-cyan-800 dark:text-white" />
               </button>
             </div>
@@ -914,14 +914,14 @@ export default function AvailabilityManagementPage() {
 
       {/* Edit Slot Modal */}
       {editSlot && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setEditSlot(null)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Edit Time Slot" onClick={() => setEditSlot(null)}>
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-lg w-full p-6" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white">Edit Time Slot</h3>
                 <p className="text-sm text-cyan-800 dark:text-white/70">{formatDate(editSlot.slot_date)}</p>
               </div>
-              <button onClick={() => setEditSlot(null)} className="p-2 hover:bg-cyan-50/50 rounded-lg transition-colors">
+              <button onClick={() => setEditSlot(null)} aria-label="Close" className="p-2 hover:bg-cyan-50/50 rounded-lg transition-colors">
                 <X className="w-5 h-5 text-cyan-800 dark:text-white" />
               </button>
             </div>
