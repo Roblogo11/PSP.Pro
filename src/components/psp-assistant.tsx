@@ -130,6 +130,12 @@ const PAGE_SUGGESTIONS: Record<string, { label: string; query: string }[]> = {
     { label: 'How do I bulk import drills?', query: 'import drill' },
     { label: 'How do I assign drills to athletes?', query: 'assign drill' },
   ],
+  '/admin/org': [
+    { label: 'How do I create an org?', query: 'create organization' },
+    { label: 'How do I invite members?', query: 'invite member org' },
+    { label: 'How do I connect Stripe payouts?', query: 'stripe connect payouts' },
+    { label: 'How does the org landing page work?', query: 'org landing page' },
+  ],
   '/admin/media': [
     { label: 'How do I create a blog post?', query: 'create blog post' },
     { label: 'How do I add images or GIFs?', query: 'add image to blog' },
@@ -807,6 +813,80 @@ const KNOWLEDGE_BASE: KBEntry[] = [
     title: 'Adding Videos to Services',
     response: 'You can attach a demo/promo video to any lesson type:\n\n1. Go to Admin → Lesson Builder\n2. Click Edit on any lesson type\n3. Scroll to the "Video URL" field\n4. Paste a YouTube, Vimeo, or direct video link\n5. Save\n\nThe video will appear on the Pricing page as a play button. Athletes (and visitors) can watch it to see what the training looks like before booking!\n\nThis is great for showcasing your training style and helping athletes choose the right lesson.',
     actions: [{ label: 'Lesson Builder', href: '/admin/services' }],
+    role: 'coach',
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── ORGANIZATIONS / MULTI-TENANT (COACH/ADMIN) ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['organization', 'org', 'academy', 'team org', 'create org', 'organizations', 'white label', 'white-label', 'multi tenant', 'my academy', 'coaching academy', 'training academy'],
+    title: 'Organizations (Multi-Tenant)',
+    response: 'Organizations let you run a fully branded coaching academy under your own name — powered by PSP.Pro behind the scenes!\n\nWhat you can do:\n• Create an org with a custom name, slug, colors, and tagline\n• Get a public landing page at propersports.pro/org/your-slug\n• Invite coaches and athletes as members\n• Connect Stripe to receive automatic split payouts\n• Set white-label branding (primary color, secondary color, logo, about text)\n• Control self-signup and approval settings\n\nWho can create orgs:\n• Coaches, Admins, and Master Admins\n\nFind it:\n• Admin → Organizations (sidebar)\n• Or go to /admin/org directly',
+    actions: [{ label: 'Organizations', href: '/admin/org' }],
+    followUp: ['How do I create an organization?', 'How does the org landing page work?', 'How do I connect Stripe to my org?'],
+    role: 'coach',
+  },
+
+  {
+    keywords: ['create organization', 'new org', 'set up org', 'start academy', 'new academy', 'how to create org'],
+    title: 'Creating an Organization',
+    response: 'Here\'s how to create your own coaching organization:\n\n1. Go to Admin → Organizations (sidebar)\n2. Click the orange "New Org" button\n3. Fill in:\n   • Org Name — e.g., "Elite Athletics Academy"\n   • Slug — auto-generated from name, used in your URL: /org/elite-athletics\n   • Tagline — optional motto or short description\n   • Primary Color — your brand color for buttons and highlights\n   • Secondary Color — accent color\n   • Platform Fee % — PSP keeps this % of each booking (default 15%)\n4. Click "Create Organization"\n\nYou\'re automatically added as the org owner. You can invite coaches and athletes right after!\n\nYour public landing page goes live immediately at:\npropersports.pro/org/your-slug',
+    actions: [{ label: 'Create Org', href: '/admin/org' }],
+    followUp: ['How do I invite members to my org?', 'How do I customize my org branding?', 'How do I connect Stripe payouts?'],
+    role: 'coach',
+  },
+
+  {
+    keywords: ['org landing page', 'org page', 'public org page', 'organization page', 'academy page', 'athlete booking page', 'org booking link'],
+    title: 'Organization Public Landing Page',
+    response: 'Every org gets a branded public landing page athletes can visit — no login required!\n\nYour page lives at:\npropersports.pro/org/your-slug\n\nWhat athletes see:\n• Your org name, tagline, and colors throughout\n• Hero headline and subheadline (set in Branding tab)\n• About section (custom text you write)\n• Your coaches listed with their names and photos\n• "Book Now" button → sends athlete to the booking page with your org ID pre-attached\n• "Join the Team" button (if self-signup is enabled)\n\nHow to customize it:\n1. Go to Admin → Organizations → Branding tab\n2. Update name, tagline, primary/secondary colors\n3. Add a hero headline, subheadline, and about text\n4. Save — changes are live instantly\n\nShare your link on social media, emails, or your own website!',
+    actions: [{ label: 'Organizations', href: '/admin/org' }],
+    followUp: ['How do I edit my org branding?', 'How do I add coaches to my org?', 'How does booking work for my org?'],
+    role: 'coach',
+  },
+
+  {
+    keywords: ['invite member', 'add member org', 'add coach to org', 'add athlete to org', 'org members', 'team members', 'manage org members'],
+    title: 'Inviting Members to Your Org',
+    response: 'You can add coaches and athletes directly to your organization:\n\n1. Go to Admin → Organizations\n2. Select your org from the left\n3. Click the "Members" tab\n4. In the "Add Member" form:\n   • Enter their email address\n   • Choose a role: Athlete, Coach, or Admin\n   • Click "Add"\n\nThe member is added instantly (they need an existing PSP.Pro account).\n\nMember roles:\n• Owner — full control (that\'s you)\n• Admin — can manage org settings and members\n• Coach — can run sessions and view athletes in the org\n• Athlete — can book sessions scoped to your org\n\nTo remove a member, click the X next to their name in the member list.\n\nNote: Only active PSP.Pro accounts can be added. Athletes without accounts should sign up at /signup first.',
+    actions: [{ label: 'Manage Org Members', href: '/admin/org' }],
+    followUp: ['How do I remove a member?', 'What can coaches in my org do?', 'How do I set up payouts?'],
+    role: 'coach',
+  },
+
+  {
+    keywords: ['org branding', 'customize org', 'org colors', 'white label branding', 'brand my org', 'org logo', 'org tagline', 'org hero', 'org about text'],
+    title: 'Customizing Org Branding',
+    response: 'Your org can have completely custom branding — colors, name, tagline, and more!\n\n1. Go to Admin → Organizations → Branding tab\n2. Update:\n   • Org Name — shown on your landing page header\n   • Tagline — short motto shown under your name\n   • Primary Color — buttons, accents, and highlights on your landing page\n   • Secondary Color — secondary text, links, and sport badges\n3. You\'ll see a live preview at the bottom showing how it looks\n4. Click "Save Branding"\n\nAdvanced branding (set via the PATCH API or future settings):\n• Hero Headline — big text at the top of your landing page\n• Hero Subheadline — subtitle under the hero\n• About Text — paragraph about your academy\n• Logo URL — image shown in the header\n\nColors affect your public landing page at propersports.pro/org/your-slug. Each org can have totally different colors!',
+    actions: [{ label: 'Org Branding', href: '/admin/org' }],
+    followUp: ['How do I update my org landing page?', 'How do I add a logo?', 'Where is my org page?'],
+    role: 'coach',
+  },
+
+  {
+    keywords: ['stripe connect', 'connect stripe', 'payouts', 'org payouts', 'split payment', 'receive payment', 'payout account', 'bank account', 'connect bank', 'coach payout', 'revenue split', 'platform fee', 'how do i get paid'],
+    title: 'Stripe Connect & Org Payouts',
+    response: 'Connect your Stripe account to automatically receive your share of every booking payment!\n\nHow it works:\n1. Athlete pays the full session price at checkout\n2. PSP platform fee is automatically deducted (default 15%)\n3. The remainder is automatically transferred to your bank via Stripe\n4. A payout ledger entry is recorded for your records\n\nHow to connect:\n1. Go to Admin → Organizations → Payouts tab\n2. Click "Connect Stripe Account"\n3. You\'ll be redirected to Stripe Express onboarding (~5 minutes)\n4. Enter your business info and bank account\n5. After completing, you\'ll return to PSP.Pro with status "Connected"\n\nSplit example (with 15% platform fee):\n• Athlete pays $75 for a session\n• PSP keeps $11.25 (15%)\n• You receive $63.75 (85%)\n\nChecking your status:\n• Payouts tab shows "Connected" with your revenue % and Stripe account ID\n• Payouts typically arrive in 2 business days\n\nIf you don\'t connect Stripe, all payments go to PSP.Pro (normal flow).',
+    actions: [{ label: 'Org Payouts', href: '/admin/org' }],
+    followUp: ['How much do I keep from each booking?', 'What is the platform fee?', 'How do I set up an org?'],
+    role: 'coach',
+  },
+
+  {
+    keywords: ['org settings', 'organization settings', 'self signup org', 'require approval', 'org self signup', 'deactivate org', 'org active'],
+    title: 'Organization Settings',
+    response: 'Control how your org works from the Settings tab:\n\n⚙️ Allow Self-Signup\n• When ON: Athletes can join your org without an invite\n• When OFF: Only invited members can join\n• Toggle instantly — changes are immediate\n\n✅ Require Coach Approval\n• When ON: New athletes must be approved before accessing org content\n• When OFF: Athletes can self-join and get instant access\n• Good for keeping your roster tight and high-quality\n\nDanger Zone (Master Admin only):\n• Deactivate Organization — disables the org and removes the public landing page\n• This does NOT delete data — it just makes the org inactive\n\nYou can find Settings by:\n1. Going to Admin → Organizations\n2. Selecting your org\n3. Clicking the "Settings" tab',
+    actions: [{ label: 'Org Settings', href: '/admin/org' }],
+    role: 'coach',
+  },
+
+  {
+    keywords: ['org booking', 'book through org', 'org athlete booking', 'book for org athlete', 'org checkout', 'org session', 'booking my org'],
+    title: 'Bookings Through Your Org',
+    response: 'When athletes book from your org\'s landing page, their bookings are automatically tagged to your org!\n\nHere\'s the full flow:\n1. Athlete visits propersports.pro/org/your-slug\n2. Clicks "Book Now"\n3. Booking page opens with your org ID pre-attached (?org=your-org-id)\n4. Athlete selects service, date, time, and pays\n5. Booking is saved in the database tagged to your org\n6. If you have Stripe Connect enabled, the payout split happens automatically\n\nYou can see org-tagged bookings in:\n• Admin → Calendar (Confirm/Book) — your normal booking management page\n\nThe org system is additive — all existing booking features (confirm, notes, metrics, complete, cancel) work exactly the same. Org just adds attribution and split payments on top.',
+    actions: [{ label: 'Calendar', href: '/admin/bookings' }, { label: 'Organizations', href: '/admin/org' }],
+    followUp: ['How do Stripe payouts work?', 'How do I confirm bookings?', 'How do I view my org page?'],
     role: 'coach',
   },
 ]
