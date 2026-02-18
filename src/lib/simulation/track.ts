@@ -35,11 +35,14 @@ export async function trackSimulationData(
   if (!isSimulationActive()) return
 
   try {
-    await fetch('/api/admin/simulation/track', {
+    const res = await fetch('/api/admin/simulation/track', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ tableName, recordId }),
     })
+    if (!res.ok) {
+      console.error('Simulation tracking failed:', res.status)
+    }
   } catch {
     // Non-critical — don't break the user flow
   }

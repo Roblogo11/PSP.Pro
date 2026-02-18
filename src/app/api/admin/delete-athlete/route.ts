@@ -1,5 +1,5 @@
-import { createClient } from '@supabase/supabase-js'
 import { createClient as createServerClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function DELETE(request: NextRequest) {
@@ -16,16 +16,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Create Supabase admin client with service role (also used for role check to bypass RLS)
-    const supabaseAdmin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false,
-        },
-      }
-    )
+    const supabaseAdmin = createAdminClient()
 
     const { data: profile } = await supabaseAdmin
       .from('profiles')

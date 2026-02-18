@@ -1,19 +1,6 @@
-import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase/server'
-
-function getAdminClient() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-      },
-    }
-  )
-}
+import { createAdminClient } from '@/lib/supabase/admin'
 
 interface ScheduleEntry {
   date: string       // "2026-02-11"
@@ -56,7 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Use admin client for role check (bypasses RLS timing)
-    const adminClient = getAdminClient()
+    const adminClient = createAdminClient()
     const { data: profile } = await adminClient
       .from('profiles')
       .select('role')

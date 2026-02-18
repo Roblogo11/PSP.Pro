@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 
 export default function SettingsPage() {
-  const { profile, loading: profileLoading } = useUserRole()
+  const { profile, loading: profileLoading, isImpersonating } = useUserRole()
   const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'security' | 'billing'>('profile')
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
@@ -64,7 +64,7 @@ export default function SettingsPage() {
   }
 
   const handleSaveProfile = async () => {
-    if (!profile) return
+    if (!profile || isImpersonating) return
 
     setSaving(true)
     setSaveSuccess(false)
@@ -106,7 +106,7 @@ export default function SettingsPage() {
   }
 
   const handleSaveNotifications = async () => {
-    if (!profile) return
+    if (!profile || isImpersonating) return
 
     setSaving(true)
     setSaveSuccess(false)
@@ -309,11 +309,11 @@ export default function SettingsPage() {
                 <div className="pt-4">
                   <button
                     onClick={handleSaveProfile}
-                    disabled={saving}
+                    disabled={saving || isImpersonating}
                     className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     <Save className="w-5 h-5" />
-                    {saving ? 'Saving...' : 'Save Changes'}
+                    {isImpersonating ? 'Read-only mode' : saving ? 'Saving...' : 'Save Changes'}
                   </button>
                 </div>
               </div>
@@ -374,11 +374,11 @@ export default function SettingsPage() {
                 <div className="pt-4">
                   <button
                     onClick={handleSaveNotifications}
-                    disabled={saving}
+                    disabled={saving || isImpersonating}
                     className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     <Save className="w-5 h-5" />
-                    {saving ? 'Saving...' : 'Save Preferences'}
+                    {isImpersonating ? 'Read-only mode' : saving ? 'Saving...' : 'Save Preferences'}
                   </button>
                 </div>
               </div>

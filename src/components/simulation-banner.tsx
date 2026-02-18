@@ -29,15 +29,21 @@ export function SimulationBanner() {
       const simulationId = simIdCookie?.split('=')[1]
 
       // End the simulation (clears cookies)
-      await fetch('/api/admin/simulation', { method: 'DELETE' })
+      const endRes = await fetch('/api/admin/simulation', { method: 'DELETE' })
+      if (!endRes.ok) {
+        console.error('Failed to end simulation:', await endRes.text())
+      }
 
       // Clean up simulation data if we have a session ID
       if (simulationId) {
-        await fetch('/api/admin/simulation/cleanup', {
+        const cleanupRes = await fetch('/api/admin/simulation/cleanup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ simulationId }),
         })
+        if (!cleanupRes.ok) {
+          console.error('Failed to cleanup simulation:', await cleanupRes.text())
+        }
       }
 
       window.location.reload()

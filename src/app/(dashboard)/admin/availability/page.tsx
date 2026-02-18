@@ -5,9 +5,13 @@ import { createClient } from '@/lib/supabase/client'
 import { getLocalDateString } from '@/lib/utils/local-date'
 import { Plus, Calendar, MapPin, Trash2, Loader2, Repeat, Edit2, X, AlertTriangle, UserPlus, CheckSquare, Square } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useUserRole } from '@/lib/hooks/use-user-role'
 
 export default function AvailabilityManagementPage() {
   const supabase = createClient()
+  const router = useRouter()
+  const { isCoach, isAdmin, loading: roleLoading } = useUserRole()
   const [slots, setSlots] = useState<any[]>([])
   const [services, setServices] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -54,6 +58,13 @@ export default function AvailabilityManagementPage() {
     repeatFrequency: 'weekly' as 'weekly' | 'monthly',
     repeatCount: 4,
   })
+
+  // Redirect non-staff users
+  useEffect(() => {
+    if (!roleLoading && !isCoach && !isAdmin) {
+      router.push('/locker')
+    }
+  }, [roleLoading, isCoach, isAdmin, router])
 
   useEffect(() => {
     const init = async () => {

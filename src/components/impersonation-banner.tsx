@@ -24,7 +24,10 @@ export function ImpersonationBanner() {
   const handleExit = async () => {
     setExiting(true)
     try {
-      await fetch('/api/admin/impersonation', { method: 'DELETE' })
+      const res = await fetch('/api/admin/impersonation', { method: 'DELETE' })
+      if (!res.ok) {
+        console.error('Failed to exit impersonation:', await res.text())
+      }
       window.location.href = '/admin'
     } catch {
       setExiting(false)
