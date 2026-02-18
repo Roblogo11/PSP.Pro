@@ -35,6 +35,7 @@ export default function BookingPage() {
   const canceled = searchParams.get('canceled')
   const preselectedServiceId = searchParams.get('service')
   const preselectedCoachId = searchParams.get('coach')
+  const orgId = searchParams.get('org')
 
   // Fetch services on mount
   useEffect(() => {
@@ -190,6 +191,7 @@ export default function BookingPage() {
             durationMinutes: service.duration_minutes,
             location: slot.location,
             coachId: slot.coach_id,
+            ...(orgId && { orgId }),
           }),
         })
 
@@ -215,6 +217,7 @@ export default function BookingPage() {
               endTime: slot.end_time,
               durationMinutes: service.duration_minutes,
               location: slot.location,
+              ...(orgId && { orgId }),
             },
           }),
         })
