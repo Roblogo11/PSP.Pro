@@ -1,5 +1,32 @@
 // Email templates for booking notifications
 
+// Shared email footer with CAN-SPAM required elements
+function getEmailFooter(unsubscribeUrl?: string): string {
+  const unsubRow = unsubscribeUrl
+    ? `<tr><td style="padding: 8px 0 0; text-align: center;"><a href="${unsubscribeUrl}" style="font-size: 11px; color: rgba(255,255,255,0.3); text-decoration: underline;">Unsubscribe from emails</a></td></tr>`
+    : ''
+  return `
+    <tr>
+      <td style="padding: 30px; text-align: center; background: rgba(0, 0, 0, 0.3); border-top: 1px solid rgba(255, 255, 255, 0.1);">
+        <table width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="text-align: center;">
+              <p style="margin: 0; font-size: 12px; color: rgba(255, 255, 255, 0.4);">
+                © ${new Date().getFullYear()} Proper Sports Performance | Virginia Beach, VA
+              </p>
+              <p style="margin: 6px 0 0; font-size: 11px; color: rgba(255, 255, 255, 0.3);">
+                <a href="mailto:support@propersports.pro" style="color: #00B4D8; text-decoration: none;">support@propersports.pro</a>
+                &nbsp;·&nbsp;
+                <a href="https://propersports.pro/privacy" style="color: rgba(255,255,255,0.3); text-decoration: none;">Privacy Policy</a>
+              </p>
+            </td>
+          </tr>
+          ${unsubRow}
+        </table>
+      </td>
+    </tr>`
+}
+
 interface BookingEmailData {
   athleteName: string
   athleteEmail: string
@@ -11,6 +38,7 @@ interface BookingEmailData {
   location: string
   amount: string
   confirmationId: string
+  unsubscribeUrl?: string
 }
 
 export function getBookingConfirmationEmail(data: BookingEmailData) {
@@ -118,19 +146,15 @@ export function getBookingConfirmationEmail(data: BookingEmailData) {
       </td>
     </tr>
 
-    <!-- Footer -->
+    <!-- Need help row -->
     <tr>
-      <td style="padding: 30px; text-align: center; background: rgba(0, 0, 0, 0.3); border-top: 1px solid rgba(255, 255, 255, 0.1);">
-        <p style="margin: 0 0 8px; font-size: 14px; color: rgba(255, 255, 255, 0.7);">Need to make changes?</p>
+      <td style="padding: 0 30px 10px; text-align: center;">
         <p style="margin: 0; font-size: 14px; color: rgba(255, 255, 255, 0.5);">
-          Contact us at <a href="mailto:support@propersports.pro" style="color: #00B4D8; text-decoration: none;">support@propersports.pro</a>
-        </p>
-        <p style="margin: 16px 0 0; font-size: 12px; color: rgba(255, 255, 255, 0.4);">
-          © ${new Date().getFullYear()} Proper Sports Performance<br/>
-          Virginia Beach, VA
+          Need to make changes? <a href="mailto:support@propersports.pro" style="color: #00B4D8; text-decoration: none;">support@propersports.pro</a>
         </p>
       </td>
     </tr>
+    ${getEmailFooter(data.unsubscribeUrl)}
   </table>
 </body>
 </html>
@@ -242,16 +266,13 @@ export function getPayOnSiteBookingEmail(data: BookingEmailData) {
       </td>
     </tr>
     <tr>
-      <td style="padding: 30px; text-align: center; background: rgba(0, 0, 0, 0.3); border-top: 1px solid rgba(255, 255, 255, 0.1);">
-        <p style="margin: 0 0 8px; font-size: 14px; color: rgba(255, 255, 255, 0.7);">Need to make changes?</p>
+      <td style="padding: 0 30px 10px; text-align: center;">
         <p style="margin: 0; font-size: 14px; color: rgba(255, 255, 255, 0.5);">
-          Contact us at <a href="mailto:support@propersports.pro" style="color: #00B4D8; text-decoration: none;">support@propersports.pro</a>
-        </p>
-        <p style="margin: 16px 0 0; font-size: 12px; color: rgba(255, 255, 255, 0.4);">
-          © ${new Date().getFullYear()} Proper Sports Performance<br/>Virginia Beach, VA
+          Need to make changes? <a href="mailto:support@propersports.pro" style="color: #00B4D8; text-decoration: none;">support@propersports.pro</a>
         </p>
       </td>
     </tr>
+    ${getEmailFooter(data.unsubscribeUrl)}
   </table>
 </body>
 </html>
@@ -362,13 +383,7 @@ export function getCoachNewBookingEmail(data: CoachNotificationData) {
         <a href="https://propersports.pro/admin/bookings" style="display: inline-block; padding: 16px 32px; background: linear-gradient(135deg, #FF4B2B 0%, #FF7F50 100%); color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 600;">View Bookings</a>
       </td>
     </tr>
-    <tr>
-      <td style="padding: 30px; text-align: center; background: rgba(0, 0, 0, 0.3); border-top: 1px solid rgba(255, 255, 255, 0.1);">
-        <p style="margin: 0; font-size: 12px; color: rgba(255, 255, 255, 0.4);">
-          © ${new Date().getFullYear()} Proper Sports Performance
-        </p>
-      </td>
-    </tr>
+    ${getEmailFooter()}
   </table>
 </body>
 </html>
@@ -423,13 +438,7 @@ export function getBookingCancellationEmail(data: BookingEmailData) {
         <a href="https://propersports.pro/booking" style="display: inline-block; padding: 16px 32px; background: linear-gradient(135deg, #FF4B2B 0%, #FF7F50 100%); color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 600;">Book Another Session</a>
       </td>
     </tr>
-    <tr>
-      <td style="padding: 30px; text-align: center; background: rgba(0, 0, 0, 0.3);">
-        <p style="margin: 0; font-size: 12px; color: rgba(255, 255, 255, 0.5);">
-          © ${new Date().getFullYear()} Proper Sports Performance
-        </p>
-      </td>
-    </tr>
+    ${getEmailFooter(data.unsubscribeUrl)}
   </table>
 </body>
 </html>
@@ -448,7 +457,111 @@ Cancelled Session:
 
 Book another session: https://propersports.pro/booking
 
-© ${new Date().getFullYear()} Proper Sports Performance
+© ${new Date().getFullYear()} Proper Sports Performance | Virginia Beach, VA
+    `.trim(),
+  }
+}
+
+// ── Parent/Guardian Notification (COPPA) ────────────────────
+interface ParentNotificationData {
+  parentName: string
+  parentEmail: string
+  athleteName: string
+  athleteAge: number
+}
+
+export function getParentNotificationEmail(data: ParentNotificationData) {
+  return {
+    subject: `Your athlete joined PSP.Pro — important account notice`,
+    html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parent/Guardian Notification</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #004663 0%, #0088AB 100%); color: #ffffff;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 40px auto; background: rgba(255, 255, 255, 0.05); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1);">
+    <!-- Header -->
+    <tr>
+      <td style="padding: 40px 30px; text-align: center; background: linear-gradient(135deg, rgba(0, 180, 216, 0.2) 0%, rgba(255, 75, 43, 0.1) 100%);">
+        <h1 style="margin: 0; font-size: 32px; font-weight: bold; color: #ffffff;">PSP.Pro</h1>
+        <p style="margin: 8px 0 0; font-size: 14px; color: rgba(255,255,255,0.7); letter-spacing: 0.2em; text-transform: uppercase;">Parent/Guardian Notice</p>
+      </td>
+    </tr>
+
+    <!-- Body -->
+    <tr>
+      <td style="padding: 30px;">
+        <h2 style="margin: 0 0 16px; font-size: 22px; color: #ffffff;">Hi ${data.parentName},</h2>
+        <p style="margin: 0 0 16px; font-size: 15px; color: rgba(255,255,255,0.85); line-height: 1.6;">
+          We're letting you know that <strong style="color:#ffffff;">${data.athleteName}</strong> (age ${data.athleteAge})
+          recently created an account on <strong style="color:#00B4D8;">PSP.Pro</strong> —
+          Proper Sports Performance's athlete training platform.
+        </p>
+        <p style="margin: 0 0 20px; font-size: 15px; color: rgba(255,255,255,0.85); line-height: 1.6;">
+          As the parent or guardian you provided, we wanted to inform you of the account and the information collected.
+        </p>
+
+        <!-- What we collected -->
+        <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1);">
+          <h3 style="margin: 0 0 12px; font-size: 16px; color: #00B4D8;">Information collected at signup:</h3>
+          <ul style="margin: 0; padding: 0 0 0 20px; color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.8;">
+            <li>Name and email address</li>
+            <li>Age (${data.athleteAge})</li>
+            <li>Primary sport(s) selection</li>
+            <li>Your name, email, and phone as parent/guardian</li>
+          </ul>
+          <p style="margin: 12px 0 0; font-size: 13px; color: rgba(255,255,255,0.5);">
+            We do <strong>not</strong> sell personal data to third parties. Data is used solely to provide training services.
+          </p>
+        </div>
+
+        <!-- Action info -->
+        <div style="background: rgba(255,75,43,0.1); border-radius: 12px; padding: 16px; border: 1px solid rgba(255,75,43,0.3);">
+          <p style="margin: 0; font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.6;">
+            <strong style="color:#FF4B2B;">If you did not authorize this account,</strong> or wish to have it removed,
+            please contact us immediately at
+            <a href="mailto:privacy@propersports.pro" style="color: #00B4D8; text-decoration: none;">privacy@propersports.pro</a>
+            and we will delete the account and all associated data within 48 hours.
+          </p>
+        </div>
+      </td>
+    </tr>
+
+    <!-- Links -->
+    <tr>
+      <td style="padding: 0 30px 20px; text-align: center;">
+        <a href="https://propersports.pro/privacy" style="display: inline-block; padding: 12px 24px; background: rgba(0,180,216,0.2); color: #00B4D8; text-decoration: none; border-radius: 8px; font-size: 14px; border: 1px solid rgba(0,180,216,0.3);">View Privacy Policy</a>
+      </td>
+    </tr>
+
+    ${getEmailFooter()}
+  </table>
+</body>
+</html>
+    `,
+    text: `
+Hi ${data.parentName},
+
+This is a notification from PSP.Pro (Proper Sports Performance).
+
+Your athlete, ${data.athleteName} (age ${data.athleteAge}), recently created an account on PSP.Pro — our athlete training platform. Your contact information was provided as their parent/guardian.
+
+Information collected at signup:
+- Name and email address
+- Age (${data.athleteAge})
+- Primary sport(s) selection
+- Your name, email, and phone as parent/guardian
+
+We do not sell personal data to third parties.
+
+IF YOU DID NOT AUTHORIZE THIS ACCOUNT: Please contact us immediately at privacy@propersports.pro and we will delete the account and all data within 48 hours.
+
+Privacy Policy: https://propersports.pro/privacy
+
+© ${new Date().getFullYear()} Proper Sports Performance | Virginia Beach, VA
     `.trim(),
   }
 }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { verifyUnsubscribeToken } from '@/lib/email/unsubscribe-token'
 
 export async function POST(request: NextRequest) {
   try {
@@ -43,5 +44,33 @@ export async function POST(request: NextRequest) {
       { error: 'Internal server error' },
       { status: 500 }
     )
+  }
+}
+
+// DELETE /api/newsletter?email=...&token=... — unsubscribe (CAN-SPAM compliant)
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const email = searchParams.get('email')
+    const token = searchParams.get('token')
+
+    if (!email || !token) {
+      return NextResponse.json({ error: 'Missing email or token' }, { status: 400 })
+    }
+
+    if (!verifyUnsubscribeToken(email, token)) {
+      return NextResponse.json({ error: 'Invalid unsubscribe token' }, { status: 403 })
+    }
+
+    const supabase = createAdminClient()
+    await supabase
+      .from('newsletter_subscribers')
+      .update({ is_active: false, unsubscribed_at: new Date().toISOString() })
+      .eq('email', email.toLowerCase().trim())
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Newsletter unsubscribe error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

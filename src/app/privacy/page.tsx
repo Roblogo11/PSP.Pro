@@ -94,34 +94,87 @@ export default function PrivacyPage() {
           <ul className="list-disc list-inside text-cyan-700 dark:text-white space-y-2 ml-4">
             <li>Access your personal information</li>
             <li>Correct inaccurate information</li>
-            <li>Request deletion of your information</li>
-            <li>Opt-out of marketing communications</li>
-            <li>Export your performance data</li>
+            <li>Request deletion of your account and all associated data</li>
+            <li>Opt-out of marketing communications at any time</li>
+            <li>Export a copy of your personal data in portable format</li>
           </ul>
           <p className="text-cyan-700 dark:text-white leading-relaxed mt-4">
-            To exercise these rights, contact us at{' '}
+            Logged-in users can exercise these rights directly in{' '}
+            <Link href="/settings?tab=privacy" className="text-cyan hover:underline">
+              Settings → Privacy &amp; Data
+            </Link>
+            . You can download your data, manage marketing preferences, or permanently delete your account there.
+            You may also contact us at{' '}
             <a href="mailto:privacy@propersports.pro" className="text-cyan hover:underline">
               privacy@propersports.pro
+            </a>{' '}
+            for manual assistance.
+          </p>
+        </section>
+
+        <section id="ccpa">
+          <h2 className="text-2xl font-bold text-white mb-4">7. California Privacy Rights (CCPA/CPRA)</h2>
+          <p className="text-cyan-700 dark:text-white leading-relaxed mb-4">
+            If you are a California resident, you have the following rights under the California Consumer Privacy Act (CCPA) and California Privacy Rights Act (CPRA):
+          </p>
+          <ul className="list-disc list-inside text-cyan-700 dark:text-white space-y-2 ml-4">
+            <li><strong className="text-white">Right to Know:</strong> Request disclosure of the personal information we collect, use, or share</li>
+            <li><strong className="text-white">Right to Delete:</strong> Request deletion of your personal information</li>
+            <li><strong className="text-white">Right to Correct:</strong> Request correction of inaccurate personal information</li>
+            <li><strong className="text-white">Right to Opt-Out:</strong> Opt-out of the sale or sharing of personal information</li>
+            <li><strong className="text-white">Right to Non-Discrimination:</strong> We will not discriminate against you for exercising your rights</li>
+          </ul>
+          <p className="text-cyan-700 dark:text-white leading-relaxed mt-4">
+            <strong className="text-white">We do not sell your personal information</strong> to third parties, and we do not share it for cross-context behavioral advertising.
+          </p>
+          <p className="text-cyan-700 dark:text-white leading-relaxed mt-4">
+            To exercise your California privacy rights, visit{' '}
+            <Link href="/settings?tab=privacy" className="text-cyan hover:underline">
+              Settings → Privacy &amp; Data
+            </Link>{' '}
+            or contact{' '}
+            <a href="mailto:privacy@propersports.pro" className="text-cyan hover:underline">
+              privacy@propersports.pro
+            </a>.{' '}
+            <a href="#do-not-sell" className="text-cyan hover:underline">
+              Do Not Sell or Share My Personal Information
             </a>
           </p>
+          <div id="do-not-sell" className="mt-4 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+            <p className="text-sm text-cyan-700 dark:text-white">
+              <strong className="text-white">Do Not Sell or Share:</strong> PSP.Pro does not sell or share personal information. If you still wish to opt out of any future data sharing, email{' '}
+              <a href="mailto:privacy@propersports.pro" className="text-cyan hover:underline">privacy@propersports.pro</a>{' '}
+              with subject "Do Not Sell — California Opt-Out".
+            </p>
+          </div>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-white mb-4">7. Cookies and Tracking</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">8. Cookies and Tracking</h2>
           <p className="text-cyan-700 dark:text-white leading-relaxed">
-            We use cookies and similar tracking technologies to track activity on our platform and store certain information. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent.
+            We use essential cookies for authentication and session management (required for the platform to function).
+            We may use optional analytics cookies to improve your experience. You can manage your cookie preferences
+            using the cookie consent banner when you first visit the site, or by contacting us.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-white mb-4">8. Children's Privacy</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">9. Children's Privacy (COPPA)</h2>
           <p className="text-cyan-700 dark:text-white leading-relaxed">
-            Our services are used by athletes of all ages, including minors. If you are under 18, you must have parental or guardian consent to use our services. We do not knowingly collect information from children under 13 without parental consent.
+            Our services are used by athletes of all ages, including minors. Athletes under 13 may not self-register
+            and must be enrolled directly by a coach or admin. Athletes ages 13–17 must provide parent or guardian
+            contact information at signup, and we notify the parent or guardian when an account is created.
+            We do not use minor athletes' data for marketing or share it with third parties.
+            Parents may contact{' '}
+            <a href="mailto:privacy@propersports.pro" className="text-cyan hover:underline">
+              privacy@propersports.pro
+            </a>{' '}
+            to review, correct, or delete their child's information at any time.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-white mb-4">9. Changes to This Policy</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">10. Changes to This Policy</h2>
           <p className="text-cyan-700 dark:text-white leading-relaxed">
             We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.
           </p>

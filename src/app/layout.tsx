@@ -11,6 +11,7 @@ import { StripeTestBanner } from '@/components/stripe-test-banner'
 import { SimulationBanner } from '@/components/simulation-banner'
 import { ImpersonationBanner } from '@/components/impersonation-banner'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { CookieConsent } from '@/components/cookie-consent'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -123,6 +124,7 @@ export default function RootLayout({
           <SimulationBanner />
           <ImpersonationBanner />
           <StripeTestBanner />
+          <CookieConsent />
           <AthleticOSBackground />
           <CommandPalette />
           <PSPAssistant />

@@ -1,14 +1,20 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { User, Bell, Lock, CreditCard, Mail, Phone, MapPin, Save, Check, Medal } from 'lucide-react'
+import { User, Bell, Lock, CreditCard, Mail, Phone, MapPin, Save, Check, Medal, ShieldCheck, Download, Trash2, AlertTriangle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { toastError } from '@/lib/toast'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 
-export default function SettingsPage() {
+function SettingsInner() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const { profile, loading: profileLoading, isImpersonating } = useUserRole()
-  const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'security' | 'billing'>('profile')
+  const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'security' | 'billing' | 'privacy'>(
+    (searchParams.get('tab') as any) || 'profile'
+  )
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
 
@@ -19,6 +25,15 @@ export default function SettingsPage() {
   const [location, setLocation] = useState('')
   const [leaderboardOptIn, setLeaderboardOptIn] = useState(false)
   const [region, setRegion] = useState('')
+
+  // Privacy tab state
+  const [newsletterConsent, setNewsletterConsent] = useState(false)
+  const [savingConsent, setSavingConsent] = useState(false)
+  const [consentSaved, setConsentSaved] = useState(false)
+  const [deleteConfirmEmail, setDeleteConfirmEmail] = useState('')
+  const [deleting, setDeleting] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [exporting, setExporting] = useState(false)
 
   // Notification preferences
   const [notifications, setNotifications] = useState({
@@ -46,7 +61,7 @@ export default function SettingsPage() {
       const supabase = createClient()
       const { data } = await supabase
         .from('profiles')
-        .select('phone, location, notification_preferences, leaderboard_opt_in, region')
+        .select('phone, location, notification_preferences, leaderboard_opt_in, region, newsletter_consent')
         .eq('id', profile.id)
         .single()
 
@@ -55,6 +70,7 @@ export default function SettingsPage() {
         setLocation(data.location || '')
         setLeaderboardOptIn(data.leaderboard_opt_in || false)
         setRegion(data.region || '')
+        setNewsletterConsent(data.newsletter_consent || false)
         if (data.notification_preferences) {
           setNotifications(data.notification_preferences)
         }
@@ -135,6 +151,56 @@ export default function SettingsPage() {
     }
   }
 
+  const handleSaveConsent = async () => {
+    if (!profile || isImpersonating) return
+    setSavingConsent(true)
+    try {
+      const supabase = createClient()
+      await supabase.from('profiles').update({ newsletter_consent: newsletterConsent }).eq('id', profile.id)
+      setConsentSaved(true)
+      setTimeout(() => setConsentSaved(false), 3000)
+    } catch (err: any) {
+      toastError('Failed to save preferences')
+    } finally {
+      setSavingConsent(false)
+    }
+  }
+
+  const handleExportData = async () => {
+    setExporting(true)
+    try {
+      const res = await fetch('/api/auth/export-data')
+      if (!res.ok) throw new Error('Export failed')
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `psp-data-export-${new Date().toISOString().split('T')[0]}.json`
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch (err: any) {
+      toastError('Failed to export data')
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  const handleDeleteAccount = async () => {
+    if (!profile || deleteConfirmEmail !== profile.email) return
+    setDeleting(true)
+    try {
+      const res = await fetch('/api/auth/delete-account', { method: 'POST' })
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Delete failed')
+      }
+      router.push('/?deleted=true')
+    } catch (err: any) {
+      toastError(err.message || 'Failed to delete account')
+      setDeleting(false)
+    }
+  }
+
   if (profileLoading) {
     return (
       <div className="min-h-screen px-3 py-4 md:p-8 flex items-center justify-center">
@@ -159,6 +225,7 @@ export default function SettingsPage() {
     { id: 'notifications', label: 'Notifications', icon: Bell },
     { id: 'security', label: 'Security', icon: Lock },
     { id: 'billing', label: 'Billing', icon: CreditCard },
+    { id: 'privacy', label: 'Privacy & Data', icon: ShieldCheck },
   ]
 
   return (
@@ -411,8 +478,136 @@ export default function SettingsPage() {
               </div>
             </div>
           )}
+
+          {activeTab === 'privacy' && (
+            <div className="command-panel space-y-8">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Privacy & Data</h2>
+
+              {/* Your Rights */}
+              <section>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                  <ShieldCheck className="w-5 h-5 text-cyan" />
+                  Your Data Rights
+                </h3>
+                <ul className="space-y-2 text-sm text-cyan-700 dark:text-white/80">
+                  <li>✓ Access — download a copy of all your data below</li>
+                  <li>✓ Correction — update your profile in the Profile tab</li>
+                  <li>✓ Deletion — permanently delete your account below</li>
+                  <li>✓ Portability — export your data in JSON format</li>
+                  <li>✓ Opt-out — manage marketing preferences below</li>
+                </ul>
+              </section>
+
+              {/* Marketing Preferences */}
+              <section className="border-t border-white/10 pt-6">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Marketing Preferences</h3>
+                <div className="flex items-center justify-between p-4 bg-cyan-900/20 rounded-xl mb-4">
+                  <div>
+                    <h4 className="font-semibold text-slate-900 dark:text-white mb-1">Training Tips & Updates</h4>
+                    <p className="text-sm text-cyan-800 dark:text-white/70">Receive news, tips, and updates from PSP.Pro</p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={newsletterConsent}
+                      onChange={(e) => setNewsletterConsent(e.target.checked)}
+                      disabled={isImpersonating}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-cyan-800/30 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange"></div>
+                  </label>
+                </div>
+                <button
+                  onClick={handleSaveConsent}
+                  disabled={savingConsent || isImpersonating}
+                  className="btn-primary flex items-center gap-2 disabled:opacity-50"
+                >
+                  {consentSaved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
+                  {consentSaved ? 'Saved!' : savingConsent ? 'Saving...' : 'Save Preferences'}
+                </button>
+              </section>
+
+              {/* Download Data */}
+              <section className="border-t border-white/10 pt-6">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">Download Your Data</h3>
+                <p className="text-sm text-cyan-700 dark:text-white/70 mb-4">
+                  Export a copy of all your personal data, bookings, performance metrics, and account info as a JSON file.
+                </p>
+                <button
+                  onClick={handleExportData}
+                  disabled={exporting || isImpersonating}
+                  className="flex items-center gap-2 px-5 py-2.5 bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 rounded-xl hover:bg-cyan-500/30 transition-colors disabled:opacity-50 text-sm font-semibold"
+                >
+                  <Download className="w-4 h-4" />
+                  {exporting ? 'Preparing export...' : 'Download My Data (JSON)'}
+                </button>
+              </section>
+
+              {/* Delete Account */}
+              <section className="border-t border-red-500/20 pt-6">
+                <h3 className="text-lg font-semibold text-red-400 mb-2 flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5" />
+                  Danger Zone
+                </h3>
+                <p className="text-sm text-white/60 mb-4">
+                  Permanently delete your account and all associated data. This cannot be undone.
+                </p>
+                {!showDeleteModal ? (
+                  <button
+                    onClick={() => setShowDeleteModal(true)}
+                    disabled={isImpersonating}
+                    className="flex items-center gap-2 px-5 py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl hover:bg-red-500/20 transition-colors disabled:opacity-50 text-sm font-semibold"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Delete My Account
+                  </button>
+                ) : (
+                  <div className="p-5 bg-red-500/10 border border-red-500/30 rounded-xl space-y-4">
+                    <p className="text-sm text-red-300 font-semibold">
+                      This will permanently delete your account and all data. Type your email address to confirm:
+                    </p>
+                    <input
+                      type="email"
+                      value={deleteConfirmEmail}
+                      onChange={(e) => setDeleteConfirmEmail(e.target.value)}
+                      placeholder={profile.email || 'your@email.com'}
+                      className="w-full px-4 py-2.5 bg-black/20 border border-red-500/30 rounded-xl text-white focus:border-red-400 focus:outline-none text-sm"
+                    />
+                    <div className="flex gap-3">
+                      <button
+                        onClick={handleDeleteAccount}
+                        disabled={deleting || deleteConfirmEmail !== profile.email}
+                        className="flex items-center gap-2 px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        {deleting ? 'Deleting...' : 'Permanently Delete Account'}
+                      </button>
+                      <button
+                        onClick={() => { setShowDeleteModal(false); setDeleteConfirmEmail('') }}
+                        className="px-5 py-2 bg-white/5 border border-white/10 text-white/70 rounded-xl text-sm hover:bg-white/10 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </section>
+            </div>
+          )}
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SettingsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <SettingsInner />
+    </Suspense>
   )
 }

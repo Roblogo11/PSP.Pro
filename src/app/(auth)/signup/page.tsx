@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Mail, Lock, User, Calendar, Loader2, ArrowRight } from 'lucide-react'
+import { Mail, Lock, User, Calendar, Loader2, ArrowRight, AlertTriangle } from 'lucide-react'
 
 export default function SignupPage() {
   const router = useRouter()
@@ -12,11 +12,14 @@ export default function SignupPage() {
   const [error, setError] = useState<string | null>(null)
   const [age, setAge] = useState<string>('')
   const [showParentFields, setShowParentFields] = useState(false)
+  const [underThirteen, setUnderThirteen] = useState(false)
   const [selectedSports, setSelectedSports] = useState<string[]>(['softball'])
+  const [newsletterConsent, setNewsletterConsent] = useState(false)
 
   const handleAgeChange = (value: string) => {
     setAge(value)
     const ageNum = parseInt(value, 10)
+    setUnderThirteen(ageNum > 0 && ageNum < 13)
     setShowParentFields(ageNum > 0 && ageNum < 18)
   }
 
@@ -41,10 +44,18 @@ export default function SignupPage() {
     const email = formData.get('email') as string
     const password = formData.get('password') as string
     const fullName = formData.get('fullName') as string
-    const age = formData.get('age') as string
+    const ageStr = formData.get('age') as string
+    const ageNum = parseInt(ageStr, 10)
     const parentGuardianName = formData.get('parentGuardianName') as string
     const parentGuardianEmail = formData.get('parentGuardianEmail') as string
     const parentGuardianPhone = formData.get('parentGuardianPhone') as string
+
+    // COPPA: Block under-13 self-signup
+    if (ageNum < 13) {
+      setError('Athletes under 13 must be enrolled directly by a coach. Please contact us at support@propersports.pro.')
+      setLoading(false)
+      return
+    }
 
     try {
       const supabase = createClient()
@@ -57,8 +68,8 @@ export default function SignupPage() {
           data: {
             full_name: fullName,
             sports: selectedSports,
-            athlete_type: selectedSports[0], // Primary sport for backwards compatibility
-            age: parseInt(age, 10),
+            athlete_type: selectedSports[0],
+            age: ageNum,
           },
         },
       })
@@ -72,20 +83,22 @@ export default function SignupPage() {
       // 2. Wait for auth state to propagate
       await new Promise(resolve => setTimeout(resolve, 500))
 
-      // 3. Create/update profile with additional fields
-      // Note: If trigger exists, this will update. If not, it will insert.
+      // 3. Create/update profile with consent fields
       const profileData: any = {
         id: authData.user.id,
         full_name: fullName,
         sports: selectedSports,
-        athlete_type: selectedSports[0], // Primary sport for backwards compatibility
-        age: parseInt(age, 10),
+        athlete_type: selectedSports[0],
+        age: ageNum,
         role: 'athlete',
+        data_consent: true,
+        data_consent_at: new Date().toISOString(),
+        newsletter_consent: newsletterConsent,
         updated_at: new Date().toISOString(),
       }
 
       // Add parent/guardian info if athlete is under 18
-      if (parseInt(age, 10) < 18) {
+      if (ageNum < 18) {
         if (parentGuardianName) profileData.parent_guardian_name = parentGuardianName
         if (parentGuardianEmail) profileData.parent_guardian_email = parentGuardianEmail
         if (parentGuardianPhone) profileData.parent_guardian_phone = parentGuardianPhone
@@ -93,9 +106,7 @@ export default function SignupPage() {
 
       const { error: profileError } = await supabase
         .from('profiles')
-        .upsert(profileData, {
-          onConflict: 'id'
-        })
+        .upsert(profileData, { onConflict: 'id' })
 
       if (profileError) {
         console.error('Profile creation error:', profileError)
@@ -114,8 +125,21 @@ export default function SignupPage() {
         throw new Error('Account created but profile verification failed. Please contact support.')
       }
 
-      // 5. Success! Refresh server state then navigate to FAQ
-      // New members land on FAQ first — they need to purchase a membership to access the dashboard
+      // 5. Send parent notification email for minors (non-blocking)
+      if (ageNum < 18 && parentGuardianEmail && parentGuardianName) {
+        fetch('/api/auth/parent-notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            parentName: parentGuardianName,
+            parentEmail: parentGuardianEmail,
+            athleteName: fullName,
+            athleteAge: ageNum,
+          }),
+        }).catch(err => console.error('Parent notify failed (non-fatal):', err))
+      }
+
+      // 6. Success — navigate to FAQ (membership purchase required)
       router.refresh()
       router.push('/faq?welcome=true')
       return
@@ -264,8 +288,25 @@ export default function SignupPage() {
             </div>
           </div>
 
+          {/* COPPA: Under-13 block */}
+          {underThirteen && (
+            <div role="alert" className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-amber-300 mb-1">Under 13 sign-up not available</p>
+                  <p className="text-xs text-amber-400/80 leading-relaxed">
+                    Athletes under 13 must be enrolled directly by a coach.
+                    Please have your coach or parent contact us at{' '}
+                    <a href="mailto:support@propersports.pro" className="underline">support@propersports.pro</a>.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Parent/Guardian Information (only if under 18) */}
-          {showParentFields && (
+          {showParentFields && !underThirteen && (
             <div className="space-y-4 p-4 rounded-xl bg-orange/5 border border-orange/20">
               <div className="flex items-center gap-2 mb-2">
                 <User className="w-4 h-4 text-orange" />
@@ -319,7 +360,7 @@ export default function SignupPage() {
             </div>
           )}
 
-          {/* Terms Checkbox */}
+          {/* Terms + Data Consent Checkbox (required) */}
           <div className="flex items-start gap-3">
             <input
               id="terms"
@@ -337,13 +378,29 @@ export default function SignupPage() {
               <Link href="/privacy" className="text-orange hover:text-orange-400">
                 Privacy Policy
               </Link>
+              , and I consent to the processing of my data as described therein.
+            </label>
+          </div>
+
+          {/* Newsletter Consent (optional) */}
+          <div className="flex items-start gap-3">
+            <input
+              id="newsletterConsent"
+              name="newsletterConsent"
+              type="checkbox"
+              checked={newsletterConsent}
+              onChange={(e) => setNewsletterConsent(e.target.checked)}
+              className="mt-1 w-4 h-4 rounded border-cyan-200/40 bg-cyan-50/50 text-orange focus:ring-cyan/50"
+            />
+            <label htmlFor="newsletterConsent" className="text-sm text-white/60">
+              I'd like to receive training tips, updates, and news from PSP.Pro. (Optional — unsubscribe anytime)
             </label>
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || underThirteen}
             className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
