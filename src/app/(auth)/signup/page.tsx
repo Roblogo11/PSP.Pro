@@ -186,7 +186,7 @@ export default function SignupPage() {
                 type="text"
                 required
                 autoComplete="name"
-                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                 placeholder="John Smith"
               />
             </div>
@@ -205,7 +205,7 @@ export default function SignupPage() {
                 type="email"
                 required
                 autoComplete="email"
-                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                 placeholder="athlete@example.com"
               />
             </div>
@@ -225,7 +225,7 @@ export default function SignupPage() {
                 required
                 autoComplete="new-password"
                 minLength={8}
-                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                 placeholder="••••••••"
               />
             </div>
@@ -249,7 +249,7 @@ export default function SignupPage() {
                     flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all
                     ${selectedSports.includes(sport.value)
                       ? 'bg-orange/20 border-2 border-orange/50'
-                      : 'bg-cyan-50/50 border border-cyan-200/40 hover:border-orange/30'
+                      : 'bg-cyan-900/20 border border-cyan-700/40 hover:border-orange/30'
                     }
                   `}
                 >
@@ -282,7 +282,7 @@ export default function SignupPage() {
                 max="100"
                 value={age}
                 onChange={(e) => handleAgeChange(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                 placeholder="16"
               />
             </div>
@@ -323,7 +323,7 @@ export default function SignupPage() {
                   name="parentGuardianName"
                   type="text"
                   required
-                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                   placeholder="Jane Smith"
                 />
               </div>
@@ -338,7 +338,7 @@ export default function SignupPage() {
                   name="parentGuardianEmail"
                   type="email"
                   required
-                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                   placeholder="parent@example.com"
                 />
               </div>
@@ -353,7 +353,7 @@ export default function SignupPage() {
                   name="parentGuardianPhone"
                   type="tel"
                   required
-                  className="w-full px-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                   placeholder="(555) 123-4567"
                 />
               </div>
@@ -367,7 +367,7 @@ export default function SignupPage() {
               name="terms"
               type="checkbox"
               required
-              className="mt-1 w-4 h-4 rounded border-cyan-200/40 bg-cyan-50/50 text-orange focus:ring-cyan/50"
+              className="mt-1 w-4 h-4 rounded border-cyan-700/40 bg-cyan-900/30 text-orange focus:ring-cyan/50"
             />
             <label htmlFor="terms" className="text-sm ">
               I agree to the{' '}
@@ -390,7 +390,7 @@ export default function SignupPage() {
               type="checkbox"
               checked={newsletterConsent}
               onChange={(e) => setNewsletterConsent(e.target.checked)}
-              className="mt-1 w-4 h-4 rounded border-cyan-200/40 bg-cyan-50/50 text-orange focus:ring-cyan/50"
+              className="mt-1 w-4 h-4 rounded border-cyan-700/40 bg-cyan-900/30 text-orange focus:ring-cyan/50"
             />
             <label htmlFor="newsletterConsent" className="text-sm text-white/60">
               I'd like to receive training tips, updates, and news from PSP.Pro. (Optional — unsubscribe anytime)
