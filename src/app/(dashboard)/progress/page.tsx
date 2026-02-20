@@ -48,17 +48,6 @@ export default function ProgressPage() {
     }
   }, [detectedSport, profile])
 
-  if (loading) {
-    return (
-      <div className="min-h-screen px-3 py-4 md:p-8 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-cyan-700 dark:text-white">Loading your progress...</p>
-        </div>
-      </div>
-    )
-  }
-
   // Calculate real stats
   const peakVelocity = stats?.recentVelocities?.length
     ? Math.max(...stats.recentVelocities.map(v => v.value))
@@ -179,6 +168,17 @@ export default function ProgressPage() {
   }
 
   milestones.sort((a, b) => (b.achieved ? 1 : 0) - (a.achieved ? 1 : 0))
+
+  if (loading) {
+    return (
+      <div className="min-h-screen px-3 py-4 md:p-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-cyan-700 dark:text-white">Loading your progress...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8 relative">
