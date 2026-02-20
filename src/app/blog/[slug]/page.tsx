@@ -104,8 +104,8 @@ export default function BlogPostPage() {
 
         if (related && related.length > 0) {
           // Prefer same category
-          const sameCategory = related.filter(r => r.category === postData.category).slice(0, 2)
-          const others = related.filter(r => r.category !== postData.category)
+          const sameCategory = related.filter((r: any) => r.category === postData.category).slice(0, 2)
+          const others = related.filter((r: any) => r.category !== postData.category)
           const finalRelated = [...sameCategory]
           if (finalRelated.length < 2) {
             finalRelated.push(...others.slice(0, 2 - finalRelated.length))

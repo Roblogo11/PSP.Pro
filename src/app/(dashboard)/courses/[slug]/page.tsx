@@ -87,10 +87,10 @@ export default function CourseDetailPage() {
       .eq('athlete_id', effectiveUserId!)
 
     const completedSet = new Set(
-      (progressData || []).filter(p => p.completed).map(p => p.lesson_id)
+      (progressData || []).filter((p: any) => p.completed).map((p: any) => p.lesson_id)
     )
 
-    const mappedLessons: Lesson[] = (lessonData || []).map(l => ({
+    const mappedLessons: Lesson[] = (lessonData || []).map((l: any) => ({
       ...l,
       completed: completedSet.has(l.id),
     }))

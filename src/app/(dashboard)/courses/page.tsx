@@ -53,7 +53,7 @@ export default function CoursesPage() {
       .select('course_id')
       .eq('athlete_id', effectiveUserId!)
 
-    const enrolledIds = new Set((enrollments || []).map(e => e.course_id))
+    const enrolledIds = new Set((enrollments || []).map((e: any) => e.course_id))
 
     // Fetch lesson progress for enrolled courses
     const { data: progress } = await supabase
@@ -61,7 +61,7 @@ export default function CoursesPage() {
       .select('lesson_id, completed')
       .eq('athlete_id', effectiveUserId!)
 
-    const completedLessons = new Set((progress || []).filter(p => p.completed).map(p => p.lesson_id))
+    const completedLessons = new Set((progress || []).filter((p: any) => p.completed).map((p: any) => p.lesson_id))
 
     // Get lesson IDs per course for progress calculation
     const courseList: Course[] = coursesData.map((c: any) => {

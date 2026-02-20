@@ -118,7 +118,7 @@ export default function AthleteLockerPage() {
 
       if (!enrollments || enrollments.length === 0) return
 
-      const courseIds = enrollments.map(e => e.course_id)
+      const courseIds = enrollments.map((e: any) => e.course_id)
 
       // Get course details
       const { data: courses } = await supabase
@@ -148,7 +148,7 @@ export default function AthleteLockerPage() {
         lessonCountMap[l.course_id] = (lessonCountMap[l.course_id] || 0) + 1
       }
 
-      const completedLessonIds = new Set((progress || []).map(p => p.lesson_id))
+      const completedLessonIds = new Set((progress || []).map((p: any) => p.lesson_id))
       const lessonToCourse: Record<string, string> = {}
       for (const l of (lessons || [])) {
         lessonToCourse[l.id] = l.course_id
@@ -156,11 +156,11 @@ export default function AthleteLockerPage() {
 
       const completedPerCourse: Record<string, number> = {}
       for (const lid of completedLessonIds) {
-        const cid = lessonToCourse[lid]
+        const cid = lessonToCourse[lid as string]
         if (cid) completedPerCourse[cid] = (completedPerCourse[cid] || 0) + 1
       }
 
-      setEnrolledCourses(courses.map(c => ({
+      setEnrolledCourses(courses.map((c: any) => ({
         id: c.id,
         title: c.title,
         slug: c.slug,

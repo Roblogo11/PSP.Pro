@@ -70,7 +70,7 @@ export function useUserStats(userId: string | undefined) {
           .limit(10)
 
         // Calculate average velocity
-        const velocities = velocityData?.map(v => v.peak_velocity).filter(Boolean) as number[] || []
+        const velocities = velocityData?.map((v: any) => v.peak_velocity).filter(Boolean) as number[] || []
         const avgVelocity = velocities.length > 0
           ? Math.round(velocities.reduce((a, b) => a + b, 0) / velocities.length)
           : null
@@ -89,7 +89,7 @@ export function useUserStats(userId: string | undefined) {
           today.setHours(0, 0, 0, 0)
 
           const dates = new Set(
-            recentCompletions.map(c =>
+            recentCompletions.map((c: any) =>
               getLocalDateString(new Date(c.completed_at))
             )
           )
@@ -111,8 +111,8 @@ export function useUserStats(userId: string | undefined) {
 
         // Format velocity history
         const recentVelocities = (velocityData || [])
-          .filter(v => v.peak_velocity !== null)
-          .map(v => ({
+          .filter((v: any) => v.peak_velocity !== null)
+          .map((v: any) => ({
             date: new Date(v.completed_at),
             value: v.peak_velocity as number,
           }))

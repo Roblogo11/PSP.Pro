@@ -101,8 +101,8 @@ export default function AnalyticsPage() {
         revenueQuery = coachFilter(revenueQuery)
         const { data: currentBookingsData } = await revenueQuery
 
-        const paidBookings = (currentBookingsData || []).filter(b => b.payment_status === 'paid')
-        const totalRevenue = paidBookings.reduce((sum, b) => sum + (b.amount_cents || 0), 0) / 100
+        const paidBookings = (currentBookingsData || []).filter((b: any) => b.payment_status === 'paid')
+        const totalRevenue = paidBookings.reduce((sum: number, b: any) => sum + (b.amount_cents || 0), 0) / 100
 
         // --- Previous period revenue ---
         let prevRevenueQuery = supabase
@@ -114,8 +114,8 @@ export default function AnalyticsPage() {
         prevRevenueQuery = coachFilter(prevRevenueQuery)
         const { data: prevBookingsData } = await prevRevenueQuery
 
-        const prevPaidBookings = (prevBookingsData || []).filter(b => b.payment_status === 'paid')
-        const prevTotalRevenue = prevPaidBookings.reduce((sum, b) => sum + (b.amount_cents || 0), 0) / 100
+        const prevPaidBookings = (prevBookingsData || []).filter((b: any) => b.payment_status === 'paid')
+        const prevTotalRevenue = prevPaidBookings.reduce((sum: number, b: any) => sum + (b.amount_cents || 0), 0) / 100
         const revenueGrowth = prevTotalRevenue > 0 ? ((totalRevenue - prevTotalRevenue) / prevTotalRevenue) * 100 : 0
 
         // --- Booking counts ---
@@ -134,7 +134,7 @@ export default function AnalyticsPage() {
           : 0
 
         // --- Active athletes ---
-        const uniqueAthletes = new Set((currentBookingsData || []).map(b => b.athlete_id)).size
+        const uniqueAthletes = new Set((currentBookingsData || []).map((b: any) => b.athlete_id)).size
 
         let prevAthletesQuery = supabase
           .from('bookings')
@@ -144,14 +144,14 @@ export default function AnalyticsPage() {
 
         prevAthletesQuery = coachFilter(prevAthletesQuery)
         const { data: prevAthletesData } = await prevAthletesQuery
-        const prevUniqueAthletes = new Set((prevAthletesData || []).map(b => b.athlete_id)).size
+        const prevUniqueAthletes = new Set((prevAthletesData || []).map((b: any) => b.athlete_id)).size
         const athletesGrowth = prevUniqueAthletes > 0 ? ((uniqueAthletes - prevUniqueAthletes) / prevUniqueAthletes) * 100 : 0
 
         // --- Avg sessions per athlete ---
         const avgSessionsPerAthlete = uniqueAthletes > 0 ? totalBookings / uniqueAthletes : 0
 
         // --- Completion rate ---
-        const completedCount = (currentBookingsData || []).filter(b => b.status === 'completed').length
+        const completedCount = (currentBookingsData || []).filter((b: any) => b.status === 'completed').length
         const completionRate = totalBookings > 0 ? (completedCount / totalBookings) * 100 : 0
 
         // --- Monthly revenue (last 6 months) ---
@@ -165,7 +165,7 @@ export default function AnalyticsPage() {
         const { data: monthlyData } = await monthlyQuery
 
         const monthlyMap: Record<string, number> = {}
-        for (const b of (monthlyData || []).filter(b => b.payment_status === 'paid')) {
+        for (const b of (monthlyData || []).filter((b: any) => b.payment_status === 'paid')) {
           const month = new Date(b.booking_date).toLocaleDateString('en-US', { month: 'short', year: '2-digit' })
           monthlyMap[month] = (monthlyMap[month] || 0) + (b.amount_cents || 0) / 100
         }
@@ -179,7 +179,7 @@ export default function AnalyticsPage() {
         }
 
         // --- Service breakdown ---
-        const serviceIds = [...new Set((currentBookingsData || []).filter(b => b.service_id).map(b => b.service_id))]
+        const serviceIds = [...new Set((currentBookingsData || []).filter((b: any) => b.service_id).map((b: any) => b.service_id))]
         let serviceBreakdown: Array<{ name: string; revenue: number; count: number }> = []
 
         if (serviceIds.length > 0) {
@@ -188,11 +188,11 @@ export default function AnalyticsPage() {
             .select('id, name')
             .in('id', serviceIds)
 
-          const serviceMap = new Map((servicesData || []).map(s => [s.id, s.name]))
+          const serviceMap = new Map((servicesData || []).map((s: any) => [s.id, s.name]))
           const breakdown: Record<string, { revenue: number; count: number }> = {}
 
           for (const b of paidBookings) {
-            const name = serviceMap.get(b.service_id) || 'Other'
+            const name = String(serviceMap.get(b.service_id) || 'Other')
             if (!breakdown[name]) breakdown[name] = { revenue: 0, count: 0 }
             breakdown[name].revenue += (b.amount_cents || 0) / 100
             breakdown[name].count += 1
@@ -235,9 +235,9 @@ export default function AnalyticsPage() {
             .select('id, full_name')
             .in('id', topAthleteIds)
 
-          const nameMap = new Map((profiles || []).map(p => [p.id, p.full_name]))
+          const nameMap = new Map((profiles || []).map((p: any) => [p.id, p.full_name]))
           topAthletes = topAthleteIds.map(id => ({
-            name: nameMap.get(id) || 'Unknown Athlete',
+            name: String(nameMap.get(id) || 'Unknown Athlete'),
             revenue: athleteRevMap[id].revenue,
             sessions: athleteRevMap[id].sessions,
           }))

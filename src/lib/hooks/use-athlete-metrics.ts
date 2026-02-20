@@ -145,7 +145,7 @@ export function useAthleteMetrics(userId: string | undefined) {
 
         if (error) throw error
 
-        const transformed: MetricEntry[] = (data || []).map(entry => {
+        const transformed: MetricEntry[] = (data || []).map((entry: any) => {
           const sport = entry.custom_metrics?.sport || null
           const verified = entry.custom_metrics?.verified ?? true
           const values: Record<string, number> = {}

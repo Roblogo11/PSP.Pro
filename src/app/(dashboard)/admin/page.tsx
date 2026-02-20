@@ -720,7 +720,7 @@ function SimulationPanel() {
           .order('full_name', { ascending: true })
 
         if (data) {
-          setAthletes(data.map(a => ({ ...a, email: a.email || '' })))
+          setAthletes(data.map((a: any) => ({ ...a, email: a.email || '' })))
         }
       } catch {
         // Non-critical

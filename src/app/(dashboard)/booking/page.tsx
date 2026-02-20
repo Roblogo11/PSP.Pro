@@ -118,7 +118,7 @@ export default function BookingPage() {
     const { data, error } = await query
 
     if (data) {
-      const slotsWithCoachNames = data.map(slot => ({
+      const slotsWithCoachNames = data.map((slot: any) => ({
         ...slot,
         coach_name: (slot.coach as any)?.full_name || 'Coach',
       }))
@@ -142,7 +142,7 @@ export default function BookingPage() {
       .in('status', ['confirmed', 'pending'])
 
     if (data) {
-      setBookedSlotIds(data.map(b => b.slot_id).filter(Boolean))
+      setBookedSlotIds(data.map((b: any) => b.slot_id).filter(Boolean))
     }
   }
 

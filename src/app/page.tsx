@@ -68,8 +68,8 @@ export default function HomePage() {
         if (data) {
           // Non-group categories go to "individual" section, group categories go to "group" section
           const isGroup = (cat: string) => cat.toLowerCase().includes('group')
-          setFeaturedIndividual(data.filter(s => !isGroup(s.category)))
-          setFeaturedGroup(data.filter(s => isGroup(s.category)))
+          setFeaturedIndividual(data.filter((s: any) => !isGroup(s.category)))
+          setFeaturedGroup(data.filter((s: any) => isGroup(s.category)))
         }
       } catch (err) {
         console.error('Error fetching featured services:', err)

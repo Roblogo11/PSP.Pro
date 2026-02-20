@@ -99,7 +99,7 @@ export default function AthletesManagementPage() {
         if (athletesError) throw athletesError
 
         // Email is now in profiles table after migration 020
-        const athletesWithSchema = (athletesData || []).map(athlete => ({
+        const athletesWithSchema = (athletesData || []).map((athlete: any) => ({
           ...athlete,
           email: athlete.email || null
         }))
@@ -127,11 +127,11 @@ export default function AthletesManagementPage() {
               .limit(10)
 
             const avgVelocity = metricsData && metricsData.length > 0
-              ? metricsData.reduce((sum, v) => sum + (v.throwing_velocity_avg_mph || v.throwing_velocity_mph || 0), 0) / metricsData.length
+              ? metricsData.reduce((sum: number, v: any) => sum + (v.throwing_velocity_avg_mph || v.throwing_velocity_mph || 0), 0) / metricsData.length
               : null
 
             const maxVelocity = metricsData && metricsData.length > 0
-              ? Math.max(...metricsData.map(v => v.throwing_velocity_mph || 0).filter(v => v > 0))
+              ? Math.max(...metricsData.map((v: any) => v.throwing_velocity_mph || 0).filter((v: number) => v > 0))
               : null
 
             // Get total metrics count
@@ -211,7 +211,7 @@ export default function AthletesManagementPage() {
         .eq('role', 'athlete')
         .order('full_name')
 
-      const athletesWithSchema = (athletesData || []).map(athlete => ({
+      const athletesWithSchema = (athletesData || []).map((athlete: any) => ({
         ...athlete,
         email: null
       }))
@@ -255,7 +255,7 @@ export default function AthletesManagementPage() {
         .eq('role', 'athlete')
         .order('full_name')
 
-      const athletesWithSchema = (athletesData || []).map(athlete => ({
+      const athletesWithSchema = (athletesData || []).map((athlete: any) => ({
         ...athlete,
         email: athlete.email || null
       }))

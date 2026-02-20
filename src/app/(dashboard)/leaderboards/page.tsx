@@ -88,8 +88,8 @@ export default function LeaderboardsPage() {
           return
         }
 
-        const profileMap = new Map(profiles.map(p => [p.id, p]))
-        const athleteIds = profiles.map(p => p.id)
+        const profileMap = new Map(profiles.map((p: any) => [p.id, p]))
+        const athleteIds = profiles.map((p: any) => p.id)
 
         // Get all metric entries for these athletes
         const { data: metricsData } = await supabase
@@ -121,7 +121,7 @@ export default function LeaderboardsPage() {
         // Build leaderboard
         const entries: LeaderboardEntry[] = Object.entries(bestPerAthlete)
           .map(([athleteId, data]) => {
-            const prof = profileMap.get(athleteId)
+            const prof: any = profileMap.get(athleteId)
             if (!prof) return null
             return {
               athleteId,
@@ -161,7 +161,7 @@ export default function LeaderboardsPage() {
         .not('region', 'is', null)
 
       if (data) {
-        const unique = [...new Set(data.map(d => d.region).filter(Boolean))] as string[]
+        const unique = [...new Set(data.map((d: any) => d.region).filter(Boolean))] as string[]
         setRegions(unique.sort())
       }
     }

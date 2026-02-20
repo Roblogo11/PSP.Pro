@@ -49,7 +49,7 @@ export function useUserSessions(userId: string | undefined) {
         if (error) throw error
 
         // Transform bookings to UserSession format
-        const transformedBookings: UserSession[] = (bookings || []).map(booking => {
+        const transformedBookings: UserSession[] = (bookings || []).map((booking: any) => {
           const sessionDate = new Date(booking.booking_date)
           const isUpcoming = sessionDate >= new Date()
 
