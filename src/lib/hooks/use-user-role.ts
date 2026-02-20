@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
 export type UserRole = 'athlete' | 'coach' | 'admin' | 'master_admin'
@@ -21,42 +21,40 @@ export function useUserRole() {
   const [impersonatedUserName, setImpersonatedUserName] = useState<string | null>(null)
   const supabase = createClient()
 
-  useEffect(() => {
-    async function loadUserProfile() {
-      try {
-        const { data: { user } } = await supabase.auth.getUser()
+  const loadUserProfile = useCallback(async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
 
-        if (!user) {
-          setProfile(null)
-          setLoading(false)
-          return
-        }
-
-        // Get user profile with role (email comes from auth.users, not profiles)
-        const { data: profileData, error } = await supabase
-          .from('profiles')
-          .select('id, full_name, role, avatar_url')
-          .eq('id', user.id)
-          .single()
-
-        if (error) {
-          console.error('Error loading profile:', error)
-          setProfile(null)
-        } else {
-          // Combine profile data with email from auth user
-          setProfile({
-            ...profileData,
-            email: user.email || '',
-          } as UserProfile)
-        }
-      } catch (error) {
-        console.error('Error in loadUserProfile:', error)
+      if (!user) {
         setProfile(null)
-      } finally {
         setLoading(false)
+        return
       }
-    }
 
+      const { data: profileData, error } = await supabase
+        .from('profiles')
+        .select('id, full_name, role, avatar_url')
+        .eq('id', user.id)
+        .single()
+
+      if (error) {
+        console.error('Error loading profile:', error)
+        setProfile(null)
+      } else {
+        setProfile({
+          ...profileData,
+          email: user.email || '',
+        } as UserProfile)
+      }
+    } catch (error) {
+      console.error('Error in loadUserProfile:', error)
+      setProfile(null)
+    } finally {
+      setLoading(false)
+    }
+  }, [supabase])
+
+  useEffect(() => {
     loadUserProfile()
 
     // Listen for auth changes
@@ -67,33 +65,42 @@ export function useUserRole() {
     return () => {
       subscription.unsubscribe()
     }
-  }, [supabase])
+  }, [supabase, loadUserProfile])
 
-  // Check for simulation mode cookie (same polling pattern as stripe-test-banner)
+  // When a background tab becomes visible again, re-fetch profile
+  // (catches session expiry, role changes, etc.)
   useEffect(() => {
-    const checkSimulation = () => {
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        loadUserProfile()
+      }
+    }
+    document.addEventListener('visibilitychange', onVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', onVisibilityChange)
+  }, [loadUserProfile])
+
+  // Check for simulation + impersonation cookies.
+  // Only poll when the tab is visible — background tabs don't need this.
+  useEffect(() => {
+    const checkCookies = () => {
+      if (document.visibilityState === 'hidden') return
       const cookies = document.cookie.split(';').map(c => c.trim())
+
+      // Simulation
       const simCookie = cookies.find(c => c.startsWith('simulation_role_ui='))
       const role = simCookie?.split('=')[1] as UserRole | undefined
       setSimulatedRole(role || null)
-    }
-    checkSimulation()
-    const interval = setInterval(checkSimulation, 3000)
-    return () => clearInterval(interval)
-  }, [])
 
-  // Check for impersonation mode cookies
-  useEffect(() => {
-    const checkImpersonation = () => {
-      const cookies = document.cookie.split(';').map(c => c.trim())
+      // Impersonation
       const idCookie = cookies.find(c => c.startsWith('impersonation_user_id_ui='))
       const nameCookie = cookies.find(c => c.startsWith('impersonation_user_name_ui='))
       setImpersonatedUserId(idCookie?.split('=')[1] || null)
       const rawName = nameCookie?.split('=')[1]
       setImpersonatedUserName(rawName ? decodeURIComponent(rawName) : null)
     }
-    checkImpersonation()
-    const interval = setInterval(checkImpersonation, 3000)
+
+    checkCookies()
+    const interval = setInterval(checkCookies, 3000)
     return () => clearInterval(interval)
   }, [])
 

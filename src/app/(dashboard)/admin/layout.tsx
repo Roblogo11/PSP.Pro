@@ -1,52 +1,12 @@
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
-import { createAdminClient } from '@/lib/supabase/admin'
+// Admin layout — auth is already verified by the parent (dashboard) layout.
+// Role gating is handled client-side by the admin page's useUserRole() hook,
+// which redirects non-staff to /locker. This avoids redundant server-side
+// Supabase calls that cause slow loads on mobile.
 
-export default async function AdminLayout({
+export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  try {
-    const supabase = await createClient()
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-
-    if (!user) {
-      redirect('/login')
-    }
-
-    // Verify admin or coach role (use admin client to bypass RLS timing)
-    // Fall back to regular client if service role key isn't configured
-    let profile: { role: string } | null = null
-    try {
-      const adminClient = createAdminClient()
-      const { data } = await adminClient
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single()
-      profile = data
-    } catch {
-      const { data } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single()
-      profile = data
-    }
-
-    if (!profile || (profile.role !== 'admin' && profile.role !== 'coach' && profile.role !== 'master_admin')) {
-      redirect('/locker')
-    }
-  } catch (error: any) {
-    if (error?.digest?.startsWith('NEXT_REDIRECT')) {
-      throw error
-    }
-    console.error('Admin auth error:', error?.message || error)
-    redirect('/login')
-  }
-
   return <>{children}</>
 }

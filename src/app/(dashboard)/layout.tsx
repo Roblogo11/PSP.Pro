@@ -19,10 +19,10 @@ export default async function DashboardLayout({
       redirect('/login')
     }
 
-    // Check user role — use admin client to bypass RLS timing issues
-    // Fall back to regular client if service role key isn't configured
+    // Check user role — prefer admin client (bypasses RLS timing), fall back to regular client
     let profile: { role: string; trial_expires_at: string | null } | null = null
-    try {
+    const hasServiceKey = !!process.env.SUPABASE_SERVICE_ROLE_KEY
+    if (hasServiceKey) {
       const adminClient = createAdminClient()
       const { data } = await adminClient
         .from('profiles')
@@ -30,8 +30,7 @@ export default async function DashboardLayout({
         .eq('id', user.id)
         .single()
       profile = data
-    } catch {
-      // Service role key not configured — fall back to regular client
+    } else {
       const { data } = await supabase
         .from('profiles')
         .select('role, trial_expires_at')
