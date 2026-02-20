@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
       parent_guardian_name,
       parent_guardian_email,
       parent_guardian_phone,
+      trial_days, // Number of days for free trial (default 7)
     } = body
 
     // Validate required fields
@@ -79,6 +80,10 @@ export async function POST(request: NextRequest) {
 
     // Update the profile with additional athlete data
     // Note: Only including columns that exist in profiles table
+    const days = trial_days ? parseInt(trial_days) : 30
+    const trialExpires = new Date()
+    trialExpires.setDate(trialExpires.getDate() + days)
+
     const profileData: any = {
       id: authData.user.id,
       full_name,
@@ -86,6 +91,7 @@ export async function POST(request: NextRequest) {
       athlete_type: sports ? sports[0] : athlete_type, // Primary sport for backwards compatibility
       age: age ? parseInt(age) : null,
       role: 'athlete',
+      trial_expires_at: trialExpires.toISOString(),
     }
 
     // Add parent/guardian info if athlete is under 18

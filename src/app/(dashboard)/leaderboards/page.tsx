@@ -185,7 +185,7 @@ export default function LeaderboardsPage() {
   }
 
   return (
-    <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8 relative">
+    <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8 relative overflow-x-hidden">
       {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
@@ -219,7 +219,7 @@ export default function LeaderboardsPage() {
           <button
             key={tab.key}
             onClick={() => setSportTab(tab.key)}
-            className={`px-5 py-2.5 rounded-xl font-semibold transition-all whitespace-nowrap ${
+            className={`px-3 py-2 md:px-5 md:py-2.5 rounded-xl font-semibold text-sm md:text-base transition-all whitespace-nowrap ${
               sportTab === tab.key
                 ? 'bg-orange text-white shadow-glow-orange'
                 : 'bg-cyan-900/30 text-cyan-700 dark:text-white hover:bg-cyan-900 hover:text-white'
@@ -278,7 +278,7 @@ export default function LeaderboardsPage() {
       </div>
 
       {/* Leaderboard */}
-      <div className="command-panel">
+      <div className="command-panel overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-16">
             <div className="w-12 h-12 border-4 border-orange border-t-transparent rounded-full animate-spin" />
@@ -304,7 +304,7 @@ export default function LeaderboardsPage() {
                 return (
                   <div
                     key={entry.athleteId}
-                    className={`flex items-center gap-3 px-4 py-3 ${isMe ? 'bg-orange/10' : ''}`}
+                    className={`flex items-center gap-2 px-3 py-3 md:gap-3 md:px-4 ${isMe ? 'bg-orange/10' : ''}`}
                   >
                     {/* Rank */}
                     <div className={`w-8 text-center font-bold text-base flex-shrink-0 ${medalColor}`}>

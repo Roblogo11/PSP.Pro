@@ -21,12 +21,12 @@ export default async function DashboardLayout({
 
     // Check user role — use admin client to bypass RLS timing issues
     // Fall back to regular client if service role key isn't configured
-    let profile: { role: string } | null = null
+    let profile: { role: string; trial_expires_at: string | null } | null = null
     try {
       const adminClient = createAdminClient()
       const { data } = await adminClient
         .from('profiles')
-        .select('role')
+        .select('role, trial_expires_at')
         .eq('id', user.id)
         .single()
       profile = data
@@ -34,7 +34,7 @@ export default async function DashboardLayout({
       // Service role key not configured — fall back to regular client
       const { data } = await supabase
         .from('profiles')
-        .select('role')
+        .select('role, trial_expires_at')
         .eq('id', user.id)
         .single()
       profile = data
@@ -42,9 +42,13 @@ export default async function DashboardLayout({
 
     const role = profile?.role
     const isStaff = role === 'admin' || role === 'coach' || role === 'master_admin'
+    // Coach-created athletes get a trial period — check if still active
+    const hasActiveTrial = profile?.trial_expires_at
+      ? new Date(profile.trial_expires_at) > new Date()
+      : false
 
-    // Athletes must have an active package to access the dashboard
-    if (!isStaff) {
+    // Athletes must have an active package (or active trial) to access the dashboard
+    if (!isStaff && !hasActiveTrial) {
       const { data: activePackage } = await supabase
         .from('athlete_packages')
         .select('id')

@@ -369,7 +369,7 @@ export default function PricingPage() {
                 </div>
                 <Link href={ctaHref}>
                   <button className={isCurrentPlan || isFeatured ? 'btn-primary w-full' : 'btn-ghost w-full'}>
-                    {(isCoach || isAdmin) ? 'Manage Packages' : isCurrentPlan ? 'Renew Package' : 'Purchase Pack'}
+                    {(isCoach || isAdmin) ? 'Manage Packages' : isCurrentPlan ? 'Renew Package' : 'Book Package'}
                   </button>
                 </Link>
               </div>

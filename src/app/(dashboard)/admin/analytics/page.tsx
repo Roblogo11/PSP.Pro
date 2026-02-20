@@ -367,7 +367,7 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="px-3 py-4 md:p-6 max-w-7xl mx-auto pb-24 lg:pb-8">
+    <div className="px-3 py-4 md:p-6 max-w-7xl mx-auto pb-24 lg:pb-8 overflow-x-hidden">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-2">
@@ -384,10 +384,10 @@ export default function AnalyticsPage() {
           <button
             key={range}
             onClick={() => setTimeRange(range)}
-            className={`px-4 py-2 rounded-xl font-medium transition-all ${
+            className={`px-3 py-2 md:px-4 rounded-xl font-medium text-sm md:text-base transition-all ${
               timeRange === range
                 ? 'bg-orange text-white'
-                : 'bg-cyan-50/50 text-cyan-600 hover:bg-white/10'
+                : 'bg-cyan-900/30 text-cyan-700 dark:text-white hover:bg-cyan-900/50'
             }`}
           >
             {range === '7d' && 'Last 7 Days'}
@@ -427,19 +427,19 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-8">
         {/* Monthly Revenue Chart */}
-        <div className="glass-card p-6">
-          <div className="flex items-center gap-3 mb-6">
+        <div className="glass-card p-4 md:p-6">
+          <div className="flex items-center gap-3 mb-4 md:mb-6">
             <BarChart3 className="w-5 h-5 text-orange" />
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Monthly Revenue</h3>
+            <h3 className="text-base md:text-lg font-semibold text-slate-900 dark:text-white">Monthly Revenue</h3>
           </div>
-          <div className="h-64">
+          <div className="h-48 md:h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={analytics.monthlyRevenue}>
+              <BarChart data={analytics.monthlyRevenue} margin={{ left: -10, right: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="month" tick={{ fill: '#94a3b8', fontSize: 12 }} />
-                <YAxis tick={{ fill: '#94a3b8', fontSize: 12 }} tickFormatter={(v) => `$${v}`} />
+                <XAxis dataKey="month" tick={{ fill: '#94a3b8', fontSize: 11 }} />
+                <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} tickFormatter={(v) => `$${v}`} width={50} />
                 <Tooltip content={<CustomTooltip />} />
                 <Bar dataKey="revenue" name="Revenue" fill="#FF4B2B" radius={[4, 4, 0, 0]} />
               </BarChart>
@@ -448,12 +448,12 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Booking Status Pie Chart */}
-        <div className="glass-card p-6">
-          <div className="flex items-center gap-3 mb-6">
+        <div className="glass-card p-4 md:p-6">
+          <div className="flex items-center gap-3 mb-4 md:mb-6">
             <PieChartIcon className="w-5 h-5 text-orange" />
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Booking Status</h3>
+            <h3 className="text-base md:text-lg font-semibold text-slate-900 dark:text-white">Booking Status</h3>
           </div>
-          <div className="h-64">
+          <div className="h-48 md:h-64">
             {analytics.statusBreakdown.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -485,12 +485,12 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Revenue by Service + Revenue Trend */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-8">
         {/* Revenue by Service */}
-        <div className="glass-card p-6">
-          <div className="flex items-center gap-3 mb-6">
+        <div className="glass-card p-4 md:p-6">
+          <div className="flex items-center gap-3 mb-4 md:mb-6">
             <Activity className="w-5 h-5 text-orange" />
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Revenue by Service</h3>
+            <h3 className="text-base md:text-lg font-semibold text-slate-900 dark:text-white">Revenue by Service</h3>
           </div>
           {analytics.serviceBreakdown.length > 0 ? (
             <div className="space-y-3">
@@ -522,17 +522,17 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Revenue Trend Line */}
-        <div className="glass-card p-6">
-          <div className="flex items-center gap-3 mb-6">
+        <div className="glass-card p-4 md:p-6">
+          <div className="flex items-center gap-3 mb-4 md:mb-6">
             <TrendingUp className="w-5 h-5 text-orange" />
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Revenue Trend</h3>
+            <h3 className="text-base md:text-lg font-semibold text-slate-900 dark:text-white">Revenue Trend</h3>
           </div>
-          <div className="h-64">
+          <div className="h-48 md:h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={analytics.monthlyRevenue}>
+              <LineChart data={analytics.monthlyRevenue} margin={{ left: -10, right: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="month" tick={{ fill: '#94a3b8', fontSize: 12 }} />
-                <YAxis tick={{ fill: '#94a3b8', fontSize: 12 }} tickFormatter={(v) => `$${v}`} />
+                <XAxis dataKey="month" tick={{ fill: '#94a3b8', fontSize: 11 }} />
+                <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} tickFormatter={(v) => `$${v}`} width={50} />
                 <Tooltip content={<CustomTooltip />} />
                 <Line type="monotone" dataKey="revenue" name="Revenue" stroke="#FF4B2B" strokeWidth={3} dot={{ fill: '#FF4B2B', r: 4 }} />
               </LineChart>
@@ -542,7 +542,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Top Athletes + Recent Bookings */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         {/* Top Athletes by Revenue */}
         <div className="glass-card p-6">
           <div className="flex items-center gap-3 mb-6">

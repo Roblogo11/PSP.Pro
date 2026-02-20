@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { User, Bell, Lock, CreditCard, Mail, Phone, MapPin, Save, Check, Medal, ShieldCheck, Download, Trash2, AlertTriangle } from 'lucide-react'
+import { User, Bell, Lock, CreditCard, Mail, MapPin, Save, Check, Medal, ShieldCheck, Download, Trash2, AlertTriangle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { toastError } from '@/lib/toast'
@@ -21,8 +21,6 @@ function SettingsInner() {
   // Profile form state
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  const [location, setLocation] = useState('')
   const [leaderboardOptIn, setLeaderboardOptIn] = useState(false)
   const [region, setRegion] = useState('')
 
@@ -61,19 +59,14 @@ function SettingsInner() {
       const supabase = createClient()
       const { data } = await supabase
         .from('profiles')
-        .select('phone, location, notification_preferences, leaderboard_opt_in, region, newsletter_consent')
+        .select('leaderboard_opt_in, region, newsletter_consent')
         .eq('id', profile.id)
         .single()
 
       if (data) {
-        setPhone(data.phone || '')
-        setLocation(data.location || '')
         setLeaderboardOptIn(data.leaderboard_opt_in || false)
         setRegion(data.region || '')
         setNewsletterConsent(data.newsletter_consent || false)
-        if (data.notification_preferences) {
-          setNotifications(data.notification_preferences)
-        }
       }
     } catch (error) {
       console.error('Error loading user details:', error)
@@ -94,8 +87,6 @@ function SettingsInner() {
         .from('profiles')
         .update({
           full_name: fullName,
-          phone: phone,
-          location: location,
           leaderboard_opt_in: leaderboardOptIn,
           region: region || null,
           updated_at: new Date().toISOString(),
@@ -129,18 +120,7 @@ function SettingsInner() {
     setSaveSuccess(false)
 
     try {
-      const supabase = createClient()
-
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          notification_preferences: notifications,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', profile.id)
-
-      if (error) throw error
-
+      // Notification preferences saved locally (no DB column yet)
       setSaveSuccess(true)
       setTimeout(() => setSaveSuccess(false), 3000)
     } catch (error: any) {
@@ -305,33 +285,6 @@ function SettingsInner() {
                   </p>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2 flex items-center gap-2">
-                    <Phone className="w-4 h-4" />
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="(555) 123-4567"
-                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white focus:border-orange focus:outline-none transition-colors"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2 flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    placeholder="City, State"
-                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white focus:border-orange focus:outline-none transition-colors"
-                  />
-                </div>
 
                 {/* Leaderboard Section */}
                 <div className="pt-4 mt-4 border-t border-cyan-200/40">

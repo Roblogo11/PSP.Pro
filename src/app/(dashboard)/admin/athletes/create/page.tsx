@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { User, Mail, Calendar, Phone, UserPlus, Loader2 } from 'lucide-react'
+import { User, Mail, Calendar, Phone, UserPlus, Loader2, Clock } from 'lucide-react'
 
 export default function CreateAthletePage() {
   const router = useRouter()
@@ -12,6 +12,7 @@ export default function CreateAthletePage() {
   const [age, setAge] = useState<string>('')
   const [showParentFields, setShowParentFields] = useState(false)
   const [selectedSports, setSelectedSports] = useState<string[]>(['softball'])
+  const [trialDays, setTrialDays] = useState('30')
 
   const handleAgeChange = (value: string) => {
     setAge(value)
@@ -47,6 +48,7 @@ export default function CreateAthletePage() {
       parent_guardian_name: formData.get('parentGuardianName') as string,
       parent_guardian_email: formData.get('parentGuardianEmail') as string,
       parent_guardian_phone: formData.get('parentGuardianPhone') as string,
+      trial_days: trialDays,
     }
 
     try {
@@ -269,6 +271,32 @@ export default function CreateAthletePage() {
               </div>
             </div>
           )}
+
+          {/* Trial Period */}
+          <div>
+            <label className="block text-sm font-medium text-cyan-800 dark:text-white mb-2">
+              Free Trial Period
+            </label>
+            <div className="relative">
+              <Clock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-700 dark:text-white" />
+              <select
+                value={trialDays}
+                onChange={(e) => setTrialDays(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all appearance-none"
+              >
+                <option value="0">No free trial</option>
+                <option value="7">7 days</option>
+                <option value="14">14 days</option>
+                <option value="30">30 days (default)</option>
+                <option value="60">60 days</option>
+                <option value="90">90 days</option>
+                <option value="365">1 year</option>
+              </select>
+            </div>
+            <p className="text-xs text-cyan-700 dark:text-white mt-1">
+              Athlete gets free dashboard access during trial. After it expires, they must purchase a package.
+            </p>
+          </div>
 
           {/* Submit Button */}
           <div className="flex items-center gap-3 pt-4">
