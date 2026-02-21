@@ -26,6 +26,10 @@ import {
   Newspaper,
   Medal,
   Building2,
+  MessageCircle,
+  FileBarChart,
+  Tag,
+  Upload,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { getLocalDateString } from '@/lib/utils/local-date'
@@ -45,8 +49,10 @@ interface NavItem {
 
 const athleteNavItems: NavItem[] = [
   { label: 'Dashboard', mobileLabel: 'Home', href: '/locker', icon: LayoutDashboard, color: 'text-orange-400' },
+  { label: 'Messages', mobileLabel: 'Chat', href: '/messages', icon: MessageCircle, color: 'text-blue-400', badgeKey: 'unreadMessages' },
   { label: 'Drills', subLabel: '(members only)', mobileLabel: 'Drills', href: '/drills', icon: Dumbbell, color: 'text-cyan-400' },
   { label: 'Progress', mobileLabel: 'Progress', href: '/progress', icon: TrendingUp, color: 'text-green-400' },
+  { label: 'Report', mobileLabel: 'Report', href: '/progress-report', icon: FileBarChart, color: 'text-indigo-400' },
   { label: 'Achievements', mobileLabel: 'Awards', href: '/achievements', icon: Trophy, color: 'text-yellow-400' },
   { label: 'Leaderboards', mobileLabel: 'Ranks', href: '/leaderboards', icon: Medal, color: 'text-amber-400' },
   { label: 'My Lessons', mobileLabel: 'Lessons', href: '/sessions', icon: Calendar, color: 'text-purple-400', badgeKey: 'upcomingSessions' },
@@ -67,6 +73,8 @@ const adminNavItems: NavItem[] = [
   { label: 'Pop Quiz', mobileLabel: 'Quiz', href: '/admin/questionnaires', icon: ClipboardCheck, color: 'text-emerald-400' },
   { label: 'Content', mobileLabel: 'Content', href: '/admin/media', icon: Newspaper, color: 'text-pink-400' },
   { label: 'Analytics', mobileLabel: 'Stats', href: '/admin/analytics', icon: BarChart3, color: 'text-green-400' },
+  { label: 'Promo Codes', mobileLabel: 'Promos', href: '/admin/promos', icon: Tag, color: 'text-orange-400' },
+  { label: 'Data Import', mobileLabel: 'Import', href: '/admin/imports', icon: Upload, color: 'text-purple-400' },
   { label: 'Organizations', mobileLabel: 'Orgs', href: '/admin/org', icon: Building2, color: 'text-indigo-400' },
 ]
 
@@ -131,6 +139,25 @@ export function Sidebar() {
       const supabase = createClient()
       const today = getLocalDateString()
       const counts: Record<string, number> = {}
+
+      // Unread messages (for all users)
+      try {
+        const { data: myConvs } = await supabase
+          .from('conversation_participants')
+          .select('conversation_id')
+          .eq('user_id', effectiveUserId)
+
+        if (myConvs && myConvs.length > 0) {
+          const convIds = myConvs.map((c: any) => c.conversation_id)
+          const { count: unreadCount } = await supabase
+            .from('messages')
+            .select('*', { count: 'exact', head: true })
+            .in('conversation_id', convIds)
+            .neq('sender_id', effectiveUserId)
+            .is('read_at', null)
+          if (unreadCount && unreadCount > 0) counts.unreadMessages = unreadCount
+        }
+      } catch {}
 
       // Athlete-specific badges (skip for staff unless impersonating)
       if (!isCoach && !isAdmin || impersonatedUserId) {

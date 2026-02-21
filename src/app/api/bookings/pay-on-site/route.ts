@@ -75,6 +75,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'This service is no longer available' }, { status: 400 })
     }
 
+    // Check Elite membership for 10% discount
+    const { data: userProfile } = await adminClient
+      .from('profiles')
+      .select('membership_tier')
+      .eq('id', user.id)
+      .single()
+
+    let amountCents = service.price_cents
+    const isElite = userProfile?.membership_tier === 'elite'
+    if (isElite) {
+      amountCents = Math.round(amountCents * 0.9)
+    }
+
     // Create booking with pending status
     const { data: booking, error: bookingError } = await adminClient
       .from('bookings')
@@ -89,10 +102,12 @@ export async function POST(request: NextRequest) {
         duration_minutes: durationMinutes || service.duration_minutes,
         location: location || slot.location,
         status: 'pending',
-        amount_cents: service.price_cents,
+        amount_cents: amountCents,
         payment_status: 'pending',
         notes: 'Pay on site',
-        internal_notes: 'Athlete selected pay-on-site at booking',
+        internal_notes: isElite
+          ? `Pay-on-site booking. Elite 10% discount applied (original: $${(service.price_cents / 100).toFixed(2)})`
+          : 'Athlete selected pay-on-site at booking',
       })
       .select('id')
       .single()
@@ -138,7 +153,7 @@ export async function POST(request: NextRequest) {
           endTime,
           coachName: coach?.full_name || 'Your Coach',
           location: location || slot.location || 'PSP.Pro Facility',
-          amount: (service.price_cents / 100).toFixed(2),
+          amount: (amountCents / 100).toFixed(2),
           confirmationId: booking.id,
         })
         await sendEmail({ to: athlete.email, ...athleteEmail })

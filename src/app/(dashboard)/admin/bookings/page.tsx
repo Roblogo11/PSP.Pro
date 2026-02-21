@@ -361,12 +361,30 @@ export default function AdminBookingsPage() {
       .from('bookings')
       .update({
         status: newStatus,
-        ...(newStatus === 'cancelled' && { cancelled_at: new Date().toISOString() })
+        ...(newStatus === 'cancelled' && { cancelled_at: new Date().toISOString() }),
+        ...(newStatus === 'no-show' && { no_show_marked_at: new Date().toISOString() }),
       })
       .eq('id', bookingId)
 
     if (!error) {
       fetchBookings()
+    }
+  }
+
+  const handleCheckIn = async (bookingId: string) => {
+    const { error } = await supabase
+      .from('bookings')
+      .update({
+        checked_in_at: new Date().toISOString(),
+        checked_in_by: profile?.id,
+      })
+      .eq('id', bookingId)
+
+    if (!error) {
+      toastSuccess('Athlete checked in!')
+      fetchBookings()
+    } else {
+      toastError('Check-in failed')
     }
   }
 
@@ -585,7 +603,7 @@ export default function AdminBookingsPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
         <div className="glass-card p-4">
           <p className="text-sm text-cyan-800 dark:text-white mb-1">Total Bookings</p>
           <p className="text-2xl font-bold text-slate-900 dark:text-white">{bookings.length}</p>
@@ -608,6 +626,12 @@ export default function AdminBookingsPage() {
             ${(bookings
               .filter(b => b.payment_status === 'paid')
               .reduce((sum, b) => sum + b.amount_cents, 0) / 100).toFixed(2)}
+          </p>
+        </div>
+        <div className="glass-card p-4">
+          <p className="text-sm text-cyan-800 dark:text-white mb-1">No-Shows</p>
+          <p className="text-2xl font-bold text-red-400">
+            {bookings.filter(b => b.status === 'no-show').length}
           </p>
         </div>
       </div>
@@ -761,6 +785,20 @@ export default function AdminBookingsPage() {
                               )}
                               {booking.status === 'confirmed' && (
                                 <>
+                                  {!booking.checked_in_at ? (
+                                    <button
+                                      onClick={() => handleCheckIn(booking.id)}
+                                      className="px-2.5 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg text-[11px] font-semibold transition-colors flex items-center gap-1"
+                                    >
+                                      <CheckCircle2 className="w-3 h-3" />
+                                      Check In
+                                    </button>
+                                  ) : (
+                                    <span className="px-2.5 py-1 bg-green-500/10 text-green-400 rounded-lg text-[10px] font-semibold flex items-center gap-1">
+                                      <CheckCircle2 className="w-3 h-3" />
+                                      Checked In
+                                    </span>
+                                  )}
                                   <button
                                     onClick={() => updateBookingStatus(booking.id, 'completed')}
                                     className="px-2.5 py-1 bg-cyan/20 hover:bg-cyan/30 text-cyan rounded-lg text-[11px] font-semibold transition-colors"
@@ -1052,6 +1090,20 @@ export default function AdminBookingsPage() {
                           )}
                           {booking.status === 'confirmed' && (
                             <>
+                              {!booking.checked_in_at ? (
+                                <button
+                                  onClick={() => handleCheckIn(booking.id)}
+                                  className="px-3 py-1.5 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1"
+                                >
+                                  <CheckCircle2 className="w-3 h-3" />
+                                  Check In
+                                </button>
+                              ) : (
+                                <span className="px-3 py-1.5 bg-green-500/10 text-green-400 rounded-lg text-[11px] font-semibold flex items-center gap-1">
+                                  <CheckCircle2 className="w-3 h-3" />
+                                  Checked In
+                                </span>
+                              )}
                               <button
                                 onClick={() => updateBookingStatus(booking.id, 'completed')}
                                 className="px-3 py-1.5 bg-cyan/20 hover:bg-cyan/30 text-cyan rounded-lg text-xs font-semibold transition-colors"

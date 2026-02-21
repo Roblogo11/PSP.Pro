@@ -7,7 +7,7 @@ import { getLocalDateString } from '@/lib/utils/local-date'
 import { Calendar } from '@/components/booking/calendar'
 import { ServiceSelector } from '@/components/booking/service-selector'
 import { TimeSlotPicker } from '@/components/booking/time-slot-picker'
-import { CheckCircle2, ArrowRight, ArrowLeft, Loader2, CalendarDays, CreditCard, Wallet } from 'lucide-react'
+import { CheckCircle2, ArrowRight, ArrowLeft, Loader2, CalendarDays, CreditCard, Wallet, Tag, Sparkles } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { toastError } from '@/lib/toast'
 
@@ -30,6 +30,10 @@ export default function BookingPage() {
   const [submitting, setSubmitting] = useState(false)
   const [bookedSlotIds, setBookedSlotIds] = useState<string[]>([])
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'on_site'>('card')
+  const [promoCode, setPromoCode] = useState('')
+  const [promoValidating, setPromoValidating] = useState(false)
+  const [promoResult, setPromoResult] = useState<{ valid: boolean; discount_type?: string; discount_value?: number; label?: string } | null>(null)
+  const [membershipTier, setMembershipTier] = useState<string>('basic')
   const [orgContext, setOrgContext] = useState<{ name: string; logo_url: string | null; primary_color: string; secondary_color: string; tagline: string | null; slug: string } | null>(null)
 
   // Check for URL params
@@ -47,9 +51,17 @@ export default function BookingPage() {
       .catch(() => {})
   }, [orgId])
 
-  // Fetch services on mount
+  // Fetch services + membership tier on mount
   useEffect(() => {
     fetchServices()
+    async function fetchTier() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data } = await supabase.from('profiles').select('membership_tier').eq('id', user.id).single()
+        if (data?.membership_tier) setMembershipTier(data.membership_tier)
+      }
+    }
+    fetchTier()
   }, [])
 
   // Auto-select service from URL param after services load
@@ -164,6 +176,41 @@ export default function BookingPage() {
     setCurrentStep('confirm')
   }
 
+  const validatePromoCode = async () => {
+    if (!promoCode.trim()) return
+    setPromoValidating(true)
+    try {
+      const res = await fetch('/api/promo/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: promoCode, type: 'booking' }),
+      })
+      const data = await res.json()
+      setPromoResult(data)
+    } catch {
+      setPromoResult({ valid: false })
+    } finally {
+      setPromoValidating(false)
+    }
+  }
+
+  // Calculate displayed price with discounts
+  const getDisplayPrice = () => {
+    if (!selectedService) return 0
+    let price = selectedService.price_cents
+    if (membershipTier === 'elite') {
+      price = Math.round(price * 0.9)
+    }
+    if (promoResult?.valid) {
+      if (promoResult.discount_type === 'percentage') {
+        price = Math.round(price * (1 - (promoResult.discount_value || 0) / 100))
+      } else if (promoResult.discount_type === 'fixed_cents') {
+        price = Math.max(0, price - (promoResult.discount_value || 0))
+      }
+    }
+    return price
+  }
+
   const handleConfirmBooking = async () => {
     if (!selectedServiceId || !selectedDate || !selectedSlotId || isImpersonating) return
 
@@ -229,6 +276,7 @@ export default function BookingPage() {
               location: slot.location,
               ...(orgId && { orgId }),
             },
+            ...(promoResult?.valid && promoCode ? { promoCode: promoCode.trim() } : {}),
           }),
         })
 
@@ -442,10 +490,57 @@ export default function BookingPage() {
                   <p className="text-lg font-bold text-slate-900 dark:text-white">{selectedSlot.location}</p>
                 </div>
 
+                {/* Elite Discount Banner */}
+                {membershipTier === 'elite' && (
+                  <div className="p-3 rounded-lg bg-gradient-to-r from-orange/10 to-yellow-500/10 border border-orange/30 flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-orange flex-shrink-0" />
+                    <div>
+                      <p className="text-sm font-semibold text-orange">Elite Member Discount</p>
+                      <p className="text-xs text-slate-600 dark:text-white/60">10% off applied automatically</p>
+                    </div>
+                    <span className="ml-auto text-sm font-bold text-green-500">-${((selectedService.price_cents * 0.1) / 100).toFixed(2)}</span>
+                  </div>
+                )}
+
+                {/* Promo Code Input */}
+                <div className="p-4 rounded-lg bg-cyan-50/50 border border-cyan-200/40">
+                  <p className="text-sm text-cyan-800 dark:text-white mb-2 font-semibold flex items-center gap-2">
+                    <Tag className="w-4 h-4" />
+                    Promo Code
+                  </p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={promoCode}
+                      onChange={(e) => { setPromoCode(e.target.value.toUpperCase()); setPromoResult(null) }}
+                      placeholder="Enter code"
+                      className="flex-1 px-3 py-2 rounded-lg bg-white dark:bg-white/10 border border-slate-200 dark:border-white/20 text-sm text-slate-900 dark:text-white placeholder:text-slate-400"
+                    />
+                    <button
+                      type="button"
+                      onClick={validatePromoCode}
+                      disabled={!promoCode.trim() || promoValidating}
+                      className="px-4 py-2 rounded-lg bg-cyan/20 text-cyan font-semibold text-sm hover:bg-cyan/30 transition-all disabled:opacity-50"
+                    >
+                      {promoValidating ? 'Checking...' : 'Apply'}
+                    </button>
+                  </div>
+                  {promoResult && (
+                    <p className={`text-xs mt-2 ${promoResult.valid ? 'text-green-500' : 'text-red-400'}`}>
+                      {promoResult.valid ? `Promo applied: ${promoResult.label}` : 'Invalid or expired promo code'}
+                    </p>
+                  )}
+                </div>
+
                 <div className="p-4 rounded-lg bg-orange/10 border border-orange/20">
                   <p className="text-sm text-orange mb-1">Total Amount</p>
+                  {(membershipTier === 'elite' || promoResult?.valid) && (
+                    <p className="text-sm text-slate-500 line-through">
+                      ${(selectedService.price_cents / 100).toFixed(2)}
+                    </p>
+                  )}
                   <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                    ${(selectedService.price_cents / 100).toFixed(2)}
+                    ${(getDisplayPrice() / 100).toFixed(2)}
                   </p>
                 </div>
 

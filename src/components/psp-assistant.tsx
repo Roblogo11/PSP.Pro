@@ -243,7 +243,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['walk me through booking', 'booking page', 'booking walkthrough', 'how does booking work'],
     title: 'Booking Page Walkthrough',
-    response: 'Here\'s how the Booking page works:\n\nStep 1 — Service Selection\nYou\'ll see all active training services in a grid. Each card shows the name, price, duration, and description. Click one to select it.\n\nStep 2 — Date Selection\nA calendar appears. Pick any date from today forward. Unavailable dates are grayed out.\n\nStep 3 — Time Slot\nAvailable time slots show up with the coach name and location. Pick one that works.\n\nStep 4 — Confirmation\nReview everything: service, date, time, coach, and total price. Hit "Confirm & Pay" to go to Stripe\'s secure checkout.\n\nAfter payment, you\'re redirected to a success page with your confirmation ID. You\'ll also get an email.',
+    response: 'Here\'s how the Booking page works:\n\nStep 1 — Service Selection\nYou\'ll see all active training services in a grid. Each card shows the name, price, duration, and description. Click one to select it.\n\nStep 2 — Date Selection\nA calendar appears. Pick any date from today forward. Unavailable dates are grayed out.\n\nStep 3 — Time Slot\nAvailable time slots show up with the coach name and location. Pick one that works.\n\nStep 4 — Confirmation\nReview everything: service, date, time, coach, and total price.\n• Elite members see their automatic 10% discount applied\n• Enter a promo code for additional savings\n• Discounts stack — Elite first, then promo code!\nHit "Confirm & Pay" to go to Stripe\'s secure checkout.\n\nAfter payment, you\'re redirected to a success page with:\n• Your confirmation ID\n• An "Add to Calendar" button to sync the session\n• A link to book another session\nYou\'ll also get a confirmation email.',
     actions: [{ label: 'Start Booking', href: '/booking' }],
   },
 
@@ -375,7 +375,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['session', 'sessions', 'my sessions', 'upcoming', 'past sessions', 'session history', 'training session'],
     title: 'My Sessions',
-    response: 'The Sessions page shows all your training sessions:\n\nFilter by:\n• All Sessions\n• Upcoming (future bookings)\n• Past (completed sessions)\n\nEach session card shows:\n• Coach name and photo\n• Session type and service\n• Date, time, and location\n• Peak velocity (if recorded)\n• Coach notes\n• Status badge (upcoming, completed, cancelled)\n\nFor upcoming sessions you can:\n• Cancel (with 24hr policy)\n• Reschedule (redirects to booking)\n\nCompleted sessions show your performance data from that session.',
+    response: 'The Sessions page shows all your training sessions:\n\nFilter by:\n• All Sessions\n• Upcoming (future bookings)\n• Past (completed sessions)\n\nEach session card shows:\n• Coach name and photo\n• Session type and service\n• Date, time, and location\n• Peak velocity (if recorded)\n• Coach notes\n• Status badge (upcoming, completed, cancelled)\n\nFor upcoming sessions you can:\n• RSVP — click Going, Maybe, or Can\'t go to let your coach know\n• Cancel (with 24hr policy)\n• Reschedule (redirects to booking)\n\nCalendar Sync:\n• Click "Sync Calendar" at the top of the page\n• Copies a subscribe URL for Google Calendar, Apple Calendar, or Outlook\n• Sessions auto-update when you book or cancel!\n\nCompleted sessions show your performance data from that session.',
     actions: [{ label: 'View Sessions', href: '/sessions' }],
   },
 
@@ -423,7 +423,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['admin', 'coach dashboard', 'manage athletes', 'coach view', 'admin panel', 'coach panel', 'control center'],
     title: 'Coach/Admin Dashboard',
-    response: 'The Admin panel is your coaching command center:\n\n📊 Quick Stats — Active athletes, upcoming sessions, total drills, pending bookings\n\n🏋️ Core Tools (sidebar navigation):\n• Calendar (Confirm/Book) — Confirm, edit, cancel bookings + book for athletes\n• Lesson Builder — Create/rename lesson types, set pricing, and add video URLs\n• Manage Athletes — View, create, edit, delete athlete profiles\n• Drills — Create drills, import from YouTube, assign to athletes\n• Courses — Build multi-lesson video courses, enroll athletes\n• Pop Quiz — Create T/F quizzes, assign to athletes, view scores\n• Media — Upload and manage content\n• Analytics — View performance data and trends\n• Organizations — Create your own branded coaching academy\n\n🚀 Quick Actions on Admin Home:\n• "Book for Athlete" button (top right — always visible)\n• Create Drill, Schedule Session, Add Athlete, Upload Video cards\n\n💰 Stripe Settings (Admin only):\n• Toggle test/live payment mode\n• View payment status\n\nCoaches see only their athletes and sessions. Admins see everything.',
+    response: 'The Admin panel is your coaching command center:\n\n📊 Quick Stats — Active athletes, upcoming sessions, total drills, pending bookings\n\n🏋️ Core Tools (sidebar navigation):\n• Calendar (Confirm/Book) — Confirm, edit, cancel bookings + book for athletes + check-in & attendance tracking\n• Lesson Builder — Create/rename lesson types, set pricing, and add video URLs\n• Manage Athletes — View, create, edit, delete athlete profiles + send progress reports\n• Drills — Create drills, import from YouTube, assign to athletes\n• Courses — Build multi-lesson video courses, enroll athletes\n• Pop Quiz — Create T/F quizzes, assign to athletes, view scores\n• Media — Upload and manage content\n• Analytics — View performance data and trends\n• Promo Codes — Create and manage discount codes for athletes\n• Data Import — Import CSV data from Rapsodo, Blast Motion, Pocket Radar, HitTrax\n• Organizations — Create your own branded coaching academy\n\n🚀 Quick Actions on Admin Home:\n• "Book for Athlete" button (top right — always visible)\n• Create Drill, Schedule Session, Add Athlete, Upload Video cards\n\n💰 Stripe Settings (Admin only):\n• Toggle test/live payment mode\n• View payment status\n\nCoaches see only their athletes and sessions. Admins see everything.',
     actions: [{ label: 'Go to Admin', href: '/admin' }],
     followUp: ['How do I create a course?', 'How do I create a quiz?', 'How do I book for an athlete?'],
     role: 'coach',
@@ -442,9 +442,9 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['first time setup', 'getting started as coach', 'new coach', 'how to start', 'setup my account', 'what do i do first', 'where do i start', 'coach tutorial', 'coach guide', 'full walkthrough coach'],
     title: 'Coach Getting Started Guide',
-    response: 'Welcome! Here\'s how to set up everything as a coach:\n\nStep 1: Create Your Lesson Types\nGo to Lesson Builder (sidebar). Click "Create Lesson Type" and add your services — 1-on-1 training, group sessions, etc. Set name, price, duration, and category.\n\nStep 2: Set Your Availability\nGo to Admin Home → "Schedule Session" (or sidebar → Availability page). Pick dates and time slots when you can coach. Link each slot to a lesson type.\n\nStep 3: Add Your Athletes\nGo to Manage Athletes. Click "Add Athlete" — enter their name, email, sport(s), and age. They get an account with a 30-day free trial instantly. Tell them to go to /forgot-password to set their login password.\n\nStep 4: Create Drills\nGo to Drills. Click "Create Drill" — add a YouTube video URL, title, description, difficulty. Or use Bulk Import with a CSV (180x faster!).\n\nStep 5: Assign Drills\nGo to Manage Athletes → select an athlete → "Assign Drills" → pick from your library.\n\nStep 6: Book Returning Clients\nFrom Admin Home, click "Book for Athlete" to manually book a session for a walk-in or existing client.\n\nThat\'s it! Your athletes can now log in, see their drills, book sessions, and track progress.',
+    response: 'Welcome! Here\'s how to set up everything as a coach:\n\nStep 1: Create Your Lesson Types\nGo to Lesson Builder (sidebar). Click "Create Lesson Type" and add your services — 1-on-1 training, group sessions, etc. Set name, price, duration, and category.\n\nStep 2: Set Your Availability\nGo to Admin Home → "Schedule Session" (or sidebar → Availability page). Pick dates and time slots when you can coach. Link each slot to a lesson type.\n\nStep 3: Add Your Athletes\nGo to Manage Athletes. Click "Add Athlete" — enter their name, email, sport(s), and age. They get an account with a 30-day free trial instantly. Tell them to go to /forgot-password to set their login password.\n\nStep 4: Create Drills\nGo to Drills. Click "Create Drill" — add a YouTube video URL, title, description, difficulty. Or use Bulk Import with a CSV (180x faster!).\n\nStep 5: Assign Drills\nGo to Manage Athletes → select an athlete → "Assign Drills" → pick from your library.\n\nStep 6: Book Returning Clients\nFrom Admin Home, click "Book for Athlete" to manually book a session for a walk-in or existing client.\n\nStep 7: Set Up Promo Codes (optional)\nGo to Promo Codes (sidebar). Create discount codes to share with new athletes or for promotions.\n\nStep 8: Import Device Data (optional)\nGo to Data Import (sidebar). Upload CSV files from Rapsodo, Blast Motion, Pocket Radar, or HitTrax to import training metrics.\n\nThat\'s it! Your athletes can now log in, see their drills, book sessions, track progress, message you, sync their calendar, and view progress reports!',
     actions: [{ label: 'Lesson Builder', href: '/admin/services' }, { label: 'Set Availability', href: '/admin/availability' }, { label: 'Manage Athletes', href: '/admin/athletes' }],
-    followUp: ['How do I book for an athlete?', 'How do I create a course?', 'Walk me through the admin panel'],
+    followUp: ['How do I book for an athlete?', 'How do I create a course?', 'Walk me through the admin panel', 'How do I create a promo code?', 'How do I import device data?'],
     role: 'coach',
   },
 
@@ -452,7 +452,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['daily workflow', 'day to day', 'routine', 'what should i do daily', 'daily tasks', 'coach routine', 'morning routine'],
     title: 'Coach Daily Workflow',
-    response: 'Here\'s a typical coach workflow:\n\n1. Check Admin Home\nOpen /admin — your smart banner shows pending bookings and upcoming sessions at a glance.\n\n2. Confirm Pending Bookings\nClick "Calendar (Confirm/Book)" in the sidebar (or the pending badge). Confirm or decline new bookings.\n\n3. Review Today\'s Sessions\nThe Upcoming Sessions widget on Admin Home shows your next 5 sessions with athlete names and times.\n\n4. After Each Session\nGo to Calendar (Confirm/Book) → find the completed session → click Edit → add Coach Notes (athlete sees these) and Internal Notes (private). Mark as "Complete."\n\n5. Assign Follow-Up Drills\nGo to Manage Athletes → select the athlete → Assign Drills based on what you worked on.\n\n6. Book Walk-Ins\nClient shows up without a booking? Click "Book for Athlete" on Admin Home → select athlete, slot, and payment type (on-site, package, or comp).\n\n7. Check Analytics\nEnd of day, review Analytics for trends across your athletes.',
+    response: 'Here\'s a typical coach workflow:\n\n1. Check Admin Home\nOpen /admin — your smart banner shows pending bookings and upcoming sessions at a glance.\n\n2. Confirm Pending Bookings\nClick "Calendar (Confirm/Book)" in the sidebar (or the pending badge). Confirm or decline new bookings.\n\n3. Check Messages\nOpen Messages — reply to athlete questions or send training updates.\n\n4. Review Today\'s Sessions\nThe Upcoming Sessions widget on Admin Home shows your next 5 sessions with athlete names and times. Check RSVPs to know who\'s coming.\n\n5. Check In Athletes\nWhen athletes arrive, click "Check In" on their confirmed booking in the Calendar page.\n\n6. After Each Session\nGo to Calendar (Confirm/Book) → find the completed session → click Edit → add Coach Notes and Internal Notes. Mark as "Complete." Import any device data (Rapsodo, etc.) from Data Import.\n\n7. Assign Follow-Up Drills\nGo to Manage Athletes → select the athlete → Assign Drills based on what you worked on.\n\n8. Book Walk-Ins\nClient shows up without a booking? Click "Book for Athlete" on Admin Home → select athlete, slot, and payment type (on-site, package, or comp). Share a promo code for their next visit!\n\n9. Send Progress Reports\nPeriodically go to Admin → Athletes → click an athlete → "Send Report" to email them a professional 30-day progress summary.\n\n10. Check Analytics\nEnd of day, review Analytics for trends across your athletes.',
     actions: [{ label: 'Admin Home', href: '/admin' }, { label: 'Calendar', href: '/admin/bookings' }],
     followUp: ['How do I edit a booking?', 'How do I add coach notes?', 'How do I mark a session complete?'],
     role: 'coach',
@@ -471,7 +471,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['sidebar', 'navigation', 'menu items', 'where is', 'find page', 'coach menu', 'admin menu', 'admin sidebar'],
     title: 'Coach Sidebar Navigation',
-    response: 'Your sidebar navigation (left side on desktop, bottom on mobile):\n\n• Admin Home — your command center with stats, sessions, and quick actions\n• Calendar (Confirm/Book) — all bookings: confirm, edit, cancel, book for athletes\n• Lesson Builder — create/manage lesson types, pricing, categories\n• Manage Athletes — view/create/edit athlete profiles\n• Drills — create, import, and manage training videos\n• Courses — build multi-lesson video course bundles\n• Pop Quiz — create T/F quizzes, assign to athletes, view scores\n• Media — upload and manage content files\n• Analytics — performance reports and trends\n\nTips:\n• Calendar has a badge showing pending bookings count\n• "Book for Athlete" is also available from Admin Home (orange button top right)\n• On mobile, swipe left/right to see all nav items',
+    response: 'Your sidebar navigation (left side on desktop, bottom on mobile):\n\n• Admin Home — your command center with stats, sessions, and quick actions\n• Calendar (Confirm/Book) — all bookings: confirm, edit, cancel, check-in, book for athletes\n• Lesson Builder — create/manage lesson types, pricing, categories\n• Manage Athletes — view/create/edit athlete profiles, send progress reports\n• Drills — create, import, and manage training videos\n• Courses — build multi-lesson video course bundles\n• Pop Quiz — create T/F quizzes, assign to athletes, view scores\n• Media — upload and manage content files\n• Analytics — performance reports and trends\n• Promo Codes — create and manage discount codes for athletes\n• Data Import — import CSV data from Rapsodo, Blast Motion, Pocket Radar, HitTrax\n\nTips:\n• Calendar has a badge showing pending bookings count\n• Messages badge shows your unread message count\n• "Book for Athlete" is also available from Admin Home (orange button top right)\n• On mobile, swipe left/right to see all nav items',
     actions: [{ label: 'Admin Home', href: '/admin' }],
     role: 'coach',
   },
@@ -539,7 +539,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['manage bookings', 'confirm booking', 'pending booking', 'booking management', 'approve booking', 'calendar confirm', 'calendar book'],
     title: 'Calendar (Confirm/Book)',
-    response: 'The Calendar page (sidebar: "Calendar (Confirm/Book)") is your booking command center:\n\nFilter tabs: All, Pending, Confirmed, Cancelled\n\nStats row: Total Bookings, Confirmed, Pending, Revenue\n\nEach booking shows: Athlete name, service, date/time, coach, amount, payment status, booking status.\n\nActions you can take:\n• Pending → "Confirm" or "Cancel"\n• Confirmed → "Mark Complete", "No Show", or "Log Metrics"\n• Edit → Add coach notes, internal notes, update status\n• Log Session Metrics → On confirmed/completed bookings, click the orange "Metrics" button or open Edit and click "Log Session Metrics" to record sport-specific performance data linked to that session\n• "Book for Athlete" button (top of page) → Create a booking on behalf of any athlete\n\nPayment types when booking for athlete:\n• Stripe — normal online payment\n• On-Site — athlete pays in person\n• Use Package — deducts from athlete\'s session pack\n• Complimentary — free session\n\nCoaches see only their own bookings. Admins see all.',
+    response: 'The Calendar page (sidebar: "Calendar (Confirm/Book)") is your booking command center:\n\nFilter tabs: All, Pending, Confirmed, Cancelled\n\nStats row: Total Bookings, Confirmed, Pending, Revenue, No-Shows\n\nEach booking shows: Athlete name, service, date/time, coach, amount, payment status, booking status.\n\nActions you can take:\n• Pending → "Confirm" or "Cancel"\n• Confirmed → "Check In" (when athlete arrives), "Mark Complete", "No Show", or "Log Metrics"\n• Edit → Add coach notes, internal notes, update status\n• Log Session Metrics → On confirmed/completed bookings, click the orange "Metrics" button or open Edit and click "Log Session Metrics" to record sport-specific performance data linked to that session\n• "Book for Athlete" button (top of page) → Create a booking on behalf of any athlete\n\nAttendance tracking:\n• "Check In" button appears on confirmed bookings — click when athlete arrives\n• "No-Show" button marks absent athletes\n• No-Show count is tracked in the stats bar\n\nPayment types when booking for athlete:\n• Stripe — normal online payment\n• On-Site — athlete pays in person\n• Use Package — deducts from athlete\'s session pack\n• Complimentary — free session\n\nCoaches see only their own bookings. Admins see all.',
     actions: [{ label: 'Calendar', href: '/admin/bookings' }],
     followUp: ['How do I book for an athlete?', 'How do I edit a booking?', 'How do I mark a session complete?'],
     role: 'coach',
@@ -641,7 +641,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['navigate', 'menu', 'sidebar', 'where do i find', 'how to find', 'navigation', 'pages', 'sitemap'],
     title: 'Site Navigation',
-    response: 'Here\'s how to get around PSP.Pro:\n\nPublic Pages (no login needed):\n• Home, About, Pricing, Blog, Contact, FAQ, Join the Team\n\nThe navigation adapts based on your login status:\n• Logged out — sidebar shows a "Login" link at the bottom\n• Logged in — sidebar shows "Your Dashboard" at the top (goes to /locker for athletes, /admin for coaches)\n\nAthlete Sidebar:\n• Dashboard — your main locker\n• Drills (members only) — browse training videos\n• Progress — track improvement\n• Achievements — earned badges\n• My Lessons — view/manage your bookings\n• Book Lessons — book new sessions\n• Courses — video course library\n• Pop Quiz — game knowledge quizzes\n• Leaderboards — regional rankings by sport & metric\n• Settings — account management\n\nCoach/Admin Sidebar:\n• Admin Home — command center with stats & quick actions\n• Calendar (Confirm/Book) — manage bookings, confirm, book for athletes\n• Lesson Builder — manage lesson types & pricing\n• Manage Athletes — athlete profiles\n• Drills — create and assign training videos\n• Courses — build video course bundles\n• Pop Quiz — create and assign quizzes\n• Media — upload content\n• Analytics — performance reports\n• Organizations — run your own branded academy\n\nCTAs across the site adapt — members see "Book Now", visitors see "Join the Team."',
+    response: 'Here\'s how to get around PSP.Pro:\n\nPublic Pages (no login needed):\n• Home, About, Pricing, Blog, Contact, FAQ, Join the Team\n\nThe navigation adapts based on your login status:\n• Logged out — sidebar shows a "Login" link at the bottom\n• Logged in — sidebar shows "Your Dashboard" at the top (goes to /locker for athletes, /admin for coaches)\n\nAthlete Sidebar:\n• Dashboard — your main locker\n• Drills (members only) — browse training videos\n• Progress — track improvement\n• Messages — direct messaging with coaches (with unread badge!)\n• Report — view your 30-day progress report\n• Achievements — earned badges\n• My Lessons — view/manage bookings with RSVP + calendar sync\n• Book Lessons — book new sessions\n• Courses — video course library\n• Pop Quiz — game knowledge quizzes\n• Leaderboards — regional rankings by sport & metric\n• Settings — account management\n\nCoach/Admin Sidebar:\n• Admin Home — command center with stats & quick actions\n• Calendar (Confirm/Book) — manage bookings, confirm, check-in, attendance tracking\n• Lesson Builder — manage lesson types & pricing\n• Manage Athletes — athlete profiles + send progress reports\n• Drills — create and assign training videos\n• Courses — build video course bundles\n• Pop Quiz — create and assign quizzes\n• Media — upload content\n• Analytics — performance reports\n• Promo Codes — create and manage discount codes\n• Data Import — import CSV data from sports devices\n• Organizations — run your own branded academy\n\nCTAs across the site adapt — members see "Book Now", visitors see "Join the Team."',
     actions: [{ label: 'Home', href: '/' }, { label: 'Dashboard', href: '/locker' }],
   },
 
@@ -892,6 +892,117 @@ const KNOWLEDGE_BASE: KBEntry[] = [
     response: 'When athletes book from your org\'s landing page, their bookings are automatically tagged to your org!\n\nHere\'s the full flow:\n1. Athlete visits propersports.pro/org/your-slug\n2. Clicks "Book Now"\n3. Booking page opens with your org ID pre-attached (?org=your-org-id)\n4. Athlete selects service, date, time, and pays\n5. Booking is saved in the database tagged to your org\n6. If you have Stripe Connect enabled, the payout split happens automatically\n\nYou can see org-tagged bookings in:\n• Admin → Calendar (Confirm/Book) — your normal booking management page\n\nThe org system is additive — all existing booking features (confirm, notes, metrics, complete, cancel) work exactly the same. Org just adds attribution and split payments on top.',
     actions: [{ label: 'Calendar', href: '/admin/bookings' }, { label: 'Organizations', href: '/admin/org' }],
     followUp: ['How do Stripe payouts work?', 'How do I confirm bookings?', 'How do I view my org page?'],
+    role: 'coach',
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── ELITE MEMBERSHIP DISCOUNT ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['elite discount', 'elite member', 'elite membership', '10 percent off', '10% off', 'auto discount', 'membership discount', 'elite tier', 'elite benefit', 'elite perks'],
+    title: 'Elite Membership Discount',
+    response: 'Elite members get an automatic 10% discount on every booking!\n\nHow it works:\n• When you check out, the system detects your Elite membership tier\n• A 10% discount is automatically applied to your session price\n• You\'ll see the discount displayed on the confirmation step before paying\n• The original price is shown crossed out with the new price highlighted\n\nExample:\n• Session costs $75 → Elite price: $67.50 (save $7.50!)\n\nThe discount works for both card payments and pay-on-site bookings. It also stacks with promo codes — Elite discount applies first, then the promo code on top!\n\nAsk about our membership tiers on the Pricing page.',
+    actions: [{ label: 'View Pricing', href: '/pricing' }, { label: 'Book a Session', href: '/booking' }],
+    followUp: ['How do I become an Elite member?', 'What are promo codes?', 'How do I book a session?'],
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── PROMO CODES ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['promo code', 'promo', 'discount code', 'coupon', 'coupon code', 'promotion', 'promotional code', 'apply code', 'enter code'],
+    title: 'Promo & Discount Codes',
+    response: 'You can apply promo codes at checkout for extra savings!\n\nHow to use a promo code:\n1. Go through the booking flow normally\n2. On the confirmation step (Step 4), you\'ll see a "Have a promo code?" section\n3. Enter your code and click "Apply"\n4. If valid, the discount is applied instantly and you\'ll see the new total\n\nTypes of discounts:\n• Percentage off (e.g., 20% off)\n• Fixed amount off (e.g., $10 off)\n\nPromo codes may have:\n• Expiration dates\n• Usage limits\n• Minimum purchase amounts\n• Category restrictions (bookings only, packages only, etc.)\n\nPro tip: If you\'re an Elite member, your 10% membership discount stacks with promo codes for maximum savings!',
+    actions: [{ label: 'Book a Session', href: '/booking' }],
+    followUp: ['What is the Elite discount?', 'How do I book a session?'],
+  },
+  {
+    keywords: ['create promo', 'manage promos', 'admin promo', 'make promo code', 'new promo code', 'promo admin'],
+    title: 'Managing Promo Codes (Coach Tool)',
+    response: 'Coaches and admins can create and manage promo codes!\n\nGo to Admin → Promo Codes (sidebar)\n\nCreate a promo code:\n1. Click "Create Promo Code"\n2. Set the code (e.g., "SPRING20")\n3. Choose discount type: Percentage or Fixed Amount\n4. Set the discount value (e.g., 20 for 20%)\n5. Optional: Set max uses, expiration date, and minimum purchase amount\n6. Choose what it applies to: All, Bookings only, Packages only, or Memberships only\n7. Click "Create"\n\nManage codes:\n• Copy any code to clipboard with one click\n• Toggle codes active/inactive\n• See usage count vs. max uses\n• Delete expired or unused codes\n\nShare codes on social media, in emails, or give to walk-in clients for a deal!',
+    actions: [{ label: 'Promo Codes', href: '/admin/promos' }],
+    followUp: ['How does the Elite discount work?', 'How do I book for an athlete?'],
+    role: 'coach',
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── PAYMENT PLANS / INSTALLMENTS ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['payment plan', 'installment', 'installments', 'pay in parts', 'split payment', 'monthly payment', 'pay over time', 'financing'],
+    title: 'Payment Plans & Installments',
+    response: 'For training packages over $200, you can split the payment into installments!\n\nHow it works:\n• Packages $200-$400: Split into 2 monthly payments\n• Packages $400-$600: Split into 3 monthly payments\n• Packages $600+: Split into 4 monthly payments\n\nExample: 10-Session Pack ($675)\n• 3 payments of $225/month instead of $675 upfront\n\nYour package activates immediately after the first payment — you don\'t have to wait until all payments are complete to start training!\n\nPayments are processed automatically each month through Stripe. You\'ll get an email receipt for each payment.\n\nLook for the "Pay in installments" option on the booking confirmation step when purchasing qualifying packages.',
+    actions: [{ label: 'View Packages', href: '/pricing' }, { label: 'Book a Session', href: '/booking' }],
+    followUp: ['What packages are available?', 'How do I book a session?'],
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── IN-APP MESSAGING ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['message', 'messages', 'messaging', 'chat with coach', 'send message', 'direct message', 'dm', 'inbox', 'conversation', 'talk to coach', 'message coach', 'message athlete'],
+    title: 'In-App Messaging',
+    response: 'PSP.Pro has built-in messaging so you can chat directly with your coaches!\n\nHow to use it:\n1. Go to Messages from your sidebar\n2. Start a new conversation by clicking "New" and selecting a contact\n3. Type your message and hit Send\n4. Messages are delivered in real-time — no refreshing needed!\n\nWho can you message?\n• Athletes can message coaches they\'ve booked sessions with\n• Coaches can message any of their athletes\n\nFeatures:\n• Real-time delivery (messages appear instantly)\n• Unread count badge in the sidebar\n• Full conversation history\n• Works on mobile and desktop\n\nPerfect for asking about drill feedback, scheduling questions, or sharing training updates!',
+    actions: [{ label: 'Messages', href: '/messages' }],
+    followUp: ['How do I book a session?', 'How do drills work?'],
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── CALENDAR SYNC ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['calendar sync', 'calendar subscribe', 'ical', 'google calendar', 'apple calendar', 'outlook calendar', 'add to calendar', 'sync calendar', 'calendar feed', 'calendar export'],
+    title: 'Calendar Sync',
+    response: 'Sync your PSP training sessions with your personal calendar!\n\nTwo options:\n\n1. Subscribe (auto-updating)\n• Go to My Lessons (Sessions page)\n• Click "Sync Calendar" at the top\n• The subscription URL is copied to your clipboard\n• Paste it into Google Calendar, Apple Calendar, or Outlook\n• Your sessions will automatically appear and stay updated!\n\n2. Add to Calendar (one-time)\n• After booking a session, click "Add to Calendar" on the success page\n• Downloads a calendar file for that specific session\n\nThe calendar feed includes:\n• Session date and time\n• Coach name\n• Session type\n• Location\n• Status (confirmed, pending, etc.)\n\nAny changes to your bookings (reschedules, cancellations) automatically update in your synced calendar!',
+    actions: [{ label: 'My Sessions', href: '/sessions' }],
+    followUp: ['How do I book a session?', 'Can I cancel a session?'],
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── RSVP / ATTENDANCE TRACKING ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['rsvp', 'attendance', 'check in', 'checkin', 'check-in', 'going', 'maybe', 'cant make it', 'attending', 'confirm attendance', 'no show tracking'],
+    title: 'RSVP & Attendance',
+    response: 'Let your coaches know if you can make it to your sessions!\n\nFor Athletes:\n• Go to My Lessons (Sessions page)\n• Each upcoming session has RSVP buttons: Going, Maybe, or Can\'t go\n• Click to update your status — coaches see it instantly\n• You can change your RSVP anytime before the session\n\nFor Coaches:\n• The Calendar page shows a "Check In" button on confirmed bookings\n• Click "Check In" when the athlete arrives\n• Mark "No-Show" if the athlete doesn\'t show up\n• Track attendance patterns over time with the No-Shows stat counter\n\nRSVP helps coaches plan sessions better and track who\'s committed to training!',
+    actions: [{ label: 'My Sessions', href: '/sessions' }],
+    followUp: ['How do I cancel a session?', 'What is the cancellation policy?'],
+  },
+  {
+    keywords: ['coach check in', 'mark attendance', 'attendance tracking coach', 'track no shows', 'athlete check in'],
+    title: 'Attendance Tracking (Coach Tool)',
+    response: 'Track your athletes\' attendance right from the Calendar page!\n\nCheck-In:\n1. Go to Calendar (Confirm/Book)\n2. Find a confirmed booking for today\n3. Click "Check In" when the athlete arrives\n4. The button changes to "Checked In" with a timestamp\n\nNo-Shows:\n• If an athlete doesn\'t show up, click "No-Show"\n• No-shows are tracked in the stats bar at the top\n• This helps you identify attendance patterns\n\nThe stats row now shows:\n• Total Bookings, Confirmed, Pending, Revenue, and No-Shows\n\nUse this data to follow up with athletes who miss sessions!',
+    actions: [{ label: 'Calendar', href: '/admin/bookings' }],
+    role: 'coach',
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── PROGRESS REPORTS ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['progress report', 'monthly report', 'performance report', 'report card', 'email report', 'send report', 'athlete report', 'training report'],
+    title: 'Progress Reports',
+    response: 'PSP.Pro can generate detailed progress reports for athletes!\n\nFor Athletes:\n• Go to "Report" in your sidebar\n• See a full summary of your last 30 days:\n  - Quick stats: sessions completed, drills done, new personal records\n  - Metrics comparison: current vs. previous period with improvement arrows\n  - Goals progress: see how close you are to each target\n  - Coach notes from your sessions\n  - Personal records achieved\n\nFor Coaches:\n• Go to Admin → Athletes → click an athlete\n• Click "Send Report" button at the top\n• A branded progress report email is sent to the athlete\n• The report covers the last 30 days of training data\n\nReports are auto-generated from real training data — no manual work needed!',
+    actions: [{ label: 'View My Report', href: '/progress-report' }],
+    followUp: ['How do I track my progress?', 'What are personal records?'],
+  },
+  {
+    keywords: ['send progress report', 'email progress report', 'generate report', 'report for athlete', 'coach send report'],
+    title: 'Sending Progress Reports (Coach Tool)',
+    response: 'Send professional progress reports to your athletes with one click!\n\n1. Go to Admin → Athletes\n2. Click on any athlete\n3. Click the "Send Report" button (top right, next to "Add Performance Data")\n4. The system generates a full 30-day progress report and emails it to the athlete\n\nThe email report includes:\n• Sessions completed and drills done\n• Performance metrics with before/after comparisons\n• Personal records achieved\n• Goals progress with completion percentages\n• Your coach notes from their sessions\n\nThe email is professionally branded with PSP.Pro design and a link to view the full dashboard.\n\nTip: Send reports monthly to keep athletes and parents engaged!',
+    actions: [{ label: 'Manage Athletes', href: '/admin/athletes' }],
+    role: 'coach',
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── WEARABLE / DEVICE DATA IMPORT ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['wearable', 'device import', 'data import', 'rapsodo', 'blast motion', 'pocket radar', 'hittrax', 'csv import', 'import data', 'device data', 'sensor data', 'upload csv'],
+    title: 'Device Data Import',
+    response: 'Import training data from popular sports devices directly into PSP.Pro!\n\nSupported devices:\n• Rapsodo — pitching/hitting data (velocity, spin rate, break)\n• Blast Motion — bat sensor data (bat speed, attack angle, power)\n• Pocket Radar — speed readings (velocity)\n• HitTrax — batting cage data (exit velo, launch angle, distance)\n\nHow to import:\n1. Go to Admin → Data Import (sidebar)\n2. Select the athlete\n3. Choose the device type\n4. Upload the CSV file exported from your device\n5. Click "Import Data"\n\nThe data is automatically:\n• Parsed based on the device format\n• Mapped to the athlete\'s performance metrics\n• Added to their progress charts and personal records\n\nImport history tracks all uploads with status and record counts.',
+    actions: [{ label: 'Data Import', href: '/admin/imports' }],
+    followUp: ['How do I log metrics manually?', 'How do I view athlete performance?'],
     role: 'coach',
   },
 ]

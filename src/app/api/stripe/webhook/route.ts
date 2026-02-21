@@ -43,6 +43,11 @@ export async function POST(request: NextRequest) {
         await handleSubscriptionDeleted(event.data.object)
         break
 
+      // Installment payment tracking
+      case 'invoice.paid':
+        await handleInvoicePaid(event.data.object)
+        break
+
       default:
         console.log(`Unhandled event type: ${event.type}`)
     }
@@ -107,6 +112,25 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
         } catch (err) {
           console.error('Failed to create payout ledger entry:', err)
           // Non-fatal — booking already created, don't fail the webhook
+        }
+      }
+      // Increment promo code usage if one was applied
+      if (metadata.promo_code_id) {
+        try {
+          const { data: promoRow } = await supabase
+            .from('promo_codes')
+            .select('current_uses')
+            .eq('id', metadata.promo_code_id)
+            .single()
+          if (promoRow) {
+            await supabase
+              .from('promo_codes')
+              .update({ current_uses: (promoRow.current_uses || 0) + 1 })
+              .eq('id', metadata.promo_code_id)
+            console.log('Promo code usage incremented:', metadata.promo_code_id)
+          }
+        } catch (err) {
+          console.error('Failed to increment promo code usage:', err)
         }
       }
     } else if (result.reason === 'already_exists') {
@@ -299,4 +323,28 @@ async function handleSubscriptionDeleted(subscription: any) {
   await supabase.from('profiles').update({
     membership_tier: 'basic',
   }).eq('id', userId)
+}
+
+async function handleInvoicePaid(invoice: any) {
+  const supabase = createAdminClient()
+  const subscriptionId = invoice.subscription
+
+  if (!subscriptionId) return
+
+  // Check if this is an installment package payment
+  const { data: pkg } = await supabase
+    .from('athlete_packages')
+    .select('id, installment_plan, installments_total, installments_paid')
+    .eq('stripe_subscription_id', subscriptionId)
+    .eq('installment_plan', true)
+    .maybeSingle()
+
+  if (pkg) {
+    const newPaid = (pkg.installments_paid || 0) + 1
+    await supabase
+      .from('athlete_packages')
+      .update({ installments_paid: newPaid })
+      .eq('id', pkg.id)
+    console.log(`Installment ${newPaid}/${pkg.installments_total} paid for package:`, pkg.id)
+  }
 }

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { CheckCircle2, Calendar, ArrowRight, Loader2 } from 'lucide-react'
+import { CheckCircle2, Calendar, CalendarPlus, ArrowRight, Loader2 } from 'lucide-react'
 
 export default function BookingSuccessPage() {
   const searchParams = useSearchParams()
@@ -164,6 +164,24 @@ export default function BookingSuccessPage() {
               <span>Go to Dashboard</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
+            <button
+              onClick={async () => {
+                try {
+                  const res = await fetch('/api/calendar/token')
+                  const data = await res.json()
+                  if (data.url) {
+                    await navigator.clipboard.writeText(data.url)
+                    alert('Calendar subscription URL copied! Paste it into Google Calendar, Apple Calendar, or Outlook.')
+                  }
+                } catch {
+                  window.open('/api/calendar/export', '_blank')
+                }
+              }}
+              className="btn-ghost inline-flex items-center justify-center gap-2"
+            >
+              <CalendarPlus className="w-4 h-4" />
+              <span>Add to Calendar</span>
+            </button>
             <Link
               href="/booking"
               className="btn-ghost inline-flex items-center justify-center gap-2"

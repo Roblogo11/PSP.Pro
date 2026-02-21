@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Calendar, Clock, MapPin, Video, CheckCircle2, XCircle, AlertCircle, X } from 'lucide-react'
+import { Calendar as CalendarIcon, Clock, MapPin, Video, CheckCircle2, XCircle, AlertCircle, X, CalendarPlus, ThumbsUp, HelpCircle, ThumbsDown } from 'lucide-react'
 import { format } from 'date-fns'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
@@ -21,6 +21,33 @@ export default function SessionsPage() {
   const [rescheduleModalOpen, setRescheduleModalOpen] = useState(false)
   const [selectedSession, setSelectedSession] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [calendarUrl, setCalendarUrl] = useState<string | null>(null)
+  const [rsvpUpdating, setRsvpUpdating] = useState<string | null>(null)
+
+  // Fetch calendar sync URL
+  useEffect(() => {
+    fetch('/api/calendar/token')
+      .then(r => r.json())
+      .then(data => { if (data.url) setCalendarUrl(data.url) })
+      .catch(() => {})
+  }, [])
+
+  const updateRsvp = async (bookingId: string, rsvpStatus: string) => {
+    setRsvpUpdating(bookingId)
+    try {
+      await fetch('/api/bookings/rsvp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bookingId, rsvpStatus }),
+      })
+      toastSuccess(`RSVP updated to ${rsvpStatus}`)
+      window.location.reload()
+    } catch {
+      toastError('Failed to update RSVP')
+    } finally {
+      setRsvpUpdating(null)
+    }
+  }
 
   // Loading state
   if (profileLoading || sessionsLoading) {
@@ -125,9 +152,23 @@ export default function SessionsPage() {
         <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
           Training <span className="text-gradient-orange">Sessions</span>
         </h1>
-        <p className="text-cyan-700 dark:text-white text-lg">
-          View and manage your training schedule
-        </p>
+        <div className="flex items-center gap-3 mt-2">
+          <p className="text-cyan-700 dark:text-white text-lg flex-1">
+            View and manage your training schedule
+          </p>
+          {calendarUrl && (
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(calendarUrl)
+                toastSuccess('Calendar URL copied! Paste it in Google Calendar → Other Calendars → From URL')
+              }}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan/10 border border-cyan/20 text-cyan text-sm font-medium hover:bg-cyan/20 transition-all"
+            >
+              <CalendarPlus className="w-4 h-4" />
+              Sync Calendar
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Filter Tabs */}
@@ -193,7 +234,7 @@ export default function SessionsPage() {
 
             <div className="grid md:grid-cols-3 gap-4 mb-4">
               <div className="flex items-center gap-3 text-cyan-700 dark:text-white">
-                <Calendar className="w-5 h-5 text-orange" />
+                <CalendarIcon className="w-5 h-5 text-orange" />
                 <span>{format(session.date, 'MMM dd, yyyy')}</span>
               </div>
               <div className="flex items-center gap-3 text-cyan-700 dark:text-white">
@@ -227,25 +268,48 @@ export default function SessionsPage() {
             )}
 
             {session.status === 'upcoming' && !isImpersonating && (
-              <div className="mt-4 pt-4 border-t border-white/5 flex gap-3">
-                <button
-                  onClick={() => {
-                    setSelectedSession(session.id)
-                    setCancelModalOpen(true)
-                  }}
-                  className="btn-ghost text-sm py-2 border-red-500/30 hover:border-red-500/50 hover:text-red-400"
-                >
-                  Cancel Session
-                </button>
-                <button
-                  onClick={() => {
-                    setSelectedSession(session.id)
-                    setRescheduleModalOpen(true)
-                  }}
-                  className="btn-ghost text-sm py-2 border-cyan/30 hover:border-cyan/50 hover:text-cyan"
-                >
-                  Reschedule
-                </button>
+              <div className="mt-4 pt-4 border-t border-white/5 space-y-3">
+                {/* RSVP Buttons */}
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold text-slate-500 dark:text-white/50 mr-1">RSVP:</span>
+                  {[
+                    { status: 'confirmed', icon: ThumbsUp, label: 'Going', color: 'text-green-500 bg-green-500/10 border-green-500/30' },
+                    { status: 'maybe', icon: HelpCircle, label: 'Maybe', color: 'text-yellow-500 bg-yellow-500/10 border-yellow-500/30' },
+                    { status: 'declined', icon: ThumbsDown, label: "Can't go", color: 'text-red-400 bg-red-500/10 border-red-500/30' },
+                  ].map(({ status, icon: Icon, label, color }) => (
+                    <button
+                      key={status}
+                      onClick={() => updateRsvp(session.id, status)}
+                      disabled={rsvpUpdating === session.id}
+                      className={`flex items-center gap-1 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all ${color} hover:opacity-80`}
+                    >
+                      <Icon className="w-3.5 h-3.5" />
+                      {label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Cancel / Reschedule */}
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      setSelectedSession(session.id)
+                      setCancelModalOpen(true)
+                    }}
+                    className="btn-ghost text-sm py-2 border-red-500/30 hover:border-red-500/50 hover:text-red-400"
+                  >
+                    Cancel Session
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSelectedSession(session.id)
+                      setRescheduleModalOpen(true)
+                    }}
+                    className="btn-ghost text-sm py-2 border-cyan/30 hover:border-cyan/50 hover:text-cyan"
+                  >
+                    Reschedule
+                  </button>
+                </div>
               </div>
             )}
           </div>

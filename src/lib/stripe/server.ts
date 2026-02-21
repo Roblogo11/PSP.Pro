@@ -61,9 +61,11 @@ export function getStripeLiveInstance(): Stripe {
 
 // Utility function to create a checkout session for booking payment
 // Supports Stripe Connect split payments when stripeConnectAccountId is provided
+// Supports Elite discount and promo code metadata
 export async function createBookingCheckoutSession({
   serviceId,
   serviceName,
+  serviceDescription,
   priceInCents,
   athleteId,
   athleteEmail,
@@ -72,9 +74,14 @@ export async function createBookingCheckoutSession({
   cancelUrl,
   stripeConnectAccountId,
   coachRevenuePercent,
+  originalPriceCents,
+  eliteDiscount,
+  promoCodeId,
+  promoCode,
 }: {
   serviceId: string
   serviceName: string
+  serviceDescription?: string
   priceInCents: number
   athleteId: string
   athleteEmail: string
@@ -83,6 +90,10 @@ export async function createBookingCheckoutSession({
   cancelUrl: string
   stripeConnectAccountId?: string
   coachRevenuePercent?: number
+  originalPriceCents?: number
+  eliteDiscount?: boolean
+  promoCodeId?: string
+  promoCode?: string
 }) {
   const stripeInstance = await getStripe()
 
@@ -105,7 +116,7 @@ export async function createBookingCheckoutSession({
           currency: 'usd',
           product_data: {
             name: serviceName,
-            description: `Training session: ${serviceName}`,
+            description: serviceDescription || `Training session: ${serviceName}`,
           },
           unit_amount: priceInCents,
         },
@@ -124,6 +135,10 @@ export async function createBookingCheckoutSession({
       ...(stripeConnectAccountId && { connect_account_id: stripeConnectAccountId }),
       ...(applicationFeeAmount !== undefined && { platform_fee_cents: applicationFeeAmount.toString() }),
       ...(simulationId && { simulation_id: simulationId }),
+      ...(originalPriceCents !== undefined && { original_price_cents: originalPriceCents.toString() }),
+      ...(eliteDiscount && { elite_discount: 'true' }),
+      ...(promoCodeId && { promo_code_id: promoCodeId }),
+      ...(promoCode && { promo_code: promoCode }),
     },
   }
 

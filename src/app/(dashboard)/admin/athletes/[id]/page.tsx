@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { toastError } from '@/lib/toast'
+import { toastError, toastSuccess } from '@/lib/toast'
 import { createClient } from '@/lib/supabase/client'
 import { getLocalDateString } from '@/lib/utils/local-date'
 import { useUserRole } from '@/lib/hooks/use-user-role'
@@ -22,6 +22,8 @@ import {
   CheckCircle2,
   AlertCircle,
   Dumbbell,
+  FileBarChart,
+  Loader2,
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -192,6 +194,28 @@ export default function AthleteDetailPage() {
   const [historyTab, setHistoryTab] = useState('all')
   // Verified toggle
   const [isVerified, setIsVerified] = useState(true)
+
+  // Send progress report
+  const [sendingReport, setSendingReport] = useState(false)
+
+  const handleSendProgressReport = async () => {
+    if (sendingReport || !athleteId) return
+    setSendingReport(true)
+    try {
+      const res = await fetch('/api/reports/progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ athleteId, sendEmail: true }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to generate report')
+      toastSuccess(`Progress report sent to ${athlete?.full_name || 'athlete'}!`)
+    } catch (err: any) {
+      toastError(err.message || 'Failed to send report')
+    } finally {
+      setSendingReport(false)
+    }
+  }
 
   // Dynamic form values — keyed by metric def key
   const [formValues, setFormValues] = useState<Record<string, string>>({})
@@ -506,16 +530,26 @@ export default function AthleteDetailPage() {
             </div>
           </div>
 
-          <button
-            onClick={() => {
-              resetForm()
-              setShowAddMetricForm(true)
-            }}
-            className="btn-primary flex items-center gap-2"
-          >
-            <Plus className="w-4 h-4" />
-            Add Performance Data
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleSendProgressReport}
+              disabled={sendingReport}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-cyan-300/40 dark:border-white/10 bg-white/60 dark:bg-white/5 text-cyan-800 dark:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-white/10 transition-all text-sm font-semibold disabled:opacity-50"
+            >
+              {sendingReport ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileBarChart className="w-4 h-4" />}
+              {sendingReport ? 'Sending...' : 'Send Report'}
+            </button>
+            <button
+              onClick={() => {
+                resetForm()
+                setShowAddMetricForm(true)
+              }}
+              className="btn-primary flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Add Performance Data
+            </button>
+          </div>
         </div>
       </div>
 
