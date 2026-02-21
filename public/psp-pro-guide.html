@@ -314,16 +314,56 @@
       </div>
       <div class="step">
         <span class="step-num">2</span>
-        <span class="step-text">The <strong>velocity chart</strong> shows your speed trend with a goal line.</span>
+        <span class="step-text">Use <strong>sport tabs</strong> (Softball / Basketball / Soccer / Athleticism) to switch between sport-specific data.</span>
       </div>
       <div class="step">
         <span class="step-num">3</span>
-        <span class="step-text"><strong>Milestones</strong> timeline shows when you hit key achievements (first session, velocity records, session streaks).</span>
+        <span class="step-text">The <strong>multi-metric performance chart</strong> tracks your top stats over time (e.g., Exit Velocity + Bat Speed for softball).</span>
       </div>
       <div class="step">
         <span class="step-num">4</span>
+        <span class="step-text"><strong>Personal Records</strong> section shows your best value for each tracked metric, with Verified/Self-Reported badges.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <span class="step-text">The <strong>velocity chart</strong> shows your speed trend with a goal line.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">6</span>
+        <span class="step-text"><strong>Milestones</strong> timeline shows when you hit key achievements (first session, velocity records, session streaks).</span>
+      </div>
+      <div class="step">
+        <span class="step-num">7</span>
         <span class="step-text">Check <span class="path">Achievements</span> for unlockable badges — streaks, session counts, velocity goals.</span>
       </div>
+    </div>
+  </div>
+
+  <div class="section" data-roles="player">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">🏅</span>
+      <span class="section-title">Leaderboards</span>
+      <span class="section-badge badge-player">Player</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Click <span class="path">Leaderboards</span> in the sidebar to see regional rankings.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text">Use <strong>sport tabs</strong> (Softball / Basketball / Soccer / Athleticism) and pick a <strong>metric</strong> to rank by.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text">Filter by <strong>region</strong> and toggle <strong>"Verified Only"</strong> to see only PSP-verified scores.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">To appear on leaderboards, go to <span class="path">Settings</span> → toggle <strong>"Show on Leaderboards"</strong> and set your region.</span>
+      </div>
+      <div class="tip">Top 3 athletes get gold, silver, and bronze medal icons. Your row is highlighted in orange. Only opted-in athletes appear.</div>
     </div>
   </div>
 
@@ -349,7 +389,7 @@
       </div>
       <div class="step">
         <span class="step-num">4</span>
-        <span class="step-text">Click <span class="path">Settings</span> to update your profile — name, phone, location, and notification preferences.</span>
+        <span class="step-text">Click <span class="path">Settings</span> to update your profile — name, email, notification preferences, and leaderboard settings.</span>
       </div>
     </div>
   </div>
@@ -441,15 +481,23 @@
       </div>
       <div class="step">
         <span class="step-num">4</span>
-        <span class="step-text">Click <strong>"Add Athlete"</strong> to create a new athlete — enter name, email, sport, and age.</span>
+        <span class="step-text">Click <strong>"Add Athlete"</strong> to create a new athlete — enter name, email, sport(s), and age. You can select <strong>multiple sports</strong>.</span>
       </div>
       <div class="step">
         <span class="step-num">5</span>
-        <span class="step-text">For athletes under 18, <strong>parent/guardian fields</strong> appear automatically.</span>
+        <span class="step-text">New athletes get a <strong>30-day free trial</strong> with full dashboard access — no package needed yet.</span>
       </div>
       <div class="step">
         <span class="step-num">6</span>
-        <span class="step-text">Click an athlete to see their <strong>detailed stats page</strong> and assign drills.</span>
+        <span class="step-text">Tell athletes to go to <span class="path">/forgot-password</span> and enter their email to <strong>set their password</strong> and log in.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">7</span>
+        <span class="step-text">For athletes under 18, <strong>parent/guardian fields</strong> appear automatically.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">8</span>
+        <span class="step-text">Click an athlete to see their <strong>detailed stats page</strong>, assign drills, and log performance metrics.</span>
       </div>
     </div>
   </div>
@@ -690,6 +738,7 @@
         <tr><td>Pop Quiz</td><td>Create T/F questionnaires, assign to athletes, view scores</td></tr>
         <tr><td>Media</td><td>Upload & manage videos and images</td></tr>
         <tr><td>Analytics</td><td>Performance insights & revenue tracking</td></tr>
+        <tr><td>Organizations</td><td>Create branded coaching academies with Stripe payouts</td></tr>
       </table>
     </div>
   </div>
@@ -727,6 +776,42 @@
         <span class="step-text">The <strong>Pricing page</strong> updates automatically — it pulls directly from your services in the database.</span>
       </div>
       <div class="tip">Training packages (5/10/20-packs) are managed separately in the training_packages table. Contact your developer to update package pricing.</div>
+    </div>
+  </div>
+
+  <div class="section" data-roles="coach admin">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-icon">🏢</span>
+      <span class="section-title">Organizations (Branded Academy)</span>
+      <span class="section-badge badge-coach">Coach</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="section-body">
+      <div class="step">
+        <span class="step-num">1</span>
+        <span class="step-text">Go to <span class="path">Admin → Organizations</span> and click <strong>"New Org"</strong>.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <span class="step-text">Enter your <strong>org name, slug, tagline, and brand colors</strong>. Your public page goes live at <span class="path">/org/your-slug</span>.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <span class="step-text">Click <strong>"Members"</strong> tab to add coaches and athletes by email.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <span class="step-text">Click <strong>"Branding"</strong> tab to customize your landing page — headline, about text, and colors.</span>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <span class="step-text">Click <strong>"Payouts"</strong> tab → <strong>"Connect Stripe"</strong> to receive automatic split payments (default 85% to you, 15% platform fee).</span>
+      </div>
+      <div class="step">
+        <span class="step-num">6</span>
+        <span class="step-text">Share your public page link — athletes can book directly from it!</span>
+      </div>
+      <div class="tip">Athletes booking through your org page automatically have their bookings tagged to your org with Stripe split payouts.</div>
     </div>
   </div>
 
@@ -842,7 +927,7 @@
       </div>
       <div class="step">
         <span class="step-num">3</span>
-        <span class="step-text">The assistant knows 40+ topics and gives step-by-step guidance with links to the right pages.</span>
+        <span class="step-text">The assistant knows 50+ topics and gives step-by-step guidance with links to the right pages.</span>
       </div>
     </div>
   </div>
@@ -871,6 +956,10 @@
         <span class="step-num">4</span>
         <span class="step-text">New athletes sign up at <span class="path">/get-started</span> ("Join the Team").</span>
       </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <span class="step-text"><strong>Coach created your account?</strong> Go to <span class="path">/forgot-password</span>, enter your email, and set a password from the reset link. You get a 30-day free trial!</span>
+      </div>
       <div class="tip">If you see "Your account exists but your profile hasn't been set up yet" — contact support at info@propersports.pro.</div>
     </div>
   </div>
@@ -891,7 +980,8 @@
         <tr><td>/drills</td><td>Players</td><td>Browse & complete drills</td></tr>
         <tr><td>/courses</td><td>Players</td><td>Video course library</td></tr>
         <tr><td>/questionnaires</td><td>Players</td><td>Pop quizzes from coaches</td></tr>
-        <tr><td>/progress</td><td>Players</td><td>Performance charts & milestones</td></tr>
+        <tr><td>/progress</td><td>Players</td><td>Performance charts, personal records & milestones</td></tr>
+        <tr><td>/leaderboards</td><td>Players</td><td>Regional rankings by sport & metric</td></tr>
         <tr><td>/achievements</td><td>Players</td><td>Unlockable badges</td></tr>
         <tr><td>/settings</td><td>All</td><td>Profile & preferences</td></tr>
         <tr><td>/admin</td><td>Staff</td><td>Admin control center</td></tr>
@@ -904,6 +994,7 @@
         <tr><td>/admin/questionnaires</td><td>Staff</td><td>Create & assign pop quizzes</td></tr>
         <tr><td>/admin/media</td><td>Staff</td><td>Upload videos & images</td></tr>
         <tr><td>/admin/analytics</td><td>Staff</td><td>Insights & reports</td></tr>
+        <tr><td>/admin/org</td><td>Staff</td><td>Organizations — branded coaching academies</td></tr>
         <tr><td>/pricing</td><td>Public</td><td>View services & packages</td></tr>
         <tr><td>/faq</td><td>Public</td><td>Common questions</td></tr>
         <tr><td>/contact</td><td>Public</td><td>Get in touch</td></tr>
