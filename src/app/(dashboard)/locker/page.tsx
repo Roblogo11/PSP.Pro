@@ -311,7 +311,7 @@ export default function AthleteLockerPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen px-3 py-4 md:p-8 flex items-center justify-center">
+      <div className="min-h-screen px-4 py-5 sm:px-5 sm:py-6 md:p-8 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-cyan-700 dark:text-white">Loading your dashboard...</p>
@@ -339,11 +339,11 @@ export default function AthleteLockerPage() {
     ]
 
     return (
-      <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8 relative">
+      <div className="min-h-screen px-4 py-5 sm:px-5 sm:py-6 md:p-8 pb-28 lg:pb-8 relative">
         {/* Header */}
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
               Welcome back, <span className="text-gradient-orange">{firstName}</span>
             </h1>
             <p className="text-cyan-700 dark:text-white text-lg">
@@ -364,7 +364,7 @@ export default function AthleteLockerPage() {
         </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-8">
           <StatCard title="Athletes" value={coachStats.totalAthletes} subtitle="Registered" icon={Users} />
           <StatCard title="Upcoming" value={coachStats.upcomingSessions} subtitle="Sessions" icon={Calendar} />
           <StatCard title="Drills" value={coachStats.totalDrills} subtitle="In library" icon={Dumbbell} />
@@ -443,7 +443,7 @@ export default function AthleteLockerPage() {
         {/* Quick Links Grid */}
         <div>
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Quick Links</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
             {quickLinks.map((link) => {
               const Icon = link.icon
               return (
@@ -485,10 +485,10 @@ export default function AthleteLockerPage() {
 
   // ─── Athlete View (existing) ───
   return (
-    <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8 relative">
+    <div className="min-h-screen px-4 py-5 sm:px-5 sm:py-6 md:p-8 pb-28 lg:pb-8 relative">
       {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
           Welcome back, <span className="text-gradient-orange">{firstName}</span>
         </h1>
         <p className="text-cyan-700 dark:text-white text-lg">
@@ -497,7 +497,7 @@ export default function AthleteLockerPage() {
       </div>
 
       {/* Bento Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 mb-6">
         {/* Quick Stats - Top Row - NOW WITH REAL DATA */}
         <StatCard
           title="Total Sessions"
@@ -530,7 +530,7 @@ export default function AthleteLockerPage() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 md:gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 mb-6">
         {/* Velocity Chart - Takes 3 columns on desktop - NOW WITH REAL DATA */}
         <VelocityChart velocityData={stats?.recentVelocities || []} />
 
@@ -548,7 +548,7 @@ export default function AthleteLockerPage() {
       </div>
 
       {/* Progress & Activity Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mb-6">
         {/* Progress Rings */}
         <div className="command-panel">
           <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">
@@ -701,13 +701,13 @@ export default function AthleteLockerPage() {
         </div>
 
         {/* Drill Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {assignedDrills.length > 0 ? (
             assignedDrills.map((drill) => (
               <Link key={drill.id} href={`/drills/${drill.id}`}>
                 <div className="glass-card-hover group cursor-pointer overflow-hidden">
                   {/* Thumbnail */}
-                  <div className="relative h-48 bg-cyan-900 overflow-hidden">
+                  <div className="relative h-36 sm:h-48 bg-cyan-900 overflow-hidden">
                     {drill.thumbnail_url ? (
                       <img
                         src={drill.thumbnail_url}

@@ -4,7 +4,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { getStripeLiveInstance } from '@/lib/stripe/server'
 
 // GET /api/stripe/connect/status
-// Returns the current Stripe Connect account status for this coach
+// Returns the current Stripe Connect account status for a coach or organization
 export async function GET(req: NextRequest) {
   try {
     const supabase = await createClient()
@@ -14,6 +14,43 @@ export async function GET(req: NextRequest) {
     const adminClient = createAdminClient()
     const org_id = req.nextUrl.searchParams.get('org_id')
 
+    // If org_id provided, check org-level Stripe account first
+    if (org_id) {
+      const { data: org } = await adminClient
+        .from('organizations')
+        .select('stripe_connect_account_id, stripe_connect_status, platform_fee_percent')
+        .eq('id', org_id)
+        .maybeSingle()
+
+      if (org?.stripe_connect_account_id) {
+        const stripe = getStripeLiveInstance()
+        const stripeAccount = await stripe.accounts.retrieve(org.stripe_connect_account_id)
+
+        const status = stripeAccount.charges_enabled ? 'active'
+          : stripeAccount.details_submitted ? 'pending'
+          : 'not_connected'
+
+        // Sync status to org table
+        if (status !== org.stripe_connect_status) {
+          await adminClient.from('organizations').update({
+            stripe_connect_status: status,
+          }).eq('id', org_id)
+        }
+
+        return NextResponse.json({
+          connected: stripeAccount.charges_enabled,
+          status,
+          charges_enabled: stripeAccount.charges_enabled,
+          payouts_enabled: stripeAccount.payouts_enabled,
+          details_submitted: stripeAccount.details_submitted,
+          coach_revenue_percent: 100 - (org.platform_fee_percent || 15),
+          stripe_account_id: org.stripe_connect_account_id,
+          source: 'organization',
+        })
+      }
+    }
+
+    // Fall back to coach-level payout account
     const query = adminClient
       .from('coach_payout_accounts')
       .select('*')
@@ -51,6 +88,7 @@ export async function GET(req: NextRequest) {
       details_submitted: stripeAccount.details_submitted,
       coach_revenue_percent: account.coach_revenue_percent,
       stripe_account_id: account.stripe_account_id,
+      source: 'coach',
     })
   } catch (err: any) {
     console.error('Stripe Connect status error:', err)

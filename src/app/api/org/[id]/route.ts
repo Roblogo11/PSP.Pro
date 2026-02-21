@@ -11,6 +11,24 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
     const adminClient = createAdminClient()
+
+    // Verify user has access: must be member of org or master_admin
+    const { data: profile } = await adminClient
+      .from('profiles').select('role').eq('id', user.id).single()
+    const isMasterAdmin = profile?.role === 'master_admin'
+
+    if (!isMasterAdmin) {
+      const { data: membership } = await adminClient
+        .from('organization_members')
+        .select('id')
+        .eq('org_id', id)
+        .eq('user_id', user.id)
+        .eq('status', 'active')
+        .maybeSingle()
+
+      if (!membership) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    }
+
     const { data: org, error } = await adminClient
       .from('organizations')
       .select(`

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { User, Bell, Lock, CreditCard, Mail, MapPin, Save, Check, Medal, ShieldCheck, Download, Trash2, AlertTriangle } from 'lucide-react'
+import { User, Bell, Lock, Mail, MapPin, Save, Check, Medal, ShieldCheck, Download, Trash2, AlertTriangle, Eye, EyeOff } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { toastError } from '@/lib/toast'
@@ -12,7 +12,7 @@ function SettingsInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { profile, loading: profileLoading, isImpersonating } = useUserRole()
-  const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'security' | 'billing' | 'privacy'>(
+  const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'security' | 'privacy'>(
     (searchParams.get('tab') as any) || 'profile'
   )
   const [saving, setSaving] = useState(false)
@@ -32,6 +32,17 @@ function SettingsInner() {
   const [deleting, setDeleting] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [exporting, setExporting] = useState(false)
+
+  // Security tab state
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [changingPassword, setChangingPassword] = useState(false)
+  const [passwordSuccess, setPasswordSuccess] = useState(false)
+  const [passwordError, setPasswordError] = useState<string | null>(null)
 
   // Notification preferences
   const [notifications, setNotifications] = useState({
@@ -131,6 +142,62 @@ function SettingsInner() {
     }
   }
 
+  const handleChangePassword = async () => {
+    if (!profile || isImpersonating) return
+    setPasswordError(null)
+    setPasswordSuccess(false)
+
+    // Validation
+    if (!newPassword) {
+      setPasswordError('Please enter a new password.')
+      return
+    }
+    if (newPassword.length < 8) {
+      setPasswordError('Password must be at least 8 characters.')
+      return
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordError('New passwords do not match.')
+      return
+    }
+
+    setChangingPassword(true)
+    try {
+      const supabase = createClient()
+
+      // Re-authenticate with current password to verify identity
+      if (currentPassword) {
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email: profile.email || '',
+          password: currentPassword,
+        })
+        if (signInError) {
+          setPasswordError('Current password is incorrect.')
+          setChangingPassword(false)
+          return
+        }
+      }
+
+      // Update password
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+      })
+
+      if (error) throw error
+
+      setPasswordSuccess(true)
+      setCurrentPassword('')
+      setNewPassword('')
+      setConfirmPassword('')
+      setTimeout(() => setPasswordSuccess(false), 5000)
+    } catch (error: any) {
+      console.error('Password change failed:', error)
+      setPasswordError(error.message || 'Failed to update password. Please try again.')
+    } finally {
+      setChangingPassword(false)
+    }
+  }
+
   const handleSaveConsent = async () => {
     if (!profile || isImpersonating) return
     setSavingConsent(true)
@@ -204,7 +271,6 @@ function SettingsInner() {
     { id: 'profile', label: 'Profile', icon: User },
     { id: 'notifications', label: 'Notifications', icon: Bell },
     { id: 'security', label: 'Security', icon: Lock },
-    { id: 'billing', label: 'Billing', icon: CreditCard },
     { id: 'privacy', label: 'Privacy & Data', icon: ShieldCheck },
   ]
 
@@ -409,24 +475,168 @@ function SettingsInner() {
           {activeTab === 'security' && (
             <div className="command-panel">
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Security Settings</h2>
-              <div className="space-y-6">
-                <div className="p-4 bg-cyan/10 border border-cyan/20 rounded-xl">
-                  <p className="text-cyan text-sm">
-                    Password reset and advanced security features coming soon!
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
 
-          {activeTab === 'billing' && (
-            <div className="command-panel">
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Billing & Subscription</h2>
               <div className="space-y-6">
-                <div className="p-4 bg-cyan/10 border border-cyan/20 rounded-xl">
-                  <p className="text-cyan text-sm">
-                    Subscription management coming soon! Contact support for billing questions.
-                  </p>
+                {/* Password Change Section */}
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                    <Lock className="w-5 h-5 text-orange" />
+                    Change Password
+                  </h3>
+
+                  {/* Success Message */}
+                  {passwordSuccess && (
+                    <div className="mb-4 p-4 bg-green-500/20 border border-green-500/30 rounded-xl flex items-center gap-3">
+                      <Check className="w-5 h-5 text-green-400" />
+                      <p className="text-green-400 font-semibold text-sm">Password updated successfully!</p>
+                    </div>
+                  )}
+
+                  {/* Error Message */}
+                  {passwordError && (
+                    <div className="mb-4 p-4 bg-red-500/15 border border-red-500/30 rounded-xl flex items-center gap-3">
+                      <AlertTriangle className="w-5 h-5 text-red-400" />
+                      <p className="text-red-400 font-semibold text-sm">{passwordError}</p>
+                    </div>
+                  )}
+
+                  <div className="space-y-4">
+                    {/* Current Password */}
+                    <div>
+                      <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2">
+                        Current Password
+                      </label>
+                      <div className="relative">
+                        <input
+                          type={showCurrentPassword ? 'text' : 'password'}
+                          value={currentPassword}
+                          onChange={(e) => setCurrentPassword(e.target.value)}
+                          placeholder="Enter your current password"
+                          className="w-full px-4 py-3 pr-12 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white focus:border-orange focus:outline-none transition-colors"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-cyan-600 hover:text-white transition-colors"
+                        >
+                          {showCurrentPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        </button>
+                      </div>
+                      <p className="text-xs text-cyan-800 dark:text-white/60 mt-1">
+                        Leave blank if you signed up with a social provider and haven&apos;t set a password yet
+                      </p>
+                    </div>
+
+                    {/* New Password */}
+                    <div>
+                      <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2">
+                        New Password
+                      </label>
+                      <div className="relative">
+                        <input
+                          type={showNewPassword ? 'text' : 'password'}
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          placeholder="Enter your new password"
+                          className="w-full px-4 py-3 pr-12 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white focus:border-orange focus:outline-none transition-colors"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowNewPassword(!showNewPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-cyan-600 hover:text-white transition-colors"
+                        >
+                          {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        </button>
+                      </div>
+                      {newPassword && (
+                        <div className="mt-2 space-y-1">
+                          <div className="flex items-center gap-2 text-xs">
+                            <div className={`w-1.5 h-1.5 rounded-full ${newPassword.length >= 8 ? 'bg-green-400' : 'bg-cyan-700'}`} />
+                            <span className={newPassword.length >= 8 ? 'text-green-400' : 'text-cyan-700 dark:text-white/50'}>
+                              At least 8 characters
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs">
+                            <div className={`w-1.5 h-1.5 rounded-full ${/[A-Z]/.test(newPassword) ? 'bg-green-400' : 'bg-cyan-700'}`} />
+                            <span className={/[A-Z]/.test(newPassword) ? 'text-green-400' : 'text-cyan-700 dark:text-white/50'}>
+                              One uppercase letter
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs">
+                            <div className={`w-1.5 h-1.5 rounded-full ${/[0-9]/.test(newPassword) ? 'bg-green-400' : 'bg-cyan-700'}`} />
+                            <span className={/[0-9]/.test(newPassword) ? 'text-green-400' : 'text-cyan-700 dark:text-white/50'}>
+                              One number
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Confirm New Password */}
+                    <div>
+                      <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2">
+                        Confirm New Password
+                      </label>
+                      <div className="relative">
+                        <input
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          placeholder="Re-enter your new password"
+                          className="w-full px-4 py-3 pr-12 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white focus:border-orange focus:outline-none transition-colors"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-cyan-600 hover:text-white transition-colors"
+                        >
+                          {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        </button>
+                      </div>
+                      {confirmPassword && newPassword !== confirmPassword && (
+                        <p className="text-xs text-red-400 mt-1">Passwords do not match</p>
+                      )}
+                      {confirmPassword && newPassword === confirmPassword && (
+                        <p className="text-xs text-green-400 mt-1">Passwords match</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="pt-4">
+                    <button
+                      onClick={handleChangePassword}
+                      disabled={changingPassword || isImpersonating || !newPassword || newPassword !== confirmPassword}
+                      className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    >
+                      <Lock className="w-5 h-5" />
+                      {isImpersonating ? 'Read-only mode' : changingPassword ? 'Updating...' : 'Update Password'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Account Info */}
+                <div className="pt-4 border-t border-cyan-200/40">
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Account Info</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-4 bg-cyan-900/20 rounded-xl">
+                      <div>
+                        <h4 className="font-semibold text-slate-900 dark:text-white text-sm">Email</h4>
+                        <p className="text-sm text-cyan-800 dark:text-white/70">{profile?.email}</p>
+                      </div>
+                      <button
+                        onClick={() => setActiveTab('profile')}
+                        className="text-orange text-sm font-semibold hover:text-orange-400 transition-colors"
+                      >
+                        Change
+                      </button>
+                    </div>
+                    <div className="flex items-center justify-between p-4 bg-cyan-900/20 rounded-xl">
+                      <div>
+                        <h4 className="font-semibold text-slate-900 dark:text-white text-sm">Sign-in Method</h4>
+                        <p className="text-sm text-cyan-800 dark:text-white/70">Email & Password</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

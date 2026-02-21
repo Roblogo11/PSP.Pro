@@ -146,7 +146,7 @@ export default function SessionsPage() {
   }
 
   return (
-    <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8 relative">
+    <div className="min-h-screen px-4 py-5 sm:px-5 sm:py-6 md:p-8 pb-28 lg:pb-8 relative">
       {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
@@ -270,7 +270,7 @@ export default function SessionsPage() {
             {session.status === 'upcoming' && !isImpersonating && (
               <div className="mt-4 pt-4 border-t border-white/5 space-y-3">
                 {/* RSVP Buttons */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-xs font-semibold text-slate-500 dark:text-white/50 mr-1">RSVP:</span>
                   {[
                     { status: 'confirmed', icon: ThumbsUp, label: 'Going', color: 'text-green-500 bg-green-500/10 border-green-500/30' },
@@ -281,22 +281,22 @@ export default function SessionsPage() {
                       key={status}
                       onClick={() => updateRsvp(session.id, status)}
                       disabled={rsvpUpdating === session.id}
-                      className={`flex items-center gap-1 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all ${color} hover:opacity-80`}
+                      className={`flex items-center gap-1.5 px-4 py-2.5 sm:px-3 sm:py-1.5 rounded-xl sm:rounded-lg border text-sm sm:text-xs font-medium transition-all active:scale-95 ${color} hover:opacity-80`}
                     >
-                      <Icon className="w-3.5 h-3.5" />
+                      <Icon className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                       {label}
                     </button>
                   ))}
                 </div>
 
                 {/* Cancel / Reschedule */}
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                   <button
                     onClick={() => {
                       setSelectedSession(session.id)
                       setCancelModalOpen(true)
                     }}
-                    className="btn-ghost text-sm py-2 border-red-500/30 hover:border-red-500/50 hover:text-red-400"
+                    className="btn-ghost text-sm py-3 sm:py-2 flex-1 border-red-500/30 hover:border-red-500/50 hover:text-red-400 active:scale-95 transition-transform"
                   >
                     Cancel Session
                   </button>
@@ -305,7 +305,7 @@ export default function SessionsPage() {
                       setSelectedSession(session.id)
                       setRescheduleModalOpen(true)
                     }}
-                    className="btn-ghost text-sm py-2 border-cyan/30 hover:border-cyan/50 hover:text-cyan"
+                    className="btn-ghost text-sm py-3 sm:py-2 flex-1 border-cyan/30 hover:border-cyan/50 hover:text-cyan active:scale-95 transition-transform"
                   >
                     Reschedule
                   </button>
@@ -325,10 +325,13 @@ export default function SessionsPage() {
         </div>
       )}
 
-      {/* Cancel Session Modal */}
+      {/* Cancel Session Modal — bottom sheet on mobile */}
       {cancelModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="glass-card max-w-md w-full p-6 animate-scale-in">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm">
+          <div className="glass-card w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl p-6 max-h-[85vh] overflow-y-auto animate-scale-in">
+            <div className="flex justify-center mb-4 sm:hidden">
+              <div className="w-10 h-1 rounded-full bg-slate-300 dark:bg-white/20" />
+            </div>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Cancel Session</h2>
               <button
@@ -344,11 +347,11 @@ export default function SessionsPage() {
 
             <div className="mb-6">
               <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl mb-4">
-                <p className="text-red-400 text-sm font-semibold mb-2">⚠️ Cancellation Policy</p>
+                <p className="text-red-400 text-sm font-semibold mb-2">Cancellation Policy</p>
                 <ul className="text-sm text-cyan-700 dark:text-white space-y-1">
-                  <li>• Cancellations made 24+ hours in advance: Full refund</li>
-                  <li>• Cancellations within 24 hours: No refund</li>
-                  <li>• Refunds processed within 3-5 business days</li>
+                  <li>Cancellations made 24+ hours in advance: Full refund</li>
+                  <li>Cancellations within 24 hours: No refund</li>
+                  <li>Refunds processed within 3-5 business days</li>
                 </ul>
               </div>
 
@@ -357,20 +360,20 @@ export default function SessionsPage() {
               </p>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex flex-col-reverse sm:flex-row gap-3">
               <button
                 onClick={() => {
                   setCancelModalOpen(false)
                   setSelectedSession(null)
                 }}
-                className="btn-ghost flex-1"
+                className="btn-ghost flex-1 py-3 sm:py-2"
                 disabled={isProcessing}
               >
                 Keep Session
               </button>
               <button
                 onClick={handleCancelSession}
-                className="flex-1 px-6 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-6 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={isProcessing}
               >
                 {isProcessing ? 'Cancelling...' : 'Cancel Session'}
@@ -380,10 +383,13 @@ export default function SessionsPage() {
         </div>
       )}
 
-      {/* Reschedule Session Modal */}
+      {/* Reschedule Session Modal — bottom sheet on mobile */}
       {rescheduleModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="glass-card max-w-md w-full p-6 animate-scale-in">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm">
+          <div className="glass-card w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl p-6 max-h-[85vh] overflow-y-auto animate-scale-in">
+            <div className="flex justify-center mb-4 sm:hidden">
+              <div className="w-10 h-1 rounded-full bg-slate-300 dark:bg-white/20" />
+            </div>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Reschedule Session</h2>
               <button
@@ -399,11 +405,11 @@ export default function SessionsPage() {
 
             <div className="mb-6">
               <div className="p-4 bg-cyan/10 border border-cyan/20 rounded-xl mb-4">
-                <p className="text-cyan text-sm font-semibold mb-2">ℹ️ Rescheduling Info</p>
+                <p className="text-cyan text-sm font-semibold mb-2">Rescheduling Info</p>
                 <ul className="text-sm text-cyan-700 dark:text-white space-y-1">
-                  <li>• Free rescheduling up to 24 hours before session</li>
-                  <li>• Choose any available slot in the booking calendar</li>
-                  <li>• Your session credit will automatically transfer</li>
+                  <li>Free rescheduling up to 24 hours before session</li>
+                  <li>Choose any available slot in the booking calendar</li>
+                  <li>Your session credit will automatically transfer</li>
                 </ul>
               </div>
 
@@ -412,19 +418,19 @@ export default function SessionsPage() {
               </p>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex flex-col-reverse sm:flex-row gap-3">
               <button
                 onClick={() => {
                   setRescheduleModalOpen(false)
                   setSelectedSession(null)
                 }}
-                className="btn-ghost flex-1"
+                className="btn-ghost flex-1 py-3 sm:py-2"
               >
                 Cancel
               </button>
               <button
                 onClick={handleRescheduleSession}
-                className="btn-primary flex-1"
+                className="btn-primary flex-1 py-3 sm:py-2 active:scale-95 transition-transform"
               >
                 Choose New Time
               </button>

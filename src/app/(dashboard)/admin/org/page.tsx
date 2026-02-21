@@ -19,7 +19,11 @@ interface Org {
   primary_color: string
   secondary_color: string
   tagline: string | null
+  hero_headline: string | null
+  hero_subheadline: string | null
+  about_text: string | null
   stripe_connect_status: string
+  stripe_connect_account_id: string | null
   platform_fee_percent: number
   allow_self_signup: boolean
   require_approval: boolean
@@ -60,8 +64,11 @@ export default function OrgPage() {
   const [onboarding, setOnboarding] = useState(false)
 
   // Branding form
-  const [brandingForm, setBrandingForm] = useState<Partial<Org>>({})
+  const [brandingForm, setBrandingForm] = useState<Record<string, any>>({})
   const [savingBranding, setSavingBranding] = useState(false)
+
+  // Settings toggle loading
+  const [togglingField, setTogglingField] = useState<string | null>(null)
 
   useEffect(() => { loadOrgs() }, [])
   useEffect(() => {
@@ -71,6 +78,9 @@ export default function OrgPage() {
         tagline: selectedOrg.tagline || '',
         primary_color: selectedOrg.primary_color,
         secondary_color: selectedOrg.secondary_color,
+        hero_headline: (selectedOrg as any).hero_headline || '',
+        hero_subheadline: (selectedOrg as any).hero_subheadline || '',
+        about_text: (selectedOrg as any).about_text || '',
       })
       loadConnectStatus()
     }
@@ -355,10 +365,15 @@ export default function OrgPage() {
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm"
-                    style={{ backgroundColor: org.primary_color }}>
-                    {org.name.charAt(0)}
-                  </div>
+                  {org.logo_url ? (
+                    <img src={org.logo_url} alt={org.name}
+                      className="w-8 h-8 rounded-lg object-cover" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm"
+                      style={{ backgroundColor: org.primary_color }}>
+                      {org.name.charAt(0)}
+                    </div>
+                  )}
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm text-slate-900 dark:text-white truncate">{org.name}</p>
                     <p className="text-xs text-cyan-700 dark:text-white/50 truncate">/{org.slug}</p>
@@ -395,10 +410,15 @@ export default function OrgPage() {
                 <div className="space-y-4">
                   <div className="glass-card p-6">
                     <div className="flex items-start gap-4">
-                      <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg"
-                        style={{ backgroundColor: selectedOrg.primary_color }}>
-                        {selectedOrg.name.charAt(0)}
-                      </div>
+                      {selectedOrg.logo_url ? (
+                        <img src={selectedOrg.logo_url} alt={selectedOrg.name}
+                          className="w-16 h-16 rounded-2xl object-cover shadow-lg" />
+                      ) : (
+                        <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg"
+                          style={{ backgroundColor: selectedOrg.primary_color }}>
+                          {selectedOrg.name.charAt(0)}
+                        </div>
+                      )}
                       <div className="flex-1">
                         <h2 className="text-xl font-bold text-slate-900 dark:text-white">{selectedOrg.name}</h2>
                         {selectedOrg.tagline && <p className="text-cyan-700 dark:text-white/60">{selectedOrg.tagline}</p>}
@@ -418,7 +438,7 @@ export default function OrgPage() {
                     <div className="glass-card p-4 text-center">
                       <Users className="w-6 h-6 text-cyan-500 mx-auto mb-2" />
                       <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                        {selectedOrg.members?.length ?? '—'}
+                        {selectedOrg.members?.filter((m: any) => m.status === 'active').length ?? selectedOrg.member_count?.[0]?.count ?? '—'}
                       </p>
                       <p className="text-xs text-cyan-700 dark:text-white/50">Members</p>
                     </div>
@@ -550,18 +570,18 @@ export default function OrgPage() {
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-1">Hero Headline</label>
-                          <input value={(brandingForm as any).hero_headline || ''} onChange={e => setBrandingForm(f => ({ ...f, hero_headline: e.target.value }))} className="input-field w-full" placeholder={`Train with ${selectedOrg.name}`} />
+                          <input value={brandingForm.hero_headline || ''} onChange={e => setBrandingForm(f => ({ ...f, hero_headline: e.target.value }))} className="input-field w-full" placeholder={`Train with ${selectedOrg.name}`} />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-1">Hero Subheadline</label>
-                          <input value={(brandingForm as any).hero_subheadline || ''} onChange={e => setBrandingForm(f => ({ ...f, hero_subheadline: e.target.value }))} className="input-field w-full" placeholder="Elite coaching tailored to your goals." />
+                          <input value={brandingForm.hero_subheadline || ''} onChange={e => setBrandingForm(f => ({ ...f, hero_subheadline: e.target.value }))} className="input-field w-full" placeholder="Elite coaching tailored to your goals." />
                         </div>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-1">About Text</label>
                         <textarea
                           rows={3}
-                          value={(brandingForm as any).about_text || ''}
+                          value={brandingForm.about_text || ''}
                           onChange={e => setBrandingForm(f => ({ ...f, about_text: e.target.value }))}
                           className="input-field w-full resize-none"
                           placeholder="Tell athletes who you are and what makes your coaching different..."
@@ -678,37 +698,36 @@ export default function OrgPage() {
                   </h3>
 
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
-                      <div>
-                        <p className="font-medium text-slate-900 dark:text-white text-sm">Allow Self-Signup</p>
-                        <p className="text-xs text-cyan-700 dark:text-white/50">Athletes can join this org without an invite</p>
+                    {[
+                      { field: 'allow_self_signup', label: 'Allow Self-Signup', desc: 'Athletes can join this org without an invite' },
+                      { field: 'require_approval', label: 'Require Coach Approval', desc: 'New athletes must be approved before accessing content' },
+                    ].map(toggle => (
+                      <div key={toggle.field} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+                        <div>
+                          <p className="font-medium text-slate-900 dark:text-white text-sm">{toggle.label}</p>
+                          <p className="text-xs text-cyan-700 dark:text-white/50">{toggle.desc}</p>
+                        </div>
+                        <button
+                          disabled={togglingField === toggle.field}
+                          onClick={async () => {
+                            if (togglingField) return
+                            setTogglingField(toggle.field)
+                            try {
+                              await fetch(`/api/org/${selectedOrg.id}`, {
+                                method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ [toggle.field]: !(selectedOrg as any)[toggle.field] }),
+                              })
+                              await loadOrgDetail(selectedOrg.id)
+                            } finally {
+                              setTogglingField(null)
+                            }
+                          }}
+                          className={`relative w-11 h-6 rounded-full transition-colors ${togglingField === toggle.field ? 'opacity-50 cursor-wait' : ''} ${(selectedOrg as any)[toggle.field] ? 'bg-orange' : 'bg-slate-300 dark:bg-slate-600'}`}
+                        >
+                          <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${(selectedOrg as any)[toggle.field] ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                        </button>
                       </div>
-                      <button onClick={async () => {
-                        await fetch(`/api/org/${selectedOrg.id}`, {
-                          method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ allow_self_signup: !selectedOrg.allow_self_signup }),
-                        })
-                        await loadOrgDetail(selectedOrg.id)
-                      }} className={`relative w-11 h-6 rounded-full transition-colors ${selectedOrg.allow_self_signup ? 'bg-orange' : 'bg-slate-300 dark:bg-slate-600'}`}>
-                        <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${selectedOrg.allow_self_signup ? 'translate-x-5' : 'translate-x-0.5'}`} />
-                      </button>
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
-                      <div>
-                        <p className="font-medium text-slate-900 dark:text-white text-sm">Require Coach Approval</p>
-                        <p className="text-xs text-cyan-700 dark:text-white/50">New athletes must be approved before accessing content</p>
-                      </div>
-                      <button onClick={async () => {
-                        await fetch(`/api/org/${selectedOrg.id}`, {
-                          method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ require_approval: !selectedOrg.require_approval }),
-                        })
-                        await loadOrgDetail(selectedOrg.id)
-                      }} className={`relative w-11 h-6 rounded-full transition-colors ${selectedOrg.require_approval ? 'bg-orange' : 'bg-slate-300 dark:bg-slate-600'}`}>
-                        <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${selectedOrg.require_approval ? 'translate-x-5' : 'translate-x-0.5'}`} />
-                      </button>
-                    </div>
+                    ))}
                   </div>
 
                   {isMasterAdmin && (

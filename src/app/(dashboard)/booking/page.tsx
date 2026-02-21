@@ -385,7 +385,7 @@ export default function BookingPage() {
       )}
 
       {/* Progress Steps */}
-      <div className="mb-8 flex items-center gap-4 overflow-x-auto pb-2">
+      <div className="mb-6 sm:mb-8 flex items-center gap-2 sm:gap-4 overflow-x-auto pb-2">
         {[
           { key: 'service', label: 'Service' },
           { key: 'date', label: 'Date' },
@@ -397,7 +397,7 @@ export default function BookingPage() {
           const isCompleted = index < stepIndex
 
           return (
-            <div key={step.key} className="flex items-center gap-4">
+            <div key={step.key} className="flex items-center gap-2 sm:gap-4">
               <div className="flex items-center gap-2">
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all
@@ -421,7 +421,7 @@ export default function BookingPage() {
               </div>
               {index < 3 && (
                 <div
-                  className={`h-0.5 w-12 ${
+                  className={`h-0.5 w-6 sm:w-12 ${
                     isCompleted ? 'bg-green-500' : 'bg-white/10'
                   } transition-all`}
                 />
@@ -431,8 +431,41 @@ export default function BookingPage() {
         })}
       </div>
 
+      {/* Mobile Sticky Summary */}
+      {currentStep !== 'service' && (
+        <div className="lg:hidden sticky top-0 z-20 -mx-4 sm:-mx-5 px-4 sm:px-5 mb-4">
+          <div className="backdrop-blur-xl bg-white/90 dark:bg-slate-900/90 rounded-2xl p-3 border border-cyan-200/30 dark:border-white/10 shadow-lg flex items-center gap-3 text-sm">
+            {selectedService && (
+              <span className="font-semibold text-slate-900 dark:text-white truncate">
+                {selectedService.name}
+              </span>
+            )}
+            {selectedDate && (
+              <span className="text-slate-500 dark:text-slate-400 flex-shrink-0">
+                {selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+              </span>
+            )}
+            {selectedSlot && (
+              <span className="text-slate-500 dark:text-slate-400 flex-shrink-0">
+                {formatTime(selectedSlot.start_time)}
+              </span>
+            )}
+            <button
+              onClick={() => {
+                if (currentStep === 'confirm') setCurrentStep('time')
+                else if (currentStep === 'time') setCurrentStep('date')
+                else if (currentStep === 'date') setCurrentStep('service')
+              }}
+              className="ml-auto p-1.5 rounded-lg bg-slate-100 dark:bg-white/10 flex-shrink-0 active:scale-95 transition-transform"
+            >
+              <ArrowLeft className="w-4 h-4 text-slate-600 dark:text-white" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Step Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Main Content */}
         <div className="lg:col-span-2">
           {currentStep === 'service' && (
@@ -616,8 +649,8 @@ export default function BookingPage() {
           )}
         </div>
 
-        {/* Sidebar Summary */}
-        <div className="lg:col-span-1">
+        {/* Sidebar Summary — desktop only */}
+        <div className="hidden lg:block lg:col-span-1">
           <div className="glass-card p-6 sticky top-24">
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Booking Summary</h3>
 

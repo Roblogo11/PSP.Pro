@@ -180,7 +180,7 @@ export default function MessagesPage() {
         <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white">Messages</h1>
       </div>
 
-      <div className="glass-card overflow-hidden" style={{ height: 'calc(100vh - 200px)', minHeight: '500px' }}>
+      <div className="glass-card overflow-hidden" style={{ height: 'calc(100dvh - 180px)', minHeight: '500px' }}>
         <div className="flex h-full">
           {/* Conversation List */}
           <div className={`w-full md:w-80 border-r border-slate-200 dark:border-white/10 flex flex-col ${selectedConv ? 'hidden md:flex' : 'flex'}`}>
@@ -275,7 +275,7 @@ export default function MessagesPage() {
             {selectedConv && otherParticipant ? (
               <>
                 {/* Header */}
-                <div className="p-4 border-b border-slate-200 dark:border-white/10 flex items-center gap-3">
+                <div className="p-3 sm:p-4 border-b border-slate-200 dark:border-white/10 flex items-center gap-3 sticky top-0 z-10 backdrop-blur-xl bg-white/80 dark:bg-slate-900/80">
                   <button onClick={() => setSelectedConv(null)} className="md:hidden p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10">
                     <ArrowLeft className="w-5 h-5 text-slate-600 dark:text-white" />
                   </button>
@@ -311,18 +311,18 @@ export default function MessagesPage() {
                 </div>
 
                 {/* Input */}
-                <form onSubmit={sendMessage} className="p-4 border-t border-slate-200 dark:border-white/10 flex gap-2">
+                <form onSubmit={sendMessage} className="p-3 sm:p-4 border-t border-slate-200 dark:border-white/10 flex gap-2" style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))' }}>
                   <input
                     type="text"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Type a message..."
-                    className="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/10 border border-slate-200 dark:border-white/20 text-sm text-slate-900 dark:text-white"
+                    className="flex-1 px-4 py-3 sm:py-2.5 rounded-2xl sm:rounded-xl bg-slate-50 dark:bg-white/10 border border-slate-200 dark:border-white/20 text-base sm:text-sm text-slate-900 dark:text-white"
                   />
                   <button
                     type="submit"
                     disabled={!newMessage.trim() || sending}
-                    className="px-4 py-2.5 rounded-xl bg-orange text-white hover:bg-orange/90 disabled:opacity-50"
+                    className="w-11 h-11 sm:w-auto sm:h-auto sm:px-4 sm:py-2.5 rounded-full sm:rounded-xl bg-orange text-white hover:bg-orange/90 disabled:opacity-50 flex items-center justify-center flex-shrink-0"
                   >
                     <Send className="w-5 h-5" />
                   </button>

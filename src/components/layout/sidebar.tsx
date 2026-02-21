@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -30,6 +30,7 @@ import {
   FileBarChart,
   Tag,
   Upload,
+  MoreHorizontal,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { getLocalDateString } from '@/lib/utils/local-date'
@@ -84,47 +85,6 @@ export function Sidebar() {
   const router = useRouter()
   const { profile, isCoach, isAdmin, isImpersonating, impersonatedUserId, loading } = useUserRole()
 
-  // Mobile nav scroll state
-  const mobileNavRef = useRef<HTMLDivElement>(null)
-  const [showLeftFade, setShowLeftFade] = useState(false)
-  const [showRightFade, setShowRightFade] = useState(false)
-
-  // Update fade indicators on scroll
-  const updateScrollFades = useCallback(() => {
-    const el = mobileNavRef.current
-    if (!el) return
-    setShowLeftFade(el.scrollLeft > 8)
-    setShowRightFade(el.scrollLeft < el.scrollWidth - el.clientWidth - 8)
-  }, [])
-
-  // Auto-scroll active item into view on mount and route change
-  useEffect(() => {
-    const el = mobileNavRef.current
-    if (!el) return
-
-    // Find the active item and scroll it to center
-    const activeItem = el.querySelector('[data-active="true"]') as HTMLElement
-    if (activeItem) {
-      const scrollLeft = activeItem.offsetLeft - el.clientWidth / 2 + activeItem.offsetWidth / 2
-      el.scrollTo({ left: scrollLeft, behavior: 'smooth' })
-    }
-
-    // Initial fade check (after scroll settles)
-    setTimeout(updateScrollFades, 100)
-  }, [pathname, updateScrollFades])
-
-  // Listen for scroll events on mobile nav
-  useEffect(() => {
-    const el = mobileNavRef.current
-    if (!el) return
-    el.addEventListener('scroll', updateScrollFades, { passive: true })
-    // Check on resize too
-    window.addEventListener('resize', updateScrollFades)
-    return () => {
-      el.removeEventListener('scroll', updateScrollFades)
-      window.removeEventListener('resize', updateScrollFades)
-    }
-  }, [updateScrollFades])
 
   // Badge counts
   const [badges, setBadges] = useState<Record<string, number>>({})
@@ -220,9 +180,6 @@ export function Sidebar() {
     await supabase.auth.signOut({ scope: 'local' })
     router.push('/')
   }
-
-  // Determine which nav items to show
-  const navItems = isCoach || isAdmin ? [...athleteNavItems, ...adminNavItems] : athleteNavItems
 
   // Badge renderer
   const renderBadge = (item: NavItem, isCollapsed: boolean) => {
@@ -447,116 +404,264 @@ export function Sidebar() {
         </div>
       </motion.aside>
 
-      {/* Mobile Bottom Navigation */}
+      {/* Mobile Bottom Navigation — 5-tab + More sheet */}
+      <MobileBottomNav
+        pathname={pathname}
+        badges={badges}
+        isCoach={isCoach}
+        isAdmin={isAdmin}
+        handleLogout={handleLogout}
+      />
+
+      {/* Spacer for desktop sidebar */}
+      <div className="hidden lg:block" style={{ width: collapsed ? 80 : 280 }} />
+    </>
+  )
+}
+
+/* ─── Mobile Bottom Navigation ─── */
+
+// Primary tabs shown in the fixed bottom bar
+const primaryMobileTabs: NavItem[] = [
+  athleteNavItems[0],  // Home/Dashboard
+  athleteNavItems[1],  // Messages/Chat
+  athleteNavItems[7],  // My Lessons (Calendar)
+  athleteNavItems[3],  // Progress
+]
+
+// Remaining athlete items for the "More" sheet
+const remainingAthleteItems = athleteNavItems.filter(
+  (_, i) => ![0, 1, 7, 3].includes(i)
+)
+
+function MobileBottomNav({
+  pathname,
+  badges,
+  isCoach,
+  isAdmin,
+  handleLogout,
+}: {
+  pathname: string
+  badges: Record<string, number>
+  isCoach: boolean
+  isAdmin: boolean
+  handleLogout: () => void
+}) {
+  const [moreSheetOpen, setMoreSheetOpen] = useState(false)
+
+  // Check if active route is in the "More" sheet (not a primary tab)
+  const primaryHrefs = primaryMobileTabs.map((t) => t.href)
+  const isMoreActive = !primaryHrefs.includes(pathname) && pathname !== '/'
+
+  return (
+    <>
       <motion.nav
         initial={{ y: 100 }}
         animate={{ y: 0 }}
-        className="lg:hidden fixed bottom-0 left-0 right-0 glass-card border-t border-cyan-200/40 z-50 mobile-safe"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 mobile-safe"
       >
-        <div className="flex items-center py-1.5">
-          {/* Pinned: Theme Toggle */}
-          <div className="flex-shrink-0 flex flex-col items-center gap-1 px-2 border-r border-cyan-200/40 dark:border-white/10">
-            <ThemeToggle />
-          </div>
+        <div className="backdrop-blur-xl bg-white/80 dark:bg-slate-900/90 border-t border-cyan-200/30 dark:border-white/10 shadow-[0_-4px_30px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_30px_rgba(0,0,0,0.4)]">
+          <div className="flex items-center justify-around px-2 py-2">
+            {primaryMobileTabs.map((item) => {
+              const isActive = pathname === item.href
+              const Icon = item.icon
+              return (
+                <Link key={item.href} href={item.href}>
+                  <motion.div
+                    whileTap={{ scale: 0.85 }}
+                    className={`
+                      flex flex-col items-center justify-center
+                      min-w-[56px] min-h-[44px] rounded-2xl px-3 py-1.5 relative
+                      transition-colors duration-200
+                      ${isActive
+                        ? 'text-orange'
+                        : 'text-slate-500 dark:text-slate-400'
+                      }
+                    `}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="mobileActiveTab"
+                        className="absolute -top-1 w-8 h-1 rounded-full bg-orange"
+                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                      />
+                    )}
+                    <Icon className={`w-5 h-5 ${isActive ? 'text-orange' : ''}`} />
+                    <span className={`text-[11px] font-medium mt-0.5 ${isActive ? 'text-orange font-semibold' : ''}`}>
+                      {item.mobileLabel}
+                    </span>
+                    {item.badgeKey && badges[item.badgeKey] ? (
+                      <span className="absolute -top-1 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center text-[10px] font-bold rounded-full bg-orange text-white">
+                        {badges[item.badgeKey]}
+                      </span>
+                    ) : null}
+                  </motion.div>
+                </Link>
+              )
+            })}
 
-          {/* Scrollable nav items */}
-          <div className="relative flex-1 min-w-0">
-            {/* Scroll fade indicators */}
-            {showLeftFade && (
-              <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white/95 dark:from-[#0a0a0f]/95 via-white/60 dark:via-[#0a0a0f]/60 to-transparent z-10 pointer-events-none" />
-            )}
-            {showRightFade && (
-              <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white/95 dark:from-[#0a0a0f]/95 via-white/60 dark:via-[#0a0a0f]/60 to-transparent z-10 pointer-events-none" />
-            )}
-
-            <div
-              ref={mobileNavRef}
-              className="flex items-center overflow-x-auto scrollbar-hide gap-0.5 px-1"
-            >
-              {/* Athlete Nav Items */}
-              {athleteNavItems.map((item) => {
-                const isActive = pathname === item.href
-                const Icon = item.icon
-
-                return (
-                  <Link key={item.href} href={item.href}>
-                    <motion.div
-                      whileTap={{ scale: 0.9 }}
-                      data-active={isActive}
-                      className={`
-                        flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0 relative
-                        ${
-                          isActive
-                            ? 'bg-orange/20 text-orange'
-                            : 'text-slate-700 dark:text-white hover:text-slate-900 dark:hover:text-white'
-                        }
-                      `}
-                    >
-                      <Icon className="w-4 h-4" />
-                      <span className="text-[9px] font-medium leading-tight text-center whitespace-nowrap">{item.mobileLabel}</span>
-                      {item.badgeKey && badges[item.badgeKey] ? (
-                        <span className="absolute -top-0.5 -right-0.5 px-1 py-0 text-[8px] font-bold rounded-full min-w-[14px] text-center leading-[14px] bg-orange text-white">
-                          {badges[item.badgeKey]}
-                        </span>
-                      ) : null}
-                    </motion.div>
-                  </Link>
-                )
-              })}
-
-              {/* Admin separator + items (coaches/admins only) */}
-              {(isCoach || isAdmin) && (
-                <>
-                  <div className="flex-shrink-0 w-px h-8 bg-cyan-200/40 dark:bg-white/10 mx-1" />
-                  {adminNavItems.map((item) => {
-                    const isActive = pathname === item.href
-                    const Icon = item.icon
-
-                    return (
-                      <Link key={item.href} href={item.href}>
-                        <motion.div
-                          whileTap={{ scale: 0.9 }}
-                          data-active={isActive}
-                          className={`
-                            flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0 relative
-                            ${
-                              isActive
-                                ? 'bg-cyan/20 text-cyan'
-                                : 'text-slate-700 dark:text-white hover:text-slate-900 dark:hover:text-white'
-                            }
-                          `}
-                        >
-                          <Icon className="w-4 h-4" />
-                          <span className="text-[9px] font-medium leading-tight text-center whitespace-nowrap">{item.mobileLabel}</span>
-                          {item.badgeKey && badges[item.badgeKey] ? (
-                            <span className="absolute -top-0.5 -right-0.5 px-1 py-0 text-[8px] font-bold rounded-full min-w-[14px] text-center leading-[14px] bg-orange text-white">
-                              {badges[item.badgeKey]}
-                            </span>
-                          ) : null}
-                        </motion.div>
-                      </Link>
-                    )
-                  })}
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Pinned: Logout */}
-          <div className="flex-shrink-0 border-l border-cyan-200/40 dark:border-white/10 px-2">
-            <button
-              onClick={handleLogout}
-              className="flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[40px] text-red-400 hover:text-red-300"
-            >
-              <LogOut className="w-4 h-4" />
-              <span className="text-[9px] font-medium leading-tight text-center whitespace-nowrap">Exit</span>
+            {/* More button */}
+            <button onClick={() => setMoreSheetOpen(true)}>
+              <motion.div
+                whileTap={{ scale: 0.85 }}
+                className={`
+                  flex flex-col items-center justify-center
+                  min-w-[56px] min-h-[44px] rounded-2xl px-3 py-1.5 relative
+                  transition-colors duration-200
+                  ${isMoreActive
+                    ? 'text-orange'
+                    : 'text-slate-500 dark:text-slate-400'
+                  }
+                `}
+              >
+                {isMoreActive && (
+                  <motion.div
+                    layoutId="mobileActiveTab"
+                    className="absolute -top-1 w-8 h-1 rounded-full bg-orange"
+                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                  />
+                )}
+                <MoreHorizontal className={`w-5 h-5 ${isMoreActive ? 'text-orange' : ''}`} />
+                <span className={`text-[11px] font-medium mt-0.5 ${isMoreActive ? 'text-orange font-semibold' : ''}`}>More</span>
+              </motion.div>
             </button>
           </div>
         </div>
       </motion.nav>
 
-      {/* Spacer for desktop sidebar */}
-      <div className="hidden lg:block" style={{ width: collapsed ? 80 : 280 }} />
+      {/* More Sheet */}
+      <AnimatePresence>
+        {moreSheetOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMoreSheetOpen(false)}
+              className="lg:hidden fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm"
+            />
+            {/* Sheet */}
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="lg:hidden fixed bottom-0 left-0 right-0 z-[61] bg-white dark:bg-slate-900 rounded-t-3xl border-t border-cyan-200/30 dark:border-white/10 shadow-[0_-8px_40px_rgba(0,0,0,0.2)] mobile-safe max-h-[75vh] overflow-y-auto"
+            >
+              {/* Drag handle */}
+              <div className="flex justify-center py-3">
+                <div className="w-10 h-1 rounded-full bg-slate-300 dark:bg-white/20" />
+              </div>
+
+              <div className="px-4 pb-6">
+                {/* Training section */}
+                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3 px-1">
+                  Training
+                </p>
+                <div className="grid grid-cols-4 gap-3 mb-6">
+                  {remainingAthleteItems.map((item) => {
+                    const Icon = item.icon
+                    const isActive = pathname === item.href
+                    return (
+                      <Link key={item.href} href={item.href} onClick={() => setMoreSheetOpen(false)}>
+                        <div className={`
+                          flex flex-col items-center gap-1.5 p-3 rounded-2xl
+                          transition-colors relative
+                          ${isActive
+                            ? 'bg-orange/10 dark:bg-orange/20'
+                            : 'active:bg-slate-100 dark:active:bg-white/5'
+                          }
+                        `}>
+                          <div className={`
+                            w-11 h-11 rounded-xl flex items-center justify-center
+                            ${isActive
+                              ? 'bg-orange/20 dark:bg-orange/30'
+                              : 'bg-slate-100 dark:bg-white/10'
+                            }
+                          `}>
+                            <Icon className={`w-5 h-5 ${isActive ? 'text-orange' : (item.color || 'text-slate-600 dark:text-slate-300')}`} />
+                          </div>
+                          <span className={`text-[11px] font-medium text-center leading-tight ${isActive ? 'text-orange' : 'text-slate-700 dark:text-slate-300'}`}>
+                            {item.mobileLabel}
+                          </span>
+                          {item.badgeKey && badges[item.badgeKey] ? (
+                            <span className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center text-[10px] font-bold rounded-full bg-orange text-white">
+                              {badges[item.badgeKey]}
+                            </span>
+                          ) : null}
+                        </div>
+                      </Link>
+                    )
+                  })}
+                </div>
+
+                {/* Admin section (coaches/admins only) */}
+                {(isCoach || isAdmin) && (
+                  <>
+                    <div className="h-px bg-slate-200 dark:bg-white/10 mb-4" />
+                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3 px-1">
+                      Admin Tools
+                    </p>
+                    <div className="grid grid-cols-4 gap-3 mb-6">
+                      {adminNavItems.map((item) => {
+                        const Icon = item.icon
+                        const isActive = pathname === item.href
+                        return (
+                          <Link key={item.href} href={item.href} onClick={() => setMoreSheetOpen(false)}>
+                            <div className={`
+                              flex flex-col items-center gap-1.5 p-3 rounded-2xl
+                              transition-colors relative
+                              ${isActive
+                                ? 'bg-cyan/10 dark:bg-cyan/20'
+                                : 'active:bg-slate-100 dark:active:bg-white/5'
+                              }
+                            `}>
+                              <div className={`
+                                w-11 h-11 rounded-xl flex items-center justify-center
+                                ${isActive
+                                  ? 'bg-cyan/20 dark:bg-cyan/30'
+                                  : 'bg-slate-100 dark:bg-white/10'
+                                }
+                              `}>
+                                <Icon className={`w-5 h-5 ${isActive ? 'text-cyan' : (item.color || 'text-slate-600 dark:text-slate-300')}`} />
+                              </div>
+                              <span className={`text-[11px] font-medium text-center leading-tight ${isActive ? 'text-cyan' : 'text-slate-700 dark:text-slate-300'}`}>
+                                {item.mobileLabel}
+                              </span>
+                              {item.badgeKey && badges[item.badgeKey] ? (
+                                <span className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center text-[10px] font-bold rounded-full bg-orange text-white">
+                                  {badges[item.badgeKey]}
+                                </span>
+                              ) : null}
+                            </div>
+                          </Link>
+                        )
+                      })}
+                    </div>
+                  </>
+                )}
+
+                {/* Theme toggle + Logout */}
+                <div className="h-px bg-slate-200 dark:bg-white/10 mb-4" />
+                <div className="flex items-center justify-between px-2">
+                  <div className="flex items-center gap-3">
+                    <ThemeToggle />
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-300">Theme</span>
+                  </div>
+                  <button
+                    onClick={() => { setMoreSheetOpen(false); handleLogout() }}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-50 dark:bg-red-500/10 text-red-500 text-sm font-medium active:scale-95 transition-transform"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   )
 }

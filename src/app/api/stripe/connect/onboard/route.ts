@@ -26,12 +26,61 @@ export async function POST(req: NextRequest) {
     const stripe = getStripeLiveInstance()
     const origin = req.headers.get('origin') || 'https://propersports.pro'
 
-    // Check if coach already has a connected account
+    // If org_id provided, check if org already has a Stripe account
+    if (org_id) {
+      const { data: org } = await adminClient
+        .from('organizations')
+        .select('stripe_connect_account_id, name')
+        .eq('id', org_id)
+        .maybeSingle()
+
+      let accountId = org?.stripe_connect_account_id
+
+      if (!accountId) {
+        // Create a new Express connected account for the org
+        const account = await stripe.accounts.create({
+          type: 'express',
+          country: 'US',
+          email: user.email,
+          capabilities: {
+            card_payments: { requested: true },
+            transfers: { requested: true },
+          },
+          business_profile: {
+            name: org?.name || 'PSP Organization',
+            product_description: 'Sports performance coaching and training sessions',
+          },
+          metadata: {
+            org_id,
+            owner_id: user.id,
+            platform: 'PSP.Pro',
+          },
+        })
+        accountId = account.id
+
+        // Save to org record
+        await adminClient.from('organizations').update({
+          stripe_connect_account_id: accountId,
+          stripe_connect_status: 'pending',
+        }).eq('id', org_id)
+      }
+
+      // Generate onboarding link
+      const accountLink = await stripe.accountLinks.create({
+        account: accountId,
+        refresh_url: `${origin}/admin/org?tab=payouts&status=refresh`,
+        return_url: `${origin}/admin/org?tab=payouts&status=connected`,
+        type: 'account_onboarding',
+      })
+
+      return NextResponse.json({ url: accountLink.url })
+    }
+
+    // Coach-level Stripe account (no org_id)
     const query = adminClient
       .from('coach_payout_accounts')
       .select('stripe_account_id, account_status')
       .eq('coach_id', user.id)
-    if (org_id) query.eq('org_id', org_id)
     const { data: existing } = await query.maybeSingle()
 
     let accountId = existing?.stripe_account_id
@@ -52,7 +101,6 @@ export async function POST(req: NextRequest) {
         },
         metadata: {
           coach_id: user.id,
-          org_id: org_id || '',
           platform: 'PSP.Pro',
         },
       })
@@ -61,7 +109,7 @@ export async function POST(req: NextRequest) {
       // Upsert payout account record
       await adminClient.from('coach_payout_accounts').upsert({
         coach_id: user.id,
-        org_id: org_id || null,
+        org_id: null,
         stripe_account_id: accountId,
         stripe_account_type: 'express',
         account_status: 'pending',
