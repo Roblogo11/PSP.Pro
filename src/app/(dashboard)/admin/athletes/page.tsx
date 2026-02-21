@@ -140,13 +140,26 @@ export default function AthletesManagementPage() {
               .select('*', { count: 'exact', head: true })
               .eq('athlete_id', athlete.id)
 
+            // Get assigned drills count
+            const { count: assignedCount } = await supabase
+              .from('assigned_drills')
+              .select('*', { count: 'exact', head: true })
+              .eq('user_id', athlete.id)
+
+            // Get pending (not completed) drills
+            const { count: pendingCount } = await supabase
+              .from('assigned_drills')
+              .select('*', { count: 'exact', head: true })
+              .eq('user_id', athlete.id)
+              .eq('completed', false)
+
             statsMap[athlete.id] = {
               total_sessions: sessionCount || 0,
-              drills_completed: metricsCount || 0, // Using metrics count as performance tests
+              drills_completed: metricsCount || 0,
               avg_velocity: avgVelocity ? parseFloat(avgVelocity.toFixed(1)) : null,
               max_velocity: maxVelocity ? parseFloat(maxVelocity.toFixed(1)) : null,
-              assigned_drills: 0, // Not tracking assigned drills yet
-              pending_drills: 0, // Not tracking assigned drills yet
+              assigned_drills: assignedCount || 0,
+              pending_drills: pendingCount || 0,
             }
           }
 

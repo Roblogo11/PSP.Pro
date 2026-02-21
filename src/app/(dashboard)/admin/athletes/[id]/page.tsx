@@ -252,7 +252,7 @@ export default function AthleteDetailPage() {
 
   const handleSaveMetric = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!profile) return
+    if (!profile || saving) return
 
     setSaving(true)
     try {
@@ -309,9 +309,10 @@ export default function AthleteDetailPage() {
         metrics: jsonMetrics,
       }
 
+      // Use upsert to prevent duplicate entries for same athlete + date
       const { error } = await supabase
         .from('athlete_performance_metrics')
-        .insert(metricData)
+        .upsert(metricData, { onConflict: 'athlete_id,test_date' })
 
       if (error) throw error
 

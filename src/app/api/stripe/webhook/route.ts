@@ -33,6 +33,16 @@ export async function POST(request: NextRequest) {
         await handlePaymentFailed(event.data.object as Stripe.PaymentIntent)
         break
 
+      // Membership subscription events
+      case 'customer.subscription.created':
+      case 'customer.subscription.updated':
+        await handleSubscriptionUpdated(event.data.object)
+        break
+
+      case 'customer.subscription.deleted':
+        await handleSubscriptionDeleted(event.data.object)
+        break
+
       default:
         console.log(`Unhandled event type: ${event.type}`)
     }
@@ -106,6 +116,55 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
     }
   }
 
+  // Handle membership subscription checkout
+  if (metadata.type === 'membership_subscription' && metadata.user_id && metadata.tier_slug) {
+    try {
+      const stripeForSub = await getStripe()
+      const subscriptionId = session.subscription as string
+
+      // Get subscription details from Stripe
+      let subscription: any = null
+      if (subscriptionId) {
+        subscription = await stripeForSub.subscriptions.retrieve(subscriptionId)
+      }
+
+      // Get the tier ID from our DB
+      const { data: tier } = await supabase
+        .from('membership_tiers')
+        .select('id')
+        .eq('slug', metadata.tier_slug)
+        .single()
+
+      if (tier) {
+        // Upsert membership record
+        await supabase.from('athlete_memberships').upsert({
+          athlete_id: metadata.user_id,
+          tier_id: tier.id,
+          status: 'active',
+          stripe_subscription_id: subscriptionId || null,
+          stripe_customer_id: (session.customer as string) || null,
+          current_period_start: subscription?.current_period_start
+            ? new Date(subscription.current_period_start * 1000).toISOString()
+            : new Date().toISOString(),
+          current_period_end: subscription?.current_period_end
+            ? new Date(subscription.current_period_end * 1000).toISOString()
+            : null,
+          cancel_at_period_end: false,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'athlete_id' })
+
+        // Update profile tier
+        await supabase.from('profiles').update({
+          membership_tier: metadata.tier_slug === 'elite_membership' ? 'elite' : 'basic',
+        }).eq('id', metadata.user_id)
+
+        console.log('Membership activated for user:', metadata.user_id, 'tier:', metadata.tier_slug)
+      }
+    } catch (err) {
+      console.error('Failed to process membership subscription:', err)
+    }
+  }
+
   // Handle package purchase
   if (metadata.package_id) {
     try {
@@ -175,4 +234,69 @@ async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
   if (error) {
     console.error('Error updating booking payment status:', error)
   }
+}
+
+async function handleSubscriptionUpdated(subscription: any) {
+  const supabase = createAdminClient()
+  const userId = subscription.metadata?.user_id
+  const tierSlug = subscription.metadata?.tier_slug
+
+  if (!userId) {
+    console.log('No user_id in subscription metadata, skipping')
+    return
+  }
+
+  console.log('Subscription updated:', subscription.id, 'status:', subscription.status)
+
+  const statusMap: Record<string, string> = {
+    active: 'active',
+    trialing: 'trialing',
+    past_due: 'past_due',
+    canceled: 'cancelled',
+    unpaid: 'past_due',
+  }
+
+  const membershipStatus = statusMap[subscription.status] || 'active'
+
+  await supabase.from('athlete_memberships').upsert({
+    athlete_id: userId,
+    tier_id: (await supabase.from('membership_tiers').select('id').eq('slug', tierSlug || 'elite_membership').single()).data?.id,
+    status: membershipStatus,
+    stripe_subscription_id: subscription.id,
+    stripe_customer_id: subscription.customer as string,
+    current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
+    current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+    cancel_at_period_end: subscription.cancel_at_period_end,
+    updated_at: new Date().toISOString(),
+  }, { onConflict: 'athlete_id' })
+
+  // Update profile tier based on status
+  const isActive = ['active', 'trialing'].includes(subscription.status)
+  await supabase.from('profiles').update({
+    membership_tier: isActive ? 'elite' : 'basic',
+  }).eq('id', userId)
+}
+
+async function handleSubscriptionDeleted(subscription: any) {
+  const supabase = createAdminClient()
+  const userId = subscription.metadata?.user_id
+
+  if (!userId) {
+    console.log('No user_id in subscription metadata for deletion, skipping')
+    return
+  }
+
+  console.log('Subscription cancelled:', subscription.id, 'for user:', userId)
+
+  // Update membership to cancelled
+  await supabase.from('athlete_memberships').update({
+    status: 'cancelled',
+    cancelled_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  }).eq('athlete_id', userId)
+
+  // Downgrade profile to basic (NEVER delete data)
+  await supabase.from('profiles').update({
+    membership_tier: 'basic',
+  }).eq('id', userId)
 }

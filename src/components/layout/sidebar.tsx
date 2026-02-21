@@ -53,6 +53,7 @@ const athleteNavItems: NavItem[] = [
   { label: 'Book Lessons', mobileLabel: 'Book', href: '/booking', icon: Clock, color: 'text-blue-400', badgeKey: 'sessionsRemaining' },
   { label: 'Courses', mobileLabel: 'Courses', href: '/courses', icon: BookOpen, color: 'text-pink-400' },
   { label: 'Pop Quiz', mobileLabel: 'Quiz', href: '/questionnaires', icon: ClipboardCheck, color: 'text-emerald-400' },
+  { label: 'Video Analysis', mobileLabel: 'Video', href: '/video-analysis', icon: Video, color: 'text-red-400' },
   { label: 'Settings', mobileLabel: 'Settings', href: '/settings', icon: Settings, color: 'text-cyan-600' },
 ]
 

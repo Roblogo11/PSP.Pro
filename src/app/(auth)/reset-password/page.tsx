@@ -18,19 +18,34 @@ export default function ResetPasswordPage() {
   const [validToken, setValidToken] = useState(false)
 
   useEffect(() => {
-    // Check if we have a valid session from the reset link
-    const checkSession = async () => {
-      const supabase = createClient()
-      const { data: { session } } = await supabase.auth.getSession()
+    const supabase = createClient()
 
+    // Listen for auth state changes (handles both PKCE callback and hash fragments)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: string, session: any) => {
+      if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && session)) {
+        setValidToken(true)
+      }
+    })
+
+    // Also check existing session (handles redirect from /auth/callback)
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
       if (session) {
         setValidToken(true)
       } else {
-        setError('Invalid or expired reset link. Please request a new one.')
+        // Wait a moment for the auth state listener to fire before showing error
+        setTimeout(() => {
+          setValidToken(prev => {
+            if (!prev) setError('Invalid or expired reset link. Please request a new one.')
+            return prev
+          })
+        }, 2000)
       }
     }
 
     checkSession()
+
+    return () => subscription.unsubscribe()
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {

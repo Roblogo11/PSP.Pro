@@ -41,16 +41,35 @@ export default function SessionsPage() {
     ? upcomingSessions
     : pastSessions
 
-  const getStatusIcon = (status: string) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case 'upcoming':
-        return <AlertCircle className="w-5 h-5 text-orange" />
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-orange/20 text-orange border border-orange/30">
+            <AlertCircle className="w-3.5 h-3.5" />
+            Confirmed
+          </span>
+        )
       case 'completed':
-        return <CheckCircle2 className="w-5 h-5 text-green-400" />
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-400 border border-green-500/30">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            Completed
+          </span>
+        )
       case 'cancelled':
-        return <XCircle className="w-5 h-5 text-red-400" />
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-500/20 text-red-400 border border-red-500/30">
+            <XCircle className="w-3.5 h-3.5" />
+            Cancelled
+          </span>
+        )
       default:
-        return null
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-cyan/20 text-cyan border border-cyan/30">
+            Pending
+          </span>
+        )
     }
   }
 
@@ -155,11 +174,11 @@ export default function SessionsPage() {
                 </div>
 
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-orange transition-colors">
                       {session.type}
                     </h3>
-                    {getStatusIcon(session.status)}
+                    {getStatusBadge(session.status)}
                   </div>
                   <p className="text-sm text-cyan-700 dark:text-white">{session.coach}</p>
                 </div>

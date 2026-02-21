@@ -112,6 +112,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to create athlete profile' }, { status: 400 })
     }
 
+    // Generate a password reset link so the athlete can set their own password
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SITE_URL || 'https://psp.pro'
+    try {
+      const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
+        type: 'recovery',
+        email,
+        options: {
+          redirectTo: `${appUrl}/auth/callback?next=/reset-password`,
+        },
+      })
+      if (linkError) {
+        console.warn('Could not generate recovery link:', linkError.message)
+      }
+    } catch (linkErr) {
+      // Non-critical: athlete can still use forgot-password flow manually
+      console.warn('Recovery link generation failed:', linkErr)
+    }
+
     return NextResponse.json({
       success: true,
       user: {

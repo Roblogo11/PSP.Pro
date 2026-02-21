@@ -75,6 +75,11 @@ export default function AdminCoursesPage() {
   const [lessonForm, setLessonForm] = useState({ title: '', video_url: '', description: '', duration_seconds: 0, is_preview: false })
   const [lessonSubmitting, setLessonSubmitting] = useState(false)
 
+  // Lesson editing
+  const [editingLesson, setEditingLesson] = useState<CourseLesson | null>(null)
+  const [editLessonForm, setEditLessonForm] = useState({ title: '', video_url: '', description: '', duration_seconds: 0, is_preview: false })
+  const [editLessonSubmitting, setEditLessonSubmitting] = useState(false)
+
   // Enrollment
   const [enrollCourse, setEnrollCourse] = useState<Course | null>(null)
   const [athletes, setAthletes] = useState<any[]>([])
@@ -214,6 +219,39 @@ export default function AdminCoursesPage() {
         supabase.from('course_lessons').update({ sort_order: i }).eq('id', l.id!)
       )
     )
+  }
+
+  const openEditLesson = (lesson: CourseLesson) => {
+    setEditingLesson(lesson)
+    setEditLessonForm({
+      title: lesson.title,
+      video_url: lesson.video_url,
+      description: lesson.description || '',
+      duration_seconds: lesson.duration_seconds || 0,
+      is_preview: lesson.is_preview,
+    })
+  }
+
+  const saveEditLesson = async () => {
+    if (!editingLesson?.id || !managingCourse || !editLessonForm.title || !editLessonForm.video_url) return
+    setEditLessonSubmitting(true)
+
+    const { error } = await supabase.from('course_lessons').update({
+      title: editLessonForm.title,
+      video_url: editLessonForm.video_url,
+      description: editLessonForm.description || null,
+      duration_seconds: editLessonForm.duration_seconds || null,
+      is_preview: editLessonForm.is_preview,
+    }).eq('id', editingLesson.id)
+
+    if (error) { toastError(error.message); setEditLessonSubmitting(false); return }
+
+    setEditLessonSubmitting(false)
+    setEditingLesson(null)
+
+    // Refresh lessons
+    const { data } = await supabase.from('course_lessons').select('*').eq('course_id', managingCourse.id).order('sort_order')
+    setLessons(data || [])
   }
 
   // Enrollment
@@ -478,7 +516,7 @@ export default function AdminCoursesPage() {
       {/* Lesson Manager Modal */}
       {managingCourse && (
         <div role="dialog" aria-modal="true" aria-label="Manage Lessons" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setManagingCourse(null)}>
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-cyan-200/40 shadow-2xl max-w-4xl w-full p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white">Manage Lessons</h3>
@@ -495,27 +533,82 @@ export default function AdminCoursesPage() {
                 <p className="text-sm text-cyan-700 dark:text-white/60 text-center py-4">No lessons yet. Add your first one below.</p>
               ) : (
                 lessons.map((lesson, idx) => (
-                  <div key={lesson.id} className="flex items-center gap-3 p-3 rounded-xl bg-cyan-50/30 dark:bg-white/5 border border-cyan-200/20">
-                    <span className="text-sm font-bold text-cyan-600 dark:text-white/50 w-6 text-center">{idx + 1}</span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{lesson.title}</p>
-                      <p className="text-xs text-cyan-700 dark:text-white/50 truncate">{lesson.video_url}</p>
+                  editingLesson?.id === lesson.id ? (
+                    <div key={lesson.id} className="p-4 rounded-xl bg-cyan-50/50 dark:bg-white/10 border border-cyan-400/40 space-y-3">
+                      <input
+                        type="text"
+                        value={editLessonForm.title}
+                        onChange={e => setEditLessonForm({ ...editLessonForm, title: e.target.value })}
+                        placeholder="Lesson title *"
+                        className={inputClasses}
+                      />
+                      <input
+                        type="url"
+                        value={editLessonForm.video_url}
+                        onChange={e => setEditLessonForm({ ...editLessonForm, video_url: e.target.value })}
+                        placeholder="Video URL *"
+                        className={inputClasses}
+                      />
+                      <input
+                        type="text"
+                        value={editLessonForm.description}
+                        onChange={e => setEditLessonForm({ ...editLessonForm, description: e.target.value })}
+                        placeholder="Brief description (optional)"
+                        className={inputClasses}
+                      />
+                      <div className="flex items-center gap-4">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={editLessonForm.is_preview}
+                            onChange={e => setEditLessonForm({ ...editLessonForm, is_preview: e.target.checked })}
+                            className="w-4 h-4 rounded border-cyan-200/40 text-green-500 focus:ring-green-500"
+                          />
+                          <span className="text-sm text-cyan-700 dark:text-white">Free preview</span>
+                        </label>
+                        <div className="flex items-center gap-2 ml-auto">
+                          <button type="button" onClick={() => setEditingLesson(null)} className="px-3 py-1.5 text-sm text-cyan-700 dark:text-white/70 hover:bg-cyan-50/50 rounded-lg">
+                            Cancel
+                          </button>
+                          <button
+                            type="button"
+                            onClick={saveEditLesson}
+                            disabled={!editLessonForm.title || !editLessonForm.video_url || editLessonSubmitting}
+                            className="btn-primary flex items-center gap-2 text-sm"
+                          >
+                            {editLessonSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+                            Save
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    {lesson.is_preview && (
-                      <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-[10px] font-semibold rounded-lg border border-green-500/30">Preview</span>
-                    )}
-                    <div className="flex items-center gap-1">
-                      <button onClick={() => moveLesson(idx, 'up')} disabled={idx === 0} aria-label="Move lesson up" className="p-1 hover:bg-cyan/20 rounded disabled:opacity-30">
-                        <ChevronUp className="w-4 h-4 text-cyan-800 dark:text-white" />
-                      </button>
-                      <button onClick={() => moveLesson(idx, 'down')} disabled={idx === lessons.length - 1} aria-label="Move lesson down" className="p-1 hover:bg-cyan/20 rounded disabled:opacity-30">
-                        <ChevronDown className="w-4 h-4 text-cyan-800 dark:text-white" />
-                      </button>
-                      <button onClick={() => deleteLesson(lesson.id!)} aria-label="Delete lesson" className="p-1 hover:bg-red-500/20 rounded">
-                        <Trash2 className="w-4 h-4 text-red-400" />
-                      </button>
+                  ) : (
+                    <div key={lesson.id} className="flex items-start gap-3 p-3 rounded-xl bg-cyan-50/30 dark:bg-white/5 border border-cyan-200/20">
+                      <span className="text-sm font-bold text-cyan-600 dark:text-white/50 w-6 text-center mt-0.5">{idx + 1}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-slate-900 dark:text-white break-words">{lesson.title}</p>
+                        <p className="text-xs text-cyan-700 dark:text-white/50 break-all">{lesson.video_url}</p>
+                        {lesson.description && <p className="text-xs text-slate-500 dark:text-white/40 mt-1">{lesson.description}</p>}
+                      </div>
+                      {lesson.is_preview && (
+                        <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-[10px] font-semibold rounded-lg border border-green-500/30 flex-shrink-0">Preview</span>
+                      )}
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        <button onClick={() => openEditLesson(lesson)} aria-label="Edit lesson" className="p-1 hover:bg-blue-500/20 rounded">
+                          <Edit2 className="w-4 h-4 text-blue-400" />
+                        </button>
+                        <button onClick={() => moveLesson(idx, 'up')} disabled={idx === 0} aria-label="Move lesson up" className="p-1 hover:bg-cyan/20 rounded disabled:opacity-30">
+                          <ChevronUp className="w-4 h-4 text-cyan-800 dark:text-white" />
+                        </button>
+                        <button onClick={() => moveLesson(idx, 'down')} disabled={idx === lessons.length - 1} aria-label="Move lesson down" className="p-1 hover:bg-cyan/20 rounded disabled:opacity-30">
+                          <ChevronDown className="w-4 h-4 text-cyan-800 dark:text-white" />
+                        </button>
+                        <button onClick={() => deleteLesson(lesson.id!)} aria-label="Delete lesson" className="p-1 hover:bg-red-500/20 rounded">
+                          <Trash2 className="w-4 h-4 text-red-400" />
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  )
                 ))
               )}
             </div>

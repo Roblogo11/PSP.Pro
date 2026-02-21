@@ -1,7 +1,11 @@
 import { redirect } from 'next/navigation'
+import { headers } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Sidebar } from '@/components/layout/sidebar'
+
+// Routes that authenticated users can access without an active membership
+const OPEN_ROUTES = ['/booking', '/pricing', '/sessions']
 
 export default async function DashboardLayout({
   children,
@@ -46,8 +50,14 @@ export default async function DashboardLayout({
       ? new Date(profile.trial_expires_at) > new Date()
       : false
 
+    // Allow authenticated users to access booking/pricing even without membership
+    const headersList = await headers()
+    const pathname = headersList.get('x-next-pathname') || headersList.get('x-invoke-path') || ''
+    const isOpenRoute = OPEN_ROUTES.some(route => pathname.includes(route))
+
     // Athletes must have an active package (or active trial) to access the dashboard
-    if (!isStaff && !hasActiveTrial) {
+    // Exception: booking and pricing pages are always accessible to authenticated users
+    if (!isStaff && !hasActiveTrial && !isOpenRoute) {
       const { data: activePackage } = await supabase
         .from('athlete_packages')
         .select('id')
