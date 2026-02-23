@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { MessageSquare, X, Send } from 'lucide-react'
@@ -1122,10 +1122,32 @@ export function PSPAssistant() {
   const [messages, setMessages] = useState<any[]>([])
   const [input, setInput] = useState('')
   const [hasGreeted, setHasGreeted] = useState(false)
+  const [fromGuide, setFromGuide] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
+  const searchParams = useSearchParams()
   const { profile, isCoach, isAdmin } = useUserRole()
+
+  // Detect ?from=guide — auto-open chat with tour offer + shimmer bubble
+  useEffect(() => {
+    if (searchParams.get('from') === 'guide' && !hasGreeted) {
+      setFromGuide(true)
+      // Short delay so page has settled before popping open
+      const t = setTimeout(() => {
+        setIsOpen(true)
+        setHasGreeted(true)
+        const name = profile?.full_name?.split(' ')[0] || ''
+        const greeting = `${name ? `Yo ${name}!` : 'Yo!'} 👀 Dr. Prop here — looks like you came straight from the Guide! Smart move! 🧪🔥 This page has an interactive tour — want me to walk you through it LIVE? Spotlight, step-by-step, clicks and all! Real app, zero consequences! 🧹✨`
+        const msgs: any[] = [{ id: 'guide-greeting', type: 'assistant', content: greeting }]
+        if (pageHasTour(pathname)) {
+          msgs.push({ id: 'guide-tour-offer', type: 'assistant', content: `👇 Hit the button below to start Dr. Prop's spotlight tour for this page!`, tourPage: pathname })
+        }
+        setMessages(msgs)
+      }, 800)
+      return () => clearTimeout(t)
+    }
+  }, [searchParams]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Determine role filter for KB matching
   const userRole: RoleFilter = isCoach || isAdmin ? 'coach' : profile ? 'athlete' : 'visitor'
@@ -1232,9 +1254,11 @@ export function PSPAssistant() {
       {/* Floating Chat Button */}
       <motion.button
         onClick={handleOpen}
-        className="fixed bottom-[88px] sm:bottom-6 right-4 sm:right-6 z-[100] flex items-center gap-2 px-5 py-3.5 rounded-full bg-gradient-to-r from-orange via-orange-500 to-orange-600 text-white text-sm font-bold shadow-2xl hover:shadow-orange/50 transition-all ring-4 ring-orange/20 hover:ring-orange/40"
+        className={`fixed bottom-[88px] sm:bottom-6 right-4 sm:right-6 z-[100] flex items-center gap-2 px-5 py-3.5 rounded-full bg-gradient-to-r from-orange via-orange-500 to-orange-600 text-white text-sm font-bold shadow-2xl hover:shadow-orange/50 transition-all ring-4 ring-orange/20 hover:ring-orange/40 overflow-hidden${fromGuide ? ' guide-shimmer' : ''}`}
         style={{
-          animation: 'pulse-glow 3s ease-in-out infinite',
+          animation: fromGuide
+            ? 'pulse-glow-intense 1.2s ease-in-out infinite'
+            : 'pulse-glow 3s ease-in-out infinite',
         }}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
@@ -1242,8 +1266,12 @@ export function PSPAssistant() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
       >
-        <MessageSquare className="w-5 h-5" />
-        <span className="hidden sm:inline">Need Help?</span>
+        {/* Shimmer wipe overlay — only when fromGuide */}
+        {fromGuide && (
+          <span className="absolute inset-0 pointer-events-none shimmer-wipe" />
+        )}
+        <MessageSquare className="w-5 h-5 relative z-10" />
+        <span className="hidden sm:inline relative z-10">Dr. Prop here! 👀</span>
         <span className="absolute -top-1 -right-1 w-3 h-3 bg-cyan rounded-full animate-ping" />
         <span className="absolute -top-1 -right-1 w-3 h-3 bg-cyan rounded-full" />
       </motion.button>
@@ -1256,6 +1284,22 @@ export function PSPAssistant() {
           50% {
             box-shadow: 0 10px 40px rgba(184, 48, 26, 0.6), 0 0 30px rgba(184, 48, 26, 0.5);
           }
+        }
+        @keyframes pulse-glow-intense {
+          0%, 100% {
+            box-shadow: 0 0 0 0 rgba(251,146,60,0.7), 0 10px 40px rgba(184,48,26,0.6), 0 0 30px rgba(251,146,60,0.5);
+          }
+          50% {
+            box-shadow: 0 0 0 10px rgba(251,146,60,0), 0 10px 60px rgba(184,48,26,0.9), 0 0 50px rgba(251,146,60,0.7);
+          }
+        }
+        @keyframes shimmer-wipe {
+          0% { transform: translateX(-100%) skewX(-15deg); opacity: 0.7; }
+          60%, 100% { transform: translateX(250%) skewX(-15deg); opacity: 0; }
+        }
+        .shimmer-wipe {
+          background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%);
+          animation: shimmer-wipe 1.6s ease-in-out infinite;
         }
       `}</style>
 

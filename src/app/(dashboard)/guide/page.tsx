@@ -223,7 +223,7 @@ function StepCard({ step, stepNumber }: { step: GuideStep; stepNumber: number })
           </p>
           <div className="flex items-center gap-3 flex-wrap">
             <Link
-              href={step.href}
+              href={`${step.href}?from=guide`}
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-orange hover:text-orange-300 transition-colors"
             >
               Go There
