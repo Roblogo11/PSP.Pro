@@ -1369,6 +1369,13 @@ export function PSPAssistant() {
                   </div>
                 ))}
 
+                {/* Tour trigger — always visible when page has a tour */}
+                {pageHasTour(pathname) && (
+                  <div className="mt-3">
+                    <TourTriggerButton page={pathname} compact />
+                  </div>
+                )}
+
                 {/* Page-contextual suggestions (show only when no messages yet or after greeting) */}
                 {messages.length <= 1 && (
                   <div className="mt-2">
