@@ -1017,6 +1017,96 @@ const KNOWLEDGE_BASE: KBEntry[] = [
     followUp: ['How do I log metrics manually?', 'How do I view athlete performance?'],
     role: 'coach',
   },
+
+  // ════════════════════════════════════════════════════════════
+  // ── ATHLETE INVITE LINKS ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['invite athlete', 'invite link', 'invite player', 'add athlete', 'onboard athlete', 'signup link', 'share link', 'athlete signup', 'how to add athletes', 'how to invite', 'generate invite'],
+    title: 'Inviting Athletes (Coach Tool)',
+    response: 'The fastest way to bring athletes onto PSP.Pro is with an Invite Link!\n\nHow to generate an invite link:\n1. Go to Admin → Athletes\n2. Click "Invite Link" button (next to "Add Athlete")\n3. Select the sport (optional) and trial length (7, 14, or 30 days)\n4. Click "Generate Link"\n5. Copy the link and text/email it to your athlete\n\nWhen the athlete opens the link:\n• They see your name — "Coach Rachel invited you to train!"\n• They fill in their name, email, and password\n• Account is created automatically with a free trial period\n• They can log in immediately and access their dashboard\n\nEach link can only be used once and expires in 7 days. Generate a new one for each athlete!\n\nYou can also create accounts manually via Admin → Athletes → Add Athlete if you prefer.',
+    actions: [{ label: 'Manage Athletes', href: '/admin/athletes' }],
+    followUp: ['How do I create an athlete account?', 'What is a trial period?', 'How do I add athletes?'],
+    role: 'coach',
+  },
+  {
+    keywords: ['trial period', 'free trial', 'trial access', 'trial days', 'try for free', 'trial account', '30 day trial', 'demo account'],
+    title: 'Athlete Trial Periods',
+    response: 'Athletes get a free trial period when a coach creates or invites them!\n\nHow trials work:\n• 30 days by default (coaches can set 7, 14, or 30 days on invite links)\n• Full dashboard access during the trial — drills, sessions, progress, everything!\n• No payment required during the trial\n• After the trial expires, athletes need to purchase a session package to continue\n\nCoach tip: The 30-day trial is perfect for new athletes to experience the platform before committing. It gives them time to book their first session and see their data!',
+    actions: [{ label: 'Manage Athletes', href: '/admin/athletes' }, { label: 'View Pricing', href: '/pricing' }],
+    followUp: ['How do I invite an athlete?', 'What packages are available?'],
+    role: 'coach',
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── COACH PUBLIC PROFILES ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['coach profile', 'public profile', 'my profile page', 'profile url', 'coach page', 'profile slug', 'view profile', 'bio', 'specialties', 'certifications', 'years experience', 'coaches page', 'meet coaches'],
+    title: 'Coach Public Profile',
+    response: 'Every PSP.Pro coach gets a public profile page that athletes and parents can view!\n\nSet up your profile:\n1. Go to Settings (sidebar) → Coach Profile tab\n2. Fill in:\n   • Profile URL Slug (e.g., "rachel-smith" → propersports.pro/coaches/rachel-smith)\n   • Bio — your coaching philosophy and background\n   • Years of experience\n   • Specialties (e.g., Pitching, Hitting, Speed Training)\n   • Certifications (e.g., NSCA-CSCS, USA Softball)\n3. Click "Save Coach Profile"\n4. Click "Preview Public Profile" to see it live\n\nYour profile shows:\n• Your photo, name, and experience\n• Total sessions coached and athletes trained (pulled automatically)\n• Bio, specialties, and certifications\n• "Book a Session" button linking directly to your booking page\n\nAll coaches are listed at propersports.pro/coaches',
+    actions: [{ label: 'Settings', href: '/settings?tab=coach' }, { label: 'All Coaches', href: '/coaches' }],
+    followUp: ['How do athletes book with me?', 'How do I set up my availability?'],
+    role: 'coach',
+  },
+  {
+    keywords: ['find a coach', 'who are the coaches', 'meet the coaches', 'view coaches', 'coach list', 'all coaches', 'coaches at psp'],
+    title: 'Meet Our Coaches',
+    response: 'PSP.Pro coaches are elite athletes and certified trainers ready to level up your game!\n\nView all coaches at propersports.pro/coaches — each profile shows:\n• Coach bio and background\n• Specialties (pitching, hitting, speed, etc.)\n• Certifications and credentials\n• Years of experience\n• Sessions coached count\n• "Book a Session" button to book directly with that coach\n\nYou can also filter sessions by coach when booking — go to Book a Session and use the ?coach= filter to see only a specific coach\'s available slots.',
+    actions: [{ label: 'Meet Our Coaches', href: '/coaches' }, { label: 'Book a Session', href: '/booking' }],
+    followUp: ['How do I book a session?', 'What sports do you train?'],
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── SESSION REMINDER EMAILS ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['reminder', 'session reminder', 'email reminder', 'reminder email', 'notify before session', 'forgot session', 'reminder notification', '24 hour reminder', 'day before'],
+    title: 'Session Reminder Emails',
+    response: 'PSP.Pro automatically sends reminder emails the day before every session!\n\nWhat happens:\n• Every morning at 8am ET, the system checks all confirmed sessions for tomorrow\n• An email is automatically sent to each athlete with:\n  - Session date and time\n  - Coach name\n  - Training type\n  - Location\n  - Link to view their session dashboard\n\nNo setup needed — reminders fire automatically for all confirmed paid bookings.\n\nMake sure your email is correct in Settings → Profile so you receive reminders!',
+    actions: [{ label: 'My Sessions', href: '/sessions' }, { label: 'Settings', href: '/settings' }],
+    followUp: ['How do I update my email?', 'Can I RSVP to my session?'],
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── NOTIFICATION PREFERENCES ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['notifications', 'notification settings', 'turn off notifications', 'email preferences', 'notification preferences', 'toggle notifications', 'disable notifications', 'alerts'],
+    title: 'Notification Preferences',
+    response: 'Customize exactly which notifications you receive from PSP.Pro!\n\nGo to Settings → Notifications tab\n\nYou can toggle each of these on or off:\n• Session Reminders — get notified before training sessions\n• Progress Updates — weekly summaries of your athletic progress\n• New Drills — when your coach assigns you new drills\n• Achievement Unlocked — celebrate when you hit milestones\n• Coach Messages — messages and feedback from your coach\n\nClick "Save Preferences" and your settings are stored permanently. They\'ll be there even after you log out and back in!',
+    actions: [{ label: 'Notification Settings', href: '/settings?tab=notifications' }],
+    followUp: ['How do session reminders work?', 'How do I update my profile?'],
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── PDF PROGRESS REPORT EXPORT ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['export pdf', 'pdf report', 'print progress', 'download progress', 'share progress', 'pdf export', 'print report', 'export report', 'download report', 'save report'],
+    title: 'Export PDF Progress Report',
+    response: 'You can export your full progress report as a PDF to share with parents, coaches, or recruiters!\n\nHow to export:\n1. Go to Progress (sidebar)\n2. Select your sport tab (Softball, Basketball, Soccer, or Athleticism)\n3. Click "Export PDF" button (top right, next to the sport tabs)\n4. Your browser\'s print dialog will open\n5. Choose "Save as PDF" as your printer\n6. Click Save!\n\nThe PDF report includes:\n• PSP.Pro branded header with your name, sport, and date\n• Key stats: sessions completed, drills done, peak velocity\n• All your sport-specific metrics with PSP Verified / Self-Reported badges\n• Full session history (last 20 sessions)\n• All achieved milestones\n\nPerfect for showing parents your progress or including in athletic recruiting profiles!',
+    actions: [{ label: 'View My Progress', href: '/progress' }],
+    followUp: ['How do coaches log my metrics?', 'What are personal records?', 'How do leaderboards work?'],
+  },
+  {
+    keywords: ['share progress with parents', 'show parents', 'recruiting', 'recruiting profile', 'share stats', 'share with school', 'show coach stats'],
+    title: 'Sharing Your Progress',
+    response: 'Want to show your parents or a school coach your stats? Here\'s how!\n\nOption 1: Export PDF (most professional)\n• Go to Progress → click "Export PDF"\n• Generates a branded, printable report with all your metrics and session history\n• Great for recruiting packets or parent meetings\n\nOption 2: Screenshot your progress page\n• The Progress page has your stats, charts, and personal records all visible\n• Just screenshot what you need\n\nOption 3: Regional Leaderboards\n• Opt in at Settings → Leaderboards\n• Your verified metrics show on the public leaderboard at propersports.pro/leaderboards\n• Share that link with coaches or recruiters\n\nPSP Verified badges on your metrics add credibility — those are logged by your coach, not self-reported!',
+    actions: [{ label: 'My Progress', href: '/progress' }, { label: 'Leaderboards', href: '/leaderboards' }],
+    followUp: ['How do I export a PDF?', 'How do leaderboards work?', 'What are PSP Verified metrics?'],
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── SPOTLIGHT TOUR / DR. PROP WALKTHROUGH ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['tour', 'walkthrough', 'show me around', 'how does this work', 'guide me', 'tutorial', 'explain dashboard', 'show me how', 'how do i use', 'dr prop tour', 'guided tour', 'interactive tour', 'take a tour'],
+    title: 'Dr. Prop\'s Interactive Tour',
+    response: 'Dr. Prop can walk you through the entire PSP.Pro platform with an interactive spotlight tour!\n\nWhat the tour does:\n• Dims the page and highlights specific UI elements\n• Dr. Prop appears with tips and explanations for each section\n• Click the highlighted area or tap "Next" to advance\n• Covers all 6 major pages: Locker, Booking, Sessions, Progress, Drills, and Settings\n\nHow to start:\n• Just ask me "show me how to book" or "walk me through the Locker"\n• Or click "Take a Tour" in any page tour suggestion\n• The tour navigates between pages automatically!\n\nEach page has its own tour:\n• Locker — your stats, velocity chart, drills, courses\n• Booking — service picker, calendar, time slots, payment\n• Sessions — filters, RSVP, calendar sync\n• Progress — metrics, charts, personal records, milestones\n• Drills — stats, filters, drill cards\n• Settings — tabs, notifications, leaderboards',
+    actions: [{ label: 'Start Locker Tour', href: '/locker' }],
+    followUp: ['Show me how to book a session', 'How do I track my progress?', 'Walk me through my drills'],
+  },
 ]
 
 // ─── Hype Coach Tone Enhancer ─────────────────────────────────

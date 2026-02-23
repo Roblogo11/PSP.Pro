@@ -5,6 +5,9 @@ import { toastError } from '@/lib/toast'
 import Link from 'next/link'
 import {
   Users,
+  Link2,
+  Copy,
+  Check as CheckIcon,
   User,
   Plus,
   Search,
@@ -44,6 +47,18 @@ interface AthleteStats {
   pending_drills: number
 }
 
+interface InviteLink {
+  id: string
+  coach_id: string
+  token: string
+  sport: string | null
+  trial_days: number
+  max_uses: number
+  uses: number
+  expires_at: string
+  created_at: string
+}
+
 export default function AthletesManagementPage() {
   const router = useRouter()
   const { profile, isCoach, isAdmin, loading: profileLoading } = useUserRole()
@@ -62,6 +77,15 @@ export default function AthletesManagementPage() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
   const [showParentFields, setShowParentFields] = useState(false)
+
+  // Invite link state
+  const [inviteModalOpen, setInviteModalOpen] = useState(false)
+  const [inviteLinks, setInviteLinks] = useState<InviteLink[]>([])
+  const [inviteSport, setInviteSport] = useState<string>('')
+  const [inviteTrialDays, setInviteTrialDays] = useState<number>(30)
+  const [isGeneratingLink, setIsGeneratingLink] = useState(false)
+  const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null)
+  const [newlyGeneratedUrl, setNewlyGeneratedUrl] = useState<string | null>(null)
 
   // Form state
   const [formData, setFormData] = useState({
@@ -184,6 +208,64 @@ export default function AthletesManagementPage() {
 
     return matchesSearch && matchesType
   })
+
+  const fetchInviteLinks = async () => {
+    try {
+      const res = await fetch('/api/admin/invite')
+      const data = await res.json()
+      if (res.ok) setInviteLinks(data.links || [])
+    } catch (err) {
+      console.error('Failed to fetch invite links', err)
+    }
+  }
+
+  const generateInviteLink = async () => {
+    setIsGeneratingLink(true)
+    setNewlyGeneratedUrl(null)
+    try {
+      const res = await fetch('/api/admin/invite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sport: inviteSport || null,
+          trial_days: inviteTrialDays,
+          max_uses: 1,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to generate link')
+      const url = `${window.location.origin}/invite/${data.link.token}`
+      setNewlyGeneratedUrl(url)
+      await fetchInviteLinks()
+    } catch (err: any) {
+      toastError(`Failed to generate invite link: ${err.message}`)
+    } finally {
+      setIsGeneratingLink(false)
+    }
+  }
+
+  const deleteInviteLink = async (id: string) => {
+    try {
+      const res = await fetch(`/api/admin/invite?id=${id}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Failed to delete')
+      setInviteLinks(prev => prev.filter(l => l.id !== id))
+      if (newlyGeneratedUrl && newlyGeneratedUrl.includes(id)) {
+        setNewlyGeneratedUrl(null)
+      }
+    } catch (err: any) {
+      toastError(`Failed to delete invite link: ${err.message}`)
+    }
+  }
+
+  const copyInviteLink = async (url: string, id: string) => {
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopiedLinkId(id)
+      setTimeout(() => setCopiedLinkId(null), 2000)
+    } catch {
+      toastError('Failed to copy link')
+    }
+  }
 
   const handleCreateAthlete = async () => {
     if (!formData.full_name || !formData.email) {
@@ -387,13 +469,26 @@ export default function AthletesManagementPage() {
             Manage your athletes, track progress, and assign training
           </p>
         </div>
-        <Link
-          href="/admin/athletes/create"
-          className="btn-primary flex items-center gap-2"
-        >
-          <Plus className="w-5 h-5" />
-          Add Athlete
-        </Link>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => {
+              setNewlyGeneratedUrl(null)
+              fetchInviteLinks()
+              setInviteModalOpen(true)
+            }}
+            className="btn-ghost flex items-center gap-2"
+          >
+            <Link2 className="w-5 h-5" />
+            Invite Link
+          </button>
+          <Link
+            href="/admin/athletes/create"
+            className="btn-primary flex items-center gap-2"
+          >
+            <Plus className="w-5 h-5" />
+            Add Athlete
+          </Link>
+        </div>
       </div>
 
       {/* Stats */}
@@ -861,6 +956,166 @@ export default function AthletesManagementPage() {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+      {/* Invite Link Modal */}
+      {inviteModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+          <div className="glass-card max-w-lg w-full p-6 my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-orange/20 border border-orange/30 flex items-center justify-center">
+                  <Link2 className="w-5 h-5 text-orange" />
+                </div>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Generate Invite Link</h2>
+              </div>
+              <button
+                onClick={() => {
+                  setInviteModalOpen(false)
+                  setNewlyGeneratedUrl(null)
+                }}
+                className="text-cyan-800 dark:text-white hover:text-white transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <p className="text-cyan-700 dark:text-white/70 text-sm mb-6">
+              Share a link with an athlete to let them create their own account and join your roster.
+            </p>
+
+            {/* Configuration */}
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Sport (Optional)</label>
+                <select
+                  value={inviteSport}
+                  onChange={e => setInviteSport(e.target.value)}
+                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-orange/50 appearance-none cursor-pointer"
+                >
+                  <option value="">Any Sport</option>
+                  <option value="softball">Softball</option>
+                  <option value="basketball">Basketball</option>
+                  <option value="soccer">Soccer</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Free Trial Length</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[7, 14, 30].map(days => (
+                    <button
+                      key={days}
+                      type="button"
+                      onClick={() => setInviteTrialDays(days)}
+                      className={`py-2.5 rounded-xl text-sm font-semibold border transition-all ${
+                        inviteTrialDays === days
+                          ? 'bg-orange/20 border-orange/50 text-orange'
+                          : 'bg-cyan-900/20 border-cyan-200/30 text-slate-900 dark:text-white hover:border-orange/30'
+                      }`}
+                    >
+                      {days} days
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={generateInviteLink}
+              disabled={isGeneratingLink}
+              className="btn-primary w-full mb-6"
+            >
+              {isGeneratingLink ? 'Generating...' : 'Generate Link'}
+            </button>
+
+            {/* Newly generated link */}
+            {newlyGeneratedUrl && (
+              <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-xl">
+                <p className="text-sm font-semibold text-green-400 mb-2">Link generated! Share this with your athlete:</p>
+                <div className="flex items-center gap-2">
+                  <input
+                    readOnly
+                    value={newlyGeneratedUrl}
+                    className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none"
+                  />
+                  <button
+                    onClick={() => copyInviteLink(newlyGeneratedUrl, 'new')}
+                    className="flex-shrink-0 px-3 py-2 bg-orange/20 border border-orange/30 rounded-lg text-orange hover:bg-orange/30 transition-all"
+                  >
+                    {copiedLinkId === 'new' ? <CheckIcon className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Existing invite links */}
+            {inviteLinks.length > 0 && (
+              <div>
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-3">
+                  Active Invite Links ({inviteLinks.length})
+                </h3>
+                <div className="space-y-2">
+                  {inviteLinks.map(link => {
+                    const linkUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/invite/${link.token}`
+                    const isExpired = new Date(link.expires_at) < new Date()
+                    const isExhausted = link.uses >= link.max_uses
+                    return (
+                      <div
+                        key={link.id}
+                        className={`flex items-center gap-3 p-3 rounded-xl border ${
+                          isExpired || isExhausted
+                            ? 'bg-white/3 border-white/10 opacity-60'
+                            : 'bg-cyan-900/20 border-cyan-200/30'
+                        }`}
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5">
+                            {link.sport ? (
+                              <span className="text-xs px-2 py-0.5 rounded-full bg-cyan/20 border border-cyan/30 text-cyan font-semibold capitalize">
+                                {link.sport}
+                              </span>
+                            ) : (
+                              <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 border border-white/20 text-slate-600 dark:text-white/50 font-semibold">
+                                Any sport
+                              </span>
+                            )}
+                            <span className="text-xs text-cyan-700 dark:text-white/50">
+                              {link.trial_days}d trial
+                            </span>
+                            <span className={`text-xs font-semibold ${isExpired || isExhausted ? 'text-red-400' : 'text-green-400'}`}>
+                              {isExpired ? 'Expired' : isExhausted ? 'Used' : `${link.uses}/${link.max_uses} uses`}
+                            </span>
+                          </div>
+                          <p className="text-xs text-cyan-700 dark:text-white/40 truncate">/invite/{link.token.substring(0, 16)}...</p>
+                        </div>
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          <button
+                            onClick={() => copyInviteLink(linkUrl, link.id)}
+                            className="p-1.5 rounded-lg bg-white/5 border border-white/10 text-slate-600 dark:text-white/50 hover:text-orange hover:border-orange/30 transition-all"
+                          >
+                            {copiedLinkId === link.id ? <CheckIcon className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
+                          </button>
+                          <button
+                            onClick={() => deleteInviteLink(link.id)}
+                            className="p-1.5 rounded-lg bg-white/5 border border-white/10 text-slate-600 dark:text-white/50 hover:text-red-400 hover:border-red-400/30 transition-all"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            {inviteLinks.length === 0 && !newlyGeneratedUrl && (
+              <p className="text-center text-sm text-cyan-700 dark:text-white/40 py-4">
+                No invite links yet. Generate one above to get started.
+              </p>
+            )}
           </div>
         </div>
       )}

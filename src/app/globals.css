@@ -917,3 +917,15 @@ html:not(.dark) .home-page .command-panel .text-purple-400 {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ─── Print Styles (PDF Export) ─────────────────────────────── */
+@media print {
+  /* Hide everything except the printable report */
+  body > * { display: none !important; }
+  #printable-report { display: block !important; }
+  body { background: white !important; }
+  @page {
+    margin: 0.5in;
+    size: letter portrait;
+  }
+}

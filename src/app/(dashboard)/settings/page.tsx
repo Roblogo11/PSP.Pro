@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { User, Bell, Lock, Mail, MapPin, Save, Check, Medal, ShieldCheck, Download, Trash2, AlertTriangle, Eye, EyeOff } from 'lucide-react'
+import { User, Bell, Lock, Mail, MapPin, Save, Check, Medal, ShieldCheck, Download, Trash2, AlertTriangle, Eye, EyeOff, Star } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { toastError } from '@/lib/toast'
@@ -12,7 +12,7 @@ function SettingsInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { profile, loading: profileLoading, isImpersonating } = useUserRole()
-  const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'security' | 'privacy'>(
+  const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'coach' | 'security' | 'privacy'>(
     (searchParams.get('tab') as any) || 'profile'
   )
   const [saving, setSaving] = useState(false)
@@ -53,6 +53,16 @@ function SettingsInner() {
     coachMessages: true,
   })
 
+  // Coach profile state
+  const [bio, setBio] = useState('')
+  const [specialties, setSpecialties] = useState('')
+  const [profileSlug, setProfileSlug] = useState('')
+  const [yearsExperience, setYearsExperience] = useState('')
+  const [certifications, setCertifications] = useState('')
+  const [savingCoach, setSavingCoach] = useState(false)
+  const [coachSaveSuccess, setCoachSaveSuccess] = useState(false)
+  const [coachSaveError, setCoachSaveError] = useState('')
+
   // Load user data
   useEffect(() => {
     if (profile) {
@@ -70,7 +80,7 @@ function SettingsInner() {
       const supabase = createClient()
       const { data } = await supabase
         .from('profiles')
-        .select('leaderboard_opt_in, region, newsletter_consent')
+        .select('leaderboard_opt_in, region, newsletter_consent, notification_preferences, bio, specialties, profile_slug, years_experience, certifications')
         .eq('id', profile.id)
         .single()
 
@@ -78,6 +88,20 @@ function SettingsInner() {
         setLeaderboardOptIn(data.leaderboard_opt_in || false)
         setRegion(data.region || '')
         setNewsletterConsent(data.newsletter_consent || false)
+        if (data.notification_preferences) {
+          setNotifications({
+            sessionReminders: data.notification_preferences.sessionReminders ?? true,
+            progressUpdates: data.notification_preferences.progressUpdates ?? true,
+            newDrills: data.notification_preferences.newDrills ?? true,
+            achievements: data.notification_preferences.achievements ?? true,
+            coachMessages: data.notification_preferences.coachMessages ?? true,
+          })
+        }
+        setBio(data.bio || '')
+        setSpecialties(Array.isArray(data.specialties) ? data.specialties.join(', ') : '')
+        setProfileSlug(data.profile_slug || '')
+        setYearsExperience(data.years_experience ? String(data.years_experience) : '')
+        setCertifications(Array.isArray(data.certifications) ? data.certifications.join(', ') : '')
       }
     } catch (error) {
       console.error('Error loading user details:', error)
@@ -131,7 +155,12 @@ function SettingsInner() {
     setSaveSuccess(false)
 
     try {
-      // Notification preferences saved locally (no DB column yet)
+      const supabase = createClient()
+      const { error } = await supabase
+        .from('profiles')
+        .update({ notification_preferences: notifications })
+        .eq('id', profile.id)
+      if (error) throw error
       setSaveSuccess(true)
       setTimeout(() => setSaveSuccess(false), 3000)
     } catch (error: any) {
@@ -139,6 +168,34 @@ function SettingsInner() {
       toastError('Failed to save notification preferences')
     } finally {
       setSaving(false)
+    }
+  }
+
+  const handleSaveCoachProfile = async () => {
+    if (!profile || isImpersonating) return
+    setSavingCoach(true)
+    setCoachSaveSuccess(false)
+    setCoachSaveError('')
+    try {
+      const res = await fetch('/api/auth/coach-profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bio: bio || null,
+          specialties: specialties ? specialties.split(',').map(s => s.trim()).filter(Boolean) : null,
+          profile_slug: profileSlug || null,
+          years_experience: yearsExperience ? parseInt(yearsExperience) : null,
+          certifications: certifications ? certifications.split(',').map(s => s.trim()).filter(Boolean) : null,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error)
+      setCoachSaveSuccess(true)
+      setTimeout(() => setCoachSaveSuccess(false), 3000)
+    } catch (err: any) {
+      setCoachSaveError(err.message || 'Failed to save coach profile')
+    } finally {
+      setSavingCoach(false)
     }
   }
 
@@ -267,9 +324,11 @@ function SettingsInner() {
     )
   }
 
+  const isStaff = (profile?.role === 'coach' || profile?.role === 'admin' || profile?.role === 'master_admin')
   const tabs = [
     { id: 'profile', label: 'Profile', icon: User },
     { id: 'notifications', label: 'Notifications', icon: Bell },
+    ...(isStaff ? [{ id: 'coach', label: 'Coach Profile', icon: Star }] : []),
     { id: 'security', label: 'Security', icon: Lock },
     { id: 'privacy', label: 'Privacy & Data', icon: ShieldCheck },
   ]
@@ -467,6 +526,110 @@ function SettingsInner() {
                     <Save className="w-5 h-5" />
                     {isImpersonating ? 'Read-only mode' : saving ? 'Saving...' : 'Save Preferences'}
                   </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'coach' && (
+            <div className="command-panel">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Coach Profile</h2>
+              <p className="text-cyan-700 dark:text-white/60 text-sm mb-6">
+                Your public profile at{' '}
+                <span className="text-orange font-semibold">
+                  propersports.pro/coaches/{profileSlug || 'your-slug'}
+                </span>
+              </p>
+
+              {coachSaveError && (
+                <div className="mb-4 p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
+                  <p className="text-red-400 text-sm font-semibold">{coachSaveError}</p>
+                </div>
+              )}
+
+              <div className="space-y-5">
+                <div>
+                  <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2">Profile URL Slug</label>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-cyan-600 dark:text-white/40 whitespace-nowrap">propersports.pro/coaches/</span>
+                    <input
+                      type="text"
+                      value={profileSlug}
+                      onChange={e => setProfileSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'))}
+                      placeholder="rachel-smith"
+                      className="flex-1 px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white focus:border-orange focus:outline-none transition-colors"
+                    />
+                  </div>
+                  <p className="text-xs text-cyan-700 dark:text-white/50 mt-1">Lowercase letters, numbers, and hyphens only</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2">Bio</label>
+                  <textarea
+                    value={bio}
+                    onChange={e => setBio(e.target.value)}
+                    rows={4}
+                    placeholder="Tell athletes about your coaching philosophy, background, and what makes your training unique..."
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white focus:border-orange focus:outline-none transition-colors resize-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2">Years of Experience</label>
+                  <input
+                    type="number"
+                    value={yearsExperience}
+                    onChange={e => setYearsExperience(e.target.value)}
+                    placeholder="e.g. 8"
+                    min="0"
+                    max="50"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white focus:border-orange focus:outline-none transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2">Specialties</label>
+                  <input
+                    type="text"
+                    value={specialties}
+                    onChange={e => setSpecialties(e.target.value)}
+                    placeholder="Pitching, Hitting, Speed Training, Conditioning"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white focus:border-orange focus:outline-none transition-colors"
+                  />
+                  <p className="text-xs text-cyan-700 dark:text-white/50 mt-1">Comma-separated list of your coaching specialties</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2">Certifications</label>
+                  <input
+                    type="text"
+                    value={certifications}
+                    onChange={e => setCertifications(e.target.value)}
+                    placeholder="NSCA-CSCS, USA Softball Certified, CPR/AED"
+                    className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white focus:border-orange focus:outline-none transition-colors"
+                  />
+                  <p className="text-xs text-cyan-700 dark:text-white/50 mt-1">Comma-separated list of certifications and credentials</p>
+                </div>
+
+                <div className="pt-4 flex items-center gap-4">
+                  <button
+                    onClick={handleSaveCoachProfile}
+                    disabled={savingCoach || isImpersonating}
+                    className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  >
+                    <Save className="w-5 h-5" />
+                    {isImpersonating ? 'Read-only mode' : savingCoach ? 'Saving...' : coachSaveSuccess ? 'Saved!' : 'Save Coach Profile'}
+                  </button>
+                  {profileSlug && (
+                    <a
+                      href={`/coaches/${profileSlug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-orange hover:text-orange-400 transition-colors font-semibold"
+                    >
+                      Preview Public Profile →
+                    </a>
+                  )}
                 </div>
               </div>
             </div>

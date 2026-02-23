@@ -1,12 +1,13 @@
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'
-import { TrendingUp, Target, Zap, Activity, Award, Trophy, CheckCircle2, AlertCircle } from 'lucide-react'
+import { TrendingUp, Target, Zap, Activity, Award, Trophy, CheckCircle2, AlertCircle, Printer } from 'lucide-react'
 import { VelocityProgressChart, MultiMetricChart } from '@/components/dashboard/velocity-progress-chart'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useUserStats } from '@/lib/hooks/use-user-stats'
 import { useUserSessions } from '@/lib/hooks/use-user-sessions'
 import { useAthleteMetrics, SPORT_METRICS, DEFAULT_CHART_METRICS } from '@/lib/hooks/use-athlete-metrics'
+import { PrintableReport } from '@/components/printable-report'
 
 const SPORT_TABS = [
   { key: 'softball', label: 'Softball' },
@@ -227,6 +228,17 @@ export default function ProgressPage() {
         ))}
       </div>
 
+      {/* Export PDF Button */}
+      <div className="flex justify-end mb-6 -mt-4">
+        <button
+          onClick={() => window.print()}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-cyan-700 dark:text-white/60 hover:border-orange/30 hover:text-orange transition-all text-sm font-semibold"
+        >
+          <Printer className="w-4 h-4" />
+          Export PDF
+        </button>
+      </div>
+
       {/* Multi-Metric Performance Chart */}
       <div data-tour="progress-chart" className="mb-6">
         <MultiMetricChart
@@ -325,6 +337,31 @@ export default function ProgressPage() {
           <p className="text-cyan-700 dark:text-white">Complete sessions and drills to start earning milestones!</p>
         </div>
       )}
+
+      {/* Printable Report (hidden in screen, visible in print) */}
+      <PrintableReport
+        athleteName={profile?.full_name || 'Athlete'}
+        sport={sportTab}
+        metrics={personalRecords.map(pr => ({
+          key: pr.metricKey,
+          label: pr.label,
+          value: pr.value,
+          unit: pr.unit,
+          verified: pr.verified,
+        }))}
+        sessions={sessions.map(s => ({
+          id: s.id,
+          type: s.type,
+          date: s.date instanceof Date ? s.date.toISOString().split('T')[0] : String(s.date),
+          status: s.status,
+          coachName: s.coach,
+          coachNotes: s.notes,
+        }))}
+        milestones={milestones}
+        peakVelocity={peakVelocity}
+        completedSessions={completedSessions}
+        completedDrills={completedDrills}
+      />
     </div>
   )
 }

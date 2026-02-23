@@ -565,3 +565,82 @@ Privacy Policy: https://propersports.pro/privacy
     `.trim(),
   }
 }
+
+interface SessionReminderEmailData {
+  athleteName: string
+  serviceName: string
+  date: string
+  startTime: string
+  endTime: string
+  coachName: string
+  location: string
+  dashboardUrl: string
+}
+
+export function getSessionReminderEmail(data: SessionReminderEmailData) {
+  return {
+    subject: `Session Tomorrow: ${data.serviceName} at ${data.startTime}`,
+    html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session Reminder</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #004663 0%, #0088AB 100%); color: #ffffff;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 40px auto; background: rgba(255, 255, 255, 0.05); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1);">
+    <tr>
+      <td style="padding: 40px 30px; text-align: center; background: linear-gradient(135deg, rgba(184, 48, 26, 0.3) 0%, rgba(0, 180, 216, 0.1) 100%);">
+        <h1 style="margin: 0 0 8px; font-size: 32px; font-weight: bold; color: #ffffff;">PSP.Pro</h1>
+        <p style="margin: 0; font-size: 14px; color: rgba(255,255,255,0.6);">Proper Sports Performance</p>
+        <div style="margin: 16px auto 0; width: 60px; height: 60px; background: rgba(184,48,26,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+          <span style="font-size: 28px;">⏰</span>
+        </div>
+        <h2 style="margin: 16px 0 0; font-size: 22px; color: #ffffff;">Session Tomorrow!</h2>
+        <p style="margin: 8px 0 0; font-size: 15px; color: rgba(255,255,255,0.7);">Hey ${data.athleteName}, just a heads-up!</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 30px;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background: rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+          <tr><td style="padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="font-size: 12px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px;">Training Type</span>
+            <p style="margin: 4px 0 0; font-size: 16px; font-weight: 600; color: #ffffff;">${data.serviceName}</p>
+          </td></tr>
+          <tr><td style="padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="font-size: 12px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px;">Date</span>
+            <p style="margin: 4px 0 0; font-size: 16px; font-weight: 600; color: #ffffff;">${data.date}</p>
+          </td></tr>
+          <tr><td style="padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="font-size: 12px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px;">Time</span>
+            <p style="margin: 4px 0 0; font-size: 16px; font-weight: 600; color: #ffffff;">${data.startTime} – ${data.endTime}</p>
+          </td></tr>
+          <tr><td style="padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <span style="font-size: 12px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px;">Coach</span>
+            <p style="margin: 4px 0 0; font-size: 16px; font-weight: 600; color: #ffffff;">${data.coachName}</p>
+          </td></tr>
+          <tr><td style="padding: 16px 20px;">
+            <span style="font-size: 12px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px;">Location</span>
+            <p style="margin: 4px 0 0; font-size: 16px; font-weight: 600; color: #ffffff;">${data.location}</p>
+          </td></tr>
+        </table>
+
+        <div style="text-align: center; margin: 28px 0 0;">
+          <a href="${data.dashboardUrl}" style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #B8301A 0%, #FF4B2B 100%); color: #ffffff; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">
+            View Session Details
+          </a>
+        </div>
+
+        <p style="margin: 24px 0 0; font-size: 14px; color: rgba(255,255,255,0.5); text-align: center;">
+          Come ready. Come focused. Progression Over Perfection. 🔥
+        </p>
+      </td>
+    </tr>
+    ${getEmailFooter()}
+  </table>
+</body>
+</html>`,
+    text: `Session Reminder - Tomorrow!\n\nHey ${data.athleteName}!\n\nYou have a session tomorrow:\n\nTraining: ${data.serviceName}\nDate: ${data.date}\nTime: ${data.startTime} - ${data.endTime}\nCoach: ${data.coachName}\nLocation: ${data.location}\n\nView your session: ${data.dashboardUrl}\n\nProgression Over Perfection 🔥\n\nPSP.Pro | Virginia Beach, VA`,
+  }
+}
