@@ -31,6 +31,8 @@ import {
   Compass,
 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
+import { TourTriggerButton } from '@/components/tour-hud'
+import { pageHasTour } from '@/lib/tour/track'
 
 interface GuideStep {
   label: string
@@ -219,13 +221,18 @@ function StepCard({ step, stepNumber }: { step: GuideStep; stepNumber: number })
           <p className="text-sm text-slate-600 dark:text-white/70 leading-relaxed mb-3">
             {step.description}
           </p>
-          <Link
-            href={step.href}
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-orange hover:text-orange-300 transition-colors"
-          >
-            Go There
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          <div className="flex items-center gap-3 flex-wrap">
+            <Link
+              href={step.href}
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-orange hover:text-orange-300 transition-colors"
+            >
+              Go There
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            {pageHasTour(step.href) && (
+              <TourTriggerButton page={step.href} compact />
+            )}
+          </div>
         </div>
       </div>
     </motion.div>
