@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useDragControls } from 'framer-motion'
 import {
   LayoutDashboard,
   Dumbbell,
@@ -448,6 +448,7 @@ function MobileBottomNav({
   handleLogout: () => void
 }) {
   const [moreSheetOpen, setMoreSheetOpen] = useState(false)
+  const dragControls = useDragControls()
 
   // Check if active route is in the "More" sheet (not a primary tab)
   const primaryHrefs = primaryMobileTabs.map((t) => t.href)
@@ -541,20 +542,34 @@ function MobileBottomNav({
               onClick={() => setMoreSheetOpen(false)}
               className="lg:hidden fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm"
             />
-            {/* Sheet */}
+            {/* Sheet — drag handle dismisses, content scrolls independently */}
             <motion.div
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="lg:hidden fixed bottom-0 left-0 right-0 z-[61] bg-white dark:bg-slate-900 rounded-t-3xl border-t border-cyan-200/30 dark:border-white/10 shadow-[0_-8px_40px_rgba(0,0,0,0.2)] mobile-safe max-h-[75vh] overflow-y-auto"
+              drag="y"
+              dragConstraints={{ top: 0 }}
+              dragElastic={0.2}
+              dragListener={false}
+              dragControls={dragControls}
+              onDragEnd={(_e, info) => {
+                if (info.offset.y > 80 || info.velocity.y > 300) {
+                  setMoreSheetOpen(false)
+                }
+              }}
+              className="lg:hidden fixed bottom-0 left-0 right-0 z-[61] bg-white dark:bg-slate-900 rounded-t-3xl border-t border-cyan-200/30 dark:border-white/10 shadow-[0_-8px_40px_rgba(0,0,0,0.2)] mobile-safe max-h-[75vh] flex flex-col"
             >
-              {/* Drag handle */}
-              <div className="flex justify-center py-3">
+              {/* Drag handle — swipe down to close */}
+              <div
+                className="flex justify-center py-3 cursor-grab active:cursor-grabbing shrink-0"
+                style={{ touchAction: 'none' }}
+                onPointerDown={(e) => dragControls.start(e)}
+              >
                 <div className="w-10 h-1 rounded-full bg-slate-300 dark:bg-white/20" />
               </div>
 
-              <div className="px-4 pb-6">
+              <div className="px-4 pb-6 overflow-y-auto">
                 {/* Training section */}
                 <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3 px-1">
                   Training
