@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  X, ChevronRight, ChevronLeft, Zap, MapPin, SkipForward,
+  ChevronRight, ChevronLeft, Zap, SkipForward,
   LayoutDashboard, Calendar, TrendingUp, Dumbbell, Settings, Clock,
 } from 'lucide-react'
 import { isTourActive, markPageVisited } from '@/lib/tour/track'
@@ -318,121 +318,121 @@ export function TourHUD() {
     <AnimatePresence>
       <motion.div
         key="tour-hud"
-        initial={{ opacity: 0, y: 60 }}
+        initial={{ opacity: 0, y: 80 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 60 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[120] w-full max-w-lg px-3"
+        exit={{ opacity: 0, y: 80 }}
+        transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+        className="fixed inset-x-3 bottom-[88px] sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 sm:bottom-6 sm:w-[480px] z-[120]"
       >
-        {/* Main HUD Card */}
-        <div className="bg-slate-900/95 backdrop-blur-xl border border-orange/30 rounded-2xl shadow-2xl shadow-black/60 overflow-hidden">
-          {/* Top bar */}
-          <div className="flex items-center justify-between px-4 py-2.5 bg-gradient-to-r from-orange/20 to-amber-500/10 border-b border-orange/20">
-            <div className="flex items-center gap-2">
-              <TourIcon className={`w-4 h-4 ${tour.color}`} />
-              <span className="text-xs font-semibold text-white/70">{tour.pageTitle}</span>
-              <span className="text-xs text-white/40">·</span>
-              <span className="text-xs text-orange font-bold">Step {currentStep + 1} of {steps.length}</span>
-            </div>
+        {/* Glow */}
+        <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-orange/40 via-amber-500/20 to-orange/10 blur-sm pointer-events-none" />
 
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={skipTour}
-                className="flex items-center gap-1 text-xs text-white/40 hover:text-white/70 transition-colors px-2 py-1 rounded-lg hover:bg-white/5"
-              >
-                <SkipForward className="w-3 h-3" />
-                <span>Skip</span>
-              </button>
-              <button
-                onClick={skipTour}
-                className="p-1 rounded-lg text-white/40 hover:text-white/70 hover:bg-white/5 transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+        {/* Card */}
+        <div className="relative bg-[#0e0f11]/96 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.7)] overflow-hidden">
 
-          {/* Progress bar */}
-          <div className="h-0.5 bg-white/5">
+          {/* Orange accent line top */}
+          <div className="h-[3px] bg-gradient-to-r from-orange via-amber-400 to-orange-600" />
+
+          {/* Progress fill under accent */}
+          <div className="h-[2px] bg-white/5 -mt-0.5">
             <motion.div
-              className="h-full bg-gradient-to-r from-orange to-amber-400"
+              className="h-full bg-orange/50"
               initial={{ width: 0 }}
               animate={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.35, ease: 'easeOut' }}
             />
           </div>
 
-          {/* Content */}
+          {/* Header row */}
+          <div className="flex items-center justify-between px-4 pt-3 pb-2">
+            <div className="flex items-center gap-2">
+              <TourIcon className={`w-3.5 h-3.5 ${tour.color} opacity-80`} />
+              <span className="text-[11px] font-medium text-white/50 tracking-wide">{tour.pageTitle}</span>
+              <span className="text-[11px] text-white/25">·</span>
+              <span className="text-[11px] font-bold text-orange/90">{currentStep + 1} / {steps.length}</span>
+            </div>
+
+            <button
+              onClick={skipTour}
+              className="flex items-center gap-1 text-[11px] text-white/30 hover:text-white/60 transition-colors px-2 py-1 rounded-lg hover:bg-white/5 group"
+            >
+              <SkipForward className="w-3 h-3 group-hover:text-orange/70 transition-colors" />
+              <span>End tour</span>
+            </button>
+          </div>
+
+          {/* Dr. Prop content */}
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 16 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.2 }}
-              className="p-4"
+              exit={{ opacity: 0, x: -16 }}
+              transition={{ duration: 0.18 }}
+              className="px-4 pb-3"
             >
               <div className="flex items-start gap-3">
-                <DrPropAvatar size="md" />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-bold text-orange uppercase tracking-wide">Dr. Prop</span>
-                    <span className="text-xs text-white/30">· Tour Guide</span>
+                {/* Avatar */}
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange via-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange/30 flex-shrink-0 ring-1 ring-orange/30 text-xl">
+                  🧪
+                </div>
+                <div className="flex-1 min-w-0 pt-0.5">
+                  <div className="flex items-baseline gap-1.5 mb-1">
+                    <span className="text-[11px] font-black text-orange tracking-widest uppercase">Dr. Prop</span>
                   </div>
-                  <h4 className="font-bold text-white text-sm mb-1.5">{step.title}</h4>
-                  <p className="text-sm text-white/70 leading-relaxed">{step.message}</p>
+                  <p className="font-bold text-white text-[13px] leading-snug mb-1.5">{step.title}</p>
+                  <p className="text-[13px] text-white/60 leading-relaxed">{step.message}</p>
                 </div>
               </div>
             </motion.div>
           </AnimatePresence>
 
-          {/* Footer / Controls */}
-          <div className="flex items-center justify-between px-4 pb-4 pt-1 gap-3">
+          {/* Divider */}
+          <div className="mx-4 h-px bg-white/5" />
+
+          {/* Controls */}
+          <div className="flex items-center gap-3 px-4 py-3">
+            {/* Back */}
             <button
               onClick={handleBack}
               disabled={currentStep === 0}
-              className="flex items-center gap-1.5 text-sm text-white/50 hover:text-white/80 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center gap-1 text-[13px] text-white/40 hover:text-white/70 disabled:opacity-20 disabled:cursor-not-allowed transition-colors shrink-0"
             >
               <ChevronLeft className="w-4 h-4" />
               Back
             </button>
 
-            {/* Step dots */}
-            <div className="flex items-center gap-1.5">
+            {/* Step dots — centered */}
+            <div className="flex items-center justify-center gap-1.5 flex-1">
               {steps.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrentStep(i)}
-                  className={`rounded-full transition-all ${
+                  className={`rounded-full transition-all duration-200 ${
                     i === currentStep
-                      ? 'w-4 h-2 bg-orange'
+                      ? 'w-5 h-[5px] bg-orange'
                       : i < currentStep
-                        ? 'w-2 h-2 bg-orange/40'
-                        : 'w-2 h-2 bg-white/15'
+                        ? 'w-[5px] h-[5px] bg-orange/35'
+                        : 'w-[5px] h-[5px] bg-white/12'
                   }`}
                 />
               ))}
             </div>
 
+            {/* Next / Finish */}
             <button
               onClick={handleNext}
               disabled={ending}
-              className="flex items-center gap-1.5 text-sm font-semibold text-white bg-orange hover:bg-orange-500 disabled:opacity-50 px-4 py-2 rounded-xl transition-colors shadow-lg shadow-orange/30"
+              className="flex items-center gap-1.5 text-[13px] font-bold text-white bg-gradient-to-r from-orange to-amber-500 hover:from-orange-500 hover:to-amber-400 disabled:opacity-50 px-5 py-2 rounded-xl transition-all shadow-md shadow-orange/25 shrink-0"
             >
-              {ending ? 'Cleaning up...' : isLastStep ? (step.action ?? 'Finish! 🎉') : (
+              {ending ? 'Cleaning up...' : isLastStep ? (step.action ?? 'Finish 🎉') : (
                 <>
-                  {step.action ? step.action : 'Next'}
-                  <ChevronRight className="w-4 h-4" />
+                  {step.action ?? 'Next'}
+                  <ChevronRight className="w-3.5 h-3.5" />
                 </>
               )}
             </button>
           </div>
-        </div>
-
-        {/* Dr. Prop label */}
-        <div className="flex items-center justify-center gap-1.5 mt-2">
-          <MapPin className="w-3 h-3 text-orange/60" />
-          <span className="text-xs text-white/30">Guided by Dr. Prop · Tour Mode Active</span>
         </div>
       </motion.div>
     </AnimatePresence>
