@@ -579,7 +579,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['walk me through the pricing page', 'walk me through pricing', 'pricing walkthrough', 'pricing page'],
     title: 'Pricing Page Walkthrough',
-    response: 'The Pricing page is organized in sections:\n\n🔝 Quick Stats — 4 cards showing starting prices for 1-on-1, group, max package savings, and a "100% Pro Training" badge.\n\n🟠 1-on-1 Training — Cards for each individual service with name, price per session, duration, and description bullets.\n\n🔵 Group Training — Cards for group sessions showing price, duration, max participants, and description.\n\n📦 Training Packages — 5, 10, and 20-session packs showing total price, per-session cost, and savings. The middle one is marked "Most Popular."\n\n🟢 Specialty Services — Video analysis, recovery sessions, etc.\n\nSmart CTAs: Buttons adapt to who you are:\n• Not logged in → "Join the Team" (sends to /get-started)\n• Logged-in member → "Book Now" (sends to /booking)\n• Coach/Admin → "Lesson Builder" (sends to /admin/services)\n\nAll prices update live from the database!',
+    response: 'The Pricing page is organized in sections:\n\n🏷️ Membership Tiers — at the top:\n• Basic (Free) — Dashboard access, drills, courses\n• Elite ($60/mo) — 10% off all services, FREE Proper Pitching course, full access\n\n🟠 1-on-1 Training — individual session cards with price, duration, and description.\n\n🔵 Group Training — group session cards showing price, duration, and max participants.\n\n📦 Training Packages — 5, 10, and 20-session bundles with per-session cost and savings. Middle one is "Most Popular."\n\n🟢 Specialty Services — Video analysis, recovery sessions, etc.\n\nSmart CTAs adapt to your role:\n• Not logged in → "Join the Team"\n• Member → "Book Now"\n• Coach/Admin → "Lesson Builder"\n\nAll prices pull live from the database!',
     actions: [{ label: 'View Pricing', href: '/pricing' }],
   },
 
@@ -611,7 +611,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['contact', 'email', 'phone', 'reach out', 'get in touch', 'message', 'support', 'help me', 'talk to someone', 'response time'],
     title: 'Contact Us',
-    response: 'Reach out to us anytime:\n\n📧 Email: info@propersports.pro\n📍 Location: Virginia Beach, VA\n⏰ Hours: Mon-Fri 3-9PM, Sat 9AM-5PM\n\nThe Contact page has a form with:\n• Name and email (required)\n• Phone number\n• Interest dropdown (1-on-1, group, assessment, packages, other)\n• Message (required)\n\nWe typically respond within 24 hours on business days. For urgent questions, showing up during training hours is always welcome!',
+    response: 'Reach out to us anytime:\n\n📧 Email: propersportsperformance@gmail.com\n📞 Rachel: (757) 377-2089\n📞 Loren: (757) 770-0206\n📍 Location: Virginia Beach, VA — serving all of Hampton Roads / 757\n⏰ Hours: Mon-Fri 3-9PM, Sat 9AM-5PM\n\nThe Contact page has a form with:\n• Name and email (required)\n• Phone number\n• Interest dropdown (1-on-1, group, assessment, packages, other)\n• Message (required)\n\nWe typically respond within 24 hours on business days!',
     actions: [{ label: 'Contact Us', href: '/contact' }],
   },
 
