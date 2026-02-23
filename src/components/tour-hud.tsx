@@ -252,18 +252,21 @@ export function TourHUD() {
   const [currentStep, setCurrentStep] = useState(0)
   const [ending, setEnding] = useState(false)
 
-  // Detect if tour is active via cookie
-  useEffect(() => {
-    setActive(isTourActive())
-  }, [pathname])
-
-  // Re-check cookie whenever pathname changes
+  // Check tour cookie on mount AND on pathname change
   useEffect(() => {
     const cookieActive = isTourActive()
-    if (cookieActive && !active) setActive(true)
-    // Reset step when navigating to a new page during tour
+    setActive(cookieActive)
+    // Reset step index when arriving at a new page during a tour
     if (cookieActive) setCurrentStep(0)
-  }, [pathname]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pathname])
+
+  // Also check on mount (catches same-page reload after tour start)
+  useEffect(() => {
+    if (isTourActive()) {
+      setActive(true)
+      setCurrentStep(0)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const tour = active ? PAGE_TOURS[pathname] ?? null : null
   const steps = tour?.steps ?? []
@@ -444,11 +447,15 @@ export function TourTriggerButton({ page, compact = false }: { page: string; com
   const startTour = async () => {
     setStarting(true)
     try {
-      await fetch('/api/tour', { method: 'POST' })
+      const res = await fetch('/api/tour', { method: 'POST' })
+      if (!res.ok) throw new Error('Failed to start tour')
+
       if (page && window.location.pathname !== page) {
+        // Navigate to the tour start page — pathname change triggers TourHUD mount effect
         router.push(page)
       } else {
-        window.location.reload()
+        // Same page: hard reload so the TourHUD mounts fresh and picks up the new cookie
+        window.location.href = page
       }
     } catch {
       setStarting(false)
