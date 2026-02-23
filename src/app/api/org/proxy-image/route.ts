@@ -12,11 +12,29 @@ export async function GET(req: NextRequest) {
     const url = req.nextUrl.searchParams.get('url')
     if (!url) return NextResponse.json({ error: 'Missing url param' }, { status: 400 })
 
-    // Basic URL validation — must be http/https
+    // URL validation — must be http/https and not targeting private networks
     let parsed: URL
     try {
       parsed = new URL(url)
       if (!['http:', 'https:'].includes(parsed.protocol)) {
+        return NextResponse.json({ error: 'Invalid URL' }, { status: 400 })
+      }
+      // Block SSRF: private IPs, loopback, link-local, metadata endpoints
+      const hostname = parsed.hostname.toLowerCase()
+      const blockedPatterns = [
+        /^localhost$/,
+        /^127\./,
+        /^10\./,
+        /^172\.(1[6-9]|2\d|3[01])\./,
+        /^192\.168\./,
+        /^0\./,
+        /^169\.254\./,           // AWS metadata / link-local
+        /^metadata\.google/,     // GCP metadata
+        /^\[::1\]$/,             // IPv6 loopback
+        /^\[fd/i,                // IPv6 private
+        /^\[fe80:/i,             // IPv6 link-local
+      ]
+      if (blockedPatterns.some(p => p.test(hostname))) {
         return NextResponse.json({ error: 'Invalid URL' }, { status: 400 })
       }
     } catch {

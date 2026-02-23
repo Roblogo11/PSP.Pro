@@ -34,6 +34,19 @@ export async function POST(request: NextRequest) {
     const adminClient = createAdminClient()
     const now = new Date().toISOString()
 
+    // Verify coach owns this booking (admins/master_admin can check in any)
+    if (profile.role === 'coach') {
+      const { data: booking } = await adminClient
+        .from('bookings')
+        .select('coach_id')
+        .eq('id', bookingId)
+        .single()
+
+      if (!booking || booking.coach_id !== user.id) {
+        return NextResponse.json({ error: 'You can only check in your own sessions' }, { status: 403 })
+      }
+    }
+
     if (action === 'checkin') {
       await adminClient.from('bookings').update({
         checked_in_at: now,
@@ -54,6 +67,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Check-in error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

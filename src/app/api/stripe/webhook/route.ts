@@ -114,23 +114,28 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
           // Non-fatal — booking already created, don't fail the webhook
         }
       }
-      // Increment promo code usage if one was applied
+      // Atomically increment promo code usage (prevents race condition on concurrent checkouts)
       if (metadata.promo_code_id) {
         try {
-          const { data: promoRow } = await supabase
-            .from('promo_codes')
-            .select('current_uses')
-            .eq('id', metadata.promo_code_id)
-            .single()
-          if (promoRow) {
-            await supabase
-              .from('promo_codes')
-              .update({ current_uses: (promoRow.current_uses || 0) + 1 })
-              .eq('id', metadata.promo_code_id)
-            console.log('Promo code usage incremented:', metadata.promo_code_id)
-          }
+          await supabase.rpc('increment_promo_usage', { promo_id: metadata.promo_code_id })
+          console.log('Promo code usage incremented:', metadata.promo_code_id)
         } catch (err) {
-          console.error('Failed to increment promo code usage:', err)
+          // Fallback: non-atomic increment if RPC not available
+          try {
+            const { data: promoRow } = await supabase
+              .from('promo_codes')
+              .select('current_uses')
+              .eq('id', metadata.promo_code_id)
+              .single()
+            if (promoRow) {
+              await supabase
+                .from('promo_codes')
+                .update({ current_uses: (promoRow.current_uses || 0) + 1 })
+                .eq('id', metadata.promo_code_id)
+            }
+          } catch (fallbackErr) {
+            console.error('Failed to increment promo code usage:', fallbackErr)
+          }
         }
       }
     } else if (result.reason === 'already_exists') {

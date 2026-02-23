@@ -1,9 +1,17 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { rateLimit, getClientIP } from '@/lib/rate-limit'
+import { auditLog } from '@/lib/audit'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const ip = getClientIP(request)
+    const { allowed } = rateLimit(`export-data:${ip}`, { limit: 5, windowSec: 3600 })
+    if (!allowed) {
+      return NextResponse.json({ error: 'Too many requests. Try again later.' }, { status: 429 })
+    }
+
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -87,6 +95,8 @@ export async function GET() {
       })),
       performance_metrics: metrics || [],
     }
+
+    auditLog({ userId: user.id, action: 'data_exported', resourceType: 'user', resourceId: user.id, ip })
 
     const json = JSON.stringify(exportData, null, 2)
 

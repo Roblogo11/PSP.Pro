@@ -32,6 +32,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
+    // Validate CSV size (max 2MB of text data)
+    if (typeof csvData !== 'string' || csvData.length > 2 * 1024 * 1024) {
+      return NextResponse.json({ error: 'CSV data too large (max 2MB)' }, { status: 400 })
+    }
+
+    // Validate device type against whitelist
+    const validDeviceTypes = ['rapsodo', 'blast_motion', 'pocket_radar', 'hittrax', 'manual']
+    if (!validDeviceTypes.includes(deviceType)) {
+      return NextResponse.json({ error: 'Invalid device type' }, { status: 400 })
+    }
+
     const adminClient = createAdminClient()
 
     // Parse the CSV data
@@ -112,6 +123,6 @@ export async function POST(request: NextRequest) {
     })
   } catch (error: any) {
     console.error('Import error:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to process import' }, { status: 500 })
   }
 }

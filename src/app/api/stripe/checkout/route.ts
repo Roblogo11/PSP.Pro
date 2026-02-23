@@ -2,9 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createBookingCheckoutSession } from '@/lib/stripe/server'
+import { rateLimit, getClientIP } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
   try {
+    const ip = getClientIP(request)
+    const { allowed } = rateLimit(`checkout:${ip}`, { limit: 10, windowSec: 60 })
+    if (!allowed) {
+      return NextResponse.json({ error: 'Too many requests. Try again later.' }, { status: 429 })
+    }
+
     const supabase = await createClient()
 
     // Get authenticated user

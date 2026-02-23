@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { rateLimit, getClientIP } from '@/lib/rate-limit'
 
 /**
  * GET /api/calendar/export?token={calendar_token}
@@ -7,6 +8,12 @@ import { createAdminClient } from '@/lib/supabase/admin'
  * Can be subscribed to by Google Calendar, Apple Calendar, Outlook.
  */
 export async function GET(request: NextRequest) {
+  const ip = getClientIP(request)
+  const { allowed } = rateLimit(`calendar:${ip}`, { limit: 30, windowSec: 60 })
+  if (!allowed) {
+    return new NextResponse('Too many requests', { status: 429 })
+  }
+
   const token = request.nextUrl.searchParams.get('token')
 
   if (!token) {
@@ -15,15 +22,20 @@ export async function GET(request: NextRequest) {
 
   const supabase = createAdminClient()
 
-  // Look up user by calendar token
+  // Look up user by calendar token and check expiration
   const { data: profile } = await supabase
     .from('profiles')
-    .select('id, full_name')
+    .select('id, full_name, calendar_token_expires_at')
     .eq('calendar_token', token)
     .single()
 
   if (!profile) {
     return new NextResponse('Invalid token', { status: 401 })
+  }
+
+  // Check token expiration
+  if (profile.calendar_token_expires_at && new Date(profile.calendar_token_expires_at) < new Date()) {
+    return new NextResponse('Token expired. Please regenerate from your dashboard.', { status: 401 })
   }
 
   // Fetch upcoming confirmed bookings

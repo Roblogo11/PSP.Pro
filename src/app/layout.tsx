@@ -97,21 +97,8 @@ export default function RootLayout({
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
         <JsonLdSchema />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                const theme = localStorage.getItem('theme') ||
-                  (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-                if (theme === 'dark') {
-                  document.documentElement.classList.add('dark');
-                } else {
-                  document.documentElement.classList.remove('dark');
-                }
-              })();
-            `,
-          }}
-        />
+        {/* External script — no unsafe-inline needed in CSP */}
+        <script src="/theme-init.js" />
       </head>
       <body className="min-h-screen min-h-[100dvh]" suppressHydrationWarning>
         <Providers>

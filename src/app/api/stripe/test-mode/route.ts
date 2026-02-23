@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { auditLog } from '@/lib/audit'
+import { getClientIP } from '@/lib/rate-limit'
 
 // GET - Check current test mode status
 export async function GET() {
@@ -20,8 +22,8 @@ export async function GET() {
       .eq('id', user.id)
       .single()
 
-    if (profile?.role !== 'master_admin' && profile?.role !== 'admin') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
+    if (profile?.role !== 'master_admin') {
+      return NextResponse.json({ error: 'Master admin access required' }, { status: 403 })
     }
 
     // Check if test keys are configured
@@ -64,8 +66,8 @@ export async function POST(request: NextRequest) {
       .eq('id', user.id)
       .single()
 
-    if (profile?.role !== 'master_admin' && profile?.role !== 'admin') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
+    if (profile?.role !== 'master_admin') {
+      return NextResponse.json({ error: 'Master admin access required' }, { status: 403 })
     }
 
     const body = await request.json()
@@ -86,6 +88,13 @@ export async function POST(request: NextRequest) {
         }, { status: 400 })
       }
     }
+
+    auditLog({
+      userId: user.id,
+      action: enabled ? 'stripe_test_mode_enabled' : 'stripe_test_mode_disabled',
+      resourceType: 'stripe',
+      ip: getClientIP(request),
+    })
 
     // Set the cookie
     const response = NextResponse.json({

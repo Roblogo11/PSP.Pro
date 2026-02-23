@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { verifyUnsubscribeToken } from '@/lib/email/unsubscribe-token'
+import { rateLimit, getClientIP } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
   try {
+    const ip = getClientIP(request)
+    const { allowed } = rateLimit(`newsletter:${ip}`, { limit: 5, windowSec: 300 })
+    if (!allowed) {
+      return NextResponse.json({ error: 'Too many requests. Try again later.' }, { status: 429 })
+    }
+
     const { email, source } = await request.json()
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {

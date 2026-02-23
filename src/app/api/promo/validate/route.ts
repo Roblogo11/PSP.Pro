@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { rateLimit, getClientIP } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
   try {
+    const ip = getClientIP(request)
+    const { allowed } = rateLimit(`promo:${ip}`, { limit: 10, windowSec: 60 })
+    if (!allowed) {
+      return NextResponse.json({ valid: false }, { status: 429 })
+    }
+
     const { code, type } = await request.json()
 
     if (!code) {

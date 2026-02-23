@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { rateLimit, getClientIP } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
   try {
+    const ip = getClientIP(request)
+    const { allowed } = rateLimit(`contact:${ip}`, { limit: 5, windowSec: 300 })
+    if (!allowed) {
+      return NextResponse.json({ error: 'Too many requests. Try again later.' }, { status: 429 })
+    }
+
     const { name, email, phone, interest, message } = await request.json()
 
     // Validate required fields

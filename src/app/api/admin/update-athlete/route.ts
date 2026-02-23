@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { auditLog } from '@/lib/audit'
+import { getClientIP } from '@/lib/rate-limit'
 
 export async function PATCH(request: NextRequest) {
   try {
@@ -29,6 +31,21 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'athlete_id is required' }, { status: 400 })
     }
 
+    // Coaches must have a booking relationship with the athlete (not master_admin/admin)
+    if (profile.role === 'coach') {
+      const { data: relationship } = await adminClient
+        .from('bookings')
+        .select('id')
+        .eq('coach_id', user.id)
+        .eq('athlete_id', athlete_id)
+        .limit(1)
+        .maybeSingle()
+
+      if (!relationship) {
+        return NextResponse.json({ error: 'You do not manage this athlete' }, { status: 403 })
+      }
+    }
+
     const updateData: Record<string, unknown> = {}
     if (full_name !== undefined) updateData.full_name = full_name
     if (athlete_type !== undefined) updateData.athlete_type = athlete_type
@@ -43,6 +60,15 @@ export async function PATCH(request: NextRequest) {
       console.error('Profile update error:', updateError)
       return NextResponse.json({ error: 'Failed to update athlete' }, { status: 500 })
     }
+
+    auditLog({
+      userId: user.id,
+      action: 'athlete_updated',
+      resourceType: 'profile',
+      resourceId: athlete_id,
+      metadata: { fields: Object.keys(updateData), role: profile.role },
+      ip: getClientIP(request),
+    })
 
     return NextResponse.json({ success: true })
   } catch (error) {

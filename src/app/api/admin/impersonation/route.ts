@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { auditLog } from '@/lib/audit'
+import { getClientIP } from '@/lib/rate-limit'
 
 // GET - Check current impersonation status
 export async function GET() {
@@ -89,6 +91,15 @@ export async function POST(request: NextRequest) {
     }
 
     const playerName = athleteProfile.full_name || athleteProfile.email || 'Unknown Player'
+
+    auditLog({
+      userId: user.id,
+      action: 'impersonation_started',
+      resourceType: 'user',
+      resourceId: athleteProfile.id,
+      metadata: { targetName: playerName, targetRole: athleteProfile.role },
+      ip: getClientIP(request),
+    })
 
     const response = NextResponse.json({
       active: true,
