@@ -5,6 +5,7 @@ export const FUNNEL_ROUTES = [
   { path: '/pricing', name: 'Pricing', keywords: ['cost', 'price', 'packages', 'rates', 'sessions'] },
   { path: '/get-started', name: 'Join the Team', keywords: ['begin', 'assessment', 'training', 'onboard', 'join'] },
   { path: '/contact', name: 'Contact', keywords: ['email', 'phone', 'message', 'reach', 'location'] },
+  { path: '/thank-you', name: 'Thank You', keywords: ['thanks', 'confirmation', 'success', 'done'] },
 ] as const
 
 // Additional pages - accessible via Cmd+K and navigation

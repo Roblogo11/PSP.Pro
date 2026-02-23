@@ -42,7 +42,10 @@ export async function trackTourData(tableName: string, recordId: string): Promis
 }
 
 /** Pages that have a defined tour. Used to show "Start Tour" prompt. */
-export const TOUR_PAGES = ['/locker', '/booking', '/sessions', '/progress', '/drills', '/settings']
+export const TOUR_PAGES = [
+  '/locker', '/booking', '/sessions', '/progress', '/drills', '/settings',
+  '/achievements', '/leaderboards', '/messages', '/courses', '/questionnaires', '/video-analysis', '/progress-report',
+]
 
 /** Check if the current page has a tour available */
 export function pageHasTour(pathname: string): boolean {

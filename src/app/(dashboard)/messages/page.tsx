@@ -180,10 +180,10 @@ export default function MessagesPage() {
         <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white">Messages</h1>
       </div>
 
-      <div className="glass-card overflow-hidden" style={{ height: 'calc(100dvh - 180px)', minHeight: '500px' }}>
+      <div className="glass-card overflow-hidden" data-tour="messages-chat-container" style={{ height: 'calc(100dvh - 180px)', minHeight: '500px' }}>
         <div className="flex h-full">
           {/* Conversation List */}
-          <div className={`w-full md:w-80 border-r border-slate-200 dark:border-white/10 flex flex-col ${selectedConv ? 'hidden md:flex' : 'flex'}`}>
+          <div data-tour="messages-conversation-list" className={`w-full md:w-80 border-r border-slate-200 dark:border-white/10 flex flex-col ${selectedConv ? 'hidden md:flex' : 'flex'}`}>
             <div className="p-4 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
               <h2 className="font-bold text-slate-900 dark:text-white">Conversations</h2>
               <button onClick={loadContacts} className="p-2 rounded-lg hover:bg-cyan/10 text-cyan">

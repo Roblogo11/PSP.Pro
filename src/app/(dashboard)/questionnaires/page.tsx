@@ -153,7 +153,7 @@ export default function QuestionnairesPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-2 gap-4 mb-6" data-tour="quizzes-stats">
         <div className="glass-card p-4 rounded-xl text-center">
           <p className="text-2xl font-bold text-amber-400">{pendingCount}</p>
           <p className="text-sm text-cyan-700 dark:text-white/70">Pending</p>
@@ -165,7 +165,7 @@ export default function QuestionnairesPage() {
       </div>
 
       {/* Filters */}
-      <div className="mb-6 flex flex-wrap gap-3">
+      <div className="mb-6 flex flex-wrap gap-3" data-tour="quizzes-filters">
         {[
           { value: 'all', label: 'All' },
           { value: 'pending', label: 'Pending' },
@@ -305,7 +305,7 @@ export default function QuestionnairesPage() {
             </p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-3" data-tour="quizzes-list">
             {filtered.map(a => (
               <button
                 key={a.id}

@@ -134,7 +134,7 @@ export default function CoursesPage() {
       </div>
 
       {/* Filters */}
-      <div className="mb-6 flex flex-wrap gap-3">
+      <div className="mb-6 flex flex-wrap gap-3" data-tour="courses-filters">
         {[
           { value: 'all', label: 'All Courses' },
           { value: 'enrolled', label: 'My Courses' },
@@ -155,6 +155,7 @@ export default function CoursesPage() {
       </div>
 
       {/* Course Grid */}
+      <div data-tour="courses-grid">
       {filtered.length === 0 ? (
         <div className="glass-card p-12 text-center">
           <BookOpen className="w-12 h-12 text-cyan-600 mx-auto mb-4" />
@@ -236,6 +237,7 @@ export default function CoursesPage() {
           ))}
         </div>
       )}
+      </div>
     </div>
   )
 }

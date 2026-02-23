@@ -241,7 +241,7 @@ export default function VideoAnalysisPage() {
       </div>
 
       {/* Filming Guidelines */}
-      <div className="glass-card mb-8 overflow-hidden">
+      <div className="glass-card mb-8 overflow-hidden" data-tour="video-analysis-guidelines">
         <button
           onClick={() => setShowGuidelines(!showGuidelines)}
           className="w-full flex items-center justify-between p-5"
@@ -279,7 +279,7 @@ export default function VideoAnalysisPage() {
 
       {/* Upload Form */}
       <form onSubmit={handleSubmit}>
-        <div className="glass-card p-6 space-y-6">
+        <div className="glass-card p-6 space-y-6" data-tour="video-analysis-form">
           {/* Submission Type Toggle */}
           <div>
             <label className="block text-sm font-bold text-slate-900 dark:text-white mb-3">How would you like to submit your video?</label>

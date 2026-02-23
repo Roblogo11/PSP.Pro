@@ -204,7 +204,7 @@ export default function AchievementsPage() {
       </div>
 
       {/* Stats Summary */}
-      <div className="grid md:grid-cols-3 gap-6 mb-12">
+      <div className="grid md:grid-cols-3 gap-6 mb-12" data-tour="achievements-stats">
         <div className="command-panel p-6">
           <div className="flex items-center gap-4">
             <div className="p-4 bg-orange/10 rounded-xl">
@@ -247,7 +247,7 @@ export default function AchievementsPage() {
       </div>
 
       {/* Achievement Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6" data-tour="achievements-grid">
         {achievements.map((achievement) => (
           <AchievementBadge
             key={achievement.id}

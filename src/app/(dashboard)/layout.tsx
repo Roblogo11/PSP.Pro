@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Sidebar } from '@/components/layout/sidebar'
+import { HomeButton } from '@/components/layout/home-button'
 
 // Routes that authenticated users can access without an active membership
 const OPEN_ROUTES = ['/booking', '/pricing', '/sessions']
@@ -94,6 +95,7 @@ export default async function DashboardLayout({
   return (
     <div className="flex min-h-screen min-h-[100dvh]">
       <Sidebar />
+      <HomeButton />
       <main className="flex-1 min-w-0 overflow-x-hidden lg:ml-0">
         {children}
       </main>

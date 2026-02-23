@@ -13,7 +13,7 @@ export default function AboutPage() {
 
   return (
     <div className="flex min-h-screen">
-      <InfoSidebar />
+      <InfoSidebar hideMobileNav />
       <main className="flex-1 pb-24 lg:pb-20">
       {/* Hero Image Banner */}
       <div className="relative px-6 py-20 md:py-28 overflow-hidden">
@@ -247,7 +247,7 @@ export default function AboutPage() {
       </div>
       </main>
 
-      <FunnelNav desktopOnly />
+      <FunnelNav />
     </div>
   )
 }

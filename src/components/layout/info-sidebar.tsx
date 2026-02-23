@@ -18,9 +18,6 @@ import {
   LayoutDashboard,
   LogIn,
   LogOut,
-  Dumbbell,
-  Calendar,
-  TrendingUp,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
@@ -42,15 +39,8 @@ const navItems: NavItem[] = [
   { label: 'Thank You', href: '/thank-you', icon: Zap },
 ]
 
-// Dashboard shortcuts shown in the mobile nav for logged-in users
-const dashboardShortcuts = [
-  { label: 'Home', href: '/locker', icon: LayoutDashboard },
-  { label: 'Drills', href: '/drills', icon: Dumbbell },
-  { label: 'My Lessons', href: '/sessions', icon: Calendar },
-  { label: 'Progress', href: '/progress', icon: TrendingUp },
-]
 
-export function InfoSidebar() {
+export function InfoSidebar({ hideMobileNav = false }: { hideMobileNav?: boolean }) {
   const [collapsed, setCollapsed] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
@@ -230,7 +220,7 @@ export function InfoSidebar() {
       </motion.aside>
 
       {/* Mobile Bottom Navigation */}
-      <motion.nav
+      {!hideMobileNav && <motion.nav
         initial={{ y: 100 }}
         animate={{ y: 0 }}
         className="lg:hidden fixed bottom-0 left-0 right-0 glass-card border-t border-cyan-200/40 dark:border-cyan-700/30 z-50 mobile-safe"
@@ -283,27 +273,6 @@ export function InfoSidebar() {
                 )
               })}
 
-              {/* Dashboard shortcuts for logged-in users */}
-              {profile && (
-                <>
-                  <div className="flex-shrink-0 w-px h-8 bg-cyan-200/40 dark:bg-white/10 mx-1" />
-                  {dashboardShortcuts.map((item) => {
-                    const Icon = item.icon
-
-                    return (
-                      <Link key={item.href} href={item.href}>
-                        <motion.div
-                          whileTap={{ scale: 0.9 }}
-                          className="flex flex-col items-center gap-0.5 p-1.5 rounded-xl min-w-[48px] flex-shrink-0 text-slate-700 dark:text-white hover:text-slate-900 dark:hover:text-white"
-                        >
-                          <Icon className="w-4 h-4" />
-                          <span className="text-[9px] font-medium leading-tight text-center whitespace-nowrap">{item.label}</span>
-                        </motion.div>
-                      </Link>
-                    )
-                  })}
-                </>
-              )}
             </div>
           </div>
 
@@ -330,7 +299,7 @@ export function InfoSidebar() {
             )}
           </div>
         </div>
-      </motion.nav>
+      </motion.nav>}
 
       {/* Spacer for desktop sidebar */}
       <div className="hidden lg:block" style={{ width: collapsed ? 80 : 280 }} />

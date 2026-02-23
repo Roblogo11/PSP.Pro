@@ -69,7 +69,7 @@ export default function ProgressReportPage() {
         <p className="text-cyan-800 dark:text-white/60 mb-8">{report.sport} | {report.periodLabel}</p>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-3 gap-4 mb-8" data-tour="progress-report-stats">
           <div className="glass-card p-4 text-center">
             <Calendar className="w-6 h-6 text-cyan mx-auto mb-2" />
             <p className="text-2xl font-bold text-slate-900 dark:text-white">{report.sessionsCompleted}</p>
@@ -89,7 +89,7 @@ export default function ProgressReportPage() {
 
         {/* Personal Records */}
         {report.personalRecords.length > 0 && (
-          <div className="glass-card p-6 mb-6">
+          <div className="glass-card p-6 mb-6" data-tour="progress-report-records">
             <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-4 flex items-center gap-2">
               <Star className="w-5 h-5 text-yellow-400" />
               Personal Records

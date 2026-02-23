@@ -160,7 +160,7 @@ export default function PricingPage() {
 
   return (
     <div className="flex min-h-screen">
-      <InfoSidebar />
+      <InfoSidebar hideMobileNav />
       <main className="flex-1 pb-24">
       {/* Hero Image Banner */}
       <div className="relative px-6 py-20 md:py-28 overflow-hidden">
@@ -429,7 +429,7 @@ export default function PricingPage() {
       </div>
       </main>
 
-      <FunnelNav desktopOnly />
+      <FunnelNav />
     </div>
   )
 }

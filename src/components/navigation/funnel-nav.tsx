@@ -9,10 +9,10 @@ import { useNavigation } from './nav-context'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 
 // Step labels for the progress indicator - PSP.Pro Athletic Journey
-const STEP_LABELS = ['Home', 'Pricing', 'Join the Team', 'Contact']
-const STEP_ICONS = [Home, Package, Rocket, Sparkles]
+const STEP_LABELS = ['Home', 'Pricing', 'Join the Team', 'Contact', 'Thank You']
+const STEP_ICONS = [Home, Package, Rocket, Sparkles, Zap]
 // Map step indices to funnel indices (About is at index 1, so we skip it)
-const STEP_TO_FUNNEL_INDEX = [0, 2, 3, 4] // Home=0, Pricing=2, GetStarted=3, Contact=4
+const STEP_TO_FUNNEL_INDEX = [0, 2, 3, 4, 5] // Home=0, Pricing=2, GetStarted=3, Contact=4, ThankYou=5
 
 interface FunnelNavProps {
   className?: string
@@ -125,9 +125,18 @@ export function FunnelNav({ className = '', desktopOnly = false }: FunnelNavProp
           <div className="max-w-7xl mx-auto px-6 py-4">
             {/* Progress Steps - Desktop */}
             <div className="hidden md:flex items-center justify-between gap-2">
-              {/* Theme Toggle - Left Side */}
-              <div className="flex-shrink-0">
+              {/* Theme Toggle + Back Button - Left Side */}
+              <div className="flex items-center gap-3 flex-shrink-0">
                 <ThemeToggle />
+                {prev && (
+                  <button
+                    onClick={() => handleNavigation(prev.path)}
+                    className="group flex items-center gap-1.5 px-3 py-2 rounded-xl bg-dark-200/80 border border-secondary/10 hover:border-secondary/30 hover:bg-dark-200 transition-all duration-200"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5 text-gray-400 group-hover:text-secondary group-hover:-translate-x-0.5 transition-all" />
+                    <span className="text-xs text-gray-400 group-hover:text-white transition-colors">{prev.name}</span>
+                  </button>
+                )}
               </div>
 
               {/* Progress Bar - Center */}
@@ -175,7 +184,7 @@ export function FunnelNav({ className = '', desktopOnly = false }: FunnelNavProp
                           <span className="text-xs font-medium">{label}</span>
                         </div>
                       )}
-                      {index < 3 && (
+                      {index < 4 && (
                         <div
                           className={`w-8 h-0.5 mx-1 transition-colors ${
                             isCompleted ? 'bg-secondary/50' : 'bg-dark-300'
@@ -208,20 +217,42 @@ export function FunnelNav({ className = '', desktopOnly = false }: FunnelNavProp
             {/* Mobile Navigation */}
             <div className="md:hidden">
               <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   <ThemeToggle />
-                  <div className="text-xs text-gray-600 dark:text-gray-400">
-                    Step {currentIndex + 1} of 5
+                  {prev && (
+                    <>
+                      <button
+                        onClick={() => handleNavigation(prev.path)}
+                        className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-secondary transition-colors active:scale-95"
+                      >
+                        <ArrowLeft className="w-3 h-3" />
+                        <span>{prev.name}</span>
+                      </button>
+                      <div className="w-px h-3 bg-gray-600/50" />
+                    </>
+                  )}
+                  <div className="text-xs font-semibold tracking-wide text-secondary/80">
+                    Step {currentIndex + 1} <span className="text-gray-500 font-normal">of 6</span>
                   </div>
                 </div>
-                <span className="text-xs text-secondary">
-                  {pathname === '/about' ? 'About' : STEP_LABELS[STEP_TO_FUNNEL_INDEX.indexOf(currentIndex)]}
-                </span>
+                {next ? (
+                  <button
+                    onClick={() => handleNavigation(next.path)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-secondary to-accent shadow-md shadow-secondary/30 active:scale-95 transition-all"
+                  >
+                    <span className="text-xs font-bold text-white">{next.name}</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-white" />
+                  </button>
+                ) : (
+                  <span className="text-xs font-semibold text-secondary">
+                    {STEP_LABELS[STEP_TO_FUNNEL_INDEX.indexOf(currentIndex)] ?? 'Done'}
+                  </span>
+                )}
               </div>
               <div className="h-1 bg-dark-300 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-secondary to-accent transition-all duration-500"
-                  style={{ width: `${((currentIndex + 1) / 5) * 100}%` }}
+                  style={{ width: `${((currentIndex + 1) / 6) * 100}%` }}
                 />
               </div>
             </div>

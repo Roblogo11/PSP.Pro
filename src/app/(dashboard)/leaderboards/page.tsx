@@ -214,7 +214,7 @@ export default function LeaderboardsPage() {
       )}
 
       {/* Sport Tab Selector */}
-      <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
+      <div className="flex gap-2 mb-6 overflow-x-auto pb-1" data-tour="leaderboards-sport-tabs">
         {SPORT_TABS.map((tab) => (
           <button
             key={tab.key}
@@ -231,7 +231,7 @@ export default function LeaderboardsPage() {
       </div>
 
       {/* Filters Row */}
-      <div className="flex flex-wrap gap-3 mb-6">
+      <div className="flex flex-wrap gap-3 mb-6" data-tour="leaderboards-filters">
         {/* Metric Selector */}
         <div className="relative">
           <select
@@ -278,7 +278,7 @@ export default function LeaderboardsPage() {
       </div>
 
       {/* Leaderboard */}
-      <div className="command-panel overflow-hidden">
+      <div className="command-panel overflow-hidden" data-tour="leaderboards-table">
         {loading ? (
           <div className="flex items-center justify-center py-16">
             <div className="w-12 h-12 border-4 border-orange border-t-transparent rounded-full animate-spin" />

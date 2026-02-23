@@ -245,6 +245,205 @@ const PAGE_TOURS: Record<string, PageTour> = {
       },
     ],
   },
+
+  '/achievements': {
+    pageTitle: 'Achievements',
+    icon: Zap,
+    color: 'text-orange',
+    steps: [
+      {
+        title: 'Your Achievement Vault 🏆',
+        message: "Welcome to your Trophy Case! Every badge you see here was EARNED — through sessions, drills, PRs, and consistency. Let's break it down!",
+      },
+      {
+        title: 'Your Stats at a Glance 📊',
+        message: "Three cards, three numbers that matter: how many you've unlocked, total points earned, and your completion rate. Chase that 100%! 🔥",
+        highlight: 'achievements-stats',
+      },
+      {
+        title: 'Your Achievement Grid 🎖️',
+        message: "Each card is a badge — orange glow means UNLOCKED, faded means in progress. Tap any badge to see what it takes to earn it. Go stack these!",
+        highlight: 'achievements-grid',
+      },
+      {
+        title: 'Achievements Tour Done! 🎊',
+        message: "You know what's here — now go EARN IT! Every session, every drill, every PR gets you closer to filling this page with gold. Let's get to work!",
+        action: 'Finish Tour',
+      },
+    ],
+  },
+
+  '/leaderboards': {
+    pageTitle: 'Leaderboards',
+    icon: TrendingUp,
+    color: 'text-orange',
+    steps: [
+      {
+        title: 'The Regional Leaderboards 🏅',
+        message: "THIS is where you see how you stack up against other PSP athletes in your region! Verified metrics only — no cap, no self-report drama!",
+      },
+      {
+        title: 'Pick Your Sport 🥎🏀⚽',
+        message: "Tap a sport tab to filter the leaderboard! Softball, Basketball, Soccer, or Athleticism — every sport has its own rankings. Which one are you topping?",
+        highlight: 'leaderboards-sport-tabs',
+      },
+      {
+        title: 'Filter & Refine 🔍',
+        message: "Choose a metric to rank by, filter by region, or toggle Verified Only to see only coach-confirmed stats. Use this to find where YOU rank!",
+        highlight: 'leaderboards-filters',
+      },
+      {
+        title: 'The Rankings Board 📋',
+        message: "Here's the live standings — rank, name, region, and stat. Is your name on the board? Go to Settings → Leaderboards to opt in and let them see you!",
+        highlight: 'leaderboards-table',
+      },
+      {
+        title: 'Leaderboards Tour Done! 🚀',
+        message: "Now you know how rankings work! Get your stats verified by your coach and opt in from Settings to start climbing. TOP OF THE BOARD is yours to take!",
+        action: 'Finish Tour',
+      },
+    ],
+  },
+
+  '/messages': {
+    pageTitle: 'Messages',
+    icon: Calendar,
+    color: 'text-blue-400',
+    steps: [
+      {
+        title: 'Your Message Hub 💬',
+        message: "Direct line to your coaches and teammates! Send questions, get feedback, coordinate sessions — all in one place. No more guessing!",
+      },
+      {
+        title: 'Your Conversations 📋',
+        message: "Left panel = all your chats. Tap any conversation to open it. Unread messages show an orange badge. Hit the + button to start a new conversation!",
+        highlight: 'messages-conversation-list',
+      },
+      {
+        title: 'The Chat Window 💭',
+        message: "Right side is where messages live! Type in the box at the bottom and hit Send (or press Enter). Your coach can reply from their dashboard — real-time!",
+        highlight: 'messages-chat-container',
+      },
+      {
+        title: 'Messages Tour Done! 🎊',
+        message: "Communication is KEY to your development! Don't be shy — ask your coach questions, share wins, and stay connected. They're here for you!",
+        action: 'Finish Tour',
+      },
+    ],
+  },
+
+  '/courses': {
+    pageTitle: 'Video Courses',
+    icon: Dumbbell,
+    color: 'text-cyan-400',
+    steps: [
+      {
+        title: 'Your Video Course Library 🎥',
+        message: "Welcome to the Course Hub! Expert training videos broken into full courses — watch on YOUR schedule, track your progress, and level up your game knowledge!",
+      },
+      {
+        title: 'Browse & Filter 🔍',
+        message: "Three views: All Courses, My Courses (enrolled), and Available (not yet enrolled). Switch between them to find what you're looking for fast!",
+        highlight: 'courses-filters',
+      },
+      {
+        title: 'Course Cards 📚',
+        message: "Each card shows title, lessons count, price, and your progress bar if enrolled. Free courses for members are tagged! Tap a card to start or continue!",
+        highlight: 'courses-grid',
+      },
+      {
+        title: 'Courses Tour Done! 🎊',
+        message: "Knowledge is a weapon — use it! Enroll in a course, watch a few lessons, and bring those concepts to your next session. Your coach will notice!",
+        action: 'Finish Tour',
+      },
+    ],
+  },
+
+  '/questionnaires': {
+    pageTitle: 'Pop Quizzes',
+    icon: Zap,
+    color: 'text-amber-400',
+    steps: [
+      {
+        title: 'Pop Quiz Time! 📝',
+        message: "Your coaches assign quizzes to test your knowledge between sessions! Sports science, technique, game IQ — it all counts. Let's see what you know!",
+      },
+      {
+        title: 'Your Quiz Stats 📊',
+        message: "Pending quizzes on the left (get to those ASAP!), completed on the right. Your coaches can see your scores — so don't sleep on the pending ones!",
+        highlight: 'quizzes-stats',
+      },
+      {
+        title: 'Filter Your Quizzes 🔍',
+        message: "Use the filter buttons to show All quizzes, just Pending ones, or your Completed history. Pending = action needed! Don't leave your coach waiting!",
+        highlight: 'quizzes-filters',
+      },
+      {
+        title: 'Take a Quiz ✅',
+        message: "Tap any quiz card to open it and start answering! Multiple choice — pick your answer and submit. You'll see your score right away. Don't overthink it!",
+        highlight: 'quizzes-list',
+      },
+      {
+        title: 'Quiz Tour Done! 🎊',
+        message: "Mental reps are just as important as physical ones! When a quiz drops, knock it out fast. Your coach assigns these for a reason — trust the process!",
+        action: 'Finish Tour',
+      },
+    ],
+  },
+
+  '/video-analysis': {
+    pageTitle: 'Video Analysis',
+    icon: TrendingUp,
+    color: 'text-purple-400',
+    steps: [
+      {
+        title: 'Video Analysis — Get Eyes On You! 🎬',
+        message: "Submit YOUR game film and get professional coaching feedback from the PSP staff! Upload a clip or drop a YouTube link — your coach will break it DOWN!",
+      },
+      {
+        title: 'Filming Guidelines 📷',
+        message: "Before you upload, expand this card! It has tips on angles, lighting, and framing so your coach can see EXACTLY what they need to analyze. Film it right the first time!",
+        highlight: 'video-analysis-guidelines',
+      },
+      {
+        title: 'Submit Your Video 📤',
+        message: "Choose Upload File OR paste a YouTube link — whichever is easier! Add notes to tell your coach what to focus on (swing, footwork, release, etc.). Then hit Submit!",
+        highlight: 'video-analysis-form',
+      },
+      {
+        title: 'Video Analysis Tour Done! 🎊',
+        message: "Getting a coach's eyes on your film is NEXT LEVEL! Submit your first video after your next session or practice. Feedback you can actually use — let's GO!",
+        action: 'Finish Tour',
+      },
+    ],
+  },
+
+  '/progress-report': {
+    pageTitle: 'Progress Report',
+    icon: TrendingUp,
+    color: 'text-green-400',
+    steps: [
+      {
+        title: 'Your Progress Report 📈',
+        message: "This is your OFFICIAL athlete report — sessions logged, drills completed, new personal records. Think of it as your performance report card for the period!",
+      },
+      {
+        title: 'Quick Stats 📊',
+        message: "Three headline numbers: Sessions Completed, Drills Done, and New PRs this period. These update as your coach logs sessions and you complete drills!",
+        highlight: 'progress-report-stats',
+      },
+      {
+        title: 'Personal Records 🥇',
+        message: "Scroll down to see your NEW personal records from this reporting period! Every PR is a proof point that you're improving. Screenshot this and share it!",
+        highlight: 'progress-report-records',
+      },
+      {
+        title: 'Progress Report Tour Done! 🎊',
+        message: "Your progress is documented and REAL! Share this with your parents, your team, your school — this is the receipts for all your hard work. Keep stacking those numbers!",
+        action: 'Finish Tour',
+      },
+    ],
+  },
 }
 
 // ─── Dr. Prop Avatar ─────────────────────────────────────────
