@@ -6,6 +6,7 @@ import { Providers } from '@/providers'
 import { CommandPalette } from '@/components/ui/command-palette'
 import { JsonLdSchema } from '@/components/seo/json-ld-schema'
 import { PSPAssistant } from '@/components/psp-assistant'
+import { TourHUD } from '@/components/tour-hud'
 import { AthleticOSBackground } from '@/components/athletic-os-background'
 import { StripeTestBanner } from '@/components/stripe-test-banner'
 import { SimulationBanner } from '@/components/simulation-banner'
@@ -116,6 +117,7 @@ export default function RootLayout({
           <AthleticOSBackground />
           <CommandPalette />
           <PSPAssistant />
+          <TourHUD />
           <main id="main-content">
             {children}
           </main>

@@ -37,6 +37,8 @@ import { createClient } from '@/lib/supabase/client'
 import { getLocalDateString } from '@/lib/utils/local-date'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { TourTriggerButton } from '@/components/tour-hud'
+import { pageHasTour } from '@/lib/tour/track'
 
 
 interface NavItem {
@@ -364,6 +366,11 @@ export function Sidebar() {
 
         {/* Theme Toggle, Collapse & Logout */}
         <div className="p-4 border-t border-cyan-200/40 space-y-2">
+          {/* Tour Button — only on pages that have a tour */}
+          {!collapsed && pageHasTour(pathname) && (
+            <TourTriggerButton page={pathname} compact />
+          )}
+
           {/* Theme Toggle */}
           <div className={`flex items-center ${collapsed ? 'justify-center' : 'justify-between'} px-2 py-2 rounded-lg bg-gradient-to-r from-cyan/10 to-orange/10 border border-cyan/20`}>
             {!collapsed && (
@@ -655,6 +662,16 @@ function MobileBottomNav({
                           </Link>
                         )
                       })}
+                    </div>
+                  </>
+                )}
+
+                {/* Tour Button — only on pages that have a tour */}
+                {pageHasTour(pathname) && (
+                  <>
+                    <div className="h-px bg-slate-200 dark:bg-white/10 mb-4" />
+                    <div className="mb-4 px-1">
+                      <TourTriggerButton page={pathname} compact />
                     </div>
                   </>
                 )}

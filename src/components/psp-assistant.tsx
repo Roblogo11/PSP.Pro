@@ -4,8 +4,10 @@ import { useState, useRef, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { MessageSquare, X, Send, Sparkles } from 'lucide-react'
+import { MessageSquare, X, Send } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
+import { TourTriggerButton } from '@/components/tour-hud'
+import { isFirstVisit, markPageVisited, pageHasTour } from '@/lib/tour/track'
 
 // ─── Types ───────────────────────────────────────────────────
 type RoleFilter = 'all' | 'athlete' | 'coach' | 'visitor'
@@ -1159,18 +1161,31 @@ export function PSPAssistant() {
     if (!hasGreeted) {
       setHasGreeted(true)
       const name = profile?.full_name?.split(' ')[0] || ''
-      const greeting = userRole === 'coach'
-        ? `What's up${name ? ` ${name}` : ''}, Coach! I'm your PSP Guide — think of me as your digital assistant coach. Need help with bookings, drills, courses, quizzes, the blog, or anything on this platform? Let's get it done! Progression Over Perfection!`
-        : userRole === 'athlete'
-        ? `Let's GO${name ? ` ${name}` : ''}! I'm your PSP Guide — here to help you crush your training goals. Ask me about your drills, sessions, courses, quizzes, progress tracking, or literally anything. I know every corner of this platform. Let's work!`
-        : 'What\'s up! Welcome to PSP.Pro — where it\'s all about Progression Over Perfection! I\'m your PSP Guide and I know this entire platform inside and out. Ask me about training programs, pricing, how to join the team, or anything else. Let\'s get you started!'
-      setMessages([
-        {
-          id: 'greeting',
+      const isNewPage = pageHasTour(pathname) && isFirstVisit(pathname)
+
+      let greeting = ''
+      if (userRole === 'coach') {
+        greeting = `Ayyyy Coach${name ? ` ${name}` : ''}! 🏆 Dr. Prop in the building — your personal platform genius! 🧪⚡ Need help with bookings, athletes, drills, courses, analytics, promo codes, or ANYTHING on this platform? I got you covered! Let's get it DONE! 💪🔥`
+      } else if (userRole === 'athlete') {
+        greeting = `YO${name ? ` ${name}` : ''}! 🔥 Dr. Prop here — your hype coach AND platform guide all in one! 🧪🏅 Ask me about drills, sessions, progress, courses, quizzes, achievements, or literally ANYTHING! I know every corner of PSP.Pro! Let's GET IT! 💥`
+      } else {
+        greeting = `WELCOME to PSP.Pro! 🎉🏆 I'm Dr. Prop — your guide to the most elite sports training platform in the 757! 🧪🥎🏀⚽ Ask me about training programs, pricing, how to join the team, what the dashboard does — ANYTHING! Progression Over Perfection — let's GO! 🚀`
+      }
+
+      const initialMessages: any[] = [{ id: 'greeting', type: 'assistant', content: greeting }]
+
+      // If first visit to a page with a tour, add a tour offer message
+      if (isNewPage) {
+        markPageVisited(pathname)
+        initialMessages.push({
+          id: 'tour-offer',
           type: 'assistant',
-          content: greeting,
-        },
-      ])
+          content: `👀 Looks like it's your first time on this page! Want me to walk you through it LIVE? 🎯 Dr. Prop's interactive tour shows you exactly where everything is — and anything we do during the tour gets cleaned up after! Real app, zero consequences! 🧹✨`,
+          tourPage: pathname,
+        })
+      }
+
+      setMessages(initialMessages)
     }
   }
 
@@ -1210,7 +1225,7 @@ export function PSPAssistant() {
       {/* Floating Chat Button */}
       <motion.button
         onClick={handleOpen}
-        className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-[100] flex items-center gap-2 px-5 py-3.5 rounded-full bg-gradient-to-r from-orange via-orange-500 to-orange-600 text-white text-sm font-bold shadow-2xl hover:shadow-orange/50 transition-all ring-4 ring-orange/20 hover:ring-orange/40"
+        className="fixed bottom-[88px] sm:bottom-6 right-4 sm:right-6 z-[100] flex items-center gap-2 px-5 py-3.5 rounded-full bg-gradient-to-r from-orange via-orange-500 to-orange-600 text-white text-sm font-bold shadow-2xl hover:shadow-orange/50 transition-all ring-4 ring-orange/20 hover:ring-orange/40"
         style={{
           animation: 'pulse-glow 3s ease-in-out infinite',
         }}
@@ -1259,11 +1274,15 @@ export function PSPAssistant() {
               className="fixed inset-x-0 bottom-0 sm:inset-x-auto sm:left-auto sm:bottom-6 sm:right-6 z-[102] sm:w-[420px] h-[85vh] sm:h-auto sm:max-h-[700px] rounded-t-2xl sm:rounded-2xl overflow-hidden shadow-2xl flex flex-col bg-slate-900 border border-white/10"
             >
               {/* Header */}
-              <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-white/10 bg-gradient-to-r from-orange/10 to-cyan/10">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-orange" />
-                  <span className="font-bold text-white">PSP.Pro Guide</span>
-                  <span className="text-[10px] px-1.5 py-0.5 bg-orange/20 text-orange rounded-full font-medium">Smart</span>
+              <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-white/10 bg-gradient-to-r from-orange/10 to-amber-500/10">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange via-amber-500 to-orange-600 flex items-center justify-center text-sm shadow-lg shadow-orange/30 ring-2 ring-orange/30">
+                    🧪
+                  </div>
+                  <div>
+                    <span className="font-bold text-white text-sm">Dr. Prop</span>
+                    <span className="text-[10px] px-1.5 py-0.5 bg-orange/20 text-orange rounded-full font-medium ml-1.5">Hype Coach</span>
+                  </div>
                 </div>
                 <button
                   onClick={() => setIsOpen(false)}
@@ -1309,6 +1328,12 @@ export function PSPAssistant() {
                           )}
                           {msg.content}
                         </div>
+                        {/* Tour trigger button */}
+                        {msg.tourPage && (
+                          <div className="ml-1">
+                            <TourTriggerButton page={msg.tourPage} />
+                          </div>
+                        )}
                         {/* Action buttons */}
                         {msg.module?.actions && msg.module.actions.length > 0 && (
                           <div className="flex flex-wrap gap-1.5 ml-1">
