@@ -9,7 +9,7 @@ interface LocalMetadataOptions {
 }
 
 const BASE_URL = 'https://propersports.pro'
-const DEFAULT_IMAGE = '/images/PSP-black-300x99-1.png'
+const DEFAULT_IMAGE = '/images/PSP-black-300x99-1.webp'
 
 const LOCATION_KEYWORDS = [
   'Virginia Beach',

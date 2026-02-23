@@ -165,7 +165,7 @@ export default function PricingPage() {
       {/* Hero Image Banner */}
       <div className="relative px-6 py-20 md:py-28 overflow-hidden">
         <Image
-          src="/images/psp pitcher.jpg"
+          src="/images/psp pitcher.webp"
           alt="PSP pitcher training"
           fill
           priority

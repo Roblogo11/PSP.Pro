@@ -7,7 +7,7 @@
 export const PLACEHOLDER_IMAGES = {
   // Hero Section - 16:9 aspect ratio (1920x1080)
   hero: {
-    main: '/images/Proper Sports Performance.jpg',
+    main: '/images/Proper Sports Performance.webp',
     alt: 'Proper Sports Performance training facility',
     width: 1920,
     height: 1080
@@ -15,9 +15,9 @@ export const PLACEHOLDER_IMAGES = {
 
   // Feature Cards - 3:2 aspect ratio (600x400)
   features: {
-    velocityTracking: '/images/psp pitcher.jpg',
-    drillBank: '/images/Praticing Soccer Drills.jpg',
-    personalizedTraining: '/images/PSP Softball Athlete.jpg',
+    velocityTracking: '/images/psp pitcher.webp',
+    drillBank: '/images/Praticing Soccer Drills.webp',
+    personalizedTraining: '/images/PSP Softball Athlete.webp',
     alt: {
       velocityTracking: 'PSP athlete pitching with coach guidance',
       drillBank: 'Athletes practicing soccer drills on the field',
@@ -29,9 +29,9 @@ export const PLACEHOLDER_IMAGES = {
 
   // Coach Headshots - 1:1 square (400x400)
   coaches: {
-    rachel: '/images/coach rachel psp.jpg',
-    mike: '/images/over the shoulder psp pitching.jpg',
-    sarah: '/images/psp pitcher.jpg',
+    rachel: '/images/coach rachel psp.webp',
+    mike: '/images/over the shoulder psp pitching.webp',
+    sarah: '/images/psp pitcher.webp',
     alt: {
       rachel: 'Coach Rachel - Lead Pitching Coach',
       mike: 'PSP coaching session in the facility',
@@ -43,9 +43,9 @@ export const PLACEHOLDER_IMAGES = {
 
   // Facility Photos - 16:9 aspect ratio (1200x675)
   facility: {
-    training: '/images/over the shoulder psp pitching.jpg',
-    equipment: '/images/Proper Sports Performance.jpg',
-    indoor: '/images/Costal At Bat.jpg',
+    training: '/images/over the shoulder psp pitching.webp',
+    equipment: '/images/Proper Sports Performance.webp',
+    indoor: '/images/Costal At Bat.webp',
     alt: {
       training: 'PSP indoor pitching training session',
       equipment: 'Proper Sports Performance training facility',
@@ -57,8 +57,8 @@ export const PLACEHOLDER_IMAGES = {
 
   // Before/After Comparison - 4:3 aspect ratio (800x600)
   beforeAfter: {
-    pitchingForm: '/images/psp pitcher.jpg',
-    battingStance: '/images/Costal At Bat.jpg',
+    pitchingForm: '/images/psp pitcher.webp',
+    battingStance: '/images/Costal At Bat.webp',
     width: 800,
     height: 600,
     alt: 'Training progress comparison'
@@ -66,9 +66,9 @@ export const PLACEHOLDER_IMAGES = {
 
   // Training Programs - 3:2 aspect ratio (600x400)
   programs: {
-    oneOnOne: '/images/psp pitcher.jpg',
-    group: '/images/Praticing Soccer Drills.jpg',
-    monthly: '/images/Top View Soccer Traing.jpg',
+    oneOnOne: '/images/psp pitcher.webp',
+    group: '/images/Praticing Soccer Drills.webp',
+    monthly: '/images/Top View Soccer Traing.webp',
     alt: {
       oneOnOne: 'PSP 1-on-1 pitching session with coach',
       group: 'Group soccer drill training session',
@@ -80,7 +80,7 @@ export const PLACEHOLDER_IMAGES = {
 
   // Drill Thumbnails - 16:9 aspect ratio (320x180)
   drills: {
-    placeholder: '/images/PSP Softball Athlete.jpg',
+    placeholder: '/images/PSP Softball Athlete.webp',
     width: 320,
     height: 180,
     alt: 'PSP softball training drill'
@@ -88,7 +88,7 @@ export const PLACEHOLDER_IMAGES = {
 
   // Dashboard Profile - 1:1 square (200x200)
   profile: {
-    placeholder: '/images/coach rachel psp.jpg',
+    placeholder: '/images/coach rachel psp.webp',
     width: 200,
     height: 200,
     alt: 'PSP athlete profile'
@@ -96,9 +96,9 @@ export const PLACEHOLDER_IMAGES = {
 
   // Achievement Badges - 1:1 square (120x120)
   badges: {
-    velocityMilestone: '/images/psp pitcher.jpg',
-    streakMaster: '/images/Costal At Bat.jpg',
-    drillComplete: '/images/Top View Soccer Traing.jpg',
+    velocityMilestone: '/images/psp pitcher.webp',
+    streakMaster: '/images/Costal At Bat.webp',
+    drillComplete: '/images/Top View Soccer Traing.webp',
     width: 120,
     height: 120,
     alt: {

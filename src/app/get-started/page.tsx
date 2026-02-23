@@ -30,7 +30,7 @@ export default function GetStartedPage() {
       {/* Hero Image Banner */}
       <div className="relative px-6 py-20 md:py-28 overflow-hidden">
         <Image
-          src="/images/Costal At Bat.jpg"
+          src="/images/Costal At Bat.webp"
           alt="PSP softball home run action"
           fill
           priority
@@ -177,7 +177,7 @@ export default function GetStartedPage() {
       {/* Athlete Image */}
       <div className="relative h-64 md:h-80 rounded-xl overflow-hidden mb-6">
         <Image
-          src="/images/PSP Softball Athlete.jpg"
+          src="/images/PSP Softball Athlete.webp"
           alt="PSP softball athlete training"
           fill
           quality={80}

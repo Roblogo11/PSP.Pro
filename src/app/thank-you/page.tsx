@@ -13,7 +13,7 @@ export default function ThankYouPage() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/images/Top View Soccer Traing.jpg"
+          src="/images/Top View Soccer Traing.webp"
           alt="PSP training session"
           fill
           quality={80}

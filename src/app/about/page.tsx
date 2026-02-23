@@ -18,7 +18,7 @@ export default function AboutPage() {
       {/* Hero Image Banner */}
       <div className="relative px-6 py-20 md:py-28 overflow-hidden">
         <Image
-          src="/images/coach rachel psp.jpg"
+          src="/images/coach rachel psp.webp"
           alt="Coach Rachel at PSP"
           fill
           priority
@@ -86,7 +86,7 @@ export default function AboutPage() {
         {/* Inline image */}
         <div className="mt-6 relative h-64 md:h-80 rounded-xl overflow-hidden">
           <Image
-            src="/images/over the shoulder psp pitching.jpg"
+            src="/images/over the shoulder psp pitching.webp"
             alt="PSP coaching session"
             fill
             quality={80}

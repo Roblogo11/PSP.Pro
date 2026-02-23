@@ -136,7 +136,7 @@ export default function HomePage() {
           {/* Logo */}
           <div className="mb-8">
             <img
-              src="/images/PSP-black-300x99-1.png"
+              src="/images/PSP-black-300x99-1.webp"
               alt="PSP.Pro Logo"
               className="h-20 mx-auto"
               style={{
@@ -272,7 +272,7 @@ export default function HomePage() {
       <section className="relative py-20 px-6 overflow-hidden">
         {/* Background Image */}
         <Image
-          src="/images/Costal At Bat.jpg"
+          src="/images/Costal At Bat.webp"
           alt="Softball athlete at bat"
           fill
           quality={85}
@@ -445,7 +445,7 @@ export default function HomePage() {
       <section className="relative py-20 px-6 overflow-hidden">
         {/* Background Image */}
         <Image
-          src="/images/over the shoulder psp pitching.jpg"
+          src="/images/over the shoulder psp pitching.webp"
           alt="PSP indoor pitching session"
           fill
           quality={85}

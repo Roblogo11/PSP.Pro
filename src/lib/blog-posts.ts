@@ -18,7 +18,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: 'Pitching',
     date: '2026-02-01',
     readTime: '5 min read',
-    thumbnail: '/images/psp pitcher.jpg',
+    thumbnail: '/images/psp pitcher.webp',
     slug: 'increasing-pitching-velocity',
     content: `Velocity is king in today's game, but adding MPH to your fastball doesn't happen overnight. At PSP.Pro, we've developed a proven system that has helped our athletes gain 3-7 MPH on their fastball in just 12 weeks. Here are the five keys to our approach.
 
@@ -83,7 +83,7 @@ Ready to add velocity? Book an assessment session and let's build your personali
     category: 'Hitting',
     date: '2026-01-28',
     readTime: '6 min read',
-    thumbnail: '/images/PSP Softball Athlete.jpg',
+    thumbnail: '/images/PSP Softball Athlete.webp',
     slug: 'science-of-hitting',
     content: `The analytics revolution has transformed how we think about hitting. Two metrics stand above the rest: **exit velocity** (how hard you hit the ball) and **launch angle** (the vertical angle the ball leaves the bat). Together, they determine whether your batted ball is a weak grounder, a line drive, or a home run.
 
@@ -161,7 +161,7 @@ The data doesn't lie — hitters who optimize both exit velocity and launch angl
     category: 'Recovery',
     date: '2026-01-25',
     readTime: '8 min read',
-    thumbnail: '/images/coach rachel psp.jpg',
+    thumbnail: '/images/coach rachel psp.webp',
     slug: 'arm-care-routine',
     content: `Arm injuries are the number one career threat for pitchers at every level. The good news? Most arm injuries are preventable with a consistent arm care routine. At PSP.Pro, arm care isn't optional — it's built into every training session.
 
@@ -253,7 +253,7 @@ Every PSP.Pro athlete gets a personalized arm care protocol based on their age, 
     category: 'Speed & Agility',
     date: '2026-01-22',
     readTime: '5 min read',
-    thumbnail: '/images/Praticing Soccer Drills.jpg',
+    thumbnail: '/images/Praticing Soccer Drills.webp',
     slug: 'speed-training-drills',
     content: `In softball and competitive sports, the difference between safe and out — or beating your defender — often comes down to a fraction of a second. Your first step — that initial explosive movement — is the most trainable aspect of speed, and it has the biggest impact on the field and court.
 
@@ -338,7 +338,7 @@ Speed is a skill, and your first step is the most important part of it. Train it
     category: 'Nutrition',
     date: '2026-01-19',
     readTime: '7 min read',
-    thumbnail: '/images/Top View Soccer Traing.jpg',
+    thumbnail: '/images/Top View Soccer Traing.webp',
     slug: 'nutrition-for-athletes',
     content: `You can have the best training program in the world, but if your nutrition isn't dialed in, you're leaving performance on the table. At PSP.Pro, we see nutrition as the fourth pillar of athletic development — alongside mechanics, strength, and recovery.
 
@@ -448,7 +448,7 @@ Want a personalized nutrition plan? Our coaches can help build one that fits you
     category: 'Mental Game',
     date: '2026-01-15',
     readTime: '6 min read',
-    thumbnail: '/images/Costal At Bat.jpg',
+    thumbnail: '/images/Costal At Bat.webp',
     slug: 'mental-game-hitting',
     content: `Ask any hitting coach what separates a .250 hitter from a .300 hitter, and mechanics will only be part of the answer. The mental game — confidence, focus, approach, and resilience — is often the bigger differentiator.
 

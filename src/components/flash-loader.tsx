@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { usePathname, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 
-const LOGO_PATH = '/images/PSP-black-300x99-1.png'
+const LOGO_PATH = '/images/PSP-black-300x99-1.webp'
 
 // Timing thresholds
 const SHOW_DELAY = 150 // Show loader if navigation takes longer than 150ms

@@ -11,8 +11,8 @@ export const siteConfig = {
     title: "PSP.Pro | ProPer Sports Performance - Elite Athletic Training",
     description: "Elite softball, basketball, and soccer training in Virginia Beach. Master mechanics, build speed, and dominate your sport with data-driven performance.",
     url: "https://propersports.pro",
-    ogImage: "/images/PSP-black-300x99-1.png",
-    logo: "/images/PSP-black-300x99-1.png",
+    ogImage: "/images/PSP-black-300x99-1.webp",
+    logo: "/images/PSP-black-300x99-1.webp",
   },
 
   // Hero Section
@@ -27,7 +27,7 @@ export const siteConfig = {
     emailPlaceholder: "Your email address",
     emailSubtext: "Join our newsletter for training tips",
     backgroundVideo: "",
-    image: "/images/PSP-black-300x99-1.png",
+    image: "/images/PSP-black-300x99-1.webp",
   },
 
   // Features
@@ -41,7 +41,7 @@ export const siteConfig = {
         title: "Velocity Tracking",
         description: "Track your throwing velocity and monitor improvements over time",
         size: "default",
-        image: "/images/PSP-black-300x99-1.png",
+        image: "/images/PSP-black-300x99-1.webp",
         cta: "Learn More",
         href: "/get-started"
       }
@@ -72,7 +72,7 @@ export const siteConfig = {
     sectionTitle: "How It Works",
     sectionSubtitle: "Your journey to peak performance",
     steps: [
-      { id: "1", number: 1, title: "Assessment", description: "Evaluate your current performance and set goals", icon: "Target", cta: "Join the Team", href: "/get-started", image: "/images/PSP-black-300x99-1.png" }
+      { id: "1", number: 1, title: "Assessment", description: "Evaluate your current performance and set goals", icon: "Target", cta: "Join the Team", href: "/get-started", image: "/images/PSP-black-300x99-1.webp" }
     ] as Array<{ id: string; number: number; title: string; description: string; icon: string; cta?: string; href?: string; image: string }>,
   },
 

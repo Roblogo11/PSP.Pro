@@ -36,7 +36,7 @@ export default function Loading() {
         {/* PSP Logo */}
         <div className="relative z-10 mb-6 animate-pulse" style={{ animationDuration: '2s' }}>
           <Image
-            src="/images/PSP-black-300x99-1.png"
+            src="/images/PSP-black-300x99-1.webp"
             alt="PSP.Pro Logo"
             width={300}
             height={99}

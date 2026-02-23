@@ -80,7 +80,7 @@ export default function ContactPage() {
       {/* Hero Image Banner */}
       <div className="relative px-6 py-20 md:py-28 overflow-hidden">
         <Image
-          src="/images/Proper Sports Performance.jpg"
+          src="/images/Proper Sports Performance.webp"
           alt="PSP training facility"
           fill
           priority

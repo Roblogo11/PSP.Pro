@@ -6,8 +6,8 @@ export function JsonLdSchema() {
     description:
       'Elite softball, basketball, and soccer training in Virginia Beach. Master mechanics, build speed, and dominate your sport with data-driven performance coaching.',
     url: 'https://propersports.pro',
-    logo: 'https://propersports.pro/images/PSP-black-300x99-1.png',
-    image: 'https://propersports.pro/images/PSP-black-300x99-1.png',
+    logo: 'https://propersports.pro/images/PSP-black-300x99-1.webp',
+    image: 'https://propersports.pro/images/PSP-black-300x99-1.webp',
     email: 'info@propersports.pro',
     address: {
       '@type': 'PostalAddress',
@@ -61,7 +61,7 @@ export function JsonLdSchema() {
     name: 'ProPer Sports Performance',
     alternateName: 'PSP.Pro',
     url: 'https://propersports.pro',
-    logo: 'https://propersports.pro/images/PSP-black-300x99-1.png',
+    logo: 'https://propersports.pro/images/PSP-black-300x99-1.webp',
     contactPoint: {
       '@type': 'ContactPoint',
       email: 'info@propersports.pro',

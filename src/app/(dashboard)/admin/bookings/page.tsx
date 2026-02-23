@@ -920,7 +920,7 @@ export default function AdminBookingsPage() {
                         hasBookings ? 'opacity-[0.08]' : 'opacity-[0.03]'
                       }`}>
                         <Image
-                          src="/images/PSP-black-300x99-1.png"
+                          src="/images/PSP-black-300x99-1.webp"
                           alt=""
                           width={40}
                           height={13}

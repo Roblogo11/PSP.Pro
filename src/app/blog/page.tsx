@@ -164,7 +164,7 @@ export default function BlogPage() {
           <div className="command-panel p-0 overflow-hidden lg:flex">
             <div className="lg:w-1/2 relative aspect-video lg:aspect-auto">
               <img
-                src={featuredPost.thumbnail_url || '/images/psp pitcher.jpg'}
+                src={featuredPost.thumbnail_url || '/images/psp pitcher.webp'}
                 alt={featuredPost.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
@@ -214,7 +214,7 @@ export default function BlogPage() {
               >
                 <div className="relative aspect-video overflow-hidden">
                   <img
-                    src={post.thumbnail_url || '/images/psp pitcher.jpg'}
+                    src={post.thumbnail_url || '/images/psp pitcher.webp'}
                     alt={post.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />

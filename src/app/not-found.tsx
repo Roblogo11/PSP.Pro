@@ -21,7 +21,7 @@ export default function NotFound() {
         <div className="flex justify-center mb-8">
           <Link href="/" className="block">
             <Image
-              src="/images/PSP-black-300x99-1.png"
+              src="/images/PSP-black-300x99-1.webp"
               alt="PSP.Pro"
               width={200}
               height={66}

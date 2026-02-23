@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { House } from 'lucide-react'
+import { Home } from 'lucide-react'
 
 /**
  * Small fixed home button — top-right of every dashboard page.
@@ -21,7 +21,7 @@ export function HomeButton() {
         shadow-sm hover:shadow-md hover:shadow-orange/10
         transition-all duration-200 active:scale-95"
     >
-      <House className="w-4 h-4" />
+      <Home className="w-4 h-4" />
     </Link>
   )
 }
