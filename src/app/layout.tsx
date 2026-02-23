@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
@@ -116,7 +117,9 @@ export default function RootLayout({
           <CookieConsent />
           <AthleticOSBackground />
           <CommandPalette />
-          <PSPAssistant />
+          <Suspense fallback={null}>
+            <PSPAssistant />
+          </Suspense>
           <TourHUD />
           <main id="main-content">
             {children}
