@@ -68,28 +68,28 @@ const PAGE_TOURS: Record<string, PageTour> = {
     steps: [
       {
         title: "Let's Book Your First Session! 🎯",
-        message: "It's time to put some work on the calendar! Booking is 4 steps — service, date, time, confirm. I'm walking you through every single one!",
+        message: "It's time to put some work on the calendar! Booking is 4 steps — Service → Date → Time → Confirm. Watch those steps light up as you go!",
         highlight: 'booking-steps',
       },
       {
         title: 'Step 1: Pick Your Training Type 🥎',
-        message: "Choose what kind of session you want! 1-on-1, group, specialty — whatever fits your goals. Each card shows price, duration, and what you're getting. TAP TO PICK!",
+        message: "See those service cards? Choose 1-on-1, group, specialty — whatever fits your goals. Each card shows price, duration, and what you're getting. TAP a card to pick and move to the next step!",
         highlight: 'booking-service',
       },
       {
         title: 'Step 2: Choose Your Date 📆',
-        message: "Pick any open date on the calendar! Green means go! Gray dates are past or fully booked. First come, first served out here!",
-        highlight: 'booking-date',
+        message: "A calendar loads after you pick a service. Tap any open date — your coach's available slots will appear for that day. Go ahead and pick one!",
+        highlight: 'booking-steps',
       },
       {
         title: 'Step 3: Grab Your Time Slot ⏰',
-        message: "Pick a time slot that works for you! You'll see your coach's name, location, and when spots are running low. Don't sleep on the good slots!",
-        highlight: 'booking-time',
+        message: "After choosing a date, time slots appear. You'll see coach name, location, and how many spots are left. Tap your slot to move to the final step!",
+        highlight: 'booking-steps',
       },
       {
         title: 'Step 4: Confirm & Pay 💳',
-        message: "Review your booking — service, date, time, price. Got a promo code? Drop it in! Elite members get 10% off automatically. Hit Confirm and you're LOCKED IN!",
-        highlight: 'booking-confirm',
+        message: "Review everything — service, date, time, price. Got a promo code? Drop it in! Elite members get 10% off automatically. Choose Pay Online or Pay at Location, then lock it in!",
+        highlight: 'booking-steps',
       },
       {
         title: 'Booking Tour Complete! 🙌',
@@ -111,22 +111,22 @@ const PAGE_TOURS: Record<string, PageTour> = {
       },
       {
         title: 'Filter Your Sessions 🔍',
-        message: "See those tabs — All, Upcoming, Past! Filter to just what you need. Upcoming shows what's on deck, Past shows your full training history. TAP to switch!",
+        message: "See those tabs — All, Upcoming, Past! Tap Upcoming to see sessions on deck, Past for your training history. TAP a tab to switch the view!",
         highlight: 'sessions-filters',
       },
       {
         title: 'Your Session Cards 📋',
-        message: "Each card shows your session details — coach, date, time, status, and coach notes after each session. Your whole training story in one scroll!",
+        message: "Each card shows coach, date, time, status, and coach feedback after sessions. Your whole training story in one scroll!",
         highlight: 'sessions-list',
       },
       {
-        title: 'RSVP to Your Sessions ✅',
-        message: "For upcoming sessions, hit Going, Maybe, or Can't Go — your coach sees your RSVP so they know who's showing up. BE THERE!",
-        highlight: 'sessions-rsvp',
+        title: 'RSVP to Upcoming Sessions ✅',
+        message: "On upcoming sessions you'll see Going / Maybe / Can't Go buttons — your coach sees your RSVP in real-time. Tap Upcoming in the filter to find them, then let your coach know you're showing up!",
+        highlight: 'sessions-filters',
       },
       {
         title: 'Sync to Your Calendar 📲',
-        message: "Tap Sync Calendar to grab a subscribe link! Drop it in Google Cal, Apple Cal, or Outlook and your sessions auto-update when you book or cancel.",
+        message: "See that Sync Calendar button up top? Tap it to copy a live subscribe link — drop it in Google Cal, Apple Cal, or Outlook and your sessions auto-update every time you book or cancel!",
         highlight: 'sessions-sync',
       },
       {

@@ -152,13 +152,12 @@ export default function SessionsPage() {
         <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
           Training <span className="text-gradient-orange">Sessions</span>
         </h1>
-        <div className="flex items-center gap-3 mt-2">
+        <div data-tour="sessions-sync" className="flex items-center gap-3 mt-2">
           <p className="text-cyan-700 dark:text-white text-lg flex-1">
             View and manage your training schedule
           </p>
           {calendarUrl && (
             <button
-              data-tour="sessions-sync"
               onClick={() => {
                 navigator.clipboard.writeText(calendarUrl)
                 toastSuccess('Calendar URL copied! Paste it in Google Calendar → Other Calendars → From URL')
@@ -271,7 +270,7 @@ export default function SessionsPage() {
             {session.status === 'upcoming' && !isImpersonating && (
               <div className="mt-4 pt-4 border-t border-white/5 space-y-3">
                 {/* RSVP Buttons */}
-                <div data-tour="sessions-rsvp" className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-xs font-semibold text-slate-500 dark:text-white/50 mr-1">RSVP:</span>
                   {[
                     { status: 'confirmed', icon: ThumbsUp, label: 'Going', color: 'text-green-500 bg-green-500/10 border-green-500/30' },
