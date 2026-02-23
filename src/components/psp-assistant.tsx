@@ -648,6 +648,16 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   },
 
   // ════════════════════════════════════════════════════════════
+  // ── FUNNEL NAV / STEP PROGRESS ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['bottom bar', 'step 1 of 6', 'step progress', 'funnel nav', 'progress bar', 'next step button', 'about button', 'back button nav', 'how do i go back', 'step tracker'],
+    title: 'Funnel Navigation Bar',
+    response: 'The bottom navigation bar guides you through the PSP.Pro journey — 6 steps total!\n\n📍 Steps:\n1. Home\n2. About\n3. Pricing\n4. Join the Team\n5. Contact\n6. Thank You\n\nHow it works:\n• The progress bar fills up as you move through each step\n• Orange "Next Step" button on the right takes you forward\n• "← Back" button on the left lets you revisit the previous page\n• "Step X of 6" shows exactly where you are\n\nOn desktop, you\'ll also see all the step icons in the center — completed steps glow, active step pulses!\n\nThe bar also appears on spoke pages (FAQ, Blog) with a "Join the Team" shortcut so you can always jump into the funnel from anywhere.',
+    actions: [{ label: 'Start the Journey', href: '/' }, { label: 'Join the Team', href: '/get-started' }],
+  },
+
+  // ════════════════════════════════════════════════════════════
   // ── VIDEO COURSES (ATHLETE) ──
   // ════════════════════════════════════════════════════════════
   {
