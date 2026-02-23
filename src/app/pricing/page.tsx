@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Zap, Users, Package, CheckCircle, Award, Info, Rocket, Mail, ArrowRight, LayoutDashboard, Shield, RefreshCw, Dumbbell } from 'lucide-react'
+import { Zap, Users, Package, Check, CheckCircle, Award, Info, Rocket, Mail, ArrowRight, LayoutDashboard, Shield, RefreshCw, Dumbbell } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
 import { createClient } from '@/lib/supabase/client'
@@ -231,20 +231,51 @@ export default function PricingPage() {
         </div>
       )}
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        {[
-          { icon: Zap, label: 'Online Course', value: formatPrice(cheapestIndividual), color: '#B8301A' },
-          { icon: Users, label: 'Group Sessions', value: formatPrice(cheapestGroup), color: '#00B4D8' },
-          { icon: Package, label: 'Save up to', value: formatPrice(maxSavings), color: '#10B981' },
-          { icon: Award, label: 'Pro Training', value: '100%', color: '#F59E0B' },
-        ].map((stat, index) => (
-          <div key={index} className="command-panel hover:border-orange/30 transition-all">
-            <stat.icon className="w-8 h-8 mb-3 mx-auto" style={{ color: stat.color }} />
-            <div className="text-2xl font-bold text-center text-gradient-orange">{stat.value}</div>
-            <div className="text-sm text-center">{stat.label}</div>
+      {/* Membership Tiers */}
+      <div className="mb-8">
+        <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+          <Shield className="w-5 h-5 text-orange" />
+          Membership Tiers
+        </h2>
+        <div className="grid md:grid-cols-2 gap-4">
+          {/* Basic */}
+          <div className="command-panel border border-slate-200 dark:border-white/10">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Basic</h3>
+              <span className="text-2xl font-bold text-slate-900 dark:text-white">Free</span>
+            </div>
+            <ul className="space-y-2 text-sm">
+              {['Access to PSP Pro Dashboard', 'Access to Training Drills', 'Can enroll in courses'].map(f => (
+                <li key={f} className="flex items-center gap-2 text-slate-600 dark:text-white/70">
+                  <Check className="w-4 h-4 text-green-500 flex-shrink-0" />{f}
+                </li>
+              ))}
+            </ul>
           </div>
-        ))}
+          {/* Elite */}
+          <div className="command-panel border-2 border-orange/40 bg-orange/5 relative">
+            <div className="absolute -top-3 right-4 px-3 py-0.5 bg-gradient-to-r from-orange to-orange/80 text-white text-xs font-bold rounded-full">Most Popular</div>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Elite</h3>
+              <span className="text-2xl font-bold text-gradient-orange">$60<span className="text-sm font-normal text-slate-500 dark:text-white/50">/mo</span></span>
+            </div>
+            <ul className="space-y-2 text-sm">
+              {[
+                '10% Discount on all services',
+                'FREE Proper Pitching Development Course',
+                'Can enroll in all offered courses',
+                'Full PSP Pro Dashboard access',
+              ].map(f => (
+                <li key={f} className="flex items-center gap-2 text-slate-600 dark:text-white/70">
+                  <Check className="w-4 h-4 text-orange flex-shrink-0" />{f}
+                </li>
+              ))}
+            </ul>
+            <Link href="/memberships" className="mt-4 block text-center text-xs font-semibold text-orange hover:underline">
+              Learn more →
+            </Link>
+          </div>
+        </div>
       </div>
 
       {/* Dynamic Service Sections — one per category */}

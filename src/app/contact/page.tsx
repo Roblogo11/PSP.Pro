@@ -108,7 +108,7 @@ export default function ContactPage() {
             <div className="w-12 h-12 bg-cyan/10 rounded-xl flex items-center justify-center mb-4">
               <MapPin className="w-6 h-6 text-cyan" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Training Facility</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Location</h3>
             <p>
               Virginia Beach, VA<br />
               Hampton Roads / 757 Area
@@ -122,10 +122,10 @@ export default function ContactPage() {
             </div>
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Email Us</h3>
             <a
-              href="mailto:info@propersports.pro"
+              href="mailto:propersportsperformance@gmail.com"
               className="hover:text-orange transition-colors"
             >
-              info@propersports.pro
+              propersportsperformance@gmail.com
             </a>
           </div>
 
@@ -135,12 +135,16 @@ export default function ContactPage() {
               <Phone className="w-6 h-6 text-green-400" />
             </div>
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Call or Text</h3>
-            <a
-              href="tel:+17571234567"
-              className="hover:text-orange transition-colors"
-            >
-              (757) 123-4567
-            </a>
+            <div className="space-y-1">
+              <div>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Rachel</p>
+                <a href="tel:+17573772089" className="hover:text-orange transition-colors">(757) 377-2089</a>
+              </div>
+              <div>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Loren</p>
+                <a href="tel:+17577700206" className="hover:text-orange transition-colors">(757) 770-0206</a>
+              </div>
+            </div>
           </div>
 
           {/* Hours */}

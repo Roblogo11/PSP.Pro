@@ -30,6 +30,20 @@ export const SPORT_METRICS: Record<string, MetricDef[]> = {
     { key: 'base_acceleration', label: 'Baserunning Acceleration', unit: 'sec', jsonKey: true, lowerIsBetter: true },
     { key: 'offspeed_command', label: 'Off-Speed Command', unit: '%', jsonKey: true },
     { key: 'infield_velocity', label: 'Infield Velocity', unit: 'mph', jsonKey: true },
+    // Pitcher Velocity by pitch type
+    { key: 'velo_fastball', label: 'Fastball Velocity', unit: 'mph', jsonKey: true },
+    { key: 'velo_changeup', label: 'Change Up Velocity', unit: 'mph', jsonKey: true },
+    { key: 'velo_offspeed', label: 'Off Speed Velocity', unit: 'mph', jsonKey: true },
+    { key: 'velo_curveball', label: 'Curve Ball Velocity', unit: 'mph', jsonKey: true },
+    { key: 'velo_screwball', label: 'Screw Ball Velocity', unit: 'mph', jsonKey: true },
+    { key: 'velo_dropball', label: 'Drop Ball Velocity', unit: 'mph', jsonKey: true },
+    { key: 'velo_riseball', label: 'Rise Ball Velocity', unit: 'mph', jsonKey: true },
+    // Pitch Accuracy by location
+    { key: 'acc_middle', label: 'Accuracy — Middle', unit: '%', jsonKey: true },
+    { key: 'acc_inside', label: 'Accuracy — Inside', unit: '%', jsonKey: true },
+    { key: 'acc_outside', label: 'Accuracy — Outside', unit: '%', jsonKey: true },
+    { key: 'acc_high', label: 'Accuracy — High', unit: '%', jsonKey: true },
+    { key: 'acc_low', label: 'Accuracy — Low', unit: '%', jsonKey: true },
   ],
   basketball: [
     { key: 'three_point_pct', label: '3-Point %', unit: '%', jsonKey: true },

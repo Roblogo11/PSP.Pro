@@ -29,13 +29,13 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/80 to-slate-950/90" />
         <div className="relative z-10 text-center max-w-3xl mx-auto">
           <div className="inline-block mb-4 px-4 py-2 bg-orange/10 border border-orange/20 rounded-full">
-            <span className="text-orange font-semibold">Virginia Beach&apos;s Premier Training Facility</span>
+            <span className="text-orange font-semibold">Serving Virginia Beach &amp; Hampton Roads</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
             About <span className="text-gradient-orange">PSP.Pro</span>
           </h1>
           <p className="text-xl text-white mb-6 max-w-2xl mx-auto leading-relaxed">
-            Virginia Beach&apos;s premier softball, basketball, and soccer training facility focused on skill development and mechanics improvement.
+            Elite softball, basketball, and soccer training serving Virginia Beach and the Hampton Roads region — focused on skill development and mechanics improvement.
           </p>
           <p className="text-2xl font-bold text-white">
             Progression Over Perfection
@@ -143,7 +143,7 @@ export default function AboutPage() {
         <h3 className="text-xl font-bold mb-3 text-white">Serving Virginia Beach & Hampton Roads</h3>
 
         <p className="text-lg text-slate-600 dark:text-white leading-relaxed mb-4">
-          Located in the heart of Virginia Beach, our state-of-the-art facility serves athletes throughout the Hampton Roads region.
+          We serve athletes throughout Virginia Beach, Chesapeake, Norfolk, and the surrounding 757 area — bringing elite coaching to your community.
         </p>
 
         <p className="text-slate-500 dark:text-white/80 mb-6">
@@ -152,9 +152,9 @@ export default function AboutPage() {
 
         <div className="grid md:grid-cols-2 gap-6">
           <div className="p-6 rounded-xl bg-cyan-900/20 border border-orange/20 hover:border-orange/40 transition-all">
-            <h3 className="text-lg font-bold mb-3 text-orange">World-Class Facility</h3>
+            <h3 className="text-lg font-bold mb-3 text-orange">Data-Driven Training</h3>
             <p className="text-slate-600 dark:text-white leading-relaxed">
-              Modern training equipment, video analysis systems, and dedicated space for athlete development.
+              Video analysis, real velocity tracking, and performance charts to measure your progress every session.
             </p>
           </div>
 

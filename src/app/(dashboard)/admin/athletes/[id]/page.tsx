@@ -55,6 +55,20 @@ const SPORT_METRICS: Record<string, MetricDef[]> = {
     { key: 'base_acceleration', label: 'Baserunning Acceleration', unit: 'sec', placeholder: '1.50', step: '0.01', lowerIsBetter: true },
     { key: 'offspeed_command', label: 'Off-Speed Command', unit: '%', placeholder: '55.0' },
     { key: 'infield_velocity', label: 'Infield Velocity', unit: 'mph', placeholder: '58.0' },
+    // Pitcher Velocity by pitch type
+    { key: 'velo_fastball', label: 'Fastball Velocity', unit: 'mph', placeholder: '62.0' },
+    { key: 'velo_changeup', label: 'Change Up Velocity', unit: 'mph', placeholder: '48.0' },
+    { key: 'velo_offspeed', label: 'Off Speed Velocity', unit: 'mph', placeholder: '50.0' },
+    { key: 'velo_curveball', label: 'Curve Ball Velocity', unit: 'mph', placeholder: '46.0' },
+    { key: 'velo_screwball', label: 'Screw Ball Velocity', unit: 'mph', placeholder: '50.0' },
+    { key: 'velo_dropball', label: 'Drop Ball Velocity', unit: 'mph', placeholder: '54.0' },
+    { key: 'velo_riseball', label: 'Rise Ball Velocity', unit: 'mph', placeholder: '56.0' },
+    // Pitch Accuracy by location
+    { key: 'acc_middle', label: 'Accuracy — Middle', unit: '%', placeholder: '70.0' },
+    { key: 'acc_inside', label: 'Accuracy — Inside', unit: '%', placeholder: '60.0' },
+    { key: 'acc_outside', label: 'Accuracy — Outside', unit: '%', placeholder: '60.0' },
+    { key: 'acc_high', label: 'Accuracy — High', unit: '%', placeholder: '55.0' },
+    { key: 'acc_low', label: 'Accuracy — Low', unit: '%', placeholder: '65.0' },
   ],
   basketball: [
     { key: 'three_pt_pct', label: '3-Point Shooting %', unit: '%', placeholder: '35.0' },
@@ -222,6 +236,10 @@ export default function AthleteDetailPage() {
   const [formDate, setFormDate] = useState(getLocalDateString())
   const [formNotes, setFormNotes] = useState('')
   const [formOverallScore, setFormOverallScore] = useState('')
+  // Pitcher-specific: which pitch type accuracy data is for
+  const [selectedPitchType, setSelectedPitchType] = useState<string>('fastball')
+  // Visibility toggles: metrics coach wants hidden from athlete view
+  const [hiddenMetrics, setHiddenMetrics] = useState<Record<string, boolean>>({})
 
   // Redirect if not authorized
   useEffect(() => {
@@ -661,12 +679,26 @@ export default function AthleteDetailPage() {
                   {SPORT_TABS.find((t) => t.key === formTab)?.emoji}{' '}
                   {SPORT_TABS.find((t) => t.key === formTab)?.label} Metrics
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                  {(SPORT_METRICS[formTab] || []).map((def) => (
+
+                {/* General metrics (non-pitcher) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                  {(SPORT_METRICS[formTab] || [])
+                    .filter(def => !def.key.startsWith('velo_') && !def.key.startsWith('acc_'))
+                    .map((def) => (
                     <div key={def.key}>
-                      <label className="block text-sm text-cyan-800 dark:text-white mb-1">
-                        {def.label} <span className="text-cyan-600 dark:text-gray-500">({def.unit})</span>
-                      </label>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="block text-sm text-cyan-800 dark:text-white">
+                          {def.label} <span className="text-cyan-600 dark:text-gray-500">({def.unit})</span>
+                        </label>
+                        <button
+                          type="button"
+                          title={hiddenMetrics[def.key] ? 'Hidden from athlete' : 'Visible to athlete'}
+                          onClick={() => setHiddenMetrics(prev => ({ ...prev, [def.key]: !prev[def.key] }))}
+                          className={`text-xs px-1.5 py-0.5 rounded transition-colors ${hiddenMetrics[def.key] ? 'text-gray-400 hover:text-orange' : 'text-cyan/70 hover:text-orange'}`}
+                        >
+                          {hiddenMetrics[def.key] ? '🙈' : '👁'}
+                        </button>
+                      </div>
                       <input
                         type="number"
                         step={def.step || '0.1'}
@@ -680,6 +712,92 @@ export default function AthleteDetailPage() {
                     </div>
                   ))}
                 </div>
+
+                {/* Pitcher-specific sections — softball only */}
+                {formTab === 'softball' && (
+                  <>
+                    {/* Pitch Velocity by Type */}
+                    <div className="mb-6">
+                      <h4 className="text-sm font-bold text-orange mb-3 uppercase tracking-wider">⚡ Pitch Velocity (mph)</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        {(SPORT_METRICS[formTab] || []).filter(def => def.key.startsWith('velo_')).map((def) => (
+                          <div key={def.key}>
+                            <div className="flex items-center justify-between mb-1">
+                              <label className="block text-sm text-cyan-800 dark:text-white">{def.label}</label>
+                              <button
+                                type="button"
+                                title={hiddenMetrics[def.key] ? 'Hidden from athlete' : 'Visible to athlete'}
+                                onClick={() => setHiddenMetrics(prev => ({ ...prev, [def.key]: !prev[def.key] }))}
+                                className={`text-xs px-1.5 py-0.5 rounded transition-colors ${hiddenMetrics[def.key] ? 'text-gray-400' : 'text-cyan/70 hover:text-orange'}`}
+                              >
+                                {hiddenMetrics[def.key] ? '🙈' : '👁'}
+                              </button>
+                            </div>
+                            <input
+                              type="number"
+                              step="0.1"
+                              value={formValues[def.key] || ''}
+                              onChange={(e) => setFormValues((prev) => ({ ...prev, [def.key]: e.target.value }))}
+                              className="w-full px-3 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50 text-sm"
+                              placeholder={def.placeholder}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Pitch Accuracy by Location */}
+                    <div className="mb-2">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="text-sm font-bold text-cyan uppercase tracking-wider">🎯 Pitch Accuracy (%)</h4>
+                        <div className="flex items-center gap-2">
+                          <label className="text-xs text-gray-400">Pitch type:</label>
+                          <select
+                            value={selectedPitchType}
+                            onChange={(e) => setSelectedPitchType(e.target.value)}
+                            className="text-xs px-2 py-1 bg-cyan-50/50 dark:bg-white/10 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white focus:outline-none"
+                          >
+                            {['fastball', 'changeup', 'offspeed', 'curveball', 'screwball', 'dropball', 'riseball'].map(p => (
+                              <option key={p} value={p}>{p.charAt(0).toUpperCase() + p.slice(1)}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        {(SPORT_METRICS[formTab] || []).filter(def => def.key.startsWith('acc_')).map((def) => {
+                          const compositeKey = `${def.key}_${selectedPitchType}`
+                          return (
+                            <div key={def.key}>
+                              <div className="flex items-center justify-between mb-1">
+                                <label className="block text-sm text-cyan-800 dark:text-white">
+                                  {def.label} <span className="text-cyan-600 dark:text-gray-400 text-xs">({selectedPitchType})</span>
+                                </label>
+                                <button
+                                  type="button"
+                                  title={hiddenMetrics[compositeKey] ? 'Hidden from athlete' : 'Visible to athlete'}
+                                  onClick={() => setHiddenMetrics(prev => ({ ...prev, [compositeKey]: !prev[compositeKey] }))}
+                                  className={`text-xs px-1.5 py-0.5 rounded transition-colors ${hiddenMetrics[compositeKey] ? 'text-gray-400' : 'text-cyan/70 hover:text-orange'}`}
+                                >
+                                  {hiddenMetrics[compositeKey] ? '🙈' : '👁'}
+                                </button>
+                              </div>
+                              <input
+                                type="number"
+                                step="0.1"
+                                min="0"
+                                max="100"
+                                value={formValues[compositeKey] || ''}
+                                onChange={(e) => setFormValues((prev) => ({ ...prev, [compositeKey]: e.target.value }))}
+                                className="w-full px-3 py-2 bg-cyan-50/50 border border-cyan-200/40 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan/50 text-sm"
+                                placeholder={def.placeholder}
+                              />
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
 
               {/* Athleticism metrics (always shown if on a sport tab) */}
