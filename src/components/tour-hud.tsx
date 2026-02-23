@@ -322,110 +322,96 @@ export function TourHUD() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 80 }}
         transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-        className="fixed inset-x-3 bottom-[88px] sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 sm:bottom-6 sm:w-[480px] z-[120]"
+        className="fixed inset-x-3 bottom-[76px] sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 sm:bottom-6 sm:w-[480px] z-[120]"
       >
-        {/* Glow */}
-        <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-orange/40 via-amber-500/20 to-orange/10 blur-sm pointer-events-none" />
-
         {/* Card */}
-        <div className="relative bg-[#0e0f11]/96 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.7)] overflow-hidden">
+        <div className="relative bg-slate-950 border border-orange/25 rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.6)] overflow-hidden">
 
-          {/* Orange accent line top */}
-          <div className="h-[3px] bg-gradient-to-r from-orange via-amber-400 to-orange-600" />
-
-          {/* Progress fill under accent */}
-          <div className="h-[2px] bg-white/5 -mt-0.5">
+          {/* Top progress bar */}
+          <div className="h-[3px] bg-white/5">
             <motion.div
-              className="h-full bg-orange/50"
+              className="h-full bg-gradient-to-r from-orange to-amber-400"
               initial={{ width: 0 }}
               animate={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
               transition={{ duration: 0.35, ease: 'easeOut' }}
             />
           </div>
 
-          {/* Header row */}
-          <div className="flex items-center justify-between px-4 pt-3 pb-2">
-            <div className="flex items-center gap-2">
-              <TourIcon className={`w-3.5 h-3.5 ${tour.color} opacity-80`} />
-              <span className="text-[11px] font-medium text-white/50 tracking-wide">{tour.pageTitle}</span>
-              <span className="text-[11px] text-white/25">·</span>
-              <span className="text-[11px] font-bold text-orange/90">{currentStep + 1} / {steps.length}</span>
+          {/* Header */}
+          <div className="flex items-center justify-between px-3 pt-2.5 pb-1.5">
+            <div className="flex items-center gap-1.5">
+              <TourIcon className={`w-3 h-3 ${tour.color} opacity-70`} />
+              <span className="text-[11px] font-medium text-white/40">{tour.pageTitle}</span>
+              <span className="text-[11px] text-white/20">·</span>
+              <span className="text-[11px] font-bold text-orange">{currentStep + 1}/{steps.length}</span>
             </div>
-
             <button
               onClick={skipTour}
-              className="flex items-center gap-1 text-[11px] text-white/30 hover:text-white/60 transition-colors px-2 py-1 rounded-lg hover:bg-white/5 group"
+              className="flex items-center gap-1 text-[11px] text-white/25 hover:text-white/50 transition-colors px-1.5 py-0.5 rounded-md hover:bg-white/5"
             >
-              <SkipForward className="w-3 h-3 group-hover:text-orange/70 transition-colors" />
-              <span>End tour</span>
+              <SkipForward className="w-3 h-3" />
+              End
             </button>
           </div>
 
-          {/* Dr. Prop content */}
+          {/* Body */}
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
-              initial={{ opacity: 0, x: 16 }}
+              initial={{ opacity: 0, x: 12 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -16 }}
-              transition={{ duration: 0.18 }}
-              className="px-4 pb-3"
+              exit={{ opacity: 0, x: -12 }}
+              transition={{ duration: 0.15 }}
+              className="px-3 pb-2"
             >
-              <div className="flex items-start gap-3">
-                {/* Avatar */}
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange via-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange/30 flex-shrink-0 ring-1 ring-orange/30 text-xl">
-                  🧪
+              <div className="flex items-start gap-2.5">
+                {/* Avatar — CSS only, no emoji rendering issues */}
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange to-amber-500 flex items-center justify-center shadow-md shadow-orange/30 flex-shrink-0 ring-1 ring-orange/20">
+                  <span className="text-white font-black text-[13px] leading-none">Dr</span>
                 </div>
-                <div className="flex-1 min-w-0 pt-0.5">
-                  <div className="flex items-baseline gap-1.5 mb-1">
-                    <span className="text-[11px] font-black text-orange tracking-widest uppercase">Dr. Prop</span>
-                  </div>
-                  <p className="font-bold text-white text-[13px] leading-snug mb-1.5">{step.title}</p>
-                  <p className="text-[13px] text-white/60 leading-relaxed">{step.message}</p>
+                <div className="flex-1 min-w-0">
+                  <span className="text-[10px] font-black text-orange tracking-widest uppercase block mb-0.5">Dr. Prop</span>
+                  <p className="font-bold text-white text-[13px] leading-snug mb-1">{step.title}</p>
+                  <p className="text-[12px] text-white/55 leading-relaxed line-clamp-3">{step.message}</p>
                 </div>
               </div>
             </motion.div>
           </AnimatePresence>
 
-          {/* Divider */}
-          <div className="mx-4 h-px bg-white/5" />
-
-          {/* Controls */}
-          <div className="flex items-center gap-3 px-4 py-3">
-            {/* Back */}
+          {/* Footer */}
+          <div className="flex items-center gap-2 px-3 py-2.5 border-t border-white/5">
             <button
               onClick={handleBack}
               disabled={currentStep === 0}
-              className="flex items-center gap-1 text-[13px] text-white/40 hover:text-white/70 disabled:opacity-20 disabled:cursor-not-allowed transition-colors shrink-0"
+              className="flex items-center gap-1 text-[12px] text-white/35 hover:text-white/65 disabled:opacity-20 disabled:cursor-not-allowed transition-colors shrink-0"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-3.5 h-3.5" />
               Back
             </button>
 
-            {/* Step dots — centered */}
-            <div className="flex items-center justify-center gap-1.5 flex-1">
+            {/* Dots */}
+            <div className="flex items-center justify-center gap-1 flex-1">
               {steps.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrentStep(i)}
                   className={`rounded-full transition-all duration-200 ${
                     i === currentStep
-                      ? 'w-5 h-[5px] bg-orange'
+                      ? 'w-4 h-1.5 bg-orange'
                       : i < currentStep
-                        ? 'w-[5px] h-[5px] bg-orange/35'
-                        : 'w-[5px] h-[5px] bg-white/12'
+                        ? 'w-1.5 h-1.5 bg-orange/30'
+                        : 'w-1.5 h-1.5 bg-white/10'
                   }`}
                 />
               ))}
             </div>
 
-            {/* Next / Finish */}
             <button
               onClick={handleNext}
               disabled={ending}
-              className="flex items-center gap-1.5 text-[13px] font-bold text-white bg-gradient-to-r from-orange to-amber-500 hover:from-orange-500 hover:to-amber-400 disabled:opacity-50 px-5 py-2 rounded-xl transition-all shadow-md shadow-orange/25 shrink-0"
+              className="flex items-center gap-1 text-[12px] font-bold text-white bg-orange hover:bg-orange-500 disabled:opacity-50 px-4 py-1.5 rounded-lg transition-colors shadow-sm shadow-orange/20 shrink-0"
             >
-              {ending ? 'Cleaning up...' : isLastStep ? (step.action ?? 'Finish 🎉') : (
+              {ending ? 'Cleaning...' : isLastStep ? (step.action ?? 'Finish!') : (
                 <>
                   {step.action ?? 'Next'}
                   <ChevronRight className="w-3.5 h-3.5" />

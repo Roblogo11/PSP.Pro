@@ -36,7 +36,7 @@ import {
 import { createClient } from '@/lib/supabase/client'
 import { getLocalDateString } from '@/lib/utils/local-date'
 import { useUserRole } from '@/lib/hooks/use-user-role'
-import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { ThemeToggle, ThemeToggleCompact } from '@/components/ui/theme-toggle'
 import { TourTriggerButton } from '@/components/tour-hud'
 import { pageHasTour } from '@/lib/tour/track'
 
@@ -430,17 +430,17 @@ export function Sidebar() {
 
 /* ─── Mobile Bottom Navigation ─── */
 
-// Primary tabs shown in the fixed bottom bar
+// Primary tabs: Home · Book · Lessons (3 centre tabs)
+// Theme toggle pinned left, Logout pinned right, More replaces old progress slot
 const primaryMobileTabs: NavItem[] = [
   athleteNavItems[0],  // Home/Dashboard
-  athleteNavItems[1],  // Messages/Chat
+  athleteNavItems[8],  // Book Lessons (was index 8 = /booking)
   athleteNavItems[7],  // My Lessons (Calendar)
-  athleteNavItems[3],  // Progress
 ]
 
-// Remaining athlete items for the "More" sheet
+// All athlete items go in More sheet (except the 3 primary)
 const remainingAthleteItems = athleteNavItems.filter(
-  (_, i) => ![0, 1, 7, 3].includes(i)
+  (_, i) => ![0, 8, 7].includes(i)
 )
 
 function MobileBottomNav({
@@ -471,57 +471,60 @@ function MobileBottomNav({
         className="lg:hidden fixed bottom-0 left-0 right-0 z-50 mobile-safe"
       >
         <div className="backdrop-blur-xl bg-white/80 dark:bg-slate-900/90 border-t border-cyan-200/30 dark:border-white/10 shadow-[0_-4px_30px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_30px_rgba(0,0,0,0.4)]">
-          <div className="flex items-center justify-around px-2 py-2">
-            {primaryMobileTabs.map((item) => {
-              const isActive = pathname === item.href
-              const Icon = item.icon
-              return (
-                <Link key={item.href} href={item.href}>
-                  <motion.div
-                    whileTap={{ scale: 0.85 }}
-                    className={`
-                      flex flex-col items-center justify-center
-                      min-w-[56px] min-h-[44px] rounded-2xl px-3 py-1.5 relative
-                      transition-colors duration-200
-                      ${isActive
-                        ? 'text-orange'
-                        : 'text-slate-500 dark:text-slate-400'
-                      }
-                    `}
-                  >
-                    {isActive && (
-                      <motion.div
-                        layoutId="mobileActiveTab"
-                        className="absolute -top-1 w-8 h-1 rounded-full bg-orange"
-                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                      />
-                    )}
-                    <Icon className={`w-5 h-5 ${isActive ? 'text-orange' : ''}`} />
-                    <span className={`text-[11px] font-medium mt-0.5 ${isActive ? 'text-orange font-semibold' : ''}`}>
-                      {item.mobileLabel}
-                    </span>
-                    {item.badgeKey && badges[item.badgeKey] ? (
-                      <span className="absolute -top-1 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center text-[10px] font-bold rounded-full bg-orange text-white">
-                        {badges[item.badgeKey]}
-                      </span>
-                    ) : null}
-                  </motion.div>
-                </Link>
-              )
-            })}
+          <div className="flex items-center justify-between px-3 py-2">
 
-            {/* More button */}
-            <button onClick={() => setMoreSheetOpen(true)}>
-              <motion.div
+            {/* Theme toggle — left (compact pill) */}
+            <div className="flex flex-col items-center justify-center min-w-[52px] min-h-[44px] gap-1">
+              <ThemeToggleCompact />
+              <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400">Theme</span>
+            </div>
+
+            {/* Centre tabs */}
+            <div className="flex items-center justify-around flex-1 px-1">
+              {primaryMobileTabs.map((item) => {
+                const isActive = pathname === item.href
+                const Icon = item.icon
+                return (
+                  <Link key={item.href} href={item.href}>
+                    <motion.div
+                      whileTap={{ scale: 0.85 }}
+                      className={`
+                        flex flex-col items-center justify-center
+                        min-w-[52px] min-h-[44px] rounded-2xl px-2 py-1.5 relative
+                        transition-colors duration-200
+                        ${isActive ? 'text-orange' : 'text-slate-500 dark:text-slate-400'}
+                      `}
+                    >
+                      {isActive && (
+                        <motion.div
+                          layoutId="mobileActiveTab"
+                          className="absolute -top-1 w-8 h-1 rounded-full bg-orange"
+                          transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                        />
+                      )}
+                      <Icon className={`w-5 h-5 ${isActive ? 'text-orange' : ''}`} />
+                      <span className={`text-[11px] font-medium mt-0.5 ${isActive ? 'text-orange font-semibold' : ''}`}>
+                        {item.mobileLabel}
+                      </span>
+                      {item.badgeKey && badges[item.badgeKey] ? (
+                        <span className="absolute -top-1 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center text-[10px] font-bold rounded-full bg-orange text-white">
+                          {badges[item.badgeKey]}
+                        </span>
+                      ) : null}
+                    </motion.div>
+                  </Link>
+                )
+              })}
+
+              {/* More button */}
+              <motion.button
                 whileTap={{ scale: 0.85 }}
+                onClick={() => setMoreSheetOpen(true)}
                 className={`
                   flex flex-col items-center justify-center
-                  min-w-[56px] min-h-[44px] rounded-2xl px-3 py-1.5 relative
+                  min-w-[52px] min-h-[44px] rounded-2xl px-2 py-1.5 relative
                   transition-colors duration-200
-                  ${isMoreActive
-                    ? 'text-orange'
-                    : 'text-slate-500 dark:text-slate-400'
-                  }
+                  ${isMoreActive ? 'text-orange' : 'text-slate-500 dark:text-slate-400'}
                 `}
               >
                 {isMoreActive && (
@@ -533,8 +536,20 @@ function MobileBottomNav({
                 )}
                 <MoreHorizontal className={`w-5 h-5 ${isMoreActive ? 'text-orange' : ''}`} />
                 <span className={`text-[11px] font-medium mt-0.5 ${isMoreActive ? 'text-orange font-semibold' : ''}`}>More</span>
-              </motion.div>
-            </button>
+              </motion.button>
+            </div>
+
+            {/* Logout — right */}
+            <motion.button
+              whileTap={{ scale: 0.85 }}
+              onClick={handleLogout}
+              aria-label="Sign out"
+              className="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] rounded-2xl px-2 py-1.5 text-red-400 transition-colors"
+            >
+              <LogOut className="w-5 h-5" />
+              <span className="text-[10px] font-medium mt-0.5">Out</span>
+            </motion.button>
+
           </div>
         </div>
       </motion.nav>
@@ -567,7 +582,7 @@ function MobileBottomNav({
                   setMoreSheetOpen(false)
                 }
               }}
-              className="lg:hidden fixed bottom-0 left-0 right-0 z-[61] bg-white dark:bg-slate-900 rounded-t-3xl border-t border-cyan-200/30 dark:border-white/10 shadow-[0_-8px_40px_rgba(0,0,0,0.2)] mobile-safe max-h-[75vh] flex flex-col"
+              className="lg:hidden fixed bottom-0 left-0 right-0 z-[61] bg-white dark:bg-slate-900 rounded-t-3xl border-t border-cyan-200/30 dark:border-white/10 shadow-[0_-8px_40px_rgba(0,0,0,0.2)] mobile-safe max-h-[80vh] flex flex-col"
             >
               {/* Drag handle — swipe down to close */}
               <div
@@ -578,7 +593,8 @@ function MobileBottomNav({
                 <div className="w-10 h-1 rounded-full bg-slate-300 dark:bg-white/20" />
               </div>
 
-              <div className="px-4 pb-6 overflow-y-auto">
+              {/* Scrollable nav area */}
+              <div className="px-4 overflow-y-auto flex-1 min-h-0 pb-3">
                 {/* Training section */}
                 <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3 px-1">
                   Training
@@ -627,7 +643,7 @@ function MobileBottomNav({
                     <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3 px-1">
                       Admin Tools
                     </p>
-                    <div className="grid grid-cols-4 gap-3 mb-6">
+                    <div className="grid grid-cols-4 gap-3 mb-4">
                       {adminNavItems.map((item) => {
                         const Icon = item.icon
                         const isActive = pathname === item.href
@@ -668,17 +684,16 @@ function MobileBottomNav({
 
                 {/* Tour Button — only on pages that have a tour */}
                 {pageHasTour(pathname) && (
-                  <>
-                    <div className="h-px bg-slate-200 dark:bg-white/10 mb-4" />
-                    <div className="mb-4 px-1">
-                      <TourTriggerButton page={pathname} compact />
-                    </div>
-                  </>
+                  <div className="mt-2">
+                    <div className="h-px bg-slate-200 dark:bg-white/10 mb-3" />
+                    <TourTriggerButton page={pathname} compact />
+                  </div>
                 )}
+              </div>
 
-                {/* Theme toggle + Logout */}
-                <div className="h-px bg-slate-200 dark:bg-white/10 mb-4" />
-                <div className="flex items-center justify-between px-2">
+              {/* Theme + Logout — always pinned to bottom */}
+              <div className="shrink-0 px-4 py-3 border-t border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <ThemeToggle />
                     <span className="text-sm font-medium text-slate-600 dark:text-slate-300">Theme</span>
