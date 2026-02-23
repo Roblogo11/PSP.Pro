@@ -8,6 +8,7 @@ import {
   LayoutDashboard, Calendar, TrendingUp, Dumbbell, Settings, Clock,
 } from 'lucide-react'
 import { isTourActive, markPageVisited } from '@/lib/tour/track'
+import { SpotlightOverlay } from '@/components/spotlight-overlay'
 
 // ─── Types ───────────────────────────────────────────────────
 interface TourStep {
@@ -34,28 +35,26 @@ const PAGE_TOURS: Record<string, PageTour> = {
     steps: [
       {
         title: 'Welcome to Your Locker! 🏠',
-        message: "Ayyyy, you made it! 🔥 This is YOUR home base — the Athlete Locker! Every time you log in, this is where you land. Let me walk you through what's here, no cap! 💪",
+        message: "Ayyyy, you made it! 🔥 This is YOUR home base. Every time you log in, this is where you land. Let me walk you through what's here!",
       },
       {
         title: 'Your Stats At a Glance 📊',
-        message: "See those 4 cards up top? That's your real-time report card! 📈 Total sessions, average velocity, drills completed, and your training streak. Hit those numbers and watch 'em climb! 🚀",
-        highlight: '.stat-card',
+        message: "See those cards up top? That's your real-time report card! Total sessions, velocity, drills completed, and your training streak. Tap to explore!",
+        highlight: 'locker-stats',
       },
       {
         title: 'Your Velocity Chart ⚡',
-        message: "This chart right here? That's your PROOF. 📉➡️📈 Every session your coach logs your velocity — and this line goes UP. Screenshot it, send it to your rivals, do whatever you gotta do! 😤",
-      },
-      {
-        title: 'Your Next Session 📅',
-        message: "Next session card shows you EXACTLY when you gotta show up and who your coach is. No excuses, no 'I forgot!' — it's right here staring at you! ⏰🎯",
+        message: "This chart is your PROOF. Every session your coach logs your velocity — and this line goes UP. That's your progress, plotted! 📈",
+        highlight: 'locker-chart',
       },
       {
         title: 'Assigned Drills 🏋️',
-        message: "Scroll down and you'll see your assigned drills — video content your coach handpicked specifically for YOU. Watch, rep it, mark it complete. That's how you level up between sessions! 🎥✅",
+        message: "Scroll down to your assigned drills — videos your coach handpicked for YOU. Watch, rep it, mark it complete. That's how you level up between sessions! 🎥✅",
+        highlight: 'locker-drills',
       },
       {
         title: 'Locker Tour Complete! 🎉',
-        message: "LETSSS GOOO! 🏆 You know your Locker now. Next stop — Book your first session so we can get to WORK! Ready? Tap 'Book a Session' or hit Next to keep exploring! 💥",
+        message: "LETSSS GOOO! 🏆 You know your Locker now. Next stop — Book your first session so we can get to WORK!",
         navigateTo: '/booking',
         action: 'Book a Session',
       },
@@ -69,28 +68,32 @@ const PAGE_TOURS: Record<string, PageTour> = {
     steps: [
       {
         title: "Let's Book Your First Session! 🎯",
-        message: "OKAY! It's time to put some work on the calendar! 📅 Booking is 4 steps — service, date, time, confirm. I'm walking you through every single one. Let's RUN IT! 🔥",
+        message: "It's time to put some work on the calendar! Booking is 4 steps — service, date, time, confirm. I'm walking you through every single one!",
+        highlight: 'booking-steps',
       },
       {
         title: 'Step 1: Pick Your Training Type 🥎',
-        message: "First, choose what kind of session you want! 1-on-1, group training, specialty — whatever fits your goals. Each card shows the price, duration, and what you're getting. PICK YOUR WEAPON! ⚔️",
-        highlight: '.service-card',
+        message: "Choose what kind of session you want! 1-on-1, group, specialty — whatever fits your goals. Each card shows price, duration, and what you're getting. TAP TO PICK!",
+        highlight: 'booking-service',
       },
       {
         title: 'Step 2: Choose Your Date 📆',
-        message: "Calendar pops up next! Pick any open date — green means go! 🟢 Gray dates are either in the past or already booked up. First come, first served out here! ⏱️",
+        message: "Pick any open date on the calendar! Green means go! Gray dates are past or fully booked. First come, first served out here!",
+        highlight: 'booking-date',
       },
       {
         title: 'Step 3: Grab Your Time Slot ⏰',
-        message: "Now pick a time slot that works for you! You'll see your coach's name, the location, and when spots are running low. Don't sleep on the good slots! 😤💨",
+        message: "Pick a time slot that works for you! You'll see your coach's name, location, and when spots are running low. Don't sleep on the good slots!",
+        highlight: 'booking-time',
       },
       {
         title: 'Step 4: Confirm & Pay 💳',
-        message: "Last step! Review your booking — service, date, time, price. Got a promo code? Drop it in! Elite members get 10% off automatic. Hit 'Confirm & Pay' and you're LOCKED IN! 🔒🎉",
+        message: "Review your booking — service, date, time, price. Got a promo code? Drop it in! Elite members get 10% off automatically. Hit Confirm and you're LOCKED IN!",
+        highlight: 'booking-confirm',
       },
       {
         title: 'Booking Tour Complete! 🙌',
-        message: "FACTS! Now you know how to book like a pro! 💯 Try booking a real session — this is tour mode so it'll clean up after. Or keep exploring! Next up: check your Sessions page! 📋",
+        message: "FACTS! Now you know how to book like a pro! Try it for real — this is tour mode so it cleans up after. Next up: check your Sessions page!",
         navigateTo: '/sessions',
         action: 'View My Sessions',
       },
@@ -104,27 +107,31 @@ const PAGE_TOURS: Record<string, PageTour> = {
     steps: [
       {
         title: 'Your Session History HQ 📋',
-        message: "This is where ALL your sessions live — upcoming, completed, the whole archive! 🗂️ Every booking you make shows up right here. Let me break it DOWN! 🔥",
+        message: "This is where ALL your sessions live — upcoming, completed, the whole archive! Every booking you make shows up right here.",
       },
       {
         title: 'Filter Your Sessions 🔍',
-        message: "See those tabs at the top? All, Upcoming, and Past! 📌 Filter to just what you need. Upcoming shows what's on deck. Past shows your training history — every grind session logged! 💪",
+        message: "See those tabs — All, Upcoming, Past! Filter to just what you need. Upcoming shows what's on deck, Past shows your full training history. TAP to switch!",
+        highlight: 'sessions-filters',
+      },
+      {
+        title: 'Your Session Cards 📋',
+        message: "Each card shows your session details — coach, date, time, status, and coach notes after each session. Your whole training story in one scroll!",
+        highlight: 'sessions-list',
       },
       {
         title: 'RSVP to Your Sessions ✅',
-        message: "For upcoming sessions, you can hit 'Going', 'Maybe', or 'Can't Go' — like a real calendar invite! 📩 Your coach can see your RSVP so they know who's showing up. BE THERE! 🏟️",
+        message: "For upcoming sessions, hit Going, Maybe, or Can't Go — your coach sees your RSVP so they know who's showing up. BE THERE!",
+        highlight: 'sessions-rsvp',
       },
       {
         title: 'Sync to Your Calendar 📲',
-        message: "Hit the 'Sync Calendar' button at the top! 🔄 Grab that subscribe link and drop it in Google Cal, Apple Cal, or Outlook. Sessions auto-update when you book or cancel — zero manual work! 🤖",
-      },
-      {
-        title: 'Coach Notes 📝',
-        message: "After each session, your coach drops notes right here! Tips, wins, things to work on. That's personalized coaching in writing — READ THEM, apply them, level UP! 📈",
+        message: "Tap Sync Calendar to grab a subscribe link! Drop it in Google Cal, Apple Cal, or Outlook and your sessions auto-update when you book or cancel.",
+        highlight: 'sessions-sync',
       },
       {
         title: 'Sessions Tour Done! 🎊',
-        message: "You're a sessions pro now! 😎 Next up — your Progress page. This is where the NUMBERS tell your story! Let's go see how you're improving! 📊🚀",
+        message: "You're a sessions pro now! Next up — your Progress page. This is where the NUMBERS tell your story!",
         navigateTo: '/progress',
         action: 'View My Progress',
       },
@@ -138,31 +145,36 @@ const PAGE_TOURS: Record<string, PageTour> = {
     steps: [
       {
         title: 'Your Trophy Case 🏆',
-        message: "YO! This page right here? This is PROOF that you put in work! 💎 Your performance data, personal records, and improvement charts all live here. Time to flex! 💪📈",
+        message: "This page is PROOF that you put in work! Your performance data, personal records, and improvement charts all live here.",
       },
       {
         title: 'Your Key Stats 📊',
-        message: "Top 4 cards = your headline numbers! Peak velocity, average velocity, sessions completed, drills done. These update after EVERY session your coach logs. Watch them grow! 🌱➡️🌳",
+        message: "These 4 cards are your headline numbers! Peak velocity, sessions completed, drills done — they update after EVERY session your coach logs!",
+        highlight: 'progress-stats',
       },
       {
-        title: 'Sport-Specific Performance 🥎🏀⚽',
-        message: "Tap the sport tabs to see YOUR sport's metrics! Softball shows exit velo + bat speed + throwing velocity. Basketball shows 3-point %, verticals, and more! 15 metrics per sport tracked! 😤",
+        title: 'Sport-Specific Tabs 🥎🏀⚽',
+        message: "Tap a sport tab to see YOUR metrics! Softball = exit velo + bat speed. Basketball = 3-point % + verticals. 15 metrics per sport tracked!",
+        highlight: 'progress-sport-tabs',
       },
       {
-        title: 'Multi-Metric Chart 📉➡️📈',
-        message: "This chart tracks MULTIPLE metrics over time! Watch all your stats trend upward as you put in sessions. Hover over any point to see the exact number! Screenshot worthy fr! 📸🔥",
+        title: 'Multi-Metric Chart 📈',
+        message: "This chart tracks multiple metrics over time! Watch all your stats trend up as you put in sessions. Screenshot worthy fr!",
+        highlight: 'progress-chart',
       },
       {
         title: 'Personal Records 🥇',
-        message: "YOUR personal bests right here! Every metric you've ever hit — date, value, and whether it's PSP Verified (recorded by your coach with equipment) or Self-Reported! Legit stats only! ✅",
+        message: "YOUR personal bests! Every metric you've hit — date, value, and whether it's PSP Verified (by your coach) or Self-Reported. Legit stats only!",
+        highlight: 'progress-records',
       },
       {
         title: 'Milestones Timeline 🎯',
-        message: "Scroll down to your Milestones! Orange dots = ACHIEVED! 🔶 Gray = coming up next! First session, velocity PRs, drill counts, streaks — unlock them all! The grind is REAL! 😤",
+        message: "Scroll down to your Milestones! Orange = ACHIEVED, gray = coming up. First session, velocity PRs, drill streaks — unlock them all!",
+        highlight: 'progress-milestones',
       },
       {
         title: 'Progress Tour Done! 🚀',
-        message: "You're BUILT DIFFERENT for checking your progress like this! 🏅 Now let's hit the Drills page — your coach-assigned training videos are waiting! Let's WORK! 🎥💪",
+        message: "You're BUILT DIFFERENT for checking your progress like this! Now let's hit the Drills page — your coach-assigned training videos are waiting!",
         navigateTo: '/drills',
         action: 'View My Drills',
       },
@@ -176,23 +188,26 @@ const PAGE_TOURS: Record<string, PageTour> = {
     steps: [
       {
         title: 'Your Drill Library 🎥',
-        message: "WELCOME to your training video library! 🏋️‍♀️ Every drill your coach assigns lives here. Watch, rep it, mark it complete — that's the formula between sessions! LET'S GO! 🔥",
+        message: "WELCOME to your training video library! Every drill your coach assigns lives here. Watch, rep it, mark it complete — that's the formula between sessions!",
+      },
+      {
+        title: 'Your Progress Stats 📊',
+        message: "These cards show your drill totals, completion rate, and hours trained. The more you complete, the higher these numbers climb!",
+        highlight: 'drills-stats',
       },
       {
         title: 'Browse & Filter 🔍',
-        message: "Use the search bar and filters to find drills by difficulty (Beginner → Advanced) or category (Mechanics, Speed, Power, etc.)! 🎯 Your assigned drills are pinned right at the top for easy access! 📌",
+        message: "Use the search bar and filters to find drills by difficulty or category! Your assigned drills are pinned at the top for easy access.",
+        highlight: 'drills-filter',
       },
       {
-        title: 'Open a Drill ▶️',
-        message: "Click any drill card to open it! You'll get the full YouTube video player, description, duration, and instructions. Watch it FIRST, THEN go practice! Don't skip the form cues! 👀",
-      },
-      {
-        title: 'Mark it Complete ✅',
-        message: "After you do the drill — HIT THAT BUTTON! ✅ 'Mark Complete' logs your completion, bumps your drill count stats, and helps you unlock achievements! Every rep counts! 💯",
+        title: 'Your Drill Cards ▶️',
+        message: "Tap any drill card to open the full video, description, and instructions. Watch it FIRST, then go practice! Don't skip the form cues!",
+        highlight: 'drills-grid',
       },
       {
         title: 'Drills Tour Done! 🎊',
-        message: "LOCKED IN! 🔒 You know how the drill library works. Last stop on the tour — Settings! Set up your profile, notifications, and leaderboard status! Almost done! ⚙️",
+        message: "LOCKED IN! Last stop — Settings! Set up your profile, notifications, and leaderboard status. Almost done!",
         navigateTo: '/settings',
         action: 'Go to Settings',
       },
@@ -206,23 +221,26 @@ const PAGE_TOURS: Record<string, PageTour> = {
     steps: [
       {
         title: 'Settings — Your Control Panel ⚙️',
-        message: "Last stop! ⚙️ Your Settings page is where you fine-tune everything about YOUR experience on PSP.Pro! Quick tour — 4 tabs, won't take long! 🙌",
+        message: "Last stop! Your Settings page is where you fine-tune everything about YOUR experience on PSP.Pro. Quick tour — 4 tabs, won't take long!",
       },
       {
-        title: 'Profile Tab 👤',
-        message: "Profile tab is where you update your name and email! Keep it current so your coach can reach you and your dashboard looks right! Click Edit, make changes, hit Save! ✏️💾",
+        title: 'Tab Navigation 📑',
+        message: "These 4 tabs control everything — Profile, Notifications, Security, and Privacy. Tap any tab to switch sections. Start with Profile!",
+        highlight: 'settings-tabs',
       },
       {
         title: 'Notifications 🔔',
-        message: "Notifications tab — control what pings you! Session reminders, new drills assigned, achievement unlocks, coach messages... toggle on what matters to you! Never miss a thing! 📲",
+        message: "Control what pings you! Session reminders, new drills assigned, achievement unlocks, coach messages... toggle on what matters to you!",
+        highlight: 'settings-notifications',
       },
       {
         title: 'Leaderboard Settings 🏅',
-        message: "Wanna compete? 😤 Toggle 'Show on Leaderboards' ON and set your region (e.g. '757' or 'Hampton Roads')! Your best metrics will appear on the regional leaderboards! Let them SEE you! 👀",
+        message: "Wanna compete? Toggle Show on Leaderboards ON and set your region! Your best metrics will appear on the regional leaderboards — let them SEE you!",
+        highlight: 'settings-leaderboard',
       },
       {
         title: "Tour Complete — You're Ready! 🎉",
-        message: "DR. PROP SAYS: YOU ARE OFFICIALLY READY! 🏆🔥 You've seen your Locker, Booking, Sessions, Progress, Drills, and Settings! Now go get that first booking in and let's make some HISTORY! 💪🚀",
+        message: "DR. PROP SAYS: YOU ARE OFFICIALLY READY! You've seen your Locker, Booking, Sessions, Progress, Drills, and Settings! Now go get that first booking in!",
         action: 'Finish Tour',
       },
     ],
@@ -244,6 +262,38 @@ function DrPropAvatar({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   )
 }
 
+// ─── Card positioning helper ──────────────────────────────────
+interface CardPos {
+  top?: number
+  bottom?: number
+  left: number
+  arrowDir: 'up' | 'down' | 'none'
+}
+
+function computeCardPos(targetRect: DOMRect, cardW = 360, cardH = 200): CardPos {
+  const vw = window.innerWidth
+  const vh = window.innerHeight
+  const pad = 12
+  const gap = 16 // gap between spotlight and card
+
+  // Horizontal: centre on target, clamp to viewport
+  const idealLeft = targetRect.left + targetRect.width / 2 - cardW / 2
+  const left = Math.max(pad, Math.min(idealLeft, vw - cardW - pad))
+
+  // Vertical: prefer below target, flip above if not enough room
+  const spaceBelow = vh - (targetRect.bottom + gap)
+  const spaceAbove = targetRect.top - gap
+
+  if (spaceBelow >= cardH + pad) {
+    return { top: targetRect.bottom + gap, left, arrowDir: 'up' }
+  } else if (spaceAbove >= cardH + pad) {
+    return { top: targetRect.top - gap - cardH, left, arrowDir: 'down' }
+  } else {
+    // Not enough room either side — pin to bottom of viewport
+    return { bottom: 76, left: pad, arrowDir: 'none' }
+  }
+}
+
 // ─── Main TourHUD Component ───────────────────────────────────
 export function TourHUD() {
   const pathname = usePathname()
@@ -251,21 +301,17 @@ export function TourHUD() {
   const [active, setActive] = useState(false)
   const [currentStep, setCurrentStep] = useState(0)
   const [ending, setEnding] = useState(false)
+  const [targetRect, setTargetRect] = useState<DOMRect | null>(null)
 
   // Check tour cookie on mount AND on pathname change
   useEffect(() => {
     const cookieActive = isTourActive()
     setActive(cookieActive)
-    // Reset step index when arriving at a new page during a tour
     if (cookieActive) setCurrentStep(0)
   }, [pathname])
 
-  // Also check on mount (catches same-page reload after tour start)
   useEffect(() => {
-    if (isTourActive()) {
-      setActive(true)
-      setCurrentStep(0)
-    }
+    if (isTourActive()) { setActive(true); setCurrentStep(0) }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const tour = active ? PAGE_TOURS[pathname] ?? null : null
@@ -274,154 +320,225 @@ export function TourHUD() {
   const isLastStep = currentStep === steps.length - 1
   const TourIcon = tour?.icon ?? Zap
 
-  const handleNext = useCallback(async () => {
-    if (!step) return
+  // ── Spotlight: find element, scroll to it, measure rect ──────
+  useEffect(() => {
+    if (!step?.highlight) { setTargetRect(null); return }
 
-    // If this step navigates somewhere, go there
+    const el = document.querySelector(`[data-tour="${step.highlight}"]`) as HTMLElement | null
+    if (!el) { setTargetRect(null); return }
+
+    // Scroll element into view
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
+    // Wait for scroll to settle then measure
+    const t = setTimeout(() => {
+      setTargetRect(el.getBoundingClientRect())
+    }, 420)
+
+    // Keep rect updated on window resize/scroll
+    const update = () => setTargetRect(el.getBoundingClientRect())
+    window.addEventListener('resize', update, { passive: true })
+    window.addEventListener('scroll', update, { passive: true })
+
+    return () => {
+      clearTimeout(t)
+      window.removeEventListener('resize', update)
+      window.removeEventListener('scroll', update)
+    }
+  }, [currentStep, step?.highlight, pathname])
+
+  // ── Click-to-advance on highlighted element ───────────────────
+  const handleNextRef = useCallback(async () => {
+    if (!step) return
     if (step.navigateTo && isLastStep) {
       markPageVisited(pathname)
       router.push(step.navigateTo)
       return
     }
-
-    if (isLastStep) {
-      // Last step of last page — end tour
-      await endTour()
-      return
-    }
-
+    if (isLastStep) { await endTour(); return }
     setCurrentStep(s => s + 1)
   }, [step, isLastStep, pathname, router]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleBack = () => {
-    if (currentStep > 0) setCurrentStep(s => s - 1)
-  }
+  useEffect(() => {
+    if (!step?.highlight) return
+    const el = document.querySelector(`[data-tour="${step.highlight}"]`) as HTMLElement | null
+    if (!el) return
+
+    const onClick = (e: Event) => {
+      e.stopPropagation()
+      handleNextRef()
+    }
+    el.addEventListener('click', onClick, { capture: true })
+    el.style.cursor = 'pointer'
+    el.style.position = el.style.position || 'relative'
+    el.style.zIndex = '116' // above overlay (z-115), below card (z-120)
+
+    return () => {
+      el.removeEventListener('click', onClick, { capture: true })
+      el.style.cursor = ''
+      el.style.zIndex = ''
+    }
+  }, [currentStep, step?.highlight, pathname, handleNextRef])
 
   const endTour = async () => {
     setEnding(true)
-    try {
-      await fetch('/api/tour', { method: 'DELETE' })
-    } catch { /* ignore */ }
+    try { await fetch('/api/tour', { method: 'DELETE' }) } catch { /* ignore */ }
     setActive(false)
     setEnding(false)
     setCurrentStep(0)
+    setTargetRect(null)
     markPageVisited(pathname)
-  }
-
-  const skipTour = async () => {
-    await endTour()
   }
 
   if (!active || !tour || !step) return null
 
+  // Compute card position
+  const CARD_W = 360
+  const CARD_H = 190
+  const pos: CardPos = targetRect
+    ? computeCardPos(targetRect, CARD_W, CARD_H)
+    : { bottom: 76, left: 12, arrowDir: 'none' }
+
+  const cardStyle: React.CSSProperties = {
+    position: 'fixed',
+    width: Math.min(CARD_W, window.innerWidth - 24),
+    zIndex: 120,
+    ...(pos.top !== undefined ? { top: pos.top } : {}),
+    ...(pos.bottom !== undefined ? { bottom: pos.bottom } : {}),
+    left: pos.left,
+  }
+
   return (
-    <AnimatePresence>
-      <motion.div
-        key="tour-hud"
-        initial={{ opacity: 0, y: 80 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 80 }}
-        transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-        className="fixed inset-x-3 bottom-[76px] sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 sm:bottom-6 sm:w-[480px] z-[120]"
-      >
-        {/* Card */}
-        <div className="relative bg-slate-950 border border-orange/25 rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.6)] overflow-hidden">
+    <>
+      {/* Spotlight overlay */}
+      <SpotlightOverlay
+        targetRect={targetRect}
+        show={active}
+        padding={10}
+        onBackdropClick={() => {}} // backdrop clicks don't skip — user must use End button
+      />
 
-          {/* Top progress bar */}
-          <div className="h-[3px] bg-white/5">
-            <motion.div
-              className="h-full bg-gradient-to-r from-orange to-amber-400"
-              initial={{ width: 0 }}
-              animate={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
-              transition={{ duration: 0.35, ease: 'easeOut' }}
-            />
-          </div>
-
-          {/* Header */}
-          <div className="flex items-center justify-between px-3 pt-2.5 pb-1.5">
-            <div className="flex items-center gap-1.5">
-              <TourIcon className={`w-3 h-3 ${tour.color} opacity-70`} />
-              <span className="text-[11px] font-medium text-white/40">{tour.pageTitle}</span>
-              <span className="text-[11px] text-white/20">·</span>
-              <span className="text-[11px] font-bold text-orange">{currentStep + 1}/{steps.length}</span>
+      {/* Dr. Prop card */}
+      <AnimatePresence>
+        <motion.div
+          key={`card-${currentStep}`}
+          initial={{ opacity: 0, y: 16, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 8, scale: 0.97 }}
+          transition={{ type: 'spring', stiffness: 340, damping: 28 }}
+          style={cardStyle}
+        >
+          {/* Arrow pointing UP to target (card is below target) */}
+          {pos.arrowDir === 'up' && (
+            <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-2 overflow-hidden">
+              <div className="w-4 h-4 bg-slate-950 border border-orange/25 rotate-45 translate-y-2 mx-auto" />
             </div>
-            <button
-              onClick={skipTour}
-              className="flex items-center gap-1 text-[11px] text-white/25 hover:text-white/50 transition-colors px-1.5 py-0.5 rounded-md hover:bg-white/5"
-            >
-              <SkipForward className="w-3 h-3" />
-              End
-            </button>
-          </div>
+          )}
 
-          {/* Body */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentStep}
-              initial={{ opacity: 0, x: 12 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -12 }}
-              transition={{ duration: 0.15 }}
-              className="px-3 pb-2"
-            >
-              <div className="flex items-start gap-2.5">
-                {/* Avatar — CSS only, no emoji rendering issues */}
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange to-amber-500 flex items-center justify-center shadow-md shadow-orange/30 flex-shrink-0 ring-1 ring-orange/20">
-                  <span className="text-white font-black text-[13px] leading-none">Dr</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <span className="text-[10px] font-black text-orange tracking-widest uppercase block mb-0.5">Dr. Prop</span>
-                  <p className="font-bold text-white text-[13px] leading-snug mb-1">{step.title}</p>
-                  <p className="text-[12px] text-white/55 leading-relaxed line-clamp-3">{step.message}</p>
-                </div>
+          {/* Arrow pointing DOWN to target (card is above target) */}
+          {pos.arrowDir === 'down' && (
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-2 overflow-hidden">
+              <div className="w-4 h-4 bg-slate-950 border border-orange/25 rotate-45 -translate-y-2 mx-auto" />
+            </div>
+          )}
+
+          {/* Card */}
+          <div className="relative bg-slate-950 border border-orange/25 rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.7)] overflow-hidden">
+
+            {/* Progress bar */}
+            <div className="h-[3px] bg-white/5">
+              <motion.div
+                className="h-full bg-gradient-to-r from-orange to-amber-400"
+                initial={{ width: 0 }}
+                animate={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+                transition={{ duration: 0.35, ease: 'easeOut' }}
+              />
+            </div>
+
+            {/* Header */}
+            <div className="flex items-center justify-between px-3 pt-2.5 pb-1.5">
+              <div className="flex items-center gap-1.5">
+                <TourIcon className={`w-3 h-3 ${tour.color} opacity-70`} />
+                <span className="text-[11px] font-medium text-white/40">{tour.pageTitle}</span>
+                <span className="text-[11px] text-white/20">·</span>
+                <span className="text-[11px] font-bold text-orange">{currentStep + 1}/{steps.length}</span>
               </div>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Footer */}
-          <div className="flex items-center gap-2 px-3 py-2.5 border-t border-white/5">
-            <button
-              onClick={handleBack}
-              disabled={currentStep === 0}
-              className="flex items-center gap-1 text-[12px] text-white/35 hover:text-white/65 disabled:opacity-20 disabled:cursor-not-allowed transition-colors shrink-0"
-            >
-              <ChevronLeft className="w-3.5 h-3.5" />
-              Back
-            </button>
-
-            {/* Dots */}
-            <div className="flex items-center justify-center gap-1 flex-1">
-              {steps.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentStep(i)}
-                  className={`rounded-full transition-all duration-200 ${
-                    i === currentStep
-                      ? 'w-4 h-1.5 bg-orange'
-                      : i < currentStep
-                        ? 'w-1.5 h-1.5 bg-orange/30'
-                        : 'w-1.5 h-1.5 bg-white/10'
-                  }`}
-                />
-              ))}
+              <button
+                onClick={endTour}
+                className="flex items-center gap-1 text-[11px] text-white/25 hover:text-white/50 transition-colors px-1.5 py-0.5 rounded-md hover:bg-white/5"
+              >
+                <SkipForward className="w-3 h-3" />
+                End
+              </button>
             </div>
 
-            <button
-              onClick={handleNext}
-              disabled={ending}
-              className="flex items-center gap-1 text-[12px] font-bold text-white bg-orange hover:bg-orange-500 disabled:opacity-50 px-4 py-1.5 rounded-lg transition-colors shadow-sm shadow-orange/20 shrink-0"
-            >
-              {ending ? 'Cleaning...' : isLastStep ? (step.action ?? 'Finish!') : (
-                <>
-                  {step.action ?? 'Next'}
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </>
-              )}
-            </button>
+            {/* Body */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentStep}
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={{ duration: 0.15 }}
+                className="px-3 pb-2"
+              >
+                <div className="flex items-start gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange to-amber-500 flex items-center justify-center shadow-md shadow-orange/30 flex-shrink-0 ring-1 ring-orange/20">
+                    <span className="text-white font-black text-[13px] leading-none">Dr</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-[10px] font-black text-orange tracking-widest uppercase block mb-0.5">Dr. Prop</span>
+                    <p className="font-bold text-white text-[13px] leading-snug mb-1">{step.title}</p>
+                    <p className="text-[12px] text-white/55 leading-relaxed line-clamp-3">{step.message}</p>
+                    {step.highlight && (
+                      <p className="text-[11px] text-orange/60 mt-1.5 font-medium">
+                        👆 Tap the highlighted area to continue
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Footer */}
+            <div className="flex items-center gap-2 px-3 py-2.5 border-t border-white/5">
+              <button
+                onClick={() => { if (currentStep > 0) setCurrentStep(s => s - 1) }}
+                disabled={currentStep === 0}
+                className="flex items-center gap-1 text-[12px] text-white/35 hover:text-white/65 disabled:opacity-20 disabled:cursor-not-allowed transition-colors shrink-0"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+                Back
+              </button>
+
+              <div className="flex items-center justify-center gap-1 flex-1">
+                {steps.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentStep(i)}
+                    className={`rounded-full transition-all duration-200 ${
+                      i === currentStep ? 'w-4 h-1.5 bg-orange'
+                      : i < currentStep ? 'w-1.5 h-1.5 bg-orange/30'
+                      : 'w-1.5 h-1.5 bg-white/10'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={handleNextRef}
+                disabled={ending}
+                className="flex items-center gap-1 text-[12px] font-bold text-white bg-orange hover:bg-orange-500 disabled:opacity-50 px-4 py-1.5 rounded-lg transition-colors shadow-sm shadow-orange/20 shrink-0"
+              >
+                {ending ? 'Cleaning...' : isLastStep ? (step.action ?? 'Finish!') : (
+                  <>{step.action ?? 'Next'}<ChevronRight className="w-3.5 h-3.5" /></>
+                )}
+              </button>
+            </div>
           </div>
-        </div>
-      </motion.div>
-    </AnimatePresence>
+        </motion.div>
+      </AnimatePresence>
+    </>
   )
 }
 

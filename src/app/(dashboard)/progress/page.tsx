@@ -193,7 +193,7 @@ export default function ProgressPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div data-tour="progress-stats" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {progressStats.map((stat) => {
           const Icon = stat.icon
           return (
@@ -211,7 +211,7 @@ export default function ProgressPage() {
       </div>
 
       {/* Sport Tab Selector */}
-      <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
+      <div data-tour="progress-sport-tabs" className="flex gap-2 mb-6 overflow-x-auto pb-1">
         {SPORT_TABS.map((tab) => (
           <button
             key={tab.key}
@@ -228,7 +228,7 @@ export default function ProgressPage() {
       </div>
 
       {/* Multi-Metric Performance Chart */}
-      <div className="mb-6">
+      <div data-tour="progress-chart" className="mb-6">
         <MultiMetricChart
           data={chartData}
           metrics={chartMetricLines}
@@ -239,7 +239,7 @@ export default function ProgressPage() {
 
       {/* Personal Records */}
       {personalRecords.length > 0 && (
-        <div className="mb-6">
+        <div data-tour="progress-records" className="mb-6">
           <div className="command-panel">
             <div className="flex items-center gap-3 mb-6">
               <Trophy className="w-6 h-6 text-orange" />
@@ -288,7 +288,7 @@ export default function ProgressPage() {
 
       {/* Milestones */}
       {milestones.length > 0 && (
-        <div className="command-panel">
+        <div data-tour="progress-milestones" className="command-panel">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Milestones</h2>
           <div className="relative">
             <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-orange via-orange/50 to-transparent" />

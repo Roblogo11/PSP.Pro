@@ -114,7 +114,7 @@ export default function DrillsPage() {
       </div>
 
       {/* Stats Row */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div data-tour="drills-stats" className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <div className="glass-card p-6">
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-xl bg-orange/10">
@@ -169,7 +169,7 @@ export default function DrillsPage() {
       </div>
 
       {/* Filter */}
-      <DrillFilter onFilterChange={handleFilterChange} />
+      <div data-tour="drills-filter"><DrillFilter onFilterChange={handleFilterChange} /></div>
 
       {/* Results Count */}
       <div className="mb-6">
@@ -180,7 +180,7 @@ export default function DrillsPage() {
       </div>
 
       {/* Drill Grid */}
-      <DrillGrid drills={filteredDrills} loading={loading} />
+      <div data-tour="drills-grid"><DrillGrid drills={filteredDrills} loading={loading} /></div>
     </div>
   )
 }

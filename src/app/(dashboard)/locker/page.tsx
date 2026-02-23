@@ -497,7 +497,7 @@ export default function AthleteLockerPage() {
       </div>
 
       {/* Bento Grid Layout */}
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 mb-6">
+      <div data-tour="locker-stats" className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 mb-6">
         {/* Quick Stats - Top Row - NOW WITH REAL DATA */}
         <StatCard
           title="Total Sessions"
@@ -530,7 +530,7 @@ export default function AthleteLockerPage() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 mb-6">
+      <div data-tour="locker-chart" className="grid grid-cols-1 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 mb-6">
         {/* Velocity Chart - Takes 3 columns on desktop - NOW WITH REAL DATA */}
         <VelocityChart velocityData={stats?.recentVelocities || []} />
 
@@ -599,7 +599,7 @@ export default function AthleteLockerPage() {
 
       {/* Quick Rebook Card */}
       {lastBooking && !isImpersonating && (
-        <div className="command-panel mb-6">
+        <div data-tour="locker-rebook" className="command-panel mb-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-orange/20 rounded-xl flex items-center justify-center flex-shrink-0">
               <RotateCcw className="w-6 h-6 text-orange" />
@@ -685,7 +685,7 @@ export default function AthleteLockerPage() {
       </div>
 
       {/* Assigned Drills Section */}
-      <div className="command-panel">
+      <div data-tour="locker-drills" className="command-panel">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">

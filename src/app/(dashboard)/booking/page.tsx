@@ -385,7 +385,7 @@ export default function BookingPage() {
       )}
 
       {/* Progress Steps */}
-      <div className="mb-6 sm:mb-8 flex items-center gap-2 sm:gap-4 overflow-x-auto pb-2">
+      <div data-tour="booking-steps" className="mb-6 sm:mb-8 flex items-center gap-2 sm:gap-4 overflow-x-auto pb-2">
         {[
           { key: 'service', label: 'Service' },
           { key: 'date', label: 'Date' },
@@ -469,33 +469,39 @@ export default function BookingPage() {
         {/* Main Content */}
         <div className="lg:col-span-2">
           {currentStep === 'service' && (
-            <ServiceSelector
-              services={services}
-              selectedServiceId={selectedServiceId}
-              onSelectService={handleServiceSelect}
-            />
+            <div data-tour="booking-service">
+              <ServiceSelector
+                services={services}
+                selectedServiceId={selectedServiceId}
+                onSelectService={handleServiceSelect}
+              />
+            </div>
           )}
 
           {currentStep === 'date' && (
-            <Calendar
-              selectedDate={selectedDate}
-              onSelectDate={handleDateSelect}
-              minDate={new Date()}
-            />
+            <div data-tour="booking-date">
+              <Calendar
+                selectedDate={selectedDate}
+                onSelectDate={handleDateSelect}
+                minDate={new Date()}
+              />
+            </div>
           )}
 
           {currentStep === 'time' && (
-            <TimeSlotPicker
-              timeSlots={timeSlots}
-              selectedSlotId={selectedSlotId}
-              onSelectSlot={handleSlotSelect}
-              loading={loading}
-              bookedSlotIds={bookedSlotIds}
-            />
+            <div data-tour="booking-time">
+              <TimeSlotPicker
+                timeSlots={timeSlots}
+                selectedSlotId={selectedSlotId}
+                onSelectSlot={handleSlotSelect}
+                loading={loading}
+                bookedSlotIds={bookedSlotIds}
+              />
+            </div>
           )}
 
           {currentStep === 'confirm' && selectedService && selectedSlot && selectedDate && (
-            <div className="glass-card p-6">
+            <div data-tour="booking-confirm" className="glass-card p-6">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Confirm Your Booking</h3>
 
               <div className="space-y-4 mb-6">

@@ -294,7 +294,7 @@ function SettingsInner() {
 
       <div className="grid lg:grid-cols-4 gap-6">
         {/* Tabs Sidebar */}
-        <div className="lg:col-span-1">
+        <div data-tour="settings-tabs" className="lg:col-span-1">
           <div className="command-panel space-y-2">
             {tabs.map((tab) => {
               const Icon = tab.icon
@@ -353,7 +353,7 @@ function SettingsInner() {
 
 
                 {/* Leaderboard Section */}
-                <div className="pt-4 mt-4 border-t border-cyan-200/40">
+                <div data-tour="settings-leaderboard" className="pt-4 mt-4 border-t border-cyan-200/40">
                   <div className="flex items-center gap-2 mb-4">
                     <Medal className="w-5 h-5 text-orange" />
                     <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Leaderboard Settings</h3>
@@ -408,7 +408,7 @@ function SettingsInner() {
           )}
 
           {activeTab === 'notifications' && (
-            <div className="command-panel">
+            <div data-tour="settings-notifications" className="command-panel">
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Notification Preferences</h2>
 
               <div className="space-y-6">

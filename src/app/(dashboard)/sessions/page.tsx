@@ -158,6 +158,7 @@ export default function SessionsPage() {
           </p>
           {calendarUrl && (
             <button
+              data-tour="sessions-sync"
               onClick={() => {
                 navigator.clipboard.writeText(calendarUrl)
                 toastSuccess('Calendar URL copied! Paste it in Google Calendar → Other Calendars → From URL')
@@ -172,7 +173,7 @@ export default function SessionsPage() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex gap-2 mb-6 overflow-x-auto">
+      <div data-tour="sessions-filters" className="flex gap-2 mb-6 overflow-x-auto">
         {['all', 'upcoming', 'past'].map((filterType) => (
           <button
             key={filterType}
@@ -189,7 +190,7 @@ export default function SessionsPage() {
       </div>
 
       {/* Sessions List */}
-      <div className="space-y-4">
+      <div data-tour="sessions-list" className="space-y-4">
         {filteredSessions.map((session) => (
           <div
             key={session.id}
@@ -270,7 +271,7 @@ export default function SessionsPage() {
             {session.status === 'upcoming' && !isImpersonating && (
               <div className="mt-4 pt-4 border-t border-white/5 space-y-3">
                 {/* RSVP Buttons */}
-                <div className="flex items-center gap-2 flex-wrap">
+                <div data-tour="sessions-rsvp" className="flex items-center gap-2 flex-wrap">
                   <span className="text-xs font-semibold text-slate-500 dark:text-white/50 mr-1">RSVP:</span>
                   {[
                     { status: 'confirmed', icon: ThumbsUp, label: 'Going', color: 'text-green-500 bg-green-500/10 border-green-500/30' },
