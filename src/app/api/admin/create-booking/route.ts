@@ -135,14 +135,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: `Failed to create booking: ${bookingError.message}` }, { status: 500 })
     }
 
-    // Increment slot bookings count
-    await adminClient
-      .from('available_slots')
-      .update({
-        current_bookings: slot.current_bookings + 1,
-        is_available: slot.current_bookings + 1 < slot.max_bookings,
-      })
-      .eq('id', slot_id)
+    // Slot count is handled by the BEFORE INSERT trigger (handle_booking_count)
+    // Do NOT manually increment — causes double-counting and broken cancellation
 
     // Send confirmation email to athlete (non-blocking)
     try {
