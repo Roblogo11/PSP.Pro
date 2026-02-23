@@ -1271,6 +1271,7 @@ export function PSPAssistant() {
           <span className="absolute inset-0 pointer-events-none shimmer-wipe" />
         )}
         <MessageSquare className="w-5 h-5 relative z-10" />
+        {fromGuide && <span className="relative z-10 text-base leading-none">👀</span>}
         <span className="hidden sm:inline relative z-10">Dr. Prop here! 👀</span>
         <span className="absolute -top-1 -right-1 w-3 h-3 bg-cyan rounded-full animate-ping" />
         <span className="absolute -top-1 -right-1 w-3 h-3 bg-cyan rounded-full" />
