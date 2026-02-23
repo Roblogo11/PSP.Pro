@@ -1200,11 +1200,18 @@ export function PSPAssistant() {
 
     const match = findBestMatch(query.trim(), userRole)
     const hypedResponse = addCoachHype(match.response)
+
+    // If the query has tour/walkthrough intent and this page has a tour, attach the trigger
+    const tourKeywords = ['walk me through', 'walkthrough', 'tour', 'show me around', 'tutorial', 'guide me', 'take me through']
+    const hasTourIntent = tourKeywords.some(kw => query.toLowerCase().includes(kw))
+    const attachTour = hasTourIntent && pageHasTour(pathname)
+
     const assistantMessage = {
       id: `assistant-${Date.now()}`,
       type: 'assistant',
       content: hypedResponse,
       module: match,
+      ...(attachTour ? { tourPage: pathname } : {}),
     }
 
     setMessages(prev => [...prev, userMessage, assistantMessage])
