@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { ArrowLeft, ArrowRight, Zap, Home, Video, Package, Globe, Rocket, Sparkles, Users } from 'lucide-react'
-import { getFunnelNavigation, getTransitionDirection, getFunnelIndex } from '@/config/navigation'
+import { ArrowLeft, ArrowRight, Zap, Home, Package, Rocket, Sparkles } from 'lucide-react'
+import { getFunnelNavigation, getTransitionDirection, getFunnelIndex, FUNNEL_ROUTES } from '@/config/navigation'
 import { useNavigation } from './nav-context'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 
@@ -216,39 +216,56 @@ export function FunnelNav({ className = '', desktopOnly = false }: FunnelNavProp
 
             {/* Mobile Navigation */}
             <div className="md:hidden">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
+              {/* Step pills row — scrollable, mirrors desktop */}
+              <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide mb-2">
+                <div className="flex-shrink-0">
                   <ThemeToggle />
-                  {prev && (
-                    <>
-                      <button
-                        onClick={() => handleNavigation(prev.path)}
-                        className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-secondary transition-colors active:scale-95"
-                      >
-                        <ArrowLeft className="w-3 h-3" />
-                        <span>{prev.name}</span>
-                      </button>
-                      <div className="w-px h-3 bg-gray-600/50" />
-                    </>
-                  )}
-                  <div className="text-xs font-semibold tracking-wide text-secondary/80">
-                    Step {currentIndex + 1} <span className="text-gray-500 font-normal">of 6</span>
-                  </div>
                 </div>
-                {next ? (
-                  <button
-                    onClick={() => handleNavigation(next.path)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-secondary to-accent shadow-md shadow-secondary/30 active:scale-95 transition-all"
-                  >
-                    <span className="text-xs font-bold text-white">{next.name}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-white" />
-                  </button>
-                ) : (
-                  <span className="text-xs font-semibold text-secondary">
-                    {STEP_LABELS[STEP_TO_FUNNEL_INDEX.indexOf(currentIndex)] ?? 'Done'}
-                  </span>
-                )}
+                <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide flex-1">
+                  {STEP_LABELS.map((label, index) => {
+                    const StepIcon = STEP_ICONS[index]
+                    const funnelIndex = STEP_TO_FUNNEL_INDEX[index]
+                    const isActive = funnelIndex === currentIndex
+                    const isCompleted = funnelIndex < currentIndex
+                    const isHome = index === 0
+
+                    return (
+                      <div key={index} className="flex items-center flex-shrink-0">
+                        <button
+                          onClick={() => handleNavigation(isHome ? '/' : (FUNNEL_ROUTES[funnelIndex] as { path: string }).path)}
+                          className={`flex items-center gap-1 px-2 py-1 rounded-full transition-all duration-200 active:scale-95 ${
+                            isActive
+                              ? 'bg-secondary/20 text-white'
+                              : isCompleted
+                                ? 'text-secondary/60'
+                                : 'text-gray-500'
+                          }`}
+                        >
+                          <StepIcon className={`w-3 h-3 flex-shrink-0 ${isActive ? 'animate-pulse' : ''}`} />
+                          <span className={`text-[10px] font-medium whitespace-nowrap ${isActive ? 'text-white' : ''}`}>{label}</span>
+                        </button>
+                        {index < STEP_LABELS.length - 1 && (
+                          <div className={`w-4 h-0.5 flex-shrink-0 transition-colors ${isCompleted ? 'bg-secondary/50' : 'bg-dark-300'}`} />
+                        )}
+                      </div>
+                    )
+                  })}
+                  {/* Next button at end */}
+                  {next && (
+                    <div className="flex items-center flex-shrink-0">
+                      <div className="w-4 h-0.5 bg-dark-300" />
+                      <button
+                        onClick={() => handleNavigation(next.path)}
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-gradient-to-r from-secondary to-accent shadow-md shadow-secondary/30 active:scale-95 transition-all ml-0.5"
+                      >
+                        <span className="text-[10px] font-bold text-white whitespace-nowrap">{next.name}</span>
+                        <ArrowRight className="w-3 h-3 text-white" />
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
+              {/* Progress bar */}
               <div className="h-1 bg-dark-300 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-secondary to-accent transition-all duration-500"
