@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     // Validate the invite token
     const { data: link, error: linkErr } = await adminClient
       .from('invite_links')
-      .select('id, coach_id, sport, trial_days, max_uses, uses, expires_at')
+      .select('id, coach_id, org_id, sport, trial_days, max_uses, uses, expires_at')
       .eq('token', invite_token)
       .single()
 
@@ -73,6 +73,22 @@ export async function POST(request: NextRequest) {
       // Clean up auth user if profile fails
       await adminClient.auth.admin.deleteUser(authData.user.id)
       return NextResponse.json({ error: 'Failed to create athlete profile' }, { status: 500 })
+    }
+
+    // Auto-enroll in org if invite link has org_id
+    if (link.org_id) {
+      try {
+        await adminClient.from('organization_members').insert({
+          org_id: link.org_id,
+          user_id: authData.user.id,
+          role: 'athlete',
+          status: 'active',
+          joined_at: new Date().toISOString(),
+        })
+      } catch {
+        // Non-critical: athlete created successfully, org enrollment failed
+        console.warn('Failed to auto-enroll athlete in org:', link.org_id)
+      }
     }
 
     // Increment the invite link usage count

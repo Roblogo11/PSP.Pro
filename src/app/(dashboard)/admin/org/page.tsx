@@ -70,6 +70,13 @@ export default function OrgPage() {
   // Settings toggle loading
   const [togglingField, setTogglingField] = useState<string | null>(null)
 
+  // Org invite links
+  const [orgInviteLinks, setOrgInviteLinks] = useState<any[]>([])
+  const [orgInviteSport, setOrgInviteSport] = useState('')
+  const [orgInviteTrialDays, setOrgInviteTrialDays] = useState(30)
+  const [generatingOrgLink, setGeneratingOrgLink] = useState(false)
+  const [copiedOrgLinkId, setCopiedOrgLinkId] = useState<string | null>(null)
+
   useEffect(() => { loadOrgs() }, [])
   useEffect(() => {
     if (selectedOrg) {
@@ -83,6 +90,7 @@ export default function OrgPage() {
         about_text: (selectedOrg as any).about_text || '',
       })
       loadConnectStatus()
+      loadOrgInviteLinks(selectedOrg.id)
     }
   }, [selectedOrg])
 
@@ -129,6 +137,51 @@ export default function OrgPage() {
       const data = await res.json()
       setConnectStatus(data)
     } catch {}
+  }
+
+  async function loadOrgInviteLinks(orgId: string) {
+    try {
+      const res = await fetch(`/api/admin/invite?org_id=${orgId}`)
+      const data = await res.json()
+      setOrgInviteLinks(data.links || [])
+    } catch {}
+  }
+
+  async function generateOrgInviteLink() {
+    if (!selectedOrg) return
+    setGeneratingOrgLink(true)
+    try {
+      const res = await fetch('/api/admin/invite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sport: orgInviteSport || null,
+          trial_days: orgInviteTrialDays,
+          max_uses: 50,
+          org_id: selectedOrg.id,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error)
+      await loadOrgInviteLinks(selectedOrg.id)
+      toastSuccess('Invite link generated!')
+    } catch (err: any) {
+      toastError(err.message || 'Failed to generate link')
+    } finally {
+      setGeneratingOrgLink(false)
+    }
+  }
+
+  async function deleteOrgInviteLink(id: string) {
+    await fetch(`/api/admin/invite?id=${id}`, { method: 'DELETE' })
+    setOrgInviteLinks(prev => prev.filter(l => l.id !== id))
+  }
+
+  function copyOrgInviteLink(link: any) {
+    const url = `${window.location.origin}/invite/${link.token}`
+    navigator.clipboard.writeText(url)
+    setCopiedOrgLinkId(link.id)
+    setTimeout(() => setCopiedOrgLinkId(null), 2000)
   }
 
   async function handleCreateOrg(e: React.FormEvent) {
@@ -513,6 +566,90 @@ export default function OrgPage() {
                         )}
                       </div>
                     ))}
+                  </div>
+
+                  {/* Org Invite Links */}
+                  <div className="glass-card p-5 mt-4">
+                    <div className="mt-8 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-white flex items-center gap-2">
+                          <Zap className="w-4 h-4 text-orange-400" />
+                          Shareable Invite Links
+                        </h3>
+                      </div>
+                      <p className="text-sm text-white/50">Generate a link athletes can use to self-signup and auto-join this org.</p>
+                      <div className="grid sm:grid-cols-3 gap-3">
+                        <div>
+                          <label className="block text-xs text-white/50 mb-1">Sport Focus</label>
+                          <select
+                            value={orgInviteSport}
+                            onChange={e => setOrgInviteSport(e.target.value)}
+                            className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:border-orange-400 focus:outline-none"
+                          >
+                            <option value="">Any sport</option>
+                            <option value="softball">Softball</option>
+                            <option value="basketball">Basketball</option>
+                            <option value="soccer">Soccer</option>
+                            <option value="speed">Speed &amp; Athleticism</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-xs text-white/50 mb-1">Trial Days</label>
+                          <select
+                            value={orgInviteTrialDays}
+                            onChange={e => setOrgInviteTrialDays(Number(e.target.value))}
+                            className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:border-orange-400 focus:outline-none"
+                          >
+                            <option value={7}>7 days</option>
+                            <option value={14}>14 days</option>
+                            <option value={30}>30 days</option>
+                          </select>
+                        </div>
+                        <div className="flex items-end">
+                          <button
+                            onClick={generateOrgInviteLink}
+                            disabled={generatingOrgLink}
+                            className="w-full px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg text-sm transition-colors disabled:opacity-50"
+                          >
+                            {generatingOrgLink ? 'Generating...' : 'Generate Link'}
+                          </button>
+                        </div>
+                      </div>
+
+                      {orgInviteLinks.length > 0 && (
+                        <div className="space-y-2 mt-2">
+                          {orgInviteLinks.map(link => {
+                            const url = typeof window !== 'undefined' ? `${window.location.origin}/invite/${link.token}` : `/invite/${link.token}`
+                            const expired = new Date(link.expires_at) < new Date()
+                            return (
+                              <div key={link.id} className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-xl">
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-xs font-mono text-white/70 truncate">{url}</p>
+                                  <p className="text-xs text-white/40 mt-0.5">
+                                    {link.sport ? `${link.sport} · ` : ''}{link.trial_days}d trial · {link.uses}/{link.max_uses} uses
+                                    {expired && <span className="text-red-400 ml-2">Expired</span>}
+                                  </p>
+                                </div>
+                                <button
+                                  onClick={() => copyOrgInviteLink(link)}
+                                  className="p-2 hover:bg-white/10 rounded-lg transition-colors text-white/60 hover:text-white flex-shrink-0"
+                                  title="Copy link"
+                                >
+                                  {copiedOrgLinkId === link.id ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+                                </button>
+                                <button
+                                  onClick={() => deleteOrgInviteLink(link.id)}
+                                  className="p-2 hover:bg-red-500/20 rounded-lg transition-colors text-white/40 hover:text-red-400 flex-shrink-0"
+                                  title="Delete link"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}

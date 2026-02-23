@@ -84,11 +84,16 @@ export default function BookingPage() {
   }, [selectedDate, selectedServiceId])
 
   const fetchServices = async () => {
-    const { data, error } = await supabase
+    let query = supabase
       .from('services')
       .select('*')
       .eq('is_active', true)
-      .order('name', { ascending: true })
+
+    if (orgId) {
+      query = query.or(`org_id.eq.${orgId},org_id.is.null`)
+    }
+
+    const { data, error } = await query.order('name', { ascending: true })
 
     if (data) {
       setServices(data)

@@ -19,11 +19,21 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    const { data: links } = await adminClient
+    const { searchParams } = new URL(request.url)
+    const orgId = searchParams.get('org_id')
+
+    let linksQuery = adminClient
       .from('invite_links')
       .select('*')
-      .eq('coach_id', user.id)
       .order('created_at', { ascending: false })
+
+    if (orgId) {
+      linksQuery = linksQuery.eq('org_id', orgId)
+    } else {
+      linksQuery = linksQuery.eq('coach_id', user.id)
+    }
+
+    const { data: links } = await linksQuery
 
     return NextResponse.json({ links: links || [] })
   } catch (error: any) {
@@ -49,7 +59,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { sport, trial_days = 30, max_uses = 1 } = body
+    const { sport, trial_days = 30, max_uses = 1, org_id } = body
 
     const { data: link, error } = await adminClient
       .from('invite_links')
@@ -58,6 +68,7 @@ export async function POST(request: NextRequest) {
         sport: sport || null,
         trial_days,
         max_uses,
+        org_id: org_id || null,
       })
       .select()
       .single()

@@ -60,3 +60,5 @@ CREATE POLICY "coaches_delete_own_invite_links"
 -- Allow public read of a specific token (for validation on invite page)
 -- We use service role in the API route instead of RLS for this, so no public policy needed.
 -- The admin client in the API route bypasses RLS entirely.
+
+ALTER TABLE invite_links ADD COLUMN IF NOT EXISTS org_id UUID REFERENCES organizations(id) ON DELETE SET NULL;
