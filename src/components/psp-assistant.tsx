@@ -1130,24 +1130,29 @@ export function PSPAssistant() {
   const { profile, isCoach, isAdmin } = useUserRole()
 
   // Detect ?from=guide — auto-open chat with tour offer + shimmer bubble
+  // Wait for profile to be resolved (not undefined) before firing so name is available
   useEffect(() => {
-    if (searchParams.get('from') === 'guide' && !hasGreeted) {
-      setFromGuide(true)
-      // Short delay so page has settled before popping open
-      const t = setTimeout(() => {
-        setIsOpen(true)
-        setHasGreeted(true)
-        const name = profile?.full_name?.split(' ')[0] || ''
-        const greeting = `${name ? `Yo ${name}!` : 'Yo!'} 👀 Dr. Prop here — looks like you came straight from the Guide! Smart move! 🧪🔥 This page has an interactive tour — want me to walk you through it LIVE? Spotlight, step-by-step, clicks and all! Real app, zero consequences! 🧹✨`
-        const msgs: any[] = [{ id: 'guide-greeting', type: 'assistant', content: greeting }]
-        if (pageHasTour(pathname)) {
-          msgs.push({ id: 'guide-tour-offer', type: 'assistant', content: `👇 Hit the button below to start Dr. Prop's spotlight tour for this page!`, tourPage: pathname })
-        }
-        setMessages(msgs)
-      }, 800)
-      return () => clearTimeout(t)
-    }
-  }, [searchParams]) // eslint-disable-line react-hooks/exhaustive-deps
+    if (searchParams.get('from') !== 'guide' || hasGreeted || profile === undefined) return
+
+    setFromGuide(true)
+
+    // Strip ?from=guide from URL so back-navigation / re-renders don't re-trigger
+    const cleanUrl = window.location.pathname + window.location.search.replace(/([?&])from=guide(&|$)/, (_, p, s) => s === '&' ? p : '').replace(/[?&]$/, '')
+    window.history.replaceState({}, '', cleanUrl)
+
+    const t = setTimeout(() => {
+      setIsOpen(true)
+      setHasGreeted(true)
+      const name = profile?.full_name?.split(' ')[0] || ''
+      const greeting = `${name ? `Yo ${name}!` : 'Yo!'} 👀 Dr. Prop here — looks like you came straight from the Guide! Smart move! 🧪🔥 This page has an interactive tour — want me to walk you through it LIVE? Spotlight, step-by-step, clicks and all! Real app, zero consequences! 🧹✨`
+      const msgs: any[] = [{ id: 'guide-greeting', type: 'assistant', content: greeting }]
+      if (pageHasTour(pathname)) {
+        msgs.push({ id: 'guide-tour-offer', type: 'assistant', content: `👇 Hit the button below to start Dr. Prop's spotlight tour for this page!`, tourPage: pathname })
+      }
+      setMessages(msgs)
+    }, 600)
+    return () => clearTimeout(t)
+  }, [searchParams, profile]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Determine role filter for KB matching
   const userRole: RoleFilter = isCoach || isAdmin ? 'coach' : profile ? 'athlete' : 'visitor'
@@ -1313,7 +1318,7 @@ export function PSPAssistant() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setIsOpen(false)}
+              onClick={() => { setIsOpen(false); setFromGuide(false) }}
               className="fixed inset-0 z-[101] bg-black/50 backdrop-blur-sm"
             />
 
@@ -1337,7 +1342,7 @@ export function PSPAssistant() {
                   </div>
                 </div>
                 <button
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => { setIsOpen(false); setFromGuide(false) }}
                   className="p-1 rounded-lg hover:bg-white/10 transition-colors text-white/70 hover:text-white"
                 >
                   <X className="w-5 h-5" />
@@ -1351,7 +1356,7 @@ export function PSPAssistant() {
                     <Link
                       key={i}
                       href={action.href}
-                      onClick={() => setIsOpen(false)}
+                      onClick={() => { setIsOpen(false); setFromGuide(false) }}
                       className="px-2.5 py-1 rounded-full text-xs font-medium bg-white/10 hover:bg-orange/20 text-white/80 hover:text-orange transition-colors border border-white/10 hover:border-orange/50"
                     >
                       {action.label}
@@ -1393,7 +1398,7 @@ export function PSPAssistant() {
                               <Link
                                 key={i}
                                 href={action.href}
-                                onClick={() => setIsOpen(false)}
+                                onClick={() => { setIsOpen(false); setFromGuide(false) }}
                                 className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-orange/20 hover:bg-orange/30 text-orange hover:text-white transition-all border border-orange/20"
                               >
                                 {action.label}
