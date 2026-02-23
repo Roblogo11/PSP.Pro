@@ -1269,7 +1269,7 @@ export function PSPAssistant() {
       {/* Floating Chat Button */}
       <motion.button
         onClick={handleOpen}
-        className={`fixed bottom-[88px] sm:bottom-6 right-4 sm:right-6 z-[100] flex items-center gap-2 px-5 py-3.5 rounded-full bg-gradient-to-r from-orange via-orange-500 to-orange-600 text-white text-sm font-bold shadow-2xl hover:shadow-orange/50 transition-all ring-4 ring-orange/20 hover:ring-orange/40 overflow-hidden${fromGuide ? ' guide-shimmer' : ''}`}
+        className={`fixed bottom-[112px] sm:bottom-6 right-4 sm:right-6 z-[100] flex items-center gap-2 px-5 py-3.5 rounded-full bg-gradient-to-r from-orange via-orange-500 to-orange-600 text-white text-sm font-bold shadow-2xl hover:shadow-orange/50 transition-all ring-4 ring-orange/20 hover:ring-orange/40 overflow-hidden${fromGuide ? ' guide-shimmer' : ''}`}
         style={{
           animation: fromGuide
             ? 'pulse-glow-intense 1.2s ease-in-out infinite'

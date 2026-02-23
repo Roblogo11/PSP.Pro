@@ -140,7 +140,7 @@ export function FunnelNav({ className = '', desktopOnly = false }: FunnelNavProp
               </div>
 
               {/* Progress Bar - Center */}
-              <div className="flex items-center justify-center gap-2 flex-1">
+              <div className="flex items-center justify-center gap-1 flex-1 min-w-0 overflow-hidden">
                 {STEP_LABELS.map((label, index) => {
                   const StepIcon = STEP_ICONS[index]
                   const funnelIndex = STEP_TO_FUNNEL_INDEX[index]
@@ -232,8 +232,8 @@ export function FunnelNav({ className = '', desktopOnly = false }: FunnelNavProp
                       <div className="w-px h-3 bg-gray-600/50" />
                     </>
                   )}
-                  <span className="text-xs font-semibold text-white">
-                    Step {currentIndex + 1} <span className="text-gray-400 font-normal">of 6</span>
+                  <span className="text-xs font-semibold text-slate-900 dark:text-white">
+                    Step {currentIndex + 1} <span className="text-gray-500 dark:text-gray-400 font-normal">of 6</span>
                   </span>
                 </div>
                 {/* Right: Next button */}
