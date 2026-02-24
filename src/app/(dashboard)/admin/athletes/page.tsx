@@ -1001,25 +1001,6 @@ export default function AthletesManagementPage() {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Free Trial Length</label>
-                <div className="grid grid-cols-3 gap-2">
-                  {[7, 14, 30].map(days => (
-                    <button
-                      key={days}
-                      type="button"
-                      onClick={() => setInviteTrialDays(days)}
-                      className={`py-2.5 rounded-xl text-sm font-semibold border transition-all ${
-                        inviteTrialDays === days
-                          ? 'bg-orange/20 border-orange/50 text-orange'
-                          : 'bg-cyan-900/20 border-cyan-200/30 text-slate-900 dark:text-white hover:border-orange/30'
-                      }`}
-                    >
-                      {days} days
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
 
             <button
@@ -1081,9 +1062,6 @@ export default function AthletesManagementPage() {
                                 Any sport
                               </span>
                             )}
-                            <span className="text-xs text-cyan-700 dark:text-white/50">
-                              {link.trial_days}d trial
-                            </span>
                             <span className={`text-xs font-semibold ${isExpired || isExhausted ? 'text-red-400' : 'text-green-400'}`}>
                               {isExpired ? 'Expired' : isExhausted ? 'Used' : `${link.uses}/${link.max_uses} uses`}
                             </span>

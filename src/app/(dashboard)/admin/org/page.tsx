@@ -593,18 +593,6 @@ export default function OrgPage() {
                             <option value="speed">Speed &amp; Athleticism</option>
                           </select>
                         </div>
-                        <div>
-                          <label className="block text-xs text-white/50 mb-1">Trial Days</label>
-                          <select
-                            value={orgInviteTrialDays}
-                            onChange={e => setOrgInviteTrialDays(Number(e.target.value))}
-                            className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:border-orange-400 focus:outline-none"
-                          >
-                            <option value={7}>7 days</option>
-                            <option value={14}>14 days</option>
-                            <option value={30}>30 days</option>
-                          </select>
-                        </div>
                         <div className="flex items-end">
                           <button
                             onClick={generateOrgInviteLink}
@@ -626,7 +614,7 @@ export default function OrgPage() {
                                 <div className="flex-1 min-w-0">
                                   <p className="text-xs font-mono text-white/70 truncate">{url}</p>
                                   <p className="text-xs text-white/40 mt-0.5">
-                                    {link.sport ? `${link.sport} · ` : ''}{link.trial_days}d trial · {link.uses}/{link.max_uses} uses
+                                    {link.sport ? `${link.sport} · ` : ''}{link.uses}/{link.max_uses} uses
                                     {expired && <span className="text-red-400 ml-2">Expired</span>}
                                   </p>
                                 </div>

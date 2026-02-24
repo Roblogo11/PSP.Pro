@@ -129,9 +129,6 @@ export default function InvitePage() {
           {sport && (
             <p className="text-white/40 text-sm mt-1 capitalize">Sport: {sport}</p>
           )}
-          <p className="text-green-400 text-sm mt-1">
-            {trialDays}-day free trial included
-          </p>
         </div>
 
         {/* Form */}
