@@ -317,7 +317,7 @@ export default function AdminCoursesPage() {
           <button onClick={openNewForm} className="btn-primary">Create Course</button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div data-tour="admin-courses-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {courses.map(course => (
             <div key={course.id} className="glass-card p-5 rounded-2xl border border-cyan-200/40 hover:border-cyan/40 transition-all">
               {/* Thumbnail */}

@@ -113,7 +113,7 @@ export default function AdminImportsPage() {
       </div>
 
       {/* Upload Form */}
-      <div className="glass-card p-6 mb-8">
+      <div data-tour="admin-imports-form" className="glass-card p-6 mb-8">
         <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Import Device Data</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">

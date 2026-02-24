@@ -398,7 +398,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div data-tour="analytics-stats" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
           title="Total Revenue"
           value={analytics.totalRevenue.toFixed(2)}
@@ -427,7 +427,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-8">
+      <div data-tour="analytics-charts" className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-8">
         {/* Monthly Revenue Chart */}
         <div className="glass-card p-4 md:p-6">
           <div className="flex items-center gap-3 mb-4 md:mb-6">

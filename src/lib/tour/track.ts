@@ -43,8 +43,13 @@ export async function trackTourData(tableName: string, recordId: string): Promis
 
 /** Pages that have a defined tour. Used to show "Start Tour" prompt. */
 export const TOUR_PAGES = [
+  // Athlete pages
   '/locker', '/booking', '/sessions', '/progress', '/drills', '/settings',
   '/achievements', '/leaderboards', '/messages', '/courses', '/questionnaires', '/video-analysis', '/progress-report',
+  // Coach / Admin pages
+  '/admin', '/admin/bookings', '/admin/athletes', '/admin/drills', '/admin/services',
+  '/admin/analytics', '/admin/courses', '/admin/questionnaires', '/admin/promos',
+  '/admin/org', '/admin/media', '/admin/imports',
 ]
 
 /** Check if the current page has a tour available */

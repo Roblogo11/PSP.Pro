@@ -73,7 +73,6 @@ export default function OrgPage() {
   // Org invite links
   const [orgInviteLinks, setOrgInviteLinks] = useState<any[]>([])
   const [orgInviteSport, setOrgInviteSport] = useState('')
-  const [orgInviteTrialDays, setOrgInviteTrialDays] = useState(30)
   const [generatingOrgLink, setGeneratingOrgLink] = useState(false)
   const [copiedOrgLinkId, setCopiedOrgLinkId] = useState<string | null>(null)
 
@@ -156,7 +155,6 @@ export default function OrgPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sport: orgInviteSport || null,
-          trial_days: orgInviteTrialDays,
           max_uses: 50,
           org_id: selectedOrg.id,
         }),
@@ -404,7 +402,7 @@ export default function OrgPage() {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div data-tour="admin-org-layout" className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Org Sidebar */}
           <div className="space-y-2">
             {orgs.map(org => (

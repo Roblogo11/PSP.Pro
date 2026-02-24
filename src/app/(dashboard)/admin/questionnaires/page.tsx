@@ -230,7 +230,7 @@ export default function AdminQuestionnairesPage() {
           <button onClick={openNewForm} className="btn-primary">Create Quiz</button>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div data-tour="admin-quizzes-list" className="space-y-4">
           {questionnaires.map(q => (
             <div key={q.id} className="glass-card p-5 rounded-2xl border border-cyan-200/40 flex items-center justify-between gap-4 flex-wrap">
               <div className="flex-1 min-w-0">

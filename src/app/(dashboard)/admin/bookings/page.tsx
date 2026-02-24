@@ -581,7 +581,7 @@ export default function AdminBookingsPage() {
       </div>
 
       {/* Filters */}
-      <div className="mb-6 flex flex-wrap gap-3">
+      <div data-tour="bookings-filters" className="mb-6 flex flex-wrap gap-3">
         {[
           { value: 'all', label: 'All Bookings' },
           { value: 'pending', label: 'Pending' },
@@ -603,7 +603,7 @@ export default function AdminBookingsPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+      <div data-tour="bookings-stats" className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
         <div className="glass-card p-4">
           <p className="text-sm text-cyan-800 dark:text-white mb-1">Total Bookings</p>
           <p className="text-2xl font-bold text-slate-900 dark:text-white">{bookings.length}</p>
@@ -638,7 +638,7 @@ export default function AdminBookingsPage() {
 
       {/* Calendar View */}
       {viewMode === 'calendar' && (
-        <div className="mb-6 flex flex-col lg:flex-row gap-4">
+        <div data-tour="bookings-calendar" className="mb-6 flex flex-col lg:flex-row gap-4">
           {/* Active Bookings List (left on desktop, top on mobile) */}
           <div className="lg:flex-[2] min-w-0">
             <div className="command-panel p-4 md:p-6 lg:h-full lg:max-h-[calc(100vh-280px)] lg:overflow-y-auto">

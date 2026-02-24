@@ -162,7 +162,7 @@ export default function ContentHub() {
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex gap-1 bg-gray-800 p-1 rounded-lg w-fit">
+        <div data-tour="admin-media-tabs" className="flex gap-1 bg-gray-800 p-1 rounded-lg w-fit">
           <button
             onClick={() => setActiveTab('blog')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-md font-medium text-sm transition-all ${

@@ -558,7 +558,7 @@ export default function ServicesManagerPage() {
       )}
 
       {/* Services List */}
-      <div className="space-y-4">
+      <div data-tour="services-list" className="space-y-4">
         {services.map((service) => (
           <div
             key={service.id}

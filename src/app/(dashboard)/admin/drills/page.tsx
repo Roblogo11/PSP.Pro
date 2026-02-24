@@ -487,7 +487,7 @@ export default function DrillsManagementPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div data-tour="admin-drills-stats" className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <div className="command-panel-active">
           <div className="flex items-center gap-3 mb-2">
             <Dumbbell className="w-6 h-6 text-orange" />
@@ -523,7 +523,7 @@ export default function DrillsManagementPage() {
       </div>
 
       {/* Search and Filters */}
-      <div className="command-panel mb-6">
+      <div data-tour="admin-drills-filter" className="command-panel mb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Search */}
           <div className="relative">
@@ -573,7 +573,7 @@ export default function DrillsManagementPage() {
       </div>
 
       {/* Drills Grid */}
-      <div className="space-y-4">
+      <div data-tour="admin-drills-grid" className="space-y-4">
         {filteredDrills.map((drill) => (
           <div key={drill.id} className="command-panel hover:border-orange/30 transition-all group">
             <div className="flex items-start justify-between gap-4">

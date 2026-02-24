@@ -386,7 +386,7 @@ export default function AdminDashboard() {
       {/* Quick Actions */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4">
+        <div data-tour="admin-actions" className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4">
           {quickActions.map((action) => {
             const Icon = action.icon
             return (
@@ -410,7 +410,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-8">
+      <div data-tour="admin-stats" className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-8">
         <div className="command-panel-active">
           <div className="flex items-center justify-between mb-2">
             <Users className="w-6 h-6 md:w-8 md:h-8 text-orange" />
@@ -455,7 +455,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Upcoming Sessions Widget */}
-      <div className="mb-8">
+      <div data-tour="admin-sessions" className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Upcoming Sessions</h2>
           <Link
@@ -545,7 +545,7 @@ export default function AdminDashboard() {
       {/* Admin Sections */}
       <div>
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Platform Management</h2>
-        <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+        <div data-tour="admin-management" className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           {adminSections.map((section) => {
             const Icon = section.icon
             return (

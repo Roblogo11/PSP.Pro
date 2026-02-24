@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   ChevronRight, ChevronLeft, Zap, SkipForward,
   LayoutDashboard, Calendar, TrendingUp, Dumbbell, Settings, Clock,
+  Shield, Users, DollarSign, BarChart3, BookOpen, ClipboardCheck, Tag,
+  Building2, Newspaper, Upload,
 } from 'lucide-react'
 import { isTourActive, markPageVisited } from '@/lib/tour/track'
 import { SpotlightOverlay } from '@/components/spotlight-overlay'
@@ -440,6 +442,328 @@ const PAGE_TOURS: Record<string, PageTour> = {
       {
         title: 'Progress Report Tour Done! 🎊',
         message: "Your progress is documented and REAL! Share this with your parents, your team, your school — this is the receipts for all your hard work. Keep stacking those numbers!",
+        action: 'Finish Tour',
+      },
+    ],
+  },
+
+  // ─── Coach / Admin Tours ─────────────────────────────────────
+
+  '/admin': {
+    pageTitle: 'Admin Dashboard',
+    icon: Shield,
+    color: 'text-red-400',
+    steps: [
+      {
+        title: 'Welcome to Command Central! 🎯',
+        message: "THIS is your HQ, Coach! Everything you need to run your business lives right here. Let me show you around!",
+      },
+      {
+        title: 'Quick Actions ⚡',
+        message: "These 4 buttons are your power moves — Log a Session, Create an Athlete, Add a Service, or Generate an Invite Link. One tap and you're rolling!",
+        highlight: 'admin-actions',
+      },
+      {
+        title: 'Your Stats Dashboard 📊',
+        message: "Total athletes, active sessions, revenue, booking trends — your business health at a glance. These update in real-time as you work!",
+        highlight: 'admin-stats',
+      },
+      {
+        title: "Today's Sessions 📋",
+        message: "See what's on deck! Upcoming sessions with athlete names, times, and status. Tap any session to log performance metrics after training.",
+        highlight: 'admin-sessions',
+      },
+      {
+        title: 'Management Hub 🛠️',
+        message: "Quick links to Athletes, Bookings, Drills, Services, and more. Think of this as your shortcut panel to every tool you need!",
+        highlight: 'admin-management',
+      },
+      {
+        title: 'Admin Home Tour Done! 🔥',
+        message: "You know your dashboard now, Coach! Next up — let's check out your Bookings Calendar where you manage all sessions!",
+        navigateTo: '/admin/bookings',
+        action: 'View Bookings',
+      },
+    ],
+  },
+
+  '/admin/bookings': {
+    pageTitle: 'Bookings Calendar',
+    icon: Calendar,
+    color: 'text-blue-400',
+    steps: [
+      {
+        title: 'Your Booking Command Center 📅',
+        message: "Every session request, confirmation, and cancellation flows through here. Calendar view + list view — you pick how you wanna work!",
+      },
+      {
+        title: 'Filter Controls 🔍',
+        message: "Filter by status (Pending, Confirmed, Completed), by athlete, or by date range. Pending bookings need your attention — confirm or decline!",
+        highlight: 'bookings-filters',
+      },
+      {
+        title: 'Booking Stats 📊',
+        message: "Quick numbers — total bookings, pending requests, today's sessions, and revenue. Watch these grow as your business scales!",
+        highlight: 'bookings-stats',
+      },
+      {
+        title: 'The Calendar View 📆',
+        message: "Your visual schedule! Each booking shows athlete name, service type, and status color-coded. Tap any booking to confirm, reschedule, or log metrics after the session!",
+        highlight: 'bookings-calendar',
+      },
+      {
+        title: 'Bookings Tour Done! ✅',
+        message: "You're a booking pro now! Next stop — your Athletes roster. That's where the REAL coaching data lives!",
+        navigateTo: '/admin/athletes',
+        action: 'Manage Athletes',
+      },
+    ],
+  },
+
+  '/admin/athletes': {
+    pageTitle: 'Manage Athletes',
+    icon: Users,
+    color: 'text-cyan-400',
+    steps: [
+      {
+        title: 'Your Athlete Roster 🏅',
+        message: "Every athlete you coach is right here! Full profiles, performance data, drill assignments — your complete athlete management system.",
+      },
+      {
+        title: 'Roster Stats 📊',
+        message: "Total athletes, active this month, new signups, and parent accounts. These cards give you the pulse of your training program at a glance!",
+        highlight: 'athletes-stats',
+      },
+      {
+        title: 'The Athlete Grid 👥',
+        message: "Each card shows the athlete's name, sport, membership status, and last activity. Tap any card to open their full profile — metrics, sessions, drill progress, everything!",
+        highlight: 'athletes-grid',
+      },
+      {
+        title: 'Athletes Tour Done! 💪',
+        message: "You know your roster! Next — let's check out the Drills Manager where you create and assign training content!",
+        navigateTo: '/admin/drills',
+        action: 'Manage Drills',
+      },
+    ],
+  },
+
+  '/admin/drills': {
+    pageTitle: 'Drill Manager',
+    icon: Dumbbell,
+    color: 'text-purple-400',
+    steps: [
+      {
+        title: 'Your Drill Library 🎥',
+        message: "Create video drills, organize by category and difficulty, then assign them to athletes. This is how you coach between sessions!",
+      },
+      {
+        title: 'Drill Stats 📊',
+        message: "Total drills created, categories covered, and athlete completion rates. Track what drills are actually getting DONE!",
+        highlight: 'admin-drills-stats',
+      },
+      {
+        title: 'Filter & Search 🔍',
+        message: "Filter by category, difficulty, or search by name. Find the right drill in seconds, then assign it to an athlete or group!",
+        highlight: 'admin-drills-filter',
+      },
+      {
+        title: 'The Drill Grid 📋',
+        message: "Each card shows video thumbnail, difficulty badge, and assignment count. Tap to edit, assign, or preview. Create new drills with the + button up top!",
+        highlight: 'admin-drills-grid',
+      },
+      {
+        title: 'Drills Tour Done! 🎬',
+        message: "Content is KING, Coach! Next up — Services. That's where you set up your training packages and pricing!",
+        navigateTo: '/admin/services',
+        action: 'Manage Services',
+      },
+    ],
+  },
+
+  '/admin/services': {
+    pageTitle: 'Lesson Builder',
+    icon: DollarSign,
+    color: 'text-green-400',
+    steps: [
+      {
+        title: 'Your Service Catalog 💰',
+        message: "This is where you build your offerings! 1-on-1 sessions, group training, specialty clinics — set prices, durations, and descriptions for everything you offer.",
+      },
+      {
+        title: 'Your Services 📋',
+        message: "Each service card shows name, price, duration, and active status. Athletes see these when booking! Tap to edit pricing, add descriptions, or toggle availability.",
+        highlight: 'services-list',
+      },
+      {
+        title: 'Services Tour Done! 🏷️',
+        message: "Your offerings are SET! Next — Analytics. See how your business is actually performing with real revenue and booking data!",
+        navigateTo: '/admin/analytics',
+        action: 'View Analytics',
+      },
+    ],
+  },
+
+  '/admin/analytics': {
+    pageTitle: 'Business Analytics',
+    icon: BarChart3,
+    color: 'text-green-400',
+    steps: [
+      {
+        title: 'Your Business Intelligence 📈',
+        message: "Revenue, bookings, athlete growth, session trends — everything you need to make smart decisions about your coaching business!",
+      },
+      {
+        title: 'Key Metrics 📊',
+        message: "Revenue totals, booking counts, average session value, and growth trends. These are YOUR business KPIs — watch them climb!",
+        highlight: 'analytics-stats',
+      },
+      {
+        title: 'Charts & Trends 📉',
+        message: "Visual breakdowns — revenue over time, bookings by service type, athlete activity heatmaps. Use these to spot your busiest days and best-selling services!",
+        highlight: 'analytics-charts',
+      },
+      {
+        title: 'Analytics Tour Done! 🚀',
+        message: "Data-driven coaching is NEXT LEVEL! Next — Courses. Build structured video courses your athletes can learn from!",
+        navigateTo: '/admin/courses',
+        action: 'Manage Courses',
+      },
+    ],
+  },
+
+  '/admin/courses': {
+    pageTitle: 'Course Builder',
+    icon: BookOpen,
+    color: 'text-pink-400',
+    steps: [
+      {
+        title: 'Your Course Library 📚',
+        message: "Build full video courses with multiple lessons! Set pricing, track enrollment, and give athletes structured learning paths they can follow at their own pace.",
+      },
+      {
+        title: 'Course Cards 🎓',
+        message: "Each card shows title, lesson count, enrollment numbers, and pricing. Tap to edit, manage lessons, or view who's enrolled. Hit New Course to build one!",
+        highlight: 'admin-courses-grid',
+      },
+      {
+        title: 'Courses Tour Done! 🎬',
+        message: "Courses = passive income + athlete development! Next up — Pop Quizzes. Test your athletes' knowledge between sessions!",
+        navigateTo: '/admin/questionnaires',
+        action: 'Manage Quizzes',
+      },
+    ],
+  },
+
+  '/admin/questionnaires': {
+    pageTitle: 'Pop Quiz Manager',
+    icon: ClipboardCheck,
+    color: 'text-emerald-400',
+    steps: [
+      {
+        title: 'Pop Quiz Builder 📝',
+        message: "Create true/false quizzes to test your athletes' game IQ! Assign them individually or to groups, then review scores to see who's paying attention.",
+      },
+      {
+        title: 'Your Quizzes 📋',
+        message: "Each row shows title, question count, assignments, and published status. Assign to athletes, view responses, or edit questions. Create new quizzes with the + button!",
+        highlight: 'admin-quizzes-list',
+      },
+      {
+        title: 'Quizzes Tour Done! ✅',
+        message: "Mental reps matter as much as physical ones! Next — Promo Codes. Create discounts to grow your client base!",
+        navigateTo: '/admin/promos',
+        action: 'Manage Promos',
+      },
+    ],
+  },
+
+  '/admin/promos': {
+    pageTitle: 'Promo Codes',
+    icon: Tag,
+    color: 'text-orange',
+    steps: [
+      {
+        title: 'Promo Code Manager 🏷️',
+        message: "Create discount codes for marketing campaigns, referral rewards, or seasonal deals! Percentage off or flat amount — you control the terms.",
+      },
+      {
+        title: 'Create & Manage 📋',
+        message: "Hit New Code to create a promo. Set the discount type, amount, max uses, and expiration. Athletes enter codes at checkout — the discount applies automatically!",
+        highlight: 'admin-promos-form',
+      },
+      {
+        title: 'Promos Tour Done! 💸',
+        message: "Smart promotions fill your schedule! Next — Organizations. Set up your coaching academy brand and team!",
+        navigateTo: '/admin/org',
+        action: 'View Orgs',
+      },
+    ],
+  },
+
+  '/admin/org': {
+    pageTitle: 'Organizations',
+    icon: Building2,
+    color: 'text-indigo-400',
+    steps: [
+      {
+        title: 'Your Organization Hub 🏢',
+        message: "Build your coaching academy brand! Custom branding, team members, Stripe Connect payouts, and invite links — all managed here.",
+      },
+      {
+        title: 'Org Management 📋',
+        message: "Select an org from the sidebar, then use tabs to manage Overview, Members, Branding, Payouts, and Settings. Everything for running a multi-coach operation!",
+        highlight: 'admin-org-layout',
+      },
+      {
+        title: 'Org Tour Done! 🏗️',
+        message: "Your brand, your team, your rules! Next — Content Hub. Manage blog posts and media for your public site!",
+        navigateTo: '/admin/media',
+        action: 'Content Hub',
+      },
+    ],
+  },
+
+  '/admin/media': {
+    pageTitle: 'Content Hub',
+    icon: Newspaper,
+    color: 'text-pink-400',
+    steps: [
+      {
+        title: 'Your Content Hub 📰',
+        message: "Two sections in one — Blog Posts and Media Gallery. Keep your public site fresh with training tips, athlete spotlights, and facility photos!",
+      },
+      {
+        title: 'Blog & Media Tabs 📑',
+        message: "Switch between Blog Posts and Media Gallery with these tabs. Blog posts drive SEO and engagement. Media Gallery stores images and videos for your site!",
+        highlight: 'admin-media-tabs',
+      },
+      {
+        title: 'Content Tour Done! 📝',
+        message: "Content marketing is how you get found! Last stop — Data Import. Bring in performance data from your training devices!",
+        navigateTo: '/admin/imports',
+        action: 'Data Import',
+      },
+    ],
+  },
+
+  '/admin/imports': {
+    pageTitle: 'Data Import',
+    icon: Upload,
+    color: 'text-purple-400',
+    steps: [
+      {
+        title: 'Device Data Import 📤',
+        message: "Import CSV data from Rapsodo, Blast Motion, Pocket Radar, and HitTrax! Bulk upload performance metrics straight into your athletes' profiles.",
+      },
+      {
+        title: 'Upload Form 📋',
+        message: "Select an athlete, choose the device type, upload the CSV file, and hit Import. The system parses the data and maps it to the right metrics automatically!",
+        highlight: 'admin-imports-form',
+      },
+      {
+        title: "You've Seen It ALL! 🎉",
+        message: "DR. PROP SAYS: YOU ARE A CERTIFIED PSP PRO COACH! 🏆 You've toured every tool in your arsenal. Now go build your empire — create services, add athletes, and start coaching!",
         action: 'Finish Tour',
       },
     ],
