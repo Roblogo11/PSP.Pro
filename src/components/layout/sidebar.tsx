@@ -32,6 +32,7 @@ import {
   Upload,
   MoreHorizontal,
   Compass,
+  Lock,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { getLocalDateString } from '@/lib/utils/local-date'
@@ -49,21 +50,22 @@ interface NavItem {
   icon: React.ElementType
   color?: string
   badgeKey?: string
+  memberOnly?: boolean
 }
 
 const athleteNavItems: NavItem[] = [
   { label: 'Dashboard', mobileLabel: 'Home', href: '/locker', icon: LayoutDashboard, color: 'text-orange-400' },
   { label: 'Messages', mobileLabel: 'Chat', href: '/messages', icon: MessageCircle, color: 'text-blue-400', badgeKey: 'unreadMessages' },
-  { label: 'Drills', subLabel: '(members only)', mobileLabel: 'Drills', href: '/drills', icon: Dumbbell, color: 'text-cyan-400' },
-  { label: 'Progress', mobileLabel: 'Progress', href: '/progress', icon: TrendingUp, color: 'text-green-400' },
-  { label: 'Report', mobileLabel: 'Report', href: '/progress-report', icon: FileBarChart, color: 'text-indigo-400' },
-  { label: 'Achievements', mobileLabel: 'Awards', href: '/achievements', icon: Trophy, color: 'text-yellow-400' },
+  { label: 'Drills', mobileLabel: 'Drills', href: '/drills', icon: Dumbbell, color: 'text-cyan-400', memberOnly: true },
+  { label: 'Progress', mobileLabel: 'Progress', href: '/progress', icon: TrendingUp, color: 'text-green-400', memberOnly: true },
+  { label: 'Report', mobileLabel: 'Report', href: '/progress-report', icon: FileBarChart, color: 'text-indigo-400', memberOnly: true },
+  { label: 'Achievements', mobileLabel: 'Awards', href: '/achievements', icon: Trophy, color: 'text-yellow-400', memberOnly: true },
   { label: 'Leaderboards', mobileLabel: 'Ranks', href: '/leaderboards', icon: Medal, color: 'text-amber-400' },
   { label: 'My Lessons', mobileLabel: 'Lessons', href: '/sessions', icon: Calendar, color: 'text-purple-400', badgeKey: 'upcomingSessions' },
   { label: 'Book Lessons', mobileLabel: 'Book', href: '/booking', icon: Clock, color: 'text-blue-400', badgeKey: 'sessionsRemaining' },
-  { label: 'Courses', mobileLabel: 'Courses', href: '/courses', icon: BookOpen, color: 'text-pink-400' },
-  { label: 'Pop Quiz', mobileLabel: 'Quiz', href: '/questionnaires', icon: ClipboardCheck, color: 'text-emerald-400' },
-  { label: 'Video Analysis', mobileLabel: 'Video', href: '/video-analysis', icon: Video, color: 'text-red-400' },
+  { label: 'Courses', mobileLabel: 'Courses', href: '/courses', icon: BookOpen, color: 'text-pink-400', memberOnly: true },
+  { label: 'Pop Quiz', mobileLabel: 'Quiz', href: '/questionnaires', icon: ClipboardCheck, color: 'text-emerald-400', memberOnly: true },
+  { label: 'Video Analysis', mobileLabel: 'Video', href: '/video-analysis', icon: Video, color: 'text-red-400', memberOnly: true },
   { label: 'Guide', mobileLabel: 'Guide', href: '/guide', icon: Compass, color: 'text-teal-400' },
   { label: 'Settings', mobileLabel: 'Settings', href: '/settings', icon: Settings, color: 'text-cyan-600' },
 ]
@@ -90,8 +92,9 @@ export function Sidebar() {
   const { profile, isCoach, isAdmin, isImpersonating, impersonatedUserId, loading } = useUserRole()
 
 
-  // Badge counts
+  // Badge counts + membership check
   const [badges, setBadges] = useState<Record<string, number>>({})
+  const [hasMembership, setHasMembership] = useState(true) // default true to avoid flash
 
   useEffect(() => {
     if (!profile?.id) return
@@ -153,6 +156,9 @@ export function Sidebar() {
           if (remaining > 0) {
             counts.sessionsRemaining = remaining
           }
+          setHasMembership(true)
+        } else {
+          setHasMembership(false)
         }
       }
 
@@ -259,17 +265,19 @@ export function Sidebar() {
           {athleteNavItems.map((item) => {
             const isActive = pathname === item.href
             const Icon = item.icon
+            const isLocked = item.memberOnly && !hasMembership && !isCoach && !isAdmin
 
             return (
-              <Link key={item.href} href={item.href}>
+              <Link key={item.href} href={isLocked ? '/membership-required' : item.href}>
                 <motion.div
-                  whileHover={{ x: 4 }}
+                  whileHover={{ x: isLocked ? 0 : 4 }}
                   whileTap={{ scale: 0.98 }}
                   className={`
                     group flex items-center gap-3 px-4 py-3 rounded-xl relative
                     transition-all duration-200 cursor-pointer
-                    ${
-                      isActive
+                    ${isLocked
+                      ? 'opacity-40 cursor-not-allowed'
+                      : isActive
                         ? 'bg-orange/20 border border-orange/50 text-slate-900 dark:text-white shadow-glow-orange'
                         : 'text-slate-700 dark:text-white hover:bg-cyan-50/50 dark:hover:text-white hover:text-slate-900'
                     }
@@ -286,11 +294,11 @@ export function Sidebar() {
                         className="font-medium whitespace-nowrap overflow-hidden"
                       >
                         {item.label}
-                        {item.subLabel && <span className="text-[10px] ml-1 opacity-60 font-normal">{item.subLabel}</span>}
+                        {isLocked && <Lock className="w-3 h-3 ml-1.5 inline opacity-60" />}
                       </motion.span>
                     )}
                   </AnimatePresence>
-                  {renderBadge(item, collapsed)}
+                  {!isLocked && renderBadge(item, collapsed)}
                 </motion.div>
               </Link>
             )
@@ -419,6 +427,7 @@ export function Sidebar() {
         badges={badges}
         isCoach={isCoach}
         isAdmin={isAdmin}
+        hasMembership={hasMembership}
         handleLogout={handleLogout}
       />
 
@@ -448,12 +457,14 @@ function MobileBottomNav({
   badges,
   isCoach,
   isAdmin,
+  hasMembership,
   handleLogout,
 }: {
   pathname: string
   badges: Record<string, number>
   isCoach: boolean
   isAdmin: boolean
+  hasMembership: boolean
   handleLogout: () => void
 }) {
   const [moreSheetOpen, setMoreSheetOpen] = useState(false)
@@ -603,29 +614,35 @@ function MobileBottomNav({
                   {remainingAthleteItems.map((item) => {
                     const Icon = item.icon
                     const isActive = pathname === item.href
+                    const isLocked = item.memberOnly && !hasMembership && !isCoach && !isAdmin
                     return (
-                      <Link key={item.href} href={item.href} onClick={() => setMoreSheetOpen(false)}>
+                      <Link key={item.href} href={isLocked ? '/membership-required' : item.href} onClick={() => setMoreSheetOpen(false)}>
                         <div className={`
                           flex flex-col items-center gap-1.5 p-3 rounded-2xl
                           transition-colors relative
-                          ${isActive
-                            ? 'bg-orange/10 dark:bg-orange/20'
-                            : 'active:bg-slate-100 dark:active:bg-white/5'
+                          ${isLocked
+                            ? 'opacity-40'
+                            : isActive
+                              ? 'bg-orange/10 dark:bg-orange/20'
+                              : 'active:bg-slate-100 dark:active:bg-white/5'
                           }
                         `}>
                           <div className={`
                             w-11 h-11 rounded-xl flex items-center justify-center
-                            ${isActive
+                            ${isActive && !isLocked
                               ? 'bg-orange/20 dark:bg-orange/30'
                               : 'bg-slate-100 dark:bg-white/10'
                             }
                           `}>
-                            <Icon className={`w-5 h-5 ${isActive ? 'text-orange' : (item.color || 'text-slate-600 dark:text-slate-300')}`} />
+                            {isLocked
+                              ? <Lock className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                              : <Icon className={`w-5 h-5 ${isActive ? 'text-orange' : (item.color || 'text-slate-600 dark:text-slate-300')}`} />
+                            }
                           </div>
-                          <span className={`text-[11px] font-medium text-center leading-tight ${isActive ? 'text-orange' : 'text-slate-700 dark:text-slate-300'}`}>
+                          <span className={`text-[11px] font-medium text-center leading-tight ${isLocked ? 'text-slate-400 dark:text-slate-500' : isActive ? 'text-orange' : 'text-slate-700 dark:text-slate-300'}`}>
                             {item.mobileLabel}
                           </span>
-                          {item.badgeKey && badges[item.badgeKey] ? (
+                          {!isLocked && item.badgeKey && badges[item.badgeKey] ? (
                             <span className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center text-[10px] font-bold rounded-full bg-orange text-white">
                               {badges[item.badgeKey]}
                             </span>
