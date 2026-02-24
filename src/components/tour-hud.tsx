@@ -7,7 +7,7 @@ import {
   ChevronRight, ChevronLeft, Zap, SkipForward,
   LayoutDashboard, Calendar, TrendingUp, Dumbbell, Settings, Clock,
   Shield, Users, DollarSign, BarChart3, BookOpen, ClipboardCheck, Tag,
-  Building2, Newspaper, Upload,
+  Building2, Newspaper, Upload, Compass, Image, FileText,
 } from 'lucide-react'
 import { isTourActive, markPageVisited } from '@/lib/tour/track'
 import { SpotlightOverlay } from '@/components/spotlight-overlay'
@@ -765,6 +765,122 @@ const PAGE_TOURS: Record<string, PageTour> = {
         title: "You've Seen It ALL! 🎉",
         message: "DR. PROP SAYS: YOU ARE A CERTIFIED PSP PRO COACH! 🏆 You've toured every tool in your arsenal. Now go build your empire — create services, add athletes, and start coaching!",
         action: 'Finish Tour',
+      },
+    ],
+  },
+
+  '/admin/availability': {
+    pageTitle: 'Availability',
+    icon: Calendar,
+    color: 'text-blue-400',
+    steps: [
+      {
+        title: 'Your Schedule Command Center 📅',
+        message: "This is where you control WHEN athletes can book you! Create time slots, set recurring schedules, and manage your entire availability from one place.",
+      },
+      {
+        title: 'Create Time Slots ➕',
+        message: "Hit 'Add Time Slot' to open the form. Pick a date, start/end time, location, and max bookings. Turn on 'Repeat' to auto-create weekly or monthly slots!",
+        highlight: 'admin-availability-header',
+      },
+      {
+        title: 'Your Slots List 📋',
+        message: "All your upcoming slots appear here. Filter by week, see how many bookings each slot has, and edit or delete on the fly. Green = available, Red = full.",
+        highlight: 'admin-availability-list',
+      },
+      {
+        title: 'Bulk Edit Power 💪',
+        message: "Got 20 slots to update? Hit 'Bulk Edit', select the ones you want, and change service, time, location, or max bookings all at once. Massive time saver!",
+      },
+      {
+        title: 'Availability Done! ✅',
+        message: "Set your schedule once, repeat it weekly, and athletes can book you around the clock. Now head to Bookings to see who's signed up!",
+        navigateTo: '/admin/bookings',
+        action: 'View Bookings',
+      },
+    ],
+  },
+
+  '/admin/requests': {
+    pageTitle: 'Action Requests',
+    icon: FileText,
+    color: 'text-amber-400',
+    steps: [
+      {
+        title: 'Action Requests Hub 📋',
+        message: "This is the master admin approval center! When coaches request destructive actions (like deleting an athlete), those requests land here for your review.",
+      },
+      {
+        title: 'Review & Approve 🔍',
+        message: "Each request shows who asked, what they want, and why. You can 'Approve & Execute' to carry out the action, or 'Deny' to block it. Full audit trail!",
+        highlight: 'admin-requests-list',
+      },
+      {
+        title: 'Filter by Status 📑',
+        message: "Use the tabs to switch between Pending, Approved, and Denied requests. Pending is where the action is — that's what needs your attention right now.",
+        highlight: 'admin-requests-tabs',
+      },
+      {
+        title: 'Requests Complete! 🛡️',
+        message: "This keeps your platform safe by requiring approval for sensitive actions. Coaches request, you approve — no accidental deletions!",
+        action: 'Got It!',
+      },
+    ],
+  },
+
+  '/admin/images': {
+    pageTitle: 'Image Management',
+    icon: Image,
+    color: 'text-pink-400',
+    steps: [
+      {
+        title: 'Image Management 🖼️',
+        message: "Replace all the placeholder images on your marketing site with YOUR real photography! Hero banners, coach headshots, feature cards, facility photos — everything.",
+      },
+      {
+        title: 'Upload Sections 📸',
+        message: "Scroll down to see sections: Hero, Feature Cards, Coach Headshots, and Facility Photos. Each slot shows the current image, recommended dimensions, and an upload button.",
+        highlight: 'admin-images-sections',
+      },
+      {
+        title: 'Image Guidelines 📐',
+        message: "Match the aspect ratio shown (16:9, 3:2, or 1:1). Use high-res images at 2x display size. WebP format is best for performance. Keep files under 5MB!",
+        highlight: 'admin-images-guidelines',
+      },
+      {
+        title: 'Images Done! 🎨',
+        message: "Upload your real photos and watch your public site transform from template to professional! First impressions matter — make yours count.",
+        action: 'Got It!',
+      },
+    ],
+  },
+
+  '/guide': {
+    pageTitle: 'Play-by-Play Guide',
+    icon: Compass,
+    color: 'text-teal-400',
+    steps: [
+      {
+        title: 'Your Play-by-Play Guide 🧭',
+        message: "Welcome to the ultimate map of PSP.Pro! This page shows you every feature organized by category. Tap any card to drill into the details.",
+      },
+      {
+        title: 'Category Cards 🗂️',
+        message: "Each card represents a group of related features — Getting Started, Track Your Growth, Train & Learn, and Stay Connected. The breadcrumb trail shows the flow!",
+        highlight: 'guide-categories',
+      },
+      {
+        title: 'Step-by-Step Details 📖',
+        message: "Inside each category, you'll see numbered steps with descriptions and 'Go There' links that take you straight to that page. Some even have a 'Take a Tour' button!",
+      },
+      {
+        title: 'Coach vs Athlete Views 👥',
+        message: "Use the tabs at the top to switch between Athlete Guide and Coach Guide. Coaches get their own categories: Command Center, Build Content, Grow Business, and Import Tools.",
+      },
+      {
+        title: 'Guide Complete! 🎓',
+        message: "This is your reference manual. Come back anytime you forget where something is. And remember — Dr. Prop is always one tap away in the bottom-right corner!",
+        action: 'Got It!',
       },
     ],
   },

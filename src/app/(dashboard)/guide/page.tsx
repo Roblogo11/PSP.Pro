@@ -29,6 +29,7 @@ import {
   ArrowRight,
   ChevronLeft,
   Compass,
+  Image as ImageIcon,
 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { TourTriggerButton } from '@/components/tour-hud'
@@ -119,6 +120,7 @@ const coachCategories: GuideCategory[] = [
     steps: [
       { label: 'Admin Home', href: '/admin', icon: Shield, color: 'text-red-400', description: 'Your command center. Athlete counts, active sessions, pending bookings, and quick actions at a glance.' },
       { label: 'Calendar', href: '/admin/bookings', icon: Calendar, color: 'text-blue-400', description: 'Calendar view of all bookings. Confirm requests, log performance metrics per sport after each session.' },
+      { label: 'Availability', href: '/admin/availability', icon: Clock, color: 'text-green-400', description: 'Create and manage your available time slots. Set recurring schedules, bulk edit, and control when athletes can book.' },
       { label: 'Manage Athletes', href: '/admin/athletes', icon: Users, color: 'text-cyan-400', description: 'Full athlete roster with individual stats, drill assignments, and course enrollment tracking.' },
     ],
   },
@@ -148,18 +150,19 @@ const coachCategories: GuideCategory[] = [
       { label: 'Promo Codes', href: '/admin/promos', icon: Tag, color: 'text-orange-400', description: 'Discount codes with percentage or flat amounts, usage limits, and expiration dates.' },
       { label: 'Organizations', href: '/admin/org', icon: Building2, color: 'text-indigo-400', description: 'Organization branding, team members, and Stripe Connect payouts.' },
       { label: 'Content', href: '/admin/media', icon: Newspaper, color: 'text-pink-400', description: 'Blog posts and gallery media to keep your public site fresh and engaging.' },
+      { label: 'Images', href: '/admin/images', icon: ImageIcon, color: 'text-rose-400', description: 'Replace placeholder images with real photography — hero banners, coach headshots, and facility photos.' },
     ],
   },
   {
     id: 'import-tools',
     title: 'Import & Tools',
-    subtitle: 'Bring in external data',
+    subtitle: 'Bring in external data and manage requests',
     icon: Upload,
     accentColor: 'text-indigo-400',
     accentBg: 'bg-indigo-400/15',
     steps: [
       { label: 'Data Import', href: '/admin/imports', icon: Upload, color: 'text-purple-400', description: 'Bulk import metrics from Rapsodo, Blast Motion, Pocket Radar, and HitTrax via CSV.' },
-      { label: 'Lesson Builder', href: '/admin/services', icon: DollarSign, color: 'text-green-400', description: 'Configure service pricing, duration, and availability for your coaching sessions.' },
+      { label: 'Requests', href: '/admin/requests', icon: FileBarChart, color: 'text-amber-400', description: 'Master admin approval center — review and approve or deny destructive action requests from coaches.' },
     ],
   },
 ]
@@ -352,6 +355,7 @@ export default function GuidePage() {
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.2 }}
               className="grid grid-cols-1 md:grid-cols-2 gap-4"
+              data-tour="guide-categories"
             >
               {categories.map((cat) => (
                 <CategoryCard key={cat.id} category={cat} onSelect={setSelectedCategory} />

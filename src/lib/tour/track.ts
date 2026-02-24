@@ -49,7 +49,10 @@ export const TOUR_PAGES = [
   // Coach / Admin pages
   '/admin', '/admin/bookings', '/admin/athletes', '/admin/drills', '/admin/services',
   '/admin/analytics', '/admin/courses', '/admin/questionnaires', '/admin/promos',
-  '/admin/org', '/admin/media', '/admin/imports',
+  '/admin/org', '/admin/media', '/admin/imports', '/admin/availability', '/admin/requests',
+  '/admin/images',
+  // Guide
+  '/guide',
 ]
 
 /** Check if the current page has a tour available */

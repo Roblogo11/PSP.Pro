@@ -165,7 +165,7 @@ export default function RequestsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 mb-6">
+      <div className="flex items-center gap-2 mb-6" data-tour="admin-requests-tabs">
         {(['pending', 'approved', 'denied'] as const).map((tab) => (
           <button
             key={tab}
@@ -183,12 +183,12 @@ export default function RequestsPage() {
 
       {/* Requests List */}
       {requests.length === 0 ? (
-        <div className="glass-card p-12 text-center">
+        <div className="glass-card p-12 text-center" data-tour="admin-requests-list">
           <FileText className="w-12 h-12 text-cyan-700 dark:text-white mx-auto mb-4" />
           <p className="text-cyan-800 dark:text-white">No {activeTab} requests</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-4" data-tour="admin-requests-list">
           {requests.map((request) => (
             <div key={request.id} className="glass-card p-6">
               <div className="flex items-start justify-between mb-4">

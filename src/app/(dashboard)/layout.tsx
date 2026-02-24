@@ -7,14 +7,14 @@ import { HomeButton } from '@/components/layout/home-button'
 
 // Routes any authenticated user can access (session buyers / drop-ins)
 const OPEN_ROUTES = [
-  '/booking', '/pricing', '/sessions', '/locker',
-  '/settings', '/messages', '/guide',
+  '/booking', '/sessions', '/locker',
+  '/settings', '/guide', '/leaderboards',
 ]
 
 // Routes that require an active membership package (not just a single booking)
 // Session buyers who try to access these get redirected to /membership-required
 const MEMBER_ONLY_ROUTES = [
-  '/progress', '/drills', '/achievements', '/leaderboards',
+  '/progress', '/drills', '/achievements',
   '/video-analysis', '/courses', '/questionnaires', '/progress-report',
 ]
 

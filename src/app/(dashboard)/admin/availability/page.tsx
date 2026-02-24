@@ -421,7 +421,7 @@ export default function AvailabilityManagementPage() {
   return (
     <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8">
       {/* Header */}
-      <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4" data-tour="admin-availability-header">
         <div>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
             Availability Management
@@ -696,7 +696,7 @@ export default function AvailabilityManagementPage() {
       )}
 
       {/* Slots List */}
-      <div className="command-panel">
+      <div className="command-panel" data-tour="admin-availability-list">
         {loading ? (
           <div className="p-12 text-center">
             <Loader2 className="w-8 h-8 text-orange mx-auto mb-4 animate-spin" />

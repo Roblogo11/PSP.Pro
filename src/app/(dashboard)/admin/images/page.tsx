@@ -56,7 +56,7 @@ export default function AdminImagesPage() {
       </div>
 
       {/* Instructions */}
-      <div className="glass-card p-6 mb-8 border-cyan/20">
+      <div className="glass-card p-6 mb-8 border-cyan/20" data-tour="admin-images-guidelines">
         <div className="flex items-start gap-4">
           <div className="p-3 bg-cyan/10 rounded-xl">
             <Info className="w-6 h-6 text-cyan" />
@@ -91,7 +91,7 @@ export default function AdminImagesPage() {
       </div>
 
       {/* Upload Sections */}
-      <div className="space-y-12">
+      <div className="space-y-12" data-tour="admin-images-sections">
         {/* Hero Section */}
         <section>
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Hero Section</h2>
