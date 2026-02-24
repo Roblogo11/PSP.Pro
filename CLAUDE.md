@@ -35,6 +35,17 @@ Next.js 14.2.35 sports training platform (softball, basketball, soccer). Supabas
 - Calendar token: 90-day rolling expiry with auto-regeneration
 - Promo RPC: `increment_promo_usage` SQL function
 
+### Parent/Guardian Accounts (COPPA Compliance)
+- Under-13 athletes get `account_type: 'parent_guardian'` — account belongs to the parent
+- `profiles.child_name` and `profiles.child_age` store the athlete's info
+- `profiles.full_name` = parent name (account holder), `profiles.email` = parent login
+- Migration 050 added these columns
+- Signup, invite signup, and admin create-athlete all auto-detect age < 13 → parent mode
+- Locker page greeting uses `child_name`, shows purple "Parent/Guardian" badge
+- Admin athletes list shows "Parent Account" badge + "Managed by [parent]"
+- Settings page shows child name/age fields for parent accounts
+- One parent = one child account (Supabase auth enforces unique emails)
+
 ### Theme System
 - Dark mode: `.dark` class on `<html>`, light mode: absence of `.dark`
 - ThemeProvider in `src/lib/contexts/theme-context.tsx`
@@ -54,6 +65,9 @@ Next.js 14.2.35 sports training platform (softball, basketball, soccer). Supabas
 5. Mobile More sheet drag-to-dismiss fix
 6. Booking slot double-counting fix (migration 048 — already run in Supabase)
 7. Interactive Play-by-Play Guide at `/guide`
+8. Image optimization: Vercel Image Optimization disabled, all images converted to WebP locally
+9. Free trial UI hidden (backend fields kept)
+10. Parent/Guardian accounts for under-13 athletes (COPPA compliance, migration 050)
 
 ## Next Up: Chatbot Interactive Walkthrough
 **User approved this feature — build it next session.**

@@ -11,6 +11,9 @@ export interface UserProfile {
   full_name: string | null
   role: UserRole
   avatar_url: string | null
+  account_type?: 'standard' | 'parent_guardian'
+  child_name?: string | null
+  child_age?: number | null
 }
 
 export function useUserRole() {
@@ -33,7 +36,7 @@ export function useUserRole() {
 
       const { data: profileData, error } = await supabase
         .from('profiles')
-        .select('id, full_name, role, avatar_url')
+        .select('id, full_name, role, avatar_url, account_type, child_name, child_age')
         .eq('id', user.id)
         .single()
 

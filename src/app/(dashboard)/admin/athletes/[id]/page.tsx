@@ -147,6 +147,9 @@ interface AthleteProfile {
   athlete_type: string | null
   age: number | null
   avatar_url: string | null
+  account_type: string | null
+  child_name: string | null
+  child_age: number | null
 }
 
 interface PerformanceMetric {
@@ -539,12 +542,26 @@ export default function AthleteDetailPage() {
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-2">
-              {athlete.full_name}
+              {athlete.account_type === 'parent_guardian' && athlete.child_name
+                ? athlete.child_name
+                : athlete.full_name}
             </h1>
+            {athlete.account_type === 'parent_guardian' && (
+              <p className="text-sm text-purple-400 mb-1">
+                Managed by {athlete.full_name} ({athlete.email})
+              </p>
+            )}
             <div className="flex items-center gap-4 text-cyan-800 dark:text-white flex-wrap">
               <span>{athlete.athlete_type || 'Athlete'}</span>
               {athlete.age && <span>Age: {athlete.age}</span>}
-              {athlete.email && <span className="hidden md:inline">{athlete.email}</span>}
+              {athlete.account_type !== 'parent_guardian' && athlete.email && (
+                <span className="hidden md:inline">{athlete.email}</span>
+              )}
+              {athlete.account_type === 'parent_guardian' && (
+                <span className="inline-block px-2 py-1 bg-purple-500/20 border border-purple-500/30 rounded-lg text-xs text-purple-400 font-semibold">
+                  Parent Account
+                </span>
+              )}
             </div>
           </div>
 

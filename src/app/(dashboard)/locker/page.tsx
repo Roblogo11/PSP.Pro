@@ -18,6 +18,7 @@ import {
   UserPlus,
   BookOpen,
   RotateCcw,
+  ShieldCheck,
 } from 'lucide-react'
 import { VelocityChart } from '@/components/dashboard/velocity-chart'
 import { NextSessionCard } from '@/components/dashboard/next-session-card'
@@ -322,9 +323,12 @@ export default function AthleteLockerPage() {
 
   if (!profile) return null
 
+  const isParentAccount = profile.account_type === 'parent_guardian'
   const firstName = isImpersonating
     ? (impersonatedUserName?.split(' ')[0] || 'Player')
-    : (profile.full_name?.split(' ')[0] || 'Coach')
+    : isParentAccount && profile.child_name
+      ? profile.child_name.split(' ')[0]
+      : (profile.full_name?.split(' ')[0] || 'Coach')
 
   // ─── Coach / Admin View (skip when impersonating) ───
   if (!isImpersonating && (isCoach || isAdmin)) {
@@ -494,6 +498,14 @@ export default function AthleteLockerPage() {
         <p className="text-cyan-700 dark:text-white text-lg">
           Let&apos;s make today count. Here&apos;s your performance overview.
         </p>
+        {isParentAccount && profile.child_name && (
+          <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 border border-purple-500/30 rounded-xl">
+            <ShieldCheck className="w-4 h-4 text-purple-400" />
+            <span className="text-sm text-purple-400 font-semibold">
+              Parent/Guardian account for {profile.child_name}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Bento Grid Layout */}

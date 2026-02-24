@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Mail, Lock, User, Calendar, Loader2, ArrowRight, AlertTriangle } from 'lucide-react'
+import { Mail, Lock, User, Calendar, Loader2, ArrowRight, ShieldCheck } from 'lucide-react'
 
 export default function SignupPage() {
   const router = useRouter()
@@ -50,9 +50,12 @@ export default function SignupPage() {
     const parentGuardianEmail = formData.get('parentGuardianEmail') as string
     const parentGuardianPhone = formData.get('parentGuardianPhone') as string
 
-    // COPPA: Block under-13 self-signup
-    if (ageNum < 13) {
-      setError('Athletes under 13 must be enrolled directly by a coach. Please contact us at support@propersports.pro.')
+    // For under-13: this is a parent/guardian account
+    const isParentAccount = ageNum < 13
+    const childName = isParentAccount ? (formData.get('childName') as string) : null
+
+    if (isParentAccount && !childName?.trim()) {
+      setError('Please enter your child\'s name.')
       setLoading(false)
       return
     }
@@ -97,8 +100,17 @@ export default function SignupPage() {
         updated_at: new Date().toISOString(),
       }
 
-      // Add parent/guardian info if athlete is under 18
-      if (ageNum < 18) {
+      // Parent/guardian account for under-13
+      if (isParentAccount) {
+        profileData.account_type = 'parent_guardian'
+        profileData.child_name = childName
+        profileData.child_age = ageNum
+        profileData.parent_guardian_name = fullName
+        profileData.parent_guardian_email = email
+      }
+
+      // Add parent/guardian info if athlete is 13-17
+      if (ageNum >= 13 && ageNum < 18) {
         if (parentGuardianName) profileData.parent_guardian_name = parentGuardianName
         if (parentGuardianEmail) profileData.parent_guardian_email = parentGuardianEmail
         if (parentGuardianPhone) profileData.parent_guardian_phone = parentGuardianPhone
@@ -125,8 +137,9 @@ export default function SignupPage() {
         throw new Error('Account created but profile verification failed. Please contact support.')
       }
 
-      // 5. Send parent notification email for minors (non-blocking)
-      if (ageNum < 18 && parentGuardianEmail && parentGuardianName) {
+      // 5. Send parent notification email for minors 13-17 (non-blocking)
+      // Skip for parent accounts (under-13) — the parent IS the account holder
+      if (!isParentAccount && ageNum < 18 && parentGuardianEmail && parentGuardianName) {
         fetch('/api/auth/parent-notify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -176,7 +189,7 @@ export default function SignupPage() {
           {/* Full Name Field */}
           <div>
             <label htmlFor="fullName" className="block text-sm font-medium  mb-2">
-              Full Name
+              {underThirteen ? 'Parent/Guardian Name' : 'Full Name'}
             </label>
             <div className="relative">
               <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 " />
@@ -187,7 +200,7 @@ export default function SignupPage() {
                 required
                 autoComplete="name"
                 className="w-full pl-12 pr-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
-                placeholder="John Smith"
+                placeholder={underThirteen ? 'Parent/Guardian name' : 'John Smith'}
               />
             </div>
           </div>
@@ -195,7 +208,7 @@ export default function SignupPage() {
           {/* Email Field */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium  mb-2">
-              Email Address
+              {underThirteen ? 'Parent/Guardian Email' : 'Email Address'}
             </label>
             <div className="relative">
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 " />
@@ -206,7 +219,7 @@ export default function SignupPage() {
                 required
                 autoComplete="email"
                 className="w-full pl-12 pr-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
-                placeholder="athlete@example.com"
+                placeholder={underThirteen ? 'parent@example.com' : 'athlete@example.com'}
               />
             </div>
           </div>
@@ -288,18 +301,35 @@ export default function SignupPage() {
             </div>
           </div>
 
-          {/* COPPA: Under-13 block */}
+          {/* Parent/Guardian Account mode for under-13 */}
           {underThirteen && (
-            <div role="alert" className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
+            <div className="space-y-4 p-4 rounded-xl bg-purple-500/10 border border-purple-500/30">
               <div className="flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                <ShieldCheck className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-semibold text-amber-300 mb-1">Under 13 sign-up not available</p>
-                  <p className="text-xs text-amber-400/80 leading-relaxed">
-                    Athletes under 13 must be enrolled directly by a coach.
-                    Please have your coach or parent contact us at{' '}
-                    <a href="mailto:support@propersports.pro" className="underline">support@propersports.pro</a>.
+                  <p className="text-sm font-semibold text-purple-300 mb-1">Parent/Guardian Account</p>
+                  <p className="text-xs text-purple-400/80 leading-relaxed">
+                    For athletes under 13, the account is created for the parent/guardian.
+                    You&apos;ll manage your child&apos;s training dashboard, view their progress, and book sessions.
                   </p>
+                </div>
+              </div>
+
+              {/* Child's Name */}
+              <div>
+                <label htmlFor="childName" className="block text-sm font-medium text-purple-300 mb-2">
+                  Child&apos;s Name *
+                </label>
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-400" />
+                  <input
+                    id="childName"
+                    name="childName"
+                    type="text"
+                    required
+                    className="w-full pl-12 pr-4 py-3 bg-cyan-900/30 border border-purple-500/30 rounded-xl text-white placeholder-purple-400/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400/50 transition-all"
+                    placeholder="Child's full name"
+                  />
                 </div>
               </div>
             </div>
@@ -378,7 +408,10 @@ export default function SignupPage() {
               <Link href="/privacy" className="text-orange hover:text-orange-400">
                 Privacy Policy
               </Link>
-              , and I consent to the processing of my data as described therein.
+              {underThirteen
+                ? ', and I consent to the processing of my child\'s data as described therein.'
+                : ', and I consent to the processing of my data as described therein.'
+              }
             </label>
           </div>
 
@@ -400,7 +433,7 @@ export default function SignupPage() {
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading || underThirteen}
+            disabled={loading}
             className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (

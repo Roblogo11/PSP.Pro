@@ -23,6 +23,8 @@ function SettingsInner() {
   const [email, setEmail] = useState('')
   const [leaderboardOptIn, setLeaderboardOptIn] = useState(false)
   const [region, setRegion] = useState('')
+  const [childName, setChildName] = useState('')
+  const [childAge, setChildAge] = useState('')
 
   // Privacy tab state
   const [newsletterConsent, setNewsletterConsent] = useState(false)
@@ -80,13 +82,15 @@ function SettingsInner() {
       const supabase = createClient()
       const { data } = await supabase
         .from('profiles')
-        .select('leaderboard_opt_in, region, newsletter_consent, notification_preferences, bio, specialties, profile_slug, years_experience, certifications')
+        .select('leaderboard_opt_in, region, newsletter_consent, notification_preferences, bio, specialties, profile_slug, years_experience, certifications, child_name, child_age')
         .eq('id', profile.id)
         .single()
 
       if (data) {
         setLeaderboardOptIn(data.leaderboard_opt_in || false)
         setRegion(data.region || '')
+        setChildName(data.child_name || '')
+        setChildAge(data.child_age ? String(data.child_age) : '')
         setNewsletterConsent(data.newsletter_consent || false)
         if (data.notification_preferences) {
           setNotifications({
@@ -118,14 +122,21 @@ function SettingsInner() {
       const supabase = createClient()
 
       // Update profile
+      const updateData: any = {
+        full_name: fullName,
+        leaderboard_opt_in: leaderboardOptIn,
+        region: region || null,
+        updated_at: new Date().toISOString(),
+      }
+
+      if (profile.account_type === 'parent_guardian') {
+        updateData.child_name = childName || null
+        updateData.child_age = childAge ? parseInt(childAge) : null
+      }
+
       const { error } = await supabase
         .from('profiles')
-        .update({
-          full_name: fullName,
-          leaderboard_opt_in: leaderboardOptIn,
-          region: region || null,
-          updated_at: new Date().toISOString(),
-        })
+        .update(updateData)
         .eq('id', profile.id)
 
       if (error) throw error
@@ -382,9 +393,23 @@ function SettingsInner() {
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Profile Information</h2>
 
               <div className="space-y-6">
+                {profile.account_type === 'parent_guardian' && (
+                  <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/30">
+                    <div className="flex items-start gap-3">
+                      <ShieldCheck className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-semibold text-purple-600 dark:text-purple-300 mb-1">Parent/Guardian Account</p>
+                        <p className="text-xs text-purple-500 dark:text-purple-400/80 leading-relaxed">
+                          This account manages your child&apos;s training dashboard. Your name and email are used for login.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <div>
                   <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2">
-                    Full Name
+                    {profile.account_type === 'parent_guardian' ? 'Your Name (Account Holder)' : 'Full Name'}
                   </label>
                   <input
                     type="text"
@@ -393,6 +418,37 @@ function SettingsInner() {
                     className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-slate-900 dark:text-white focus:border-orange focus:outline-none transition-colors"
                   />
                 </div>
+
+                {profile.account_type === 'parent_guardian' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-purple-600 dark:text-purple-300 mb-2">
+                        Child&apos;s Name
+                      </label>
+                      <input
+                        type="text"
+                        value={childName}
+                        onChange={(e) => setChildName(e.target.value)}
+                        placeholder="Child's full name"
+                        className="w-full px-4 py-3 bg-cyan-900/30 border border-purple-500/30 rounded-xl text-slate-900 dark:text-white focus:border-purple-400 focus:outline-none transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-purple-600 dark:text-purple-300 mb-2">
+                        Child&apos;s Age
+                      </label>
+                      <input
+                        type="number"
+                        value={childAge}
+                        onChange={(e) => setChildAge(e.target.value)}
+                        placeholder="12"
+                        min="5"
+                        max="17"
+                        className="w-full px-4 py-3 bg-cyan-900/30 border border-purple-500/30 rounded-xl text-slate-900 dark:text-white focus:border-purple-400 focus:outline-none transition-colors"
+                      />
+                    </div>
+                  </div>
+                )}
 
                 <div>
                   <label className="block text-sm font-semibold text-cyan-700 dark:text-white mb-2 flex items-center gap-2">
