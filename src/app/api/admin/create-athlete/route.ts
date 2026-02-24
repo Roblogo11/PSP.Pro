@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { rateLimit, getClientIP } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
   try {
+    const ip = getClientIP(request)
+    const { allowed } = rateLimit(`create-athlete:${ip}`, { limit: 10, windowSec: 60 })
+    if (!allowed) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+    }
+
     // 🔒 SECURITY: Verify the user is an admin/coach
     const supabase = await createServerClient()
 
@@ -68,10 +75,7 @@ export async function POST(request: NextRequest) {
 
     if (createUserError) {
       console.error('Auth error:', createUserError)
-      const msg = createUserError.message?.includes('already been registered')
-        ? 'An account with this email already exists'
-        : 'Failed to create athlete account'
-      return NextResponse.json({ error: msg }, { status: 400 })
+      return NextResponse.json({ error: 'Failed to create athlete account' }, { status: 400 })
     }
 
     if (!authData.user) {

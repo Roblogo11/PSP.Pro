@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { auditLog } from '@/lib/audit'
+import { getClientIP } from '@/lib/rate-limit'
 
 // GET /api/org/[id] — fetch one org's full details
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -85,6 +87,21 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       if (key in body) updates[key] = body[key]
     }
 
+    // Validate custom_domain format if provided
+    if (updates.custom_domain) {
+      const domainRegex = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/i
+      if (typeof updates.custom_domain !== 'string' || !domainRegex.test(updates.custom_domain)) {
+        return NextResponse.json({ error: 'Invalid domain format' }, { status: 400 })
+      }
+    }
+
+    // Validate color fields are hex colors
+    for (const colorKey of ['primary_color', 'secondary_color', 'accent_color']) {
+      if (updates[colorKey] && !/^#[0-9a-fA-F]{3,8}$/.test(updates[colorKey])) {
+        return NextResponse.json({ error: `Invalid ${colorKey} format` }, { status: 400 })
+      }
+    }
+
     const { data: updated, error } = await adminClient
       .from('organizations')
       .update(updates)
@@ -93,6 +110,16 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       .single()
 
     if (error) throw error
+
+    auditLog({
+      userId: user.id,
+      action: 'org.settings_update',
+      resourceType: 'organization',
+      resourceId: id,
+      metadata: { fields: Object.keys(updates) },
+      ip: getClientIP(req),
+    })
+
     return NextResponse.json({ org: updated })
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 })

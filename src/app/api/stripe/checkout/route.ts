@@ -41,8 +41,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'This service is no longer available' }, { status: 400 })
     }
 
-    // Get user profile (with membership tier) + coach's Stripe Connect account
+    // Validate coach_id is a real coach profile if provided
     const adminClient = createAdminClient()
+    if (bookingData?.coach_id) {
+      const { data: coachProfile } = await adminClient
+        .from('profiles')
+        .select('id, role')
+        .eq('id', bookingData.coach_id)
+        .single()
+
+      if (!coachProfile || !['coach', 'admin', 'master_admin'].includes(coachProfile.role)) {
+        return NextResponse.json({ error: 'Invalid coach' }, { status: 400 })
+      }
+    }
+
+    // Get user profile (with membership tier) + coach's Stripe Connect account
     const [{ data: profile }, coachConnectData] = await Promise.all([
       adminClient.from('profiles').select('full_name, membership_tier').eq('id', user.id).single(),
       // If booking has a coach_id, look up their connected account

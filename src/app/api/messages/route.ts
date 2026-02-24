@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { rateLimit, getClientIP } from '@/lib/rate-limit'
 
 // GET /api/messages — list conversations for current user
 export async function GET() {
@@ -87,6 +88,12 @@ export async function GET() {
 // POST /api/messages — start a new conversation or send a message
 export async function POST(request: NextRequest) {
   try {
+    const ip = getClientIP(request)
+    const { allowed } = rateLimit(`msg:${ip}`, { limit: 30, windowSec: 60 })
+    if (!allowed) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+    }
+
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 

@@ -28,6 +28,20 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false })
 
     if (orgId) {
+      // Verify user is a member of this org (or master_admin)
+      if (profile?.role !== 'master_admin') {
+        const { data: orgMembership } = await adminClient
+          .from('organization_members')
+          .select('id')
+          .eq('org_id', orgId)
+          .eq('user_id', user.id)
+          .eq('status', 'active')
+          .maybeSingle()
+
+        if (!orgMembership) {
+          return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+        }
+      }
       linksQuery = linksQuery.eq('org_id', orgId)
     } else {
       linksQuery = linksQuery.eq('coach_id', user.id)
@@ -60,6 +74,21 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
     const { sport, max_uses = 1, org_id } = body
+
+    // Verify org membership if creating invite for a specific org
+    if (org_id && profile?.role !== 'master_admin') {
+      const { data: orgMembership } = await adminClient
+        .from('organization_members')
+        .select('id')
+        .eq('org_id', org_id)
+        .eq('user_id', user.id)
+        .eq('status', 'active')
+        .maybeSingle()
+
+      if (!orgMembership) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
+    }
 
     const { data: link, error } = await adminClient
       .from('invite_links')

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { auditLog } from '@/lib/audit'
+import { getClientIP } from '@/lib/rate-limit'
 
 // POST /api/org/[id]/members — invite a user to the org by email
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -23,6 +25,12 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
     const { email, role = 'athlete' } = await req.json()
     if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 })
+
+    // L1: Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      return NextResponse.json({ error: 'Invalid email format' }, { status: 400 })
+    }
 
     // Find user by email
     const { data: invitee } = await adminClient
@@ -81,14 +89,41 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     if (!canManage) return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
 
     const { user_id, role, status } = await req.json()
+    if (!user_id) return NextResponse.json({ error: 'user_id required' }, { status: 400 })
+
+    // Verify target member exists in this org
+    const { data: targetMember } = await adminClient
+      .from('organization_members')
+      .select('id')
+      .eq('org_id', org_id)
+      .eq('user_id', user_id)
+      .maybeSingle()
+
+    if (!targetMember) {
+      return NextResponse.json({ error: 'Member not found' }, { status: 404 })
+    }
+
     const updates: Record<string, any> = {}
     if (role) updates.role = role
     if (status) updates.status = status
+
+    if (Object.keys(updates).length === 0) {
+      return NextResponse.json({ error: 'No updates provided' }, { status: 400 })
+    }
 
     await adminClient.from('organization_members')
       .update(updates)
       .eq('org_id', org_id)
       .eq('user_id', user_id)
+
+    auditLog({
+      userId: user.id,
+      action: 'org.member_role_change',
+      resourceType: 'organization_member',
+      resourceId: `${org_id}:${user_id}`,
+      metadata: updates,
+      ip: getClientIP(req),
+    })
 
     return NextResponse.json({ ok: true })
   } catch (err: any) {
@@ -122,6 +157,14 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
       .update({ status: 'removed' })
       .eq('org_id', org_id)
       .eq('user_id', target_user_id)
+
+    auditLog({
+      userId: user.id,
+      action: 'org.member_removed',
+      resourceType: 'organization_member',
+      resourceId: `${org_id}:${target_user_id}`,
+      ip: getClientIP(req),
+    })
 
     return NextResponse.json({ ok: true })
   } catch (err: any) {

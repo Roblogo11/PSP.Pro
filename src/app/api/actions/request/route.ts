@@ -45,6 +45,25 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Validate action_type and target_table against allowed values
+    const ALLOWED_ACTIONS = ['delete', 'archive', 'restore', 'transfer', 'suspend', 'activate']
+    const ALLOWED_TABLES = ['profiles', 'bookings', 'services', 'organizations', 'available_slots']
+    if (!ALLOWED_ACTIONS.includes(action_type)) {
+      return NextResponse.json({ error: 'Invalid action type' }, { status: 400 })
+    }
+    if (!ALLOWED_TABLES.includes(target_table)) {
+      return NextResponse.json({ error: 'Invalid target table' }, { status: 400 })
+    }
+
+    // Validate metadata: must be a plain object with safe values
+    let sanitizedMetadata = {}
+    if (metadata && typeof metadata === 'object' && !Array.isArray(metadata)) {
+      const safeEntries = Object.entries(metadata).filter(
+        ([k, v]) => typeof k === 'string' && k.length < 100 && (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean')
+      )
+      sanitizedMetadata = Object.fromEntries(safeEntries)
+    }
+
     // Create the request
     const { data: actionRequest, error: insertError } = await supabase
       .from('action_requests')
@@ -53,8 +72,8 @@ export async function POST(request: NextRequest) {
         action_type,
         target_id,
         target_table,
-        reason,
-        metadata: metadata || {},
+        reason: typeof reason === 'string' ? reason.slice(0, 500) : null,
+        metadata: sanitizedMetadata,
         status: 'pending',
       })
       .select()
