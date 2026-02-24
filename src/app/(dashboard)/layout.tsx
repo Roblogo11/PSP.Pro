@@ -5,8 +5,18 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { Sidebar } from '@/components/layout/sidebar'
 import { HomeButton } from '@/components/layout/home-button'
 
-// Routes that authenticated users can access without an active membership
-const OPEN_ROUTES = ['/booking', '/pricing', '/sessions']
+// Routes any authenticated user can access (session buyers / drop-ins)
+const OPEN_ROUTES = [
+  '/booking', '/pricing', '/sessions', '/locker',
+  '/settings', '/messages', '/guide',
+]
+
+// Routes that require an active membership package (not just a single booking)
+// Session buyers who try to access these get redirected to /membership-required
+const MEMBER_ONLY_ROUTES = [
+  '/progress', '/drills', '/achievements', '/leaderboards',
+  '/video-analysis', '/courses', '/questionnaires', '/progress-report',
+]
 
 export default async function DashboardLayout({
   children,
@@ -25,20 +35,20 @@ export default async function DashboardLayout({
     }
 
     // Check user role — prefer admin client (bypasses RLS timing), fall back to regular client
-    let profile: { role: string; trial_expires_at: string | null } | null = null
+    let profile: { role: string } | null = null
     const hasServiceKey = !!process.env.SUPABASE_SERVICE_ROLE_KEY
     if (hasServiceKey) {
       const adminClient = createAdminClient()
       const { data } = await adminClient
         .from('profiles')
-        .select('role, trial_expires_at')
+        .select('role')
         .eq('id', user.id)
         .single()
       profile = data
     } else {
       const { data } = await supabase
         .from('profiles')
-        .select('role, trial_expires_at')
+        .select('role')
         .eq('id', user.id)
         .single()
       profile = data
@@ -46,40 +56,52 @@ export default async function DashboardLayout({
 
     const role = profile?.role
     const isStaff = role === 'admin' || role === 'coach' || role === 'master_admin'
-    // Coach-created athletes get a trial period — check if still active
-    const hasActiveTrial = profile?.trial_expires_at
-      ? new Date(profile.trial_expires_at) > new Date()
-      : false
 
-    // Allow authenticated users to access booking/pricing even without membership
-    const headersList = await headers()
-    const pathname = headersList.get('x-next-pathname') || headersList.get('x-invoke-path') || ''
-    const isOpenRoute = OPEN_ROUTES.some(route => pathname.includes(route))
+    // Staff bypass all access checks
+    if (!isStaff) {
+      const headersList = await headers()
+      const pathname = headersList.get('x-next-pathname') || headersList.get('x-invoke-path') || ''
+      const isOpenRoute = OPEN_ROUTES.some(route => pathname.includes(route))
+      const isMemberRoute = MEMBER_ONLY_ROUTES.some(route => pathname.includes(route))
 
-    // Athletes must have an active package (or active trial) to access the dashboard
-    // Exception: booking and pricing pages are always accessible to authenticated users
-    if (!isStaff && !hasActiveTrial && !isOpenRoute) {
-      const { data: activePackage } = await supabase
-        .from('athlete_packages')
-        .select('id')
-        .eq('athlete_id', user.id)
-        .eq('is_active', true)
-        .gte('expires_at', new Date().toISOString())
-        .gt('sessions_total', 0)
-        .limit(1)
-        .single()
+      if (isMemberRoute) {
+        // Member-only routes require an active package (subscription or session package)
+        const { data: activePackage } = await supabase
+          .from('athlete_packages')
+          .select('id')
+          .eq('athlete_id', user.id)
+          .eq('is_active', true)
+          .gte('expires_at', new Date().toISOString())
+          .gt('sessions_total', 0)
+          .limit(1)
+          .single()
 
-      // Also check for any active bookings (single session purchases)
-      const { data: activeBooking } = await supabase
-        .from('bookings')
-        .select('id')
-        .eq('athlete_id', user.id)
-        .eq('payment_status', 'paid')
-        .limit(1)
-        .single()
+        if (!activePackage) {
+          redirect('/membership-required')
+        }
+      } else if (!isOpenRoute) {
+        // Non-open, non-member routes: need at least a paid booking or active package
+        const { data: activePackage } = await supabase
+          .from('athlete_packages')
+          .select('id')
+          .eq('athlete_id', user.id)
+          .eq('is_active', true)
+          .gte('expires_at', new Date().toISOString())
+          .gt('sessions_total', 0)
+          .limit(1)
+          .single()
 
-      if (!activePackage && !activeBooking) {
-        redirect('/membership-required')
+        const { data: activeBooking } = await supabase
+          .from('bookings')
+          .select('id')
+          .eq('athlete_id', user.id)
+          .eq('payment_status', 'paid')
+          .limit(1)
+          .single()
+
+        if (!activePackage && !activeBooking) {
+          redirect('/membership-required')
+        }
       }
     }
   } catch (error: any) {

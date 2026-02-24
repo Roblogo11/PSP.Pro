@@ -5,10 +5,17 @@ import { createAdminClient } from '@/lib/supabase/admin'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { invite_token, full_name, email, password } = body
+    const { invite_token, full_name, email, password, age, child_name } = body
 
     if (!invite_token || !full_name || !email || !password) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
+    }
+
+    const ageNum = age ? parseInt(age) : null
+    const isParentAccount = ageNum !== null && ageNum > 0 && ageNum < 13
+
+    if (isParentAccount && !child_name?.trim()) {
+      return NextResponse.json({ error: "Please enter your child's name" }, { status: 400 })
     }
 
     if (password.length < 8) {
@@ -20,7 +27,7 @@ export async function POST(request: NextRequest) {
     // Validate the invite token
     const { data: link, error: linkErr } = await adminClient
       .from('invite_links')
-      .select('id, coach_id, org_id, sport, trial_days, max_uses, uses, expires_at')
+      .select('id, coach_id, org_id, sport, max_uses, uses, expires_at')
       .eq('token', invite_token)
       .single()
 
@@ -53,21 +60,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to create user' }, { status: 500 })
     }
 
-    // Build profile with trial period
-    const days = link.trial_days || 30
-    const trialExpires = new Date()
-    trialExpires.setDate(trialExpires.getDate() + days)
+    // Build profile
+    const profileData: any = {
+      id: authData.user.id,
+      full_name,
+      role: 'athlete',
+      athlete_type: link.sport || 'softball',
+      sports: link.sport ? [link.sport] : ['softball'],
+    }
+
+    if (ageNum) {
+      profileData.age = ageNum
+    }
+
+    if (isParentAccount) {
+      profileData.account_type = 'parent_guardian'
+      profileData.child_name = child_name.trim()
+      profileData.child_age = ageNum
+    }
 
     const { error: profileError } = await adminClient
       .from('profiles')
-      .upsert({
-        id: authData.user.id,
-        full_name,
-        role: 'athlete',
-        athlete_type: link.sport || 'softball',
-        sports: link.sport ? [link.sport] : ['softball'],
-        trial_expires_at: trialExpires.toISOString(),
-      })
+      .upsert(profileData)
 
     if (profileError) {
       // Clean up auth user if profile fails

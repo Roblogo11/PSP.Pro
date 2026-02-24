@@ -319,8 +319,17 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['walk me through signup', 'signup page', 'signup walkthrough'],
     title: 'Signup Page Walkthrough',
-    response: 'The Signup page has these fields:\n\n• Full Name — your real name\n• Email Address — used for login and notifications\n• Password — minimum 8 characters\n• Sports — checkboxes for Softball, Basketball, Soccer (select all that apply, at least 1 required)\n• Age — your current age\n• Parent/Guardian Info — appears automatically if your age is under 18 (name, email, phone required)\n• Terms checkbox — agree to Terms of Service & Privacy Policy\n\nOnce you submit, your account is created and you\'re logged in immediately. You\'ll land on the FAQ page with a welcome banner that links to Pricing (to purchase a plan) and your Dashboard.\n\nNote: You need a membership or package to access the training dashboard — without one you\'ll be redirected to the Membership Required page.',
+    response: 'The Signup page has these fields:\n\n• Full Name — your real name (or parent name if under 13)\n• Email Address — used for login and notifications\n• Password — minimum 8 characters\n• Sports — checkboxes for Softball, Basketball, Soccer (select all that apply, at least 1 required)\n• Age — your current age\n• Parent/Guardian Info — appears automatically if your age is under 18 (name, email, phone required)\n• Under 13? — the account becomes a Parent/Guardian account. You\'ll enter your (parent) info as the account holder, plus your child\'s name.\n• Terms checkbox — agree to Terms of Service & Privacy Policy\n\nOnce you submit, your account is created and you\'re logged in immediately. You\'ll land on the FAQ page with a welcome banner that links to Pricing (to purchase a plan) and your Dashboard.\n\nNote: You need a membership or package to access the training dashboard — without one you\'ll be redirected to the Membership Required page.',
     actions: [{ label: 'Go to Signup', href: '/signup' }],
+  },
+
+  // ── PARENT/GUARDIAN ACCOUNTS ──
+  {
+    keywords: ['parent account', 'guardian account', 'under 13', 'underage', 'child account', 'coppa', 'parent guardian', 'kid account', 'my kid', 'my child', 'young athlete'],
+    title: 'Parent/Guardian Accounts (Under 13)',
+    response: 'For athletes under 13, PSP.Pro uses a Parent/Guardian account model for safety and compliance:\n\n• The account belongs to the parent/guardian — you sign up with YOUR name and email\n• Your child\'s name and age are stored separately\n• You log in and manage your child\'s training dashboard\n• The child never needs to interact with the platform directly\n\nHow it works:\n1. During signup, enter your child\'s age (under 13)\n2. The form switches to "Parent/Guardian" mode\n3. Enter YOUR name, email, and password\n4. Enter your child\'s name\n5. Create the account — you\'re the account holder!\n\nOn the dashboard:\n• The welcome greeting shows your child\'s name\n• A purple badge shows "Parent/Guardian account for [child name]"\n• You can update your child\'s info in Settings\n\nCoaches can also create parent accounts when adding athletes under 13 from the Admin panel.',
+    actions: [{ label: 'Sign Up', href: '/signup' }],
+    followUp: ['How do I sign up?', 'How do I update my child\'s info?', 'What about ages 13-17?'],
   },
 
   // ── LOGIN ──
@@ -482,7 +491,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['add athlete', 'create athlete', 'new athlete', 'register athlete'],
     title: 'Adding Athletes (Coach Tool)',
-    response: 'To add an athlete:\n\n1. Go to Admin → Athletes\n2. Click "Add Athlete" button\n3. Fill in the form:\n   • Full Name (required)\n   • Email (required — used for their login)\n   • Sport(s) — select multiple sports if needed (Softball, Basketball, Soccer)\n   • Age\n   • Parent/Guardian info (if under 18)\n4. Click "Create"\n\nWhat happens next:\n• The athlete gets a 30-day trial with full dashboard access — no package purchase needed yet!\n• They need to set their password: go to /forgot-password, enter the email you used, and click "Send Reset Link"\n• After clicking the link in their email, they set a password and can log in\n• Trial countdown shows in the system — after 30 days they\'ll need to purchase a package\n\nYou can also edit or delete athletes from the Athletes management page.',
+    response: 'To add an athlete:\n\n1. Go to Admin → Athletes\n2. Click "Add Athlete" button\n3. Fill in the form:\n   • Full Name (required)\n   • Email (required — used for their login)\n   • Sport(s) — select multiple sports if needed (Softball, Basketball, Soccer)\n   • Age\n   • Parent/Guardian info (if under 18)\n4. Click "Create"\n\nWhat happens next:\n• The athlete account is created — they can book sessions immediately\n• They need to set their password: go to /forgot-password, enter the email you used, and click "Send Reset Link"\n• After clicking the link in their email, they set a password and can log in\n• To access the full training dashboard (progress, drills, leaderboards, etc.) they need an active membership package\n• Session-only buyers can book and view their sessions without a full membership\n\nYou can also edit or delete athletes from the Athletes management page.',
     actions: [{ label: 'Athlete Management', href: '/admin/athletes' }],
     role: 'coach',
   },
@@ -1027,6 +1036,18 @@ const KNOWLEDGE_BASE: KBEntry[] = [
     response: 'The fastest way to bring athletes onto PSP.Pro is with an Invite Link!\n\nHow to generate an invite link:\n1. Go to Admin → Athletes\n2. Click "Invite Link" button (next to "Add Athlete")\n3. Select the sport (optional)\n4. Click "Generate Link"\n5. Copy the link and text/email it to your athlete\n\nWhen the athlete opens the link:\n• They see your name — "Coach Rachel invited you to train!"\n• They fill in their name, email, and password\n• Account is created automatically\n• They can log in immediately and access their dashboard\n\nEach link can only be used once and expires in 7 days. Generate a new one for each athlete!\n\nYou can also create accounts manually via Admin → Athletes → Add Athlete if you prefer.',
     actions: [{ label: 'Manage Athletes', href: '/admin/athletes' }],
     followUp: ['How do I create an athlete account?', 'How do I add athletes?'],
+    role: 'coach',
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // ── PARENT/GUARDIAN ACCOUNTS (COACH VIEW) ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['under 13 athlete', 'parent account coach', 'create young athlete', 'child athlete', 'coppa coach', 'underage athlete', 'minor athlete'],
+    title: 'Creating Under-13 Athlete Accounts',
+    response: 'When adding athletes under 13, PSP.Pro automatically creates a Parent/Guardian account:\n\nFrom Admin → Athletes → Add Athlete:\n1. Enter the athlete\'s age (under 13)\n2. The form switches to Parent/Guardian mode\n3. "Full Name" becomes "Child\'s Name"\n4. "Email" becomes "Parent/Guardian Email (Login)"\n5. Fill in parent/guardian info in the section below\n6. Submit — the account is created as a parent account\n\nThe parent logs in with their email and sees their child\'s training data. The child never needs platform access.\n\nInvite links also support this — if an athlete enters age under 13 on the invite signup page, it automatically becomes a parent account.\n\nIn the Athletes list, parent accounts show a purple "Parent Account" badge and display "Managed by [parent name]" under the child\'s name.',
+    actions: [{ label: 'Add Athlete', href: '/admin/athletes/create' }],
+    followUp: ['How do invite links work?', 'How do I manage athletes?'],
     role: 'coach',
   },
 

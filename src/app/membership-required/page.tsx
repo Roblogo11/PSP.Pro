@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Shield, Package, ArrowRight, HelpCircle, LogOut } from 'lucide-react'
+import { Shield, Package, ArrowRight, HelpCircle, LogOut, Calendar } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
@@ -28,11 +28,15 @@ export default function MembershipRequiredPage() {
             </div>
 
             <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white mb-4">
-              Membership <span className="text-gradient-orange">Required</span>
+              Members <span className="text-gradient-orange">Only</span>
             </h1>
 
-            <p className="text-lg text-slate-600 dark:text-white/80 mb-8 max-w-lg mx-auto">
-              Your account is set up, but you need an active membership or lesson package to access the training dashboard.
+            <p className="text-lg text-slate-600 dark:text-white/80 mb-4 max-w-lg mx-auto">
+              This feature requires an active membership package. Upgrade to unlock your full training dashboard.
+            </p>
+
+            <p className="text-sm text-slate-500 dark:text-white/50 mb-8 max-w-lg mx-auto">
+              You can still book and manage sessions without a membership.
             </p>
 
             {/* Action Buttons */}
@@ -41,6 +45,10 @@ export default function MembershipRequiredPage() {
                 <Package className="w-5 h-5" />
                 <span>View Memberships & Pricing</span>
                 <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link href="/sessions" className="px-8 py-4 rounded-xl bg-cyan-600/10 hover:bg-cyan-600/20 text-cyan-800 dark:text-white border border-cyan-600/30 hover:border-cyan-600/50 transition-all flex items-center gap-2 justify-center font-semibold">
+                <Calendar className="w-5 h-5" />
+                <span>Manage My Sessions</span>
               </Link>
             </div>
 

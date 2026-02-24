@@ -59,14 +59,13 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { sport, trial_days = 30, max_uses = 1, org_id } = body
+    const { sport, max_uses = 1, org_id } = body
 
     const { data: link, error } = await adminClient
       .from('invite_links')
       .insert({
         coach_id: user.id,
         sport: sport || null,
-        trial_days,
         max_uses,
         org_id: org_id || null,
       })

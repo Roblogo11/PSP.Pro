@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { User, Mail, Calendar, Phone, UserPlus, Loader2, Clock } from 'lucide-react'
+import { User, Mail, Calendar, Phone, UserPlus, Loader2, ShieldCheck } from 'lucide-react'
 
 export default function CreateAthletePage() {
   const router = useRouter()
@@ -12,11 +12,12 @@ export default function CreateAthletePage() {
   const [age, setAge] = useState<string>('')
   const [showParentFields, setShowParentFields] = useState(false)
   const [selectedSports, setSelectedSports] = useState<string[]>(['softball'])
-  const [trialDays, setTrialDays] = useState('30')
+  const [underThirteen, setUnderThirteen] = useState(false)
 
   const handleAgeChange = (value: string) => {
     setAge(value)
     const ageNum = parseInt(value, 10)
+    setUnderThirteen(ageNum > 0 && ageNum < 13)
     setShowParentFields(ageNum > 0 && ageNum < 18)
   }
 
@@ -39,16 +40,19 @@ export default function CreateAthletePage() {
     setSuccess(false)
 
     const formData = new FormData(e.currentTarget)
-    const data = {
+    const ageNum = parseInt(age, 10)
+    const isParentAccount = ageNum < 13
+    const data: any = {
       email: formData.get('email') as string,
       full_name: formData.get('fullName') as string,
-      // Password is auto-generated server-side; athlete uses "Forgot Password" to set their own
       sports: selectedSports,
-      age: parseInt(age, 10),
+      age: ageNum,
       parent_guardian_name: formData.get('parentGuardianName') as string,
       parent_guardian_email: formData.get('parentGuardianEmail') as string,
       parent_guardian_phone: formData.get('parentGuardianPhone') as string,
-      trial_days: trialDays,
+    }
+    if (isParentAccount) {
+      data.child_name = data.full_name // The "Full Name" field is the child's name for under-13
     }
 
     try {
@@ -110,10 +114,25 @@ export default function CreateAthletePage() {
       {/* Form */}
       <form onSubmit={handleSubmit} className="glass-card p-8">
         <div className="space-y-5">
-          {/* Full Name */}
+          {/* Parent account banner for under-13 */}
+          {underThirteen && (
+            <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/30">
+              <div className="flex items-start gap-3">
+                <ShieldCheck className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-purple-600 dark:text-purple-300 mb-1">Parent/Guardian Account</p>
+                  <p className="text-xs text-purple-500 dark:text-purple-400/80 leading-relaxed">
+                    For under-13 athletes, the account belongs to the parent. Enter the parent&apos;s email as the login and the child&apos;s name below.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Full Name (athlete name — for under-13, this becomes the child's name) */}
           <div>
             <label htmlFor="fullName" className="block text-sm font-medium text-cyan-800 dark:text-white mb-2">
-              Full Name *
+              {underThirteen ? "Child's Name *" : 'Full Name *'}
             </label>
             <div className="relative">
               <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-700 dark:text-white" />
@@ -123,7 +142,7 @@ export default function CreateAthletePage() {
                 type="text"
                 required
                 className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
-                placeholder="John Smith"
+                placeholder={underThirteen ? "Child's full name" : 'John Smith'}
               />
             </div>
           </div>
@@ -131,7 +150,7 @@ export default function CreateAthletePage() {
           {/* Email */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-cyan-800 dark:text-white mb-2">
-              Email Address *
+              {underThirteen ? "Parent/Guardian Email (Login) *" : 'Email Address *'}
             </label>
             <div className="relative">
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-700 dark:text-white" />
@@ -141,7 +160,7 @@ export default function CreateAthletePage() {
                 type="email"
                 required
                 className="w-full pl-12 pr-4 py-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
-                placeholder="athlete@example.com"
+                placeholder={underThirteen ? "parent@example.com" : 'athlete@example.com'}
               />
             </div>
           </div>

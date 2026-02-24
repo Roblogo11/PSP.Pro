@@ -29,7 +29,6 @@ export async function GET(
       valid: true,
       coachName: (link.coach as any)?.full_name || 'Your Coach',
       sport: link.sport,
-      trialDays: link.trial_days,
     })
   } catch (error: any) {
     return NextResponse.json({ valid: false, error: error.message }, { status: 500 })

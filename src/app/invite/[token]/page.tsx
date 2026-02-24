@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Zap, CheckCircle, AlertTriangle, Eye, EyeOff } from 'lucide-react'
+import { Zap, CheckCircle, AlertTriangle, Eye, EyeOff, ShieldCheck } from 'lucide-react'
 
 export default function InvitePage() {
   const { token } = useParams<{ token: string }>()
@@ -14,15 +14,18 @@ export default function InvitePage() {
   const [invalidReason, setInvalidReason] = useState('')
   const [coachName, setCoachName] = useState('')
   const [sport, setSport] = useState<string | null>(null)
-  const [trialDays, setTrialDays] = useState(30)
 
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [age, setAge] = useState('')
+  const [childName, setChildName] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+
+  const underThirteen = parseInt(age) > 0 && parseInt(age) < 13
 
   useEffect(() => {
     async function validateToken() {
@@ -33,7 +36,6 @@ export default function InvitePage() {
           setValid(true)
           setCoachName(data.coachName)
           setSport(data.sport)
-          setTrialDays(data.trialDays)
         } else {
           setInvalidReason(data.error || 'Invalid link')
         }
@@ -50,6 +52,7 @@ export default function InvitePage() {
     e.preventDefault()
     if (!fullName || !email || !password) { setError('All fields required'); return }
     if (password.length < 8) { setError('Password must be at least 8 characters'); return }
+    if (underThirteen && !childName.trim()) { setError("Please enter your child's name"); return }
 
     setSubmitting(true)
     setError('')
@@ -63,6 +66,8 @@ export default function InvitePage() {
           full_name: fullName,
           email,
           password,
+          ...(age ? { age: parseInt(age) } : {}),
+          ...(underThirteen ? { child_name: childName } : {}),
         }),
       })
       const data = await res.json()
@@ -134,20 +139,65 @@ export default function InvitePage() {
         {/* Form */}
         <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Athlete Age (optional but enables parent account for under-13) */}
             <div>
-              <label className="block text-sm font-semibold text-white/70 mb-1.5">Full Name</label>
+              <label className="block text-sm font-semibold text-white/70 mb-1.5">Athlete Age</label>
+              <input
+                type="number"
+                value={age}
+                onChange={e => setAge(e.target.value)}
+                placeholder="16"
+                min="5"
+                max="100"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:border-orange focus:outline-none transition-colors"
+              />
+            </div>
+
+            {/* Parent account banner for under-13 */}
+            {underThirteen && (
+              <div className="p-3 rounded-xl bg-purple-500/10 border border-purple-500/30">
+                <div className="flex items-start gap-2">
+                  <ShieldCheck className="w-4 h-4 text-purple-400 flex-shrink-0 mt-0.5" />
+                  <p className="text-xs text-purple-300 leading-relaxed">
+                    For under-13 athletes, this account is for the parent/guardian. You&apos;ll manage your child&apos;s dashboard.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Child's name (only for parent accounts) */}
+            {underThirteen && (
+              <div>
+                <label className="block text-sm font-semibold text-purple-300 mb-1.5">Child&apos;s Name *</label>
+                <input
+                  type="text"
+                  value={childName}
+                  onChange={e => setChildName(e.target.value)}
+                  placeholder="Child's full name"
+                  required
+                  className="w-full px-4 py-3 bg-white/5 border border-purple-500/30 rounded-xl text-white placeholder-purple-400/40 focus:border-purple-400 focus:outline-none transition-colors"
+                />
+              </div>
+            )}
+
+            <div>
+              <label className="block text-sm font-semibold text-white/70 mb-1.5">
+                {underThirteen ? 'Parent/Guardian Name' : 'Full Name'}
+              </label>
               <input
                 type="text"
                 value={fullName}
                 onChange={e => setFullName(e.target.value)}
-                placeholder="Jane Smith"
+                placeholder={underThirteen ? 'Parent/Guardian name' : 'Jane Smith'}
                 required
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:border-orange focus:outline-none transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-white/70 mb-1.5">Email Address</label>
+              <label className="block text-sm font-semibold text-white/70 mb-1.5">
+                {underThirteen ? 'Parent/Guardian Email' : 'Email Address'}
+              </label>
               <input
                 type="email"
                 value={email}

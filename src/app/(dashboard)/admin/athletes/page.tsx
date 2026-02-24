@@ -36,6 +36,8 @@ interface Athlete {
   role: string
   created_at: string
   updated_at: string
+  account_type: string | null
+  child_name: string | null
 }
 
 interface AthleteStats {
@@ -52,7 +54,6 @@ interface InviteLink {
   coach_id: string
   token: string
   sport: string | null
-  trial_days: number
   max_uses: number
   uses: number
   expires_at: string
@@ -82,7 +83,6 @@ export default function AthletesManagementPage() {
   const [inviteModalOpen, setInviteModalOpen] = useState(false)
   const [inviteLinks, setInviteLinks] = useState<InviteLink[]>([])
   const [inviteSport, setInviteSport] = useState<string>('')
-  const [inviteTrialDays, setInviteTrialDays] = useState<number>(30)
   const [isGeneratingLink, setIsGeneratingLink] = useState(false)
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null)
   const [newlyGeneratedUrl, setNewlyGeneratedUrl] = useState<string | null>(null)
@@ -116,7 +116,7 @@ export default function AthletesManagementPage() {
         // Load all athletes WITH emails (after migration 020)
         const { data: athletesData, error: athletesError } = await supabase
           .from('profiles')
-          .select('id, full_name, email, avatar_url, athlete_type, age, role, created_at, updated_at')
+          .select('id, full_name, email, avatar_url, athlete_type, age, role, created_at, updated_at, account_type, child_name')
           .eq('role', 'athlete')
           .order('full_name')
 
@@ -228,7 +228,6 @@ export default function AthletesManagementPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sport: inviteSport || null,
-          trial_days: inviteTrialDays,
           max_uses: 1,
         }),
       })
@@ -302,7 +301,7 @@ export default function AthletesManagementPage() {
       const supabase = createClient()
       const { data: athletesData } = await supabase
         .from('profiles')
-        .select('id, full_name, avatar_url, athlete_type, age, role, created_at, updated_at')
+        .select('id, full_name, avatar_url, athlete_type, age, role, created_at, updated_at, account_type, child_name')
         .eq('role', 'athlete')
         .order('full_name')
 
@@ -346,7 +345,7 @@ export default function AthletesManagementPage() {
       const supabase = createClient()
       const { data: athletesData } = await supabase
         .from('profiles')
-        .select('id, full_name, email, avatar_url, athlete_type, age, role, created_at, updated_at')
+        .select('id, full_name, email, avatar_url, athlete_type, age, role, created_at, updated_at, account_type, child_name')
         .eq('role', 'athlete')
         .order('full_name')
 
@@ -492,7 +491,7 @@ export default function AthletesManagementPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div data-tour="athletes-stats" className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <div className="command-panel-active">
           <div className="flex items-center gap-3 mb-2">
             <Users className="w-6 h-6 text-orange" />
@@ -566,7 +565,7 @@ export default function AthletesManagementPage() {
       </div>
 
       {/* Athletes Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div data-tour="athletes-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredAthletes.map((athlete) => {
           const stats = athleteStats[athlete.id]
           return (
@@ -590,12 +589,26 @@ export default function AthletesManagementPage() {
                 )}
                 <div className="flex-1">
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-orange transition-colors mb-1">
-                    {athlete.full_name}
+                    {athlete.account_type === 'parent_guardian' && athlete.child_name
+                      ? athlete.child_name
+                      : athlete.full_name}
                   </h3>
-                  {athlete.athlete_type && (
-                    <span className="inline-block px-2 py-1 bg-cyan/20 border border-cyan/30 rounded-lg text-xs text-cyan font-semibold capitalize">
-                      {athlete.athlete_type}
-                    </span>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {athlete.athlete_type && (
+                      <span className="inline-block px-2 py-1 bg-cyan/20 border border-cyan/30 rounded-lg text-xs text-cyan font-semibold capitalize">
+                        {athlete.athlete_type}
+                      </span>
+                    )}
+                    {athlete.account_type === 'parent_guardian' && (
+                      <span className="inline-block px-2 py-1 bg-purple-500/20 border border-purple-500/30 rounded-lg text-xs text-purple-400 font-semibold">
+                        Parent Account
+                      </span>
+                    )}
+                  </div>
+                  {athlete.account_type === 'parent_guardian' && (
+                    <p className="text-xs text-cyan-700 dark:text-white/50 mt-1">
+                      Managed by {athlete.full_name}
+                    </p>
                   )}
                 </div>
               </div>

@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       parent_guardian_name,
       parent_guardian_email,
       parent_guardian_phone,
-      trial_days, // Number of days for free trial (default 7)
+      child_name, // For parent/guardian accounts (under-13)
     } = body
 
     // Validate required fields
@@ -79,11 +79,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Update the profile with additional athlete data
-    // Note: Only including columns that exist in profiles table
-    const days = trial_days ? parseInt(trial_days) : 30
-    const trialExpires = new Date()
-    trialExpires.setDate(trialExpires.getDate() + days)
-
     const profileData: any = {
       id: authData.user.id,
       full_name,
@@ -91,11 +86,24 @@ export async function POST(request: NextRequest) {
       athlete_type: sports ? sports[0] : athlete_type, // Primary sport for backwards compatibility
       age: age ? parseInt(age) : null,
       role: 'athlete',
-      trial_expires_at: trialExpires.toISOString(),
     }
 
-    // Add parent/guardian info if athlete is under 18
-    if (age && parseInt(age) < 18) {
+    // Under-13: auto-create parent/guardian account
+    const ageNum = age ? parseInt(age) : null
+    if (ageNum && ageNum < 13) {
+      profileData.account_type = 'parent_guardian'
+      profileData.child_name = child_name || full_name
+      profileData.child_age = ageNum
+      // For parent accounts: full_name is the parent, child_name is the athlete
+      // If coach provided parent_guardian_name, use that as account holder name
+      if (parent_guardian_name) {
+        profileData.full_name = parent_guardian_name
+        profileData.child_name = full_name
+      }
+      profileData.parent_guardian_name = profileData.full_name
+      profileData.parent_guardian_email = email
+    } else if (ageNum && ageNum < 18) {
+      // 13-17: standard account with parent info
       if (parent_guardian_name) profileData.parent_guardian_name = parent_guardian_name
       if (parent_guardian_email) profileData.parent_guardian_email = parent_guardian_email
       if (parent_guardian_phone) profileData.parent_guardian_phone = parent_guardian_phone
