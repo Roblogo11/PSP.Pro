@@ -1135,21 +1135,17 @@ const HYPE_OPENERS = [
   'Alright, let\'s work!',
 ]
 
-const HYPE_CLOSERS = [
-  '\n\nLet\'s get after it! Progression Over Perfection!',
-  '\n\nYou got this! Progression Over Perfection!',
-  '\n\nLet\'s go! Progression Over Perfection!',
-  '\n\nNow let\'s make it happen!',
-  '\n\nKeep grinding — Progression Over Perfection!',
-  '\n\nThat\'s how we do it at PSP!',
-]
-
 function addCoachHype(response: string): string {
-  // Use a simple hash of the response to pick consistent but varied openers/closers
+  // Use a simple hash of the response to pick consistent but varied openers
   const hash = response.length + response.charCodeAt(0)
   const opener = HYPE_OPENERS[hash % HYPE_OPENERS.length]
-  const closer = HYPE_CLOSERS[hash % HYPE_CLOSERS.length]
-  return `${opener} ${response}${closer}`
+
+  // Skip opener if the response already starts with an energetic hook
+  const startsHype = /^(yo|hey|welcome|alright|ok|the |from |our |your |see |tap |click )/i.test(response)
+  const prefix = startsHype ? '' : `${opener} `
+
+  // No more generic closers — the KB responses already have natural endings
+  return `${prefix}${response}`
 }
 
 // ─── Smart Matching Engine ───────────────────────────────────

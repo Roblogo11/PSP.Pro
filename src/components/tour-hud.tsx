@@ -933,6 +933,28 @@ function computeCardPos(targetRect: DOMRect, cardW = 360, cardH = 200): CardPos 
   }
 }
 
+// ─── Tour Active Banner ─────────────────────────────────────────
+function TourActiveBanner({ onEnd, ending }: { onEnd: () => void; ending: boolean }) {
+  return (
+    <motion.div
+      initial={{ y: -40, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: -40, opacity: 0 }}
+      className="fixed top-0 left-0 right-0 z-[130] flex items-center justify-center gap-3 py-1.5 px-4 bg-gradient-to-r from-orange via-amber-500 to-orange text-white text-sm font-bold shadow-lg"
+    >
+      <span className="text-base">🧪</span>
+      <span>Tour Mode Active — data will be cleaned up when you finish</span>
+      <button
+        onClick={onEnd}
+        disabled={ending}
+        className="ml-2 px-3 py-0.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-xs font-bold transition-colors border border-white/30"
+      >
+        {ending ? 'Ending...' : 'End Tour'}
+      </button>
+    </motion.div>
+  )
+}
+
 // ─── Main TourHUD Component ───────────────────────────────────
 export function TourHUD() {
   const pathname = usePathname()
@@ -952,6 +974,41 @@ export function TourHUD() {
   useEffect(() => {
     if (isTourActive()) { setActive(true); setCurrentStep(0) }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Auto-end tour when user leaves (tab close / navigate away) ──
+  useEffect(() => {
+    if (!active) return
+
+    const handleBeforeUnload = () => {
+      // Use sendBeacon for reliable fire-on-close
+      navigator.sendBeacon('/api/tour/end', '')
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        // Mark timestamp — if they come back quickly, don't end tour
+        sessionStorage.setItem('psp_tour_hidden_at', Date.now().toString())
+      } else if (document.visibilityState === 'visible') {
+        // Back within 5 minutes? Keep tour. Otherwise end it.
+        const hiddenAt = sessionStorage.getItem('psp_tour_hidden_at')
+        if (hiddenAt) {
+          const elapsed = Date.now() - parseInt(hiddenAt, 10)
+          if (elapsed > 5 * 60 * 1000) {
+            endTour()
+          }
+          sessionStorage.removeItem('psp_tour_hidden_at')
+        }
+      }
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [active]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const tour = active ? PAGE_TOURS[pathname] ?? null : null
   const steps = tour?.steps ?? []
@@ -1029,11 +1086,17 @@ export function TourHUD() {
     markPageVisited(pathname)
   }
 
-  if (!active || !tour || !step) return null
+  // No tour definition for this page — show persistent "Tour Active" banner only
+  if (!active) return null
+  if (!tour || !step) {
+    return (
+      <TourActiveBanner onEnd={endTour} ending={ending} />
+    )
+  }
 
   // Compute card position
   const CARD_W = 360
-  const CARD_H = 190
+  const CARD_H = 240
   const pos: CardPos = targetRect
     ? computeCardPos(targetRect, CARD_W, CARD_H)
     : { bottom: 76, left: 12, arrowDir: 'none' }
@@ -1049,6 +1112,9 @@ export function TourHUD() {
 
   return (
     <>
+      {/* Persistent banner */}
+      <TourActiveBanner onEnd={endTour} ending={ending} />
+
       {/* Spotlight overlay */}
       <SpotlightOverlay
         targetRect={targetRect}
@@ -1128,7 +1194,7 @@ export function TourHUD() {
                   <div className="flex-1 min-w-0">
                     <span className="text-[10px] font-black text-orange tracking-widest uppercase block mb-0.5">Dr. Prop</span>
                     <p className="font-bold text-white text-[13px] leading-snug mb-1">{step.title}</p>
-                    <p className="text-[12px] text-white/55 leading-relaxed line-clamp-3">{step.message}</p>
+                    <p className="text-[12px] text-white/80 leading-relaxed">{step.message}</p>
                     {step.highlight && (
                       <p className="text-[11px] text-orange/60 mt-1.5 font-medium">
                         👆 Tap the highlighted area to continue

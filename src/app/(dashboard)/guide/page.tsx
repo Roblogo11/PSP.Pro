@@ -225,15 +225,16 @@ function StepCard({ step, stepNumber }: { step: GuideStep; stepNumber: number })
             {step.description}
           </p>
           <div className="flex items-center gap-3 flex-wrap">
-            <Link
-              href={`${step.href}?from=guide`}
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-orange hover:text-orange-300 transition-colors"
-            >
-              Go There
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            {pageHasTour(step.href) && (
+            {pageHasTour(step.href) ? (
               <TourTriggerButton page={step.href} compact />
+            ) : (
+              <Link
+                href={step.href}
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-orange hover:text-orange-300 transition-colors"
+              >
+                Go There
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             )}
           </div>
         </div>

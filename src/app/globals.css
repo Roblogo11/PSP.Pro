@@ -336,14 +336,14 @@
   html:not(.dark) input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
   html:not(.dark) select,
   html:not(.dark) textarea {
-    background: rgba(241, 245, 249, 0.9) !important;
-    color: #1e293b !important;
-    border-color: rgba(0, 180, 216, 0.3) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #0f172a !important;
+    border-color: rgba(0, 180, 216, 0.4) !important;
   }
 
   html:not(.dark) input::placeholder,
   html:not(.dark) textarea::placeholder {
-    color: #94a3b8 !important;
+    color: #64748b !important;
   }
 
   html:not(.dark) select option {

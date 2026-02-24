@@ -376,7 +376,7 @@ export function Sidebar() {
             {!collapsed && (
               <span className="text-sm font-medium bg-gradient-to-r from-cyan to-orange bg-clip-text text-transparent">Theme</span>
             )}
-            <ThemeToggle />
+            {collapsed ? <ThemeToggleCompact /> : <ThemeToggle />}
           </div>
 
           <motion.button
