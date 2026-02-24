@@ -1232,8 +1232,10 @@ export function PSPAssistant() {
   const [input, setInput] = useState('')
   const [hasGreeted, setHasGreeted] = useState(false)
   const [fromGuide, setFromGuide] = useState(false)
+  const [isTyping, setIsTyping] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const typingTimeoutsRef = useRef<NodeJS.Timeout[]>([])
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const { profile, isCoach, isAdmin } = useUserRole()
@@ -1326,7 +1328,11 @@ export function PSPAssistant() {
   }
 
   const handleQuery = (query: string) => {
-    if (!query.trim()) return
+    if (!query.trim() || isTyping) return
+
+    // Clear any pending timeouts from previous query
+    typingTimeoutsRef.current.forEach(clearTimeout)
+    typingTimeoutsRef.current = []
 
     const userMessage = {
       id: `user-${Date.now()}`,
@@ -1342,24 +1348,68 @@ export function PSPAssistant() {
     const hasTourIntent = tourKeywords.some(kw => query.toLowerCase().includes(kw))
     const attachTour = hasTourIntent && pageHasTour(pathname)
 
-    const assistantMessage = {
-      id: `assistant-${Date.now()}`,
-      type: 'assistant',
-      content: hypedResponse,
-      module: match,
-      ...(attachTour ? { tourPage: pathname } : {}),
-    }
+    // Split response into chunks at double-newlines
+    const chunks = hypedResponse.split('\n\n').filter((c: string) => c.trim())
 
-    setMessages(prev => [...prev, userMessage, assistantMessage])
+    // Add user message + show typing indicator immediately
+    const typingId = `typing-${Date.now()}`
+    setMessages(prev => [...prev, userMessage, { id: typingId, type: 'typing' }])
+    setIsTyping(true)
+
+    // Drip-feed chunks with delays
+    const DELAY = 700 // ms between chunks
+    chunks.forEach((chunk: string, i: number) => {
+      const timeout = setTimeout(() => {
+        const isFirst = i === 0
+        const isLast = i === chunks.length - 1
+        const chunkMessage = {
+          id: `assistant-${Date.now()}-${i}`,
+          type: 'assistant',
+          content: chunk,
+          // Title on first bubble only
+          ...(isFirst ? { moduleTitle: match.title } : {}),
+          // Actions, followUp, tourPage on last bubble only
+          ...(isLast ? {
+            module: { ...match, title: '' },
+            ...(attachTour ? { tourPage: pathname } : {}),
+          } : {}),
+        }
+
+        setMessages(prev => {
+          // Remove the typing indicator
+          const withoutTyping = prev.filter(m => m.type !== 'typing')
+          // Add the chunk + new typing indicator (unless last)
+          if (isLast) {
+            return [...withoutTyping, chunkMessage]
+          }
+          return [...withoutTyping, chunkMessage, { id: `typing-${Date.now()}`, type: 'typing' }]
+        })
+
+        if (isLast) {
+          setIsTyping(false)
+        }
+      }, DELAY * (i + 1))
+
+      typingTimeoutsRef.current.push(timeout)
+    })
   }
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      typingTimeoutsRef.current.forEach(clearTimeout)
+    }
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    if (isTyping) return
     handleQuery(input)
     setInput('')
   }
 
   const handleSuggestionClick = (query: string) => {
+    if (isTyping) return
     handleQuery(query)
   }
 
@@ -1415,6 +1465,18 @@ export function PSPAssistant() {
         .shimmer-wipe {
           background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%);
           animation: shimmer-wipe 1.6s ease-in-out infinite;
+        }
+        .typing-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.5);
+          display: inline-block;
+          animation: typing-bounce 1.2s ease-in-out infinite;
+        }
+        @keyframes typing-bounce {
+          0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+          30% { transform: translateY(-6px); opacity: 1; }
         }
       `}</style>
 
@@ -1480,20 +1542,41 @@ export function PSPAssistant() {
                   <div key={msg.id}>
                     {msg.type === 'user' ? (
                       <div className="flex justify-end">
-                        <div className="max-w-[85%] px-3 py-2 rounded-2xl rounded-tr-sm bg-orange/80 text-white text-sm">
+                        <motion.div
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="max-w-[85%] px-3 py-2 rounded-2xl rounded-tr-sm bg-orange/80 text-white text-sm"
+                        >
                           {msg.content}
-                        </div>
+                        </motion.div>
                       </div>
+                    ) : msg.type === 'typing' ? (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.15 }}
+                        className="flex items-center gap-1.5 px-4 py-3 rounded-2xl rounded-tl-sm bg-white/10 w-fit"
+                      >
+                        <span className="typing-dot" />
+                        <span className="typing-dot" style={{ animationDelay: '0.15s' }} />
+                        <span className="typing-dot" style={{ animationDelay: '0.3s' }} />
+                      </motion.div>
                     ) : (
                       <div className="flex flex-col gap-2">
-                        <div className="max-w-[90%] px-3 py-2.5 rounded-2xl rounded-tl-sm bg-white/10 text-white/90 text-sm whitespace-pre-line leading-relaxed">
-                          {msg.module?.title && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="max-w-[90%] px-3 py-2.5 rounded-2xl rounded-tl-sm bg-white/10 text-white/90 text-sm whitespace-pre-line leading-relaxed"
+                        >
+                          {(msg.moduleTitle || (msg.module?.title)) && (
                             <div className="font-bold text-white mb-1.5 text-sm">
-                              {msg.module.title}
+                              {msg.moduleTitle || msg.module.title}
                             </div>
                           )}
                           {msg.content}
-                        </div>
+                        </motion.div>
                         {/* Tour trigger button */}
                         {msg.tourPage && (
                           <div className="ml-1">
@@ -1502,7 +1585,12 @@ export function PSPAssistant() {
                         )}
                         {/* Action buttons */}
                         {msg.module?.actions && msg.module.actions.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 ml-1">
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.3, delay: 0.1 }}
+                            className="flex flex-wrap gap-1.5 ml-1"
+                          >
                             {msg.module.actions.map((action: any, i: number) => (
                               <Link
                                 key={i}
@@ -1514,11 +1602,16 @@ export function PSPAssistant() {
                                 <span>→</span>
                               </Link>
                             ))}
-                          </div>
+                          </motion.div>
                         )}
                         {/* Follow-up suggestions */}
                         {msg.module?.followUp && msg.module.followUp.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 ml-1 mt-1">
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.3, delay: 0.2 }}
+                            className="flex flex-wrap gap-1.5 ml-1 mt-1"
+                          >
                             {msg.module.followUp.map((q: string, i: number) => (
                               <button
                                 key={i}
@@ -1528,7 +1621,7 @@ export function PSPAssistant() {
                                 {q}
                               </button>
                             ))}
-                          </div>
+                          </motion.div>
                         )}
                       </div>
                     )}
@@ -1571,12 +1664,14 @@ export function PSPAssistant() {
                     type="text"
                     value={input}
                     onChange={e => setInput(e.target.value)}
-                    placeholder="Ask anything about PSP.Pro..."
-                    className="flex-1 px-4 py-2 rounded-xl bg-white/10 border border-white/10 text-white placeholder:text-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50"
+                    disabled={isTyping}
+                    placeholder={isTyping ? 'Dr. Prop is typing...' : 'Ask anything about PSP.Pro...'}
+                    className={`flex-1 px-4 py-2 rounded-xl bg-white/10 border border-white/10 text-white placeholder:text-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-opacity${isTyping ? ' opacity-50 cursor-not-allowed' : ''}`}
                   />
                   <button
                     type="submit"
-                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-orange to-orange-600 text-white font-medium text-sm hover:opacity-90 transition-opacity"
+                    disabled={isTyping}
+                    className={`px-4 py-2 rounded-xl bg-gradient-to-r from-orange to-orange-600 text-white font-medium text-sm hover:opacity-90 transition-opacity${isTyping ? ' opacity-50 cursor-not-allowed' : ''}`}
                   >
                     <Send className="w-4 h-4" />
                   </button>
