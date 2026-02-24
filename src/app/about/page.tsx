@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Target, Users, MapPin, Award, TrendingUp, Zap, Package, Rocket, Mail, ArrowRight, LayoutDashboard } from 'lucide-react'
+import { Target, Users, MapPin, Award, TrendingUp, Zap, Package, Rocket, Mail, ArrowRight, LayoutDashboard, Star, Calendar } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
 import { useUserRole } from '@/lib/hooks/use-user-role'
@@ -94,6 +94,124 @@ export default function AboutPage() {
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
+        </div>
+      </div>
+
+      {/* Meet the Coaches */}
+      <div className="command-panel mb-6">
+        <div className="flex items-center gap-3 mb-6">
+          <Users className="w-8 h-8 text-orange" />
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Meet the Coaches</h2>
+        </div>
+
+        <p className="text-lg text-slate-600 dark:text-white leading-relaxed mb-8">
+          Since 2017, Loren &amp; Rachel Bagley have owned and operated Proper Sports Performance — bringing elite-level coaching to athletes of all ages across Virginia Beach and Hampton Roads.
+        </p>
+
+        {/* Loren */}
+        <div className="p-6 rounded-xl bg-cyan-900/20 border border-orange/20 mb-6">
+          <div className="flex items-start gap-4 mb-4">
+            <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
+              <Image
+                src="/images/Praticing Soccer Drills.webp"
+                alt="Coach Loren Bagley"
+                width={64}
+                height={64}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-orange">Loren Bagley</h3>
+              <p className="text-sm text-slate-500 dark:text-white/60 flex items-center gap-1.5 mt-0.5">
+                <Star className="w-3.5 h-3.5 text-orange" />
+                Athletic Performance &amp; Skills Development Specialist
+              </p>
+            </div>
+          </div>
+
+          <p className="text-slate-600 dark:text-white/80 leading-relaxed mb-4">
+            Since 2018, Loren has been developing athletes through individualized and group performance training with a specialized focus on core strength, speed, power, and game-specific skill execution in basketball and soccer.
+          </p>
+
+          <p className="text-slate-600 dark:text-white/80 leading-relaxed mb-4">
+            His approach goes beyond drills — he builds complete athletes. With a deep understanding of performance mechanics and sport IQ, he emphasizes disciplined execution, progressive overload, and skill refinement under game-realistic conditions.
+          </p>
+
+          <p className="text-lg font-bold text-orange mb-4">
+            Discipline. Determination. Dedication.
+          </p>
+
+          <p className="text-slate-600 dark:text-white/80 leading-relaxed mb-4">
+            A former multi-sport varsity athlete at Hickory High School, Loren competed on nationally ranked soccer teams (Top 12 in the U.S. during 2003-04 and Top 2 in 2004-05). He continued his soccer career at Virginia Wesleyan College before playing for the Hampton Roads Piranhas PDL team. In basketball, he earned three varsity letters and tied the school record for most three-pointers in a single game.
+          </p>
+
+          <p className="text-slate-600 dark:text-white/80 leading-relaxed">
+            Today, Loren channels his competitive experience into developing athletes who move faster, think sharper, and perform stronger under pressure. He thrives on seeing measurable growth, breakthrough moments, and the joy athletes experience when preparation meets opportunity.
+          </p>
+
+          <div className="flex flex-wrap gap-2 mt-4">
+            <span className="px-3 py-1 bg-orange/10 border border-orange/20 text-orange text-xs font-semibold rounded-full">Basketball</span>
+            <span className="px-3 py-1 bg-orange/10 border border-orange/20 text-orange text-xs font-semibold rounded-full">Soccer</span>
+            <span className="px-3 py-1 bg-orange/10 border border-orange/20 text-orange text-xs font-semibold rounded-full">Speed &amp; Agility</span>
+            <span className="px-3 py-1 bg-orange/10 border border-orange/20 text-orange text-xs font-semibold rounded-full">Strength &amp; Power</span>
+          </div>
+        </div>
+
+        {/* Rachel */}
+        <div className="p-6 rounded-xl bg-cyan-900/20 border border-cyan/20 mb-6">
+          <div className="flex items-start gap-4 mb-4">
+            <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
+              <Image
+                src="/images/coach rachel psp.webp"
+                alt="Coach Rachel Bagley"
+                width={64}
+                height={64}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-cyan">Rachel Bagley</h3>
+              <p className="text-sm text-slate-500 dark:text-white/60 flex items-center gap-1.5 mt-0.5">
+                <Star className="w-3.5 h-3.5 text-cyan" />
+                Softball Pitching Specialist &amp; Hall of Fame Inductee
+              </p>
+            </div>
+          </div>
+
+          <p className="text-slate-600 dark:text-white/80 leading-relaxed mb-4">
+            Rachel is a former collegiate softball pitcher with an impressive career at Patrick Henry Community College, where she was inducted into the Hall of Fame and helped lead her team to a Region X Championship. She continued her success at UVA Wise, competing at the Division II level and winning a conference championship.
+          </p>
+
+          <p className="text-slate-600 dark:text-white/80 leading-relaxed mb-4">
+            Throughout her career, Rachel earned numerous accolades including Pitcher of the Year and First &amp; Second Team All-Conference honors every year she competed.
+          </p>
+
+          <p className="text-slate-600 dark:text-white/80 leading-relaxed mb-4">
+            Rachel has been coaching pitchers for over 12 years. Passionate about using her God-given abilities, she is dedicated to impacting the next generation, building confidence in young athletes, and working with players of all ages.
+          </p>
+
+          <p className="text-slate-500 dark:text-white/60 text-sm leading-relaxed">
+            Beyond coaching, Rachel and Loren stay busy raising their two boys, ages 4 and 1.
+          </p>
+
+          <div className="flex flex-wrap gap-2 mt-4">
+            <span className="px-3 py-1 bg-cyan/10 border border-cyan/20 text-cyan text-xs font-semibold rounded-full">Softball Pitching</span>
+            <span className="px-3 py-1 bg-cyan/10 border border-cyan/20 text-cyan text-xs font-semibold rounded-full">Mechanics Analysis</span>
+            <span className="px-3 py-1 bg-cyan/10 border border-cyan/20 text-cyan text-xs font-semibold rounded-full">Velocity Development</span>
+            <span className="px-3 py-1 bg-cyan/10 border border-cyan/20 text-cyan text-xs font-semibold rounded-full">Hall of Fame</span>
+          </div>
+        </div>
+
+        {/* CTA to coaches page */}
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <Link href="/coaches" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-orange to-amber-500 text-white font-bold rounded-xl hover:from-orange/90 hover:to-amber-500/90 transition-all shadow-lg shadow-orange/20 text-sm">
+            <Calendar className="w-4 h-4" />
+            Book a Session
+          </Link>
+          <Link href="/coaches" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white/5 border border-white/10 text-slate-700 dark:text-white/70 rounded-xl hover:bg-white/10 hover:text-slate-900 dark:hover:text-white transition-all text-sm font-semibold">
+            View All Coaches
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </div>
 

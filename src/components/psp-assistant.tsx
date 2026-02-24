@@ -275,10 +275,10 @@ const KNOWLEDGE_BASE: KBEntry[] = [
 
   // ── COACHES ──
   {
-    keywords: ['coach', 'trainer', 'instructor', 'staff', 'rachel', 'who teaches', 'coaching'],
+    keywords: ['coach', 'trainer', 'instructor', 'staff', 'rachel', 'loren', 'who teaches', 'coaching', 'bagley'],
     title: 'Our Coaching Team',
-    response: 'Our coaches bring real experience to every session:\n\n• College and/or pro playing experience\n• Certified training credentials\n• Data analysis and video review expertise\n• Proven track record developing athletes\n\nCoach Rachel Bagley leads our softball program — she\'s our head coach specializing in pitching mechanics, hitting development, and athletic performance across softball, basketball, and soccer.\n\nYou\'ll be matched with the best coach for your sport and goals!',
-    actions: [{ label: 'About Us', href: '/about' }, { label: 'Join the Team', href: '/get-started' }],
+    response: 'PSP is owned and operated by Loren & Rachel Bagley — they\'ve run Proper Sports Performance since 2017.\n\n🏀 Loren Bagley — Basketball, Soccer, Speed & Agility\nFormer multi-sport varsity athlete (Hickory HS) who competed on nationally ranked soccer teams (Top 12 in the US). Played at Virginia Wesleyan College and for the Hampton Roads Piranhas PDL. Specializes in core strength, speed, power, and game-specific skill execution. His motto: Discipline. Determination. Dedication.\n\n🥎 Rachel Bagley — Softball Pitching Specialist\nFormer collegiate pitcher at Patrick Henry CC (Hall of Fame inductee, Region X Championship) and UVA Wise (D2 conference championship). Earned Pitcher of the Year and All-Conference honors every year. Over 12 years of coaching experience — dedicated to building confidence in young athletes.\n\nVisit the About page or Coaches page to learn more!',
+    actions: [{ label: 'About Us', href: '/about' }, { label: 'Meet the Coaches', href: '/coaches' }],
   },
 
   // ── AGE GROUPS ──
@@ -1065,7 +1065,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['find a coach', 'who are the coaches', 'meet the coaches', 'view coaches', 'coach list', 'all coaches', 'coaches at psp'],
     title: 'Meet Our Coaches',
-    response: 'PSP.Pro coaches are elite athletes and certified trainers ready to level up your game!\n\nView all coaches at propersports.pro/coaches — each profile shows:\n• Coach bio and background\n• Specialties (pitching, hitting, speed, etc.)\n• Certifications and credentials\n• Years of experience\n• Sessions coached count\n• "Book a Session" button to book directly with that coach\n\nYou can also filter sessions by coach when booking — go to Book a Session and use the ?coach= filter to see only a specific coach\'s available slots.',
+    response: 'PSP is run by Loren & Rachel Bagley — elite coaches with real playing experience!\n\n• Loren Bagley — Basketball, soccer, speed & agility. Former nationally ranked soccer player and varsity basketball standout.\n• Rachel Bagley — Softball pitching specialist. Hall of Fame collegiate pitcher with 12+ years coaching.\n\nView all coaches at propersports.pro/coaches — each profile shows:\n• Bio and background\n• Specialties and certifications\n• Years of experience\n• "Book a Session" button to book directly\n\nYou can also filter by coach when booking!',
     actions: [{ label: 'Meet Our Coaches', href: '/coaches' }, { label: 'Book a Session', href: '/booking' }],
     followUp: ['How do I book a session?', 'What sports do you train?'],
   },
