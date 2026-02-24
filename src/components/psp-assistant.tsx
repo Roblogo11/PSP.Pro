@@ -16,6 +16,7 @@ interface KBEntry {
   keywords: string[]
   title: string
   response: string
+  shortResponse?: string // brief summary shown by default; full response revealed on "Read more"
   actions: { label: string; href: string }[]
   followUp?: string[]
   role?: RoleFilter // which role sees this entry (default: 'all')
@@ -188,6 +189,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['what is psp', 'what is this', 'tell me about', 'about psp', 'about this site', 'overview', 'what do you do'],
     title: 'Welcome to PSP.Pro',
+    shortResponse: 'PSP.Pro (Proper Sports Performance) is a complete athletic training platform in Virginia Beach, VA — 1-on-1 coaching, group classes, and a full athlete dashboard. Motto: "Progression Over Perfection."',
     response: 'PSP.Pro (ProPer Sports Performance) is a complete athletic training platform based in Virginia Beach, VA.\n\nWe offer:\n• 1-on-1 coaching sessions\n• Group training classes\n• Video analysis & specialty services\n• A full athlete dashboard with drills, progress tracking, achievements & more\n\nOur motto: "Progression Over Perfection"\n\nWe train softball, basketball, and soccer athletes of all ages and skill levels.',
     actions: [{ label: 'About Us', href: '/about' }, { label: 'View Pricing', href: '/pricing' }],
     followUp: ['What sports do you train?', 'How do I sign up?', 'What does the dashboard do?'],
@@ -211,6 +213,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['pricing', 'cost', 'price', 'how much', 'rate', 'session cost', 'expensive', 'affordable', 'money', 'pay'],
     title: 'Training Pricing',
+    shortResponse: '1-on-1 sessions start at $75/hr. Group sessions from $40-$65. Save big with packages: 5-Pack $350, 10-Pack $675, 20-Pack $1,300.',
     response: 'Our training options:\n\n1-on-1 Sessions:\n• Skills Training: $75 / 60 min\n• Performance Training: $75 / 60 min\n\nGroup Sessions:\n• Speed & Agility: $50 / 90 min\n• Small Group: $40 / 75 min\n• Strength & Conditioning: $65 / 60 min\n\nSession Packages (best value):\n• 5-Pack: $350 (save $25)\n• 10-Pack: $675 (save $75)\n• 20-Pack: $1,300 (save $200)\n\nAll prices are pulled live from our system — check the Pricing page for the most current rates.',
     actions: [{ label: 'View Full Pricing', href: '/pricing' }, { label: 'Book Now', href: '/booking' }],
     followUp: ['Tell me about packages', 'How do I book a session?'],
@@ -236,6 +239,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['book', 'schedule', 'appointment', 'reserve', 'buy lesson', 'how to book', 'buy', 'lesson'],
     title: 'How to Book a Session',
+    shortResponse: 'Booking takes 4 steps: pick a service → choose a date → select a time → pay (card or on-site). Available Mon-Fri 3-9PM, Sat 9AM-5PM.',
     response: 'Booking is a simple 4-step process:\n\n1️⃣ Choose your training type\nPick from 1-on-1, group, or specialty sessions\n\n2️⃣ Select your date\nUse the calendar to pick a training day\n\n3️⃣ Pick a time slot\nSee available coaches and times with location info\n\n4️⃣ Confirm & pay\nTwo options:\n• Pay with Card — secure Stripe checkout\n• Pay On-Site — reserve your spot now, pay in person at the facility\n\nAfter booking, you\'ll get a confirmation email automatically, and your coach gets notified too. The session appears on your dashboard right away.\n\nAvailability: Mon-Fri 3PM-9PM, Sat 9AM-5PM',
     actions: [{ label: 'Book Now', href: '/booking' }],
     followUp: ['Can I cancel or reschedule?', 'What payment methods do you accept?'],
@@ -277,6 +281,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['coach', 'trainer', 'instructor', 'staff', 'rachel', 'loren', 'who teaches', 'coaching', 'bagley'],
     title: 'Our Coaching Team',
+    shortResponse: 'PSP is run by Loren & Rachel Bagley — elite coaches with real playing experience. Loren covers basketball, soccer & speed. Rachel is a softball pitching specialist with 12+ years of coaching.',
     response: 'PSP is owned and operated by Loren & Rachel Bagley — they\'ve run Proper Sports Performance since 2017.\n\n🏀 Loren Bagley — Basketball, Soccer, Speed & Agility\nFormer multi-sport varsity athlete (Hickory HS) who competed on nationally ranked soccer teams (Top 12 in the US). Played at Virginia Wesleyan College and for the Hampton Roads Piranhas PDL. Specializes in core strength, speed, power, and game-specific skill execution. His motto: Discipline. Determination. Dedication.\n\n🥎 Rachel Bagley — Softball Pitching Specialist\nFormer collegiate pitcher at Patrick Henry CC (Hall of Fame inductee, Region X Championship) and UVA Wise (D2 conference championship). Earned Pitcher of the Year and All-Conference honors every year. Over 12 years of coaching experience — dedicated to building confidence in young athletes.\n\nVisit the About page or Coaches page to learn more!',
     actions: [{ label: 'About Us', href: '/about' }, { label: 'Meet the Coaches', href: '/coaches' }],
   },
@@ -310,6 +315,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['sign up', 'signup', 'create account', 'register', 'join', 'new account', 'get started'],
     title: 'How to Sign Up',
+    shortResponse: 'Join at /get-started → create your account → purchase a membership or package → start training! Under 18? You\'ll provide parent/guardian info during signup.',
     response: 'Here\'s the full process to join PSP.Pro:\n\n1️⃣ Start at "Join the Team" (/get-started)\nFill out the prospect form with your info, goals, and sport preferences. This helps us match you with the right coach.\n\n2️⃣ Create your account (/signup)\nAfter submitting the form, you\'ll be directed to create your login. Enter your name, email, password (8+ chars), sports, and age. Under 18? Provide parent/guardian info.\n\n3️⃣ Land on the FAQ page\nAfter signup you\'ll see a welcome banner with links to view memberships and access your dashboard.\n\n4️⃣ Purchase a membership or package\nVisit the Pricing page to pick a plan. You need an active membership or package to access the full training dashboard.\n\n5️⃣ Start training!\nOnce you have a package, your Athlete Locker unlocks with drills, sessions, progress tracking, and more.\n\nAlternative: If your coach already created your account, you don\'t need to sign up! Just go to /forgot-password, enter your email, set a password, and log in.',
     actions: [{ label: 'Join the Team', href: '/get-started' }, { label: 'Sign Up', href: '/signup' }],
     followUp: ['What if I\'m under 18?', 'What does the dashboard do?', 'Tell me about pricing'],
@@ -1111,6 +1117,36 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   },
 
   // ════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════
+  // ── SCHOLARSHIP & RECRUITING ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['scholarship', 'college', 'recruit', 'recruiting', 'get recruited', 'college coach', 'division 1', 'division 2', 'd1', 'd2', 'athletic scholarship', 'sports scholarship', 'college offer', 'recruiting profile', 'get noticed', 'get seen', 'college team'],
+    title: 'Using PSP.Pro to Get Recruited',
+    shortResponse: 'PSP.Pro can be a powerful tool in your recruiting journey! We help you build verified stats, exportable progress reports, and a public leaderboard profile that college coaches can see.',
+    response: 'PSP.Pro is built to help athletes get noticed — here\'s how to use the platform to boost your recruiting game:\n\n📊 Build a Verified Stats Profile\n• Work with our coaches to log PSP Verified metrics — exit velocity, pitch speed, bat speed, sprint times, and more\n• "PSP Verified" means a coach logged it — not self-reported — which adds credibility with college programs\n\n📄 Export a Professional PDF Report\n• Go to Progress → "Export PDF"\n• Generates a branded report with your stats, session history, personal records, and milestones\n• Perfect for emailing to college coaches or adding to a recruiting packet\n\n🏆 Opt Into Regional Leaderboards\n• Go to Settings → Leaderboard Settings and toggle "Show on Leaderboards"\n• Your verified metrics appear publicly at propersports.pro/leaderboards\n• College coaches can filter by sport, metric, and region — and your verified numbers stand out\n\n📈 Track Progress Over Time\n• Consistent training + data = a story coaches want to see\n• Your Progress page shows improvement charts over months, not just a snapshot\n\n🎯 Tips for Getting Recruited\n• Start early — data over 6-12 months is more compelling than one session\n• Ask your coach to verify your top metrics (they log them from the Admin panel)\n• Export your PDF and share it with your club coach to include in game film packets\n• Share your leaderboard profile link on your recruiting social profiles\n\nReach out to us — our coaches have placed athletes at the college level and can help you build a recruiting strategy!',
+    actions: [{ label: 'My Progress', href: '/progress' }, { label: 'Leaderboards', href: '/leaderboards' }, { label: 'Contact Us', href: '/contact' }],
+    followUp: ['How do I export a PDF report?', 'What are PSP Verified metrics?', 'How do leaderboards work?'],
+  },
+
+  {
+    keywords: ['improve skills', 'get better', 'get faster', 'increase velocity', 'get stronger', 'reach next level', 'level up', 'college ready', 'varsity', 'make team', 'tryout', 'tryouts', 'get a scholarship'],
+    title: 'Leveling Up Your Game',
+    shortResponse: 'PSP.Pro gives you the data, coaching, and training system to take your game to the next level — whether that\'s making varsity, going to college, or just dominating your sport.',
+    response: 'Want to level up? Here\'s the PSP blueprint:\n\n1️⃣ Get Assessed — Start with a session where your coach measures your baseline (velocity, speed, mechanics). This is your "before."\n\n2️⃣ Train Consistently — Our data shows athletes who train 2-3x per week see the biggest gains. Use session packages to save money and stay consistent.\n\n3️⃣ Do Your Drills — Coaches assign drills for at-home work between sessions. Athletes who complete drills between sessions improve faster. Track your streak!\n\n4️⃣ Watch Your Stats — Your Progress page shows every metric over time. Seeing the line go up is addictive — in a good way!\n\n5️⃣ Set Goals & Hit Milestones — Velocity milestones (60 MPH, 70 MPH, etc.) unlock achievement badges. Set a goal with your coach and chase it.\n\n6️⃣ Share the Data — When you\'re ready to recruit, export your PDF report or share your leaderboard profile. Data + consistency = offers.\n\nProgression Over Perfection — every rep counts. Let\'s get after it! 🔥',
+    actions: [{ label: 'Book a Session', href: '/booking' }, { label: 'View Pricing', href: '/pricing' }, { label: 'Contact Us', href: '/contact' }],
+    followUp: ['How can I use this for a scholarship?', 'Tell me about training packages', 'How do I track my progress?'],
+  },
+
+  {
+    keywords: ['parent question', 'parent faq', 'parent info', 'parent portal', 'parent access', 'parent view', 'what can parents see', 'mom dad', 'parent dashboard'],
+    title: 'Info for Parents',
+    shortResponse: 'Parents — you can see everything: sessions, drills, progress, coach notes, and achievement badges. For athletes under 13, you control the account directly.',
+    response: 'PSP.Pro is built with parents in mind — here\'s what you need to know:\n\n👀 What Parents Can See\n• Every booked and completed session with coach notes\n• Drill assignments and completion status\n• Progress charts and personal records over time\n• Achievement badges and milestones\n• Upcoming session reminders (emailed automatically)\n\n👤 Account Types\n• Ages 13-17: Athlete has their own account. You can share login credentials or simply review progress together.\n• Under 13: You are the account holder. Log in with your email and manage your child\'s training dashboard.\n\n📧 Automated Emails\n• Booking confirmations\n• Session reminders (day before)\n• Progress report emails (coaches can send these)\n\n📊 Progress Reports\n• Coaches can email a professional progress report anytime\n• You can also export a PDF from the Progress page\n• Great for parent-coach meetings or recruiting conversations\n\n💬 Questions?\n• Use the contact form or message your coach directly through the platform\n• We\'re a family-run business — Loren and Rachel are available!',
+    actions: [{ label: 'FAQ', href: '/faq' }, { label: 'Contact Us', href: '/contact' }, { label: 'Sign Up', href: '/signup' }],
+    followUp: ['How do I sign up my child?', 'What is the cancellation policy?', 'Tell me about pricing'],
+  },
+
   // ── SPOTLIGHT TOUR / DR. PROP WALKTHROUGH ──
   // ════════════════════════════════════════════════════════════
   {
@@ -1233,6 +1269,7 @@ export function PSPAssistant() {
   const [hasGreeted, setHasGreeted] = useState(false)
   const [fromGuide, setFromGuide] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
+  const [expandedMessages, setExpandedMessages] = useState<Set<string>>(new Set())
   const inputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const typingTimeoutsRef = useRef<NodeJS.Timeout[]>([])
@@ -1347,6 +1384,32 @@ export function PSPAssistant() {
     const tourKeywords = ['walk me through', 'walkthrough', 'tour', 'show me around', 'tutorial', 'guide me', 'take me through']
     const hasTourIntent = tourKeywords.some(kw => query.toLowerCase().includes(kw))
     const attachTour = hasTourIntent && pageHasTour(pathname)
+
+    // If the KB entry has a shortResponse, show it collapsed; otherwise drip-feed full response
+    const hasShort = !!match.shortResponse
+
+    if (hasShort) {
+      // Single collapsed bubble — no drip feed
+      const msgId = `assistant-${Date.now()}-0`
+      const collapsedMsg = {
+        id: msgId,
+        type: 'assistant',
+        content: match.shortResponse!,
+        fullContent: hypedResponse,
+        moduleTitle: match.title,
+        module: { ...match, title: '' },
+        ...(attachTour ? { tourPage: pathname } : {}),
+      }
+      const typingId = `typing-${Date.now()}`
+      setMessages(prev => [...prev, userMessage, { id: typingId, type: 'typing' }])
+      setIsTyping(true)
+      const timeout = setTimeout(() => {
+        setMessages(prev => [...prev.filter(m => m.type !== 'typing'), collapsedMsg])
+        setIsTyping(false)
+      }, 700)
+      typingTimeoutsRef.current.push(timeout)
+      return
+    }
 
     // Split response into chunks at double-newlines
     const chunks = hypedResponse.split('\n\n').filter((c: string) => c.trim())
@@ -1563,67 +1626,89 @@ export function PSPAssistant() {
                         <span className="typing-dot" style={{ animationDelay: '0.3s' }} />
                       </motion.div>
                     ) : (
-                      <div className="flex flex-col gap-2">
-                        <motion.div
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.2 }}
-                          className="max-w-[90%] px-3 py-2.5 rounded-2xl rounded-tl-sm bg-white/10 text-white/90 text-sm whitespace-pre-line leading-relaxed"
-                        >
-                          {(msg.moduleTitle || (msg.module?.title)) && (
-                            <div className="font-bold text-white mb-1.5 text-sm">
-                              {msg.moduleTitle || msg.module.title}
-                            </div>
-                          )}
-                          {msg.content}
-                        </motion.div>
-                        {/* Tour trigger button */}
-                        {msg.tourPage && (
-                          <div className="ml-1">
-                            <TourTriggerButton page={msg.tourPage} />
+                      (() => {
+                        const isExpanded = expandedMessages.has(msg.id)
+                        const hasFullContent = !!msg.fullContent
+                        const displayContent = hasFullContent && !isExpanded ? msg.content : (msg.fullContent || msg.content)
+                        const showActions = !hasFullContent || isExpanded
+                        return (
+                          <div className="flex flex-col gap-2">
+                            <motion.div
+                              initial={{ opacity: 0, y: 8 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="max-w-[90%] px-3 py-2.5 rounded-2xl rounded-tl-sm bg-white/10 text-white/90 text-sm whitespace-pre-line leading-relaxed"
+                            >
+                              {(msg.moduleTitle || msg.module?.title) && (
+                                <div className="font-bold text-white mb-1.5 text-sm">
+                                  {msg.moduleTitle || msg.module.title}
+                                </div>
+                              )}
+                              {displayContent}
+                              {/* Read more / Show less toggle */}
+                              {hasFullContent && (
+                                <button
+                                  onClick={() => setExpandedMessages(prev => {
+                                    const next = new Set(prev)
+                                    if (next.has(msg.id)) next.delete(msg.id)
+                                    else next.add(msg.id)
+                                    return next
+                                  })}
+                                  className="block mt-2 text-xs font-semibold text-orange hover:text-orange-300 transition-colors"
+                                >
+                                  {isExpanded ? '▲ Show less' : '▼ Read more'}
+                                </button>
+                              )}
+                            </motion.div>
+                            {/* Tour trigger button */}
+                            {msg.tourPage && showActions && (
+                              <div className="ml-1">
+                                <TourTriggerButton page={msg.tourPage} />
+                              </div>
+                            )}
+                            {/* Action buttons */}
+                            {showActions && msg.module?.actions && msg.module.actions.length > 0 && (
+                              <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.3, delay: 0.1 }}
+                                className="flex flex-wrap gap-1.5 ml-1"
+                              >
+                                {msg.module.actions.map((action: any, i: number) => (
+                                  <Link
+                                    key={i}
+                                    href={action.href}
+                                    onClick={() => { setIsOpen(false); setFromGuide(false) }}
+                                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-orange/20 hover:bg-orange/30 text-orange hover:text-white transition-all border border-orange/20"
+                                  >
+                                    {action.label}
+                                    <span>→</span>
+                                  </Link>
+                                ))}
+                              </motion.div>
+                            )}
+                            {/* Follow-up suggestions — always shown */}
+                            {msg.module?.followUp && msg.module.followUp.length > 0 && (
+                              <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.3, delay: 0.2 }}
+                                className="flex flex-wrap gap-1.5 ml-1 mt-1"
+                              >
+                                {msg.module.followUp.map((q: string, i: number) => (
+                                  <button
+                                    key={i}
+                                    onClick={() => handleSuggestionClick(q)}
+                                    className="px-2.5 py-1 rounded-lg text-xs font-medium bg-cyan/10 hover:bg-cyan/20 text-cyan hover:text-white transition-all border border-cyan/20 text-left"
+                                  >
+                                    {q}
+                                  </button>
+                                ))}
+                              </motion.div>
+                            )}
                           </div>
-                        )}
-                        {/* Action buttons */}
-                        {msg.module?.actions && msg.module.actions.length > 0 && (
-                          <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.3, delay: 0.1 }}
-                            className="flex flex-wrap gap-1.5 ml-1"
-                          >
-                            {msg.module.actions.map((action: any, i: number) => (
-                              <Link
-                                key={i}
-                                href={action.href}
-                                onClick={() => { setIsOpen(false); setFromGuide(false) }}
-                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-orange/20 hover:bg-orange/30 text-orange hover:text-white transition-all border border-orange/20"
-                              >
-                                {action.label}
-                                <span>→</span>
-                              </Link>
-                            ))}
-                          </motion.div>
-                        )}
-                        {/* Follow-up suggestions */}
-                        {msg.module?.followUp && msg.module.followUp.length > 0 && (
-                          <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.3, delay: 0.2 }}
-                            className="flex flex-wrap gap-1.5 ml-1 mt-1"
-                          >
-                            {msg.module.followUp.map((q: string, i: number) => (
-                              <button
-                                key={i}
-                                onClick={() => handleSuggestionClick(q)}
-                                className="px-2.5 py-1 rounded-lg text-xs font-medium bg-cyan/10 hover:bg-cyan/20 text-cyan hover:text-white transition-all border border-cyan/20 text-left"
-                              >
-                                {q}
-                              </button>
-                            ))}
-                          </motion.div>
-                        )}
-                      </div>
+                        )
+                      })()
                     )}
                   </div>
                 ))}

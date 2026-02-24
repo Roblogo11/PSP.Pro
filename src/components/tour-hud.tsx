@@ -1086,6 +1086,17 @@ export function TourHUD() {
     markPageVisited(pathname)
   }
 
+  // Listen for tour-start event dispatched by TourTriggerButton (same-page restart)
+  useEffect(() => {
+    const handler = () => {
+      setActive(true)
+      setCurrentStep(0)
+      setTargetRect(null)
+    }
+    window.addEventListener('psp-tour-start', handler)
+    return () => window.removeEventListener('psp-tour-start', handler)
+  }, [])
+
   // No tour definition for this page — show persistent "Tour Active" banner only
   if (!active) return null
   if (!tour || !step) {
@@ -1262,8 +1273,9 @@ export function TourTriggerButton({ page, compact = false }: { page: string; com
         // Navigate to the tour start page — pathname change triggers TourHUD mount effect
         router.push(page)
       } else {
-        // Same page: hard reload so the TourHUD mounts fresh and picks up the new cookie
-        window.location.href = page
+        // Same page: dispatch event so TourHUD activates immediately without reload
+        window.dispatchEvent(new CustomEvent('psp-tour-start'))
+        setStarting(false)
       }
     } catch {
       setStarting(false)
