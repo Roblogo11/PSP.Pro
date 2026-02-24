@@ -29,11 +29,15 @@ export async function GET() {
     const cookieStore = await cookieHeader()
     const userId = cookieStore.get('impersonation_user_id')?.value || null
     const userName = cookieStore.get('impersonation_user_name')?.value || null
+    const coachId = cookieStore.get('impersonation_coach_id')?.value || null
+    const coachName = cookieStore.get('impersonation_coach_name')?.value || null
 
     return NextResponse.json({
-      active: !!userId,
+      active: !!(userId || coachId),
       userId,
       userName,
+      coachId,
+      coachName,
     })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
@@ -73,75 +77,87 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { userId } = body
+    const { userId, type = 'athlete' } = body
 
     if (!userId) {
       return NextResponse.json({ error: 'userId is required' }, { status: 400 })
     }
 
-    // Look up the athlete profile (use admin client to bypass RLS)
-    const { data: athleteProfile, error: lookupError } = await adminClient
+    // Look up the target profile (use admin client to bypass RLS)
+    const { data: targetProfile, error: lookupError } = await adminClient
       .from('profiles')
       .select('id, full_name, email, role')
       .eq('id', userId)
       .single()
 
-    if (lookupError || !athleteProfile) {
-      return NextResponse.json({ error: 'Player not found' }, { status: 404 })
+    if (lookupError || !targetProfile) {
+      return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
     }
 
-    const playerName = athleteProfile.full_name || athleteProfile.email || 'Unknown Player'
+    const maxAge = 60 * 60 * 2 // 2 hours
+    const cookieOpts = (httpOnly: boolean) => ({
+      httpOnly,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax' as const,
+      path: '/',
+      maxAge,
+    })
+
+    if (type === 'coach') {
+      // Verify target is actually a coach or admin
+      if (targetProfile.role !== 'coach' && targetProfile.role !== 'admin' && targetProfile.role !== 'master_admin') {
+        return NextResponse.json({ error: 'Target user is not a coach' }, { status: 400 })
+      }
+
+      const coachName = targetProfile.full_name || targetProfile.email || 'Unknown Coach'
+
+      auditLog({
+        userId: user.id,
+        action: 'impersonation_started',
+        resourceType: 'user',
+        resourceId: targetProfile.id,
+        metadata: { targetName: coachName, targetRole: targetProfile.role, impersonationType: 'coach' },
+        ip: getClientIP(request),
+      })
+
+      const response = NextResponse.json({
+        active: true,
+        coachId: targetProfile.id,
+        coachName,
+        message: `Now viewing dashboard as Coach ${coachName}. Read-only mode — no data will be modified.`,
+      })
+
+      response.cookies.set('impersonation_coach_id', targetProfile.id, cookieOpts(true))
+      response.cookies.set('impersonation_coach_id_ui', targetProfile.id, cookieOpts(false))
+      response.cookies.set('impersonation_coach_name', encodeURIComponent(coachName), cookieOpts(true))
+      response.cookies.set('impersonation_coach_name_ui', encodeURIComponent(coachName), cookieOpts(false))
+
+      return response
+    }
+
+    // Default: athlete impersonation (existing behavior)
+    const playerName = targetProfile.full_name || targetProfile.email || 'Unknown Player'
 
     auditLog({
       userId: user.id,
       action: 'impersonation_started',
       resourceType: 'user',
-      resourceId: athleteProfile.id,
-      metadata: { targetName: playerName, targetRole: athleteProfile.role },
+      resourceId: targetProfile.id,
+      metadata: { targetName: playerName, targetRole: targetProfile.role, impersonationType: 'athlete' },
       ip: getClientIP(request),
     })
 
     const response = NextResponse.json({
       active: true,
-      userId: athleteProfile.id,
+      userId: targetProfile.id,
       userName: playerName,
       message: `Now viewing dashboard as ${playerName}. Read-only mode — no data will be modified.`,
     })
 
-    const maxAge = 60 * 60 * 2 // 2 hours
-
-    // Impersonation cookies (httpOnly + JS-readable pairs)
-    response.cookies.set('impersonation_user_id', athleteProfile.id, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge,
-    })
-
-    response.cookies.set('impersonation_user_id_ui', athleteProfile.id, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge,
-    })
-
-    response.cookies.set('impersonation_user_name', playerName, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge,
-    })
-
-    response.cookies.set('impersonation_user_name_ui', playerName, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge,
-    })
+    response.cookies.set('impersonation_user_id', targetProfile.id, cookieOpts(true))
+    response.cookies.set('impersonation_user_id_ui', targetProfile.id, cookieOpts(false))
+    response.cookies.set('impersonation_user_name', playerName, cookieOpts(true))
+    response.cookies.set('impersonation_user_name_ui', playerName, cookieOpts(false))
 
     return response
   } catch (error: any) {
@@ -164,15 +180,17 @@ export async function DELETE() {
       message: 'Impersonation ended.',
     })
 
-    // Clear all impersonation cookies
+    // Clear all impersonation cookies (athlete + coach)
     const cookieNames = [
       'impersonation_user_id', 'impersonation_user_id_ui',
       'impersonation_user_name', 'impersonation_user_name_ui',
+      'impersonation_coach_id', 'impersonation_coach_id_ui',
+      'impersonation_coach_name', 'impersonation_coach_name_ui',
     ]
 
     for (const name of cookieNames) {
       response.cookies.set(name, '', {
-        httpOnly: name === 'impersonation_user_id' || name === 'impersonation_user_name',
+        httpOnly: !name.endsWith('_ui'),
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         path: '/',

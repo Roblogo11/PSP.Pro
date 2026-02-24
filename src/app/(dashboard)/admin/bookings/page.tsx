@@ -84,7 +84,8 @@ const QUICK_SPORT_TABS = [
 
 export default function AdminBookingsPage() {
   const supabase = createClient()
-  const { isCoach, isAdmin, profile, loading: roleLoading } = useUserRole()
+  const { isCoach, isAdmin, profile, loading: roleLoading, isImpersonatingCoach, impersonatedCoachId } = useUserRole()
+  const effectiveCoachId = isImpersonatingCoach ? impersonatedCoachId : profile?.id
   const router = useRouter()
   const [bookings, setBookings] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -220,8 +221,8 @@ export default function AdminBookingsPage() {
       supabase.from('profiles').select('id, full_name').eq('role', 'athlete').order('full_name'),
       (() => {
         let query = supabase.from('available_slots').select('id, slot_date, start_time, end_time, location, service:service_id(name), coach:coach_id(full_name), current_bookings, max_bookings').eq('is_available', true).gte('slot_date', todayStr)
-        // Coaches only see their own slots; admins see all
-        if (isCoach && !isAdmin && profile?.id) query = query.eq('coach_id', profile.id)
+        // Coaches (and coach-impersonation view) only see their own slots; admins see all
+        if ((isCoach && !isAdmin) || isImpersonatingCoach) query = query.eq('coach_id', effectiveCoachId)
         return query.order('slot_date').order('start_time')
       })(),
       supabase.from('services').select('id, name, price_cents, duration_minutes').eq('is_active', true).order('name'),

@@ -22,6 +22,8 @@ export function useUserRole() {
   const [simulatedRole, setSimulatedRole] = useState<UserRole | null>(null)
   const [impersonatedUserId, setImpersonatedUserId] = useState<string | null>(null)
   const [impersonatedUserName, setImpersonatedUserName] = useState<string | null>(null)
+  const [impersonatedCoachId, setImpersonatedCoachId] = useState<string | null>(null)
+  const [impersonatedCoachName, setImpersonatedCoachName] = useState<string | null>(null)
   const supabase = createClient()
 
   const loadUserProfile = useCallback(async () => {
@@ -94,12 +96,19 @@ export function useUserRole() {
       const role = simCookie?.split('=')[1] as UserRole | undefined
       setSimulatedRole(role || null)
 
-      // Impersonation
+      // Athlete impersonation
       const idCookie = cookies.find(c => c.startsWith('impersonation_user_id_ui='))
       const nameCookie = cookies.find(c => c.startsWith('impersonation_user_name_ui='))
       setImpersonatedUserId(idCookie?.split('=')[1] || null)
       const rawName = nameCookie?.split('=')[1]
       setImpersonatedUserName(rawName ? decodeURIComponent(rawName) : null)
+
+      // Coach impersonation
+      const coachIdCookie = cookies.find(c => c.startsWith('impersonation_coach_id_ui='))
+      const coachNameCookie = cookies.find(c => c.startsWith('impersonation_coach_name_ui='))
+      setImpersonatedCoachId(coachIdCookie?.split('=')[1] || null)
+      const rawCoachName = coachNameCookie?.split('=')[1]
+      setImpersonatedCoachName(rawCoachName ? decodeURIComponent(rawCoachName) : null)
     }
 
     checkCookies()
@@ -111,6 +120,7 @@ export function useUserRole() {
   const realRole = profile?.role || null
   const isSimulating = !!(realRole === 'master_admin' && simulatedRole)
   const isImpersonating = !!(realRole === 'master_admin' && impersonatedUserId)
+  const isImpersonatingCoach = !!(realRole === 'master_admin' && impersonatedCoachId)
   const effectiveRole = isSimulating ? simulatedRole : realRole
 
   return {
@@ -119,8 +129,11 @@ export function useUserRole() {
     realRole,
     isSimulating,
     isImpersonating,
+    isImpersonatingCoach,
     impersonatedUserId,
     impersonatedUserName,
+    impersonatedCoachId,
+    impersonatedCoachName,
     isAthlete: effectiveRole === 'athlete',
     isCoach: effectiveRole === 'coach' || effectiveRole === 'admin' || effectiveRole === 'master_admin',
     isAdmin: effectiveRole === 'admin' || effectiveRole === 'master_admin',

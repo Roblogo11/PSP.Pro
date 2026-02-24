@@ -1,25 +1,34 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Eye } from 'lucide-react'
+import { Eye, UserCircle } from 'lucide-react'
 
 export function ImpersonationBanner() {
   const [userName, setUserName] = useState<string | null>(null)
+  const [coachName, setCoachName] = useState<string | null>(null)
   const [exiting, setExiting] = useState(false)
 
   useEffect(() => {
     const checkCookie = () => {
       const cookies = document.cookie.split(';').map(c => c.trim())
+
+      // Athlete impersonation
       const nameCookie = cookies.find(c => c.startsWith('impersonation_user_name_ui='))
       const name = nameCookie?.split('=')[1]
       setUserName(name ? decodeURIComponent(name) : null)
+
+      // Coach impersonation
+      const coachNameCookie = cookies.find(c => c.startsWith('impersonation_coach_name_ui='))
+      const cName = coachNameCookie?.split('=')[1]
+      setCoachName(cName ? decodeURIComponent(cName) : null)
     }
     checkCookie()
     const interval = setInterval(checkCookie, 3000)
     return () => clearInterval(interval)
   }, [])
 
-  if (!userName) return null
+  const isActive = !!(userName || coachName)
+  if (!isActive) return null
 
   const handleExit = async () => {
     setExiting(true)
@@ -36,8 +45,17 @@ export function ImpersonationBanner() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-[110] bg-amber-600 text-white text-center py-2 px-4 font-bold text-sm flex items-center justify-center gap-3 shadow-lg">
-      <Eye className="w-4 h-4" />
-      VIEWING AS: {userName} — Read-only mode
+      {coachName ? (
+        <>
+          <UserCircle className="w-4 h-4" />
+          VIEWING AS COACH: {coachName} — Read-only mode
+        </>
+      ) : (
+        <>
+          <Eye className="w-4 h-4" />
+          VIEWING AS PLAYER: {userName} — Read-only mode
+        </>
+      )}
       <button
         onClick={handleExit}
         disabled={exiting}

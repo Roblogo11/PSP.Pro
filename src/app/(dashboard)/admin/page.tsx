@@ -678,14 +678,20 @@ function SimulationPanel() {
 
   // Impersonation (Act as Player) state
   const [showPlayerSelect, setShowPlayerSelect] = useState(false)
+  const [showCoachSelect, setShowCoachSelect] = useState(false)
   const [athletes, setAthletes] = useState<{ id: string; full_name: string | null; email: string }[]>([])
+  const [coaches, setCoaches] = useState<{ id: string; full_name: string | null; email: string }[]>([])
   const [searchTerm, setSearchTerm] = useState('')
+  const [coachSearchTerm, setCoachSearchTerm] = useState('')
   const [loadingAthletes, setLoadingAthletes] = useState(false)
+  const [loadingCoaches, setLoadingCoaches] = useState(false)
   const [startingImpersonation, setStartingImpersonation] = useState<string | null>(null)
   const [impersonationStatus, setImpersonationStatus] = useState<{
     active: boolean
     userId: string | null
     userName: string | null
+    coachId: string | null
+    coachName: string | null
   } | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -730,6 +736,31 @@ function SimulationPanel() {
     }
     fetchAthletes()
   }, [showPlayerSelect])
+
+  // Fetch coaches when coach selector is opened
+  useEffect(() => {
+    if (!showCoachSelect || coaches.length > 0) return
+
+    async function fetchCoaches() {
+      setLoadingCoaches(true)
+      try {
+        const { data } = await createClient()
+          .from('profiles')
+          .select('id, full_name, email')
+          .in('role', ['coach', 'admin', 'master_admin'])
+          .order('full_name', { ascending: true })
+
+        if (data) {
+          setCoaches(data.map((c: any) => ({ ...c, email: c.email || '' })))
+        }
+      } catch {
+        // Non-critical
+      } finally {
+        setLoadingCoaches(false)
+      }
+    }
+    fetchCoaches()
+  }, [showCoachSelect])
 
   // ── Simulation handlers ──
   const startSimulation = async (role: 'athlete' | 'coach') => {
@@ -822,6 +853,31 @@ function SimulationPanel() {
     }
   }
 
+  const startCoachImpersonation = async (coachId: string) => {
+    setStartingImpersonation(coachId)
+    setError(null)
+    try {
+      const res = await fetch('/api/admin/impersonation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: coachId, type: 'coach' }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.error || 'Failed to start coach view')
+        setStartingImpersonation(null)
+        return
+      }
+
+      window.location.href = '/admin'
+    } catch {
+      setError('Network error. Please try again.')
+      setStartingImpersonation(null)
+    }
+  }
+
   const endImpersonation = async () => {
     try {
       await fetch('/api/admin/impersonation', { method: 'DELETE' })
@@ -837,6 +893,13 @@ function SimulationPanel() {
         a.email.toLowerCase().includes(searchTerm.toLowerCase())
       )
     : athletes
+
+  const filteredCoaches = coachSearchTerm
+    ? coaches.filter(c =>
+        (c.full_name?.toLowerCase().includes(coachSearchTerm.toLowerCase())) ||
+        c.email.toLowerCase().includes(coachSearchTerm.toLowerCase())
+      )
+    : coaches
 
   const isSimActive = simStatus?.active
   const isImpActive = impersonationStatus?.active
@@ -920,7 +983,7 @@ function SimulationPanel() {
 
                 <div className="flex gap-3 mb-4">
                   <button
-                    onClick={() => setShowPlayerSelect(!showPlayerSelect)}
+                    onClick={() => { setShowPlayerSelect(!showPlayerSelect); setShowCoachSelect(false) }}
                     className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 ${
                       showPlayerSelect
                         ? 'bg-amber-600 hover:bg-amber-700 text-white'
@@ -931,23 +994,24 @@ function SimulationPanel() {
                     Act as Player
                   </button>
                   <button
-                    onClick={() => { setShowPlayerSelect(false); startSimulation('coach') }}
-                    disabled={startingSim}
-                    className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-600 dark:text-purple-300 border border-purple-500/50 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 disabled:opacity-50"
+                    onClick={() => { setShowCoachSelect(!showCoachSelect); setShowPlayerSelect(false) }}
+                    className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 border ${
+                      showCoachSelect
+                        ? 'bg-amber-600 hover:bg-amber-700 text-white border-amber-600'
+                        : 'bg-purple-500/20 hover:bg-purple-500/30 text-purple-600 dark:text-purple-300 border-purple-500/50'
+                    }`}
                   >
-                    {startingSim && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+                    <UserCircle className="w-4 h-4" />
                     Act as Coach
                   </button>
                 </div>
 
-                {/* ── Player selector (expanded when Act as Player is clicked) ── */}
+                {/* ── Player selector ── */}
                 {showPlayerSelect && (
-                  <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20">
+                  <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 mb-4">
                     <p className="text-sm text-amber-400 font-semibold mb-3">
                       Select a player to view their dashboard (read-only)
                     </p>
-
-                    {/* Search */}
                     <div className="relative mb-3">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-cyan-700 dark:text-white" />
                       <input
@@ -958,8 +1022,6 @@ function SimulationPanel() {
                         className="w-full pl-10 pr-4 py-2 bg-cyan-50/50 dark:bg-white/5 border border-cyan-200/40 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white placeholder-cyan-700 dark:placeholder-white/50 focus:outline-none focus:border-amber-500/50"
                       />
                     </div>
-
-                    {/* Athlete List */}
                     {loadingAthletes ? (
                       <div className="text-center py-4">
                         <div className="w-6 h-6 border-2 border-amber-400 border-t-transparent rounded-full animate-spin mx-auto" />
@@ -992,6 +1054,62 @@ function SimulationPanel() {
                                 <Eye className="w-3 h-3" />
                               )}
                               View Dashboard
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* ── Coach selector ── */}
+                {showCoachSelect && (
+                  <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20">
+                    <p className="text-sm text-amber-400 font-semibold mb-3">
+                      Select a coach to view their exact dashboard (read-only)
+                    </p>
+                    <div className="relative mb-3">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-cyan-700 dark:text-white" />
+                      <input
+                        type="text"
+                        placeholder="Search by name or email..."
+                        value={coachSearchTerm}
+                        onChange={(e) => setCoachSearchTerm(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2 bg-cyan-50/50 dark:bg-white/5 border border-cyan-200/40 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white placeholder-cyan-700 dark:placeholder-white/50 focus:outline-none focus:border-amber-500/50"
+                      />
+                    </div>
+                    {loadingCoaches ? (
+                      <div className="text-center py-4">
+                        <div className="w-6 h-6 border-2 border-amber-400 border-t-transparent rounded-full animate-spin mx-auto" />
+                      </div>
+                    ) : filteredCoaches.length === 0 ? (
+                      <p className="text-sm text-cyan-700 dark:text-white text-center py-4">
+                        {coachSearchTerm ? 'No coaches match your search' : 'No coaches found'}
+                      </p>
+                    ) : (
+                      <div className="space-y-2 max-h-64 overflow-y-auto">
+                        {filteredCoaches.map(coach => (
+                          <div
+                            key={coach.id}
+                            className="flex items-center justify-between p-3 bg-cyan-50/50 dark:bg-white/5 border border-cyan-200/40 dark:border-white/10 rounded-xl hover:border-amber-500/30 transition-all"
+                          >
+                            <div>
+                              <p className="font-semibold text-sm text-slate-900 dark:text-white">
+                                {coach.full_name || 'Unnamed Coach'}
+                              </p>
+                              <p className="text-xs text-cyan-700 dark:text-white">{coach.email}</p>
+                            </div>
+                            <button
+                              onClick={() => startCoachImpersonation(coach.id)}
+                              disabled={startingImpersonation === coach.id}
+                              className="px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 rounded-lg text-xs font-semibold transition-all disabled:opacity-50 flex items-center gap-1.5"
+                            >
+                              {startingImpersonation === coach.id ? (
+                                <div className="w-3 h-3 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+                              ) : (
+                                <UserCircle className="w-3 h-3" />
+                              )}
+                              View as Coach
                             </button>
                           </div>
                         ))}
@@ -1033,9 +1151,9 @@ function SimulationPanel() {
         <div className="mt-4 p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg flex items-start gap-2">
           <AlertTriangle className="w-4 h-4 text-purple-400 mt-0.5 flex-shrink-0" />
           <p className="text-xs text-purple-600 dark:text-purple-300">
-            <strong>Act as Player</strong> — read-only view of a specific player&apos;s dashboard (no data created, amber banner, 2hr expiry).
+            <strong>Act as Player</strong> — read-only view of a specific athlete&apos;s dashboard. No data created, amber banner, 2hr expiry.
             <br />
-            <strong>Act as Coach</strong> — full simulation with Stripe test mode and tracked test data (purple banner, 4hr expiry, one-click cleanup).
+            <strong>Act as Coach</strong> — read-only view of a specific coach&apos;s dashboard. See their athletes, bookings, and analytics exactly as they do. Amber banner, 2hr expiry.
           </p>
         </div>
       </div>

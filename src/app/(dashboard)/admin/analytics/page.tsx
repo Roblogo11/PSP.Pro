@@ -52,12 +52,13 @@ const CHART_COLORS = ['#FF4B2B', '#00B4D8', '#22C55E', '#F59E0B', '#A855F7', '#E
 
 export default function AnalyticsPage() {
   const router = useRouter()
-  const { profile, isCoach, isAdmin, loading } = useUserRole()
+  const { profile, isCoach, isAdmin, loading, isImpersonatingCoach, impersonatedCoachId } = useUserRole()
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
   const [loadingData, setLoadingData] = useState(true)
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d')
 
-  const isCoachOnly = isCoach && !isAdmin
+  const isCoachOnly = (isCoach && !isAdmin) || isImpersonatingCoach
+  const effectiveCoachId = isImpersonatingCoach ? impersonatedCoachId : profile?.id
 
   // Redirect if not authenticated or not admin/coach
   useEffect(() => {
@@ -84,10 +85,10 @@ export default function AnalyticsPage() {
           .toISOString()
           .split('T')[0]
 
-        // Helper to add coach filter
+        // Helper to add coach filter — uses impersonated coach's ID when viewing as a coach
         const coachFilter = (query: any) => {
-          if (isCoachOnly && profile?.id) {
-            return query.eq('coach_id', profile.id)
+          if (isCoachOnly && effectiveCoachId) {
+            return query.eq('coach_id', effectiveCoachId)
           }
           return query
         }
