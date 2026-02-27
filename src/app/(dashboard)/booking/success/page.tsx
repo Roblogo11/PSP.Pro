@@ -73,7 +73,7 @@ export default function BookingSuccessPage() {
   }
 
   return (
-    <div className="min-h-screen px-3 py-4 md:p-8 flex items-center justify-center">
+    <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8 flex items-center justify-center">
       <div className="max-w-2xl w-full">
         {/* Success Card */}
         <div className="glass-card p-8 md:p-12 text-center mb-6">

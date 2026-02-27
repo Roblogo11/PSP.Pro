@@ -139,7 +139,7 @@ export function ServiceSelector({ services, selectedServiceId, onSelectService }
               </div>
 
               {/* Details */}
-              <div className="flex items-center gap-4 text-sm text-cyan-700 dark:text-white">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm text-cyan-700 dark:text-white">
                 <div className="flex items-center gap-1.5">
                   <Clock className="w-4 h-4 text-cyan" />
                   <span>{service.duration_minutes} min</span>

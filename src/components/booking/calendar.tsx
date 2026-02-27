@@ -125,19 +125,19 @@ export function Calendar({ selectedDate, onSelectDate, availableDates = [], minD
       <div className="flex items-center justify-between mb-6 pb-4 border-b border-cyan-200/40">
         <button
           onClick={goToPreviousMonth}
-          className="p-2 hover:bg-gradient-to-r hover:from-orange/20 hover:to-orange/10 rounded-xl transition-all hover:scale-110"
+          className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-gradient-to-r hover:from-orange/20 hover:to-orange/10 rounded-xl transition-all hover:scale-110"
           aria-label="Previous month"
         >
           <ChevronLeft className="w-6 h-6 text-orange" />
         </button>
 
-        <h3 className="text-xl font-display font-bold bg-gradient-to-r from-white via-white to-slate-300 bg-clip-text text-transparent">
+        <h3 className="text-xl font-display font-bold text-slate-900 dark:bg-gradient-to-r dark:from-white dark:via-white dark:to-slate-300 dark:bg-clip-text dark:text-transparent">
           {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
         </h3>
 
         <button
           onClick={goToNextMonth}
-          className="p-2 hover:bg-gradient-to-r hover:from-orange/20 hover:to-orange/10 rounded-xl transition-all hover:scale-110"
+          className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-gradient-to-r hover:from-orange/20 hover:to-orange/10 rounded-xl transition-all hover:scale-110"
           aria-label="Next month"
         >
           <ChevronRight className="w-6 h-6 text-orange" />
@@ -145,7 +145,7 @@ export function Calendar({ selectedDate, onSelectDate, availableDates = [], minD
       </div>
 
       {/* Day headers with better styling */}
-      <div className="grid grid-cols-7 gap-3 mb-3">
+      <div className="grid grid-cols-7 gap-1 sm:gap-2 md:gap-3 mb-3">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
           <div key={day} className="text-center text-xs font-bold text-cyan uppercase tracking-wider py-2">
             {day}
@@ -154,7 +154,7 @@ export function Calendar({ selectedDate, onSelectDate, availableDates = [], minD
       </div>
 
       {/* Calendar days with better spacing */}
-      <div className="grid grid-cols-7 gap-3">{renderDays()}</div>
+      <div className="grid grid-cols-7 gap-1 sm:gap-2 md:gap-3">{renderDays()}</div>
 
       {/* Legend with icons */}
       <div className="mt-6 pt-6 border-t border-cyan-200/40 flex items-center justify-center gap-6 text-sm">

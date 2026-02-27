@@ -26,9 +26,9 @@ export function StripeTestBanner() {
 
   return (
     <div className={`fixed ${isSimulating ? 'top-10' : 'top-0'} left-0 right-0 z-[100] bg-yellow-500 text-black text-center py-2 px-4 font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition-all`}>
-      <AlertTriangle className="w-4 h-4" />
-      STRIPE TEST MODE — No real charges. Card: 4242 4242 4242 4242 · Any future date · Any CVC · Any name, email &amp; zip
-      <AlertTriangle className="w-4 h-4" />
+      <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+      <span className="truncate">STRIPE TEST MODE — No real charges.<span className="hidden sm:inline"> Card: 4242 4242 4242 4242 · Any future date · Any CVC</span></span>
+      <AlertTriangle className="w-4 h-4 flex-shrink-0 hidden sm:block" />
     </div>
   )
 }

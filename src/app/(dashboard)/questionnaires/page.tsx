@@ -174,7 +174,7 @@ export default function QuestionnairesPage() {
           <button
             key={f.value}
             onClick={() => setFilter(f.value as any)}
-            className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+            className={`px-4 py-2 min-h-[44px] rounded-xl text-sm font-semibold transition-all ${
               filter === f.value
                 ? 'bg-orange text-white shadow-lg shadow-orange/30'
                 : 'glass-card text-slate-700 dark:text-white hover:bg-cyan-50/50'
@@ -239,7 +239,7 @@ export default function QuestionnairesPage() {
                       type="button"
                       onClick={() => !showResults && setAnswers({ ...answers, [idx]: true })}
                       disabled={showResults}
-                      className={`flex-1 py-2.5 rounded-xl text-sm font-bold border transition-all ${
+                      className={`flex-1 py-3 rounded-xl text-sm font-bold border transition-all ${
                         answers[idx] === true
                           ? showResults
                             ? q.correct_answer === true
@@ -255,7 +255,7 @@ export default function QuestionnairesPage() {
                       type="button"
                       onClick={() => !showResults && setAnswers({ ...answers, [idx]: false })}
                       disabled={showResults}
-                      className={`flex-1 py-2.5 rounded-xl text-sm font-bold border transition-all ${
+                      className={`flex-1 py-3 rounded-xl text-sm font-bold border transition-all ${
                         answers[idx] === false
                           ? showResults
                             ? q.correct_answer === false

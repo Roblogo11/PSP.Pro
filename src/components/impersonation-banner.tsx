@@ -44,24 +44,26 @@ export function ImpersonationBanner() {
   }
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[110] bg-amber-600 text-white text-center py-2 px-4 font-bold text-sm flex items-center justify-center gap-3 shadow-lg">
+    <div className="fixed top-0 left-0 right-0 z-[110] bg-amber-600 text-white text-center py-2 px-4 font-bold text-sm flex items-center justify-center gap-2 sm:gap-3 shadow-lg">
       {coachName ? (
         <>
-          <UserCircle className="w-4 h-4" />
-          VIEWING AS COACH: {coachName} — Read-only mode
+          <UserCircle className="w-4 h-4 flex-shrink-0" />
+          <span className="truncate max-w-[200px] sm:max-w-none">VIEWING AS COACH: {coachName}</span>
+          <span className="hidden sm:inline">— Read-only</span>
         </>
       ) : (
         <>
-          <Eye className="w-4 h-4" />
-          VIEWING AS PLAYER: {userName} — Read-only mode
+          <Eye className="w-4 h-4 flex-shrink-0" />
+          <span className="truncate max-w-[200px] sm:max-w-none">VIEWING AS PLAYER: {userName}</span>
+          <span className="hidden sm:inline">— Read-only</span>
         </>
       )}
       <button
         onClick={handleExit}
         disabled={exiting}
-        className="ml-2 px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg text-xs font-semibold transition-colors disabled:opacity-50"
+        className="ml-1 sm:ml-2 px-3 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-xs font-semibold transition-colors disabled:opacity-50 flex-shrink-0"
       >
-        {exiting ? 'Exiting...' : 'Exit View'}
+        {exiting ? 'Exiting...' : 'Exit'}
       </button>
     </div>
   )

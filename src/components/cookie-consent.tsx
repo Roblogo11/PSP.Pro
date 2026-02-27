@@ -49,7 +49,7 @@ export function CookieConsent() {
       role="dialog"
       aria-label="Cookie consent"
       aria-live="polite"
-      className="fixed bottom-0 left-0 right-0 z-[105] p-4 md:p-6"
+      className="fixed bottom-20 lg:bottom-0 left-0 right-0 z-[105] p-4 md:p-6 mobile-safe"
     >
       <div className="max-w-4xl mx-auto bg-slate-900/95 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-md p-5 md:p-6">
         <div className="flex flex-col md:flex-row md:items-center gap-4">

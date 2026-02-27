@@ -55,15 +55,15 @@ export function SimulationBanner() {
   const roleLabel = simulatedRole === 'athlete' ? 'PLAYER' : 'COACH'
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[110] bg-purple-600 text-white text-center py-2 px-4 font-bold text-sm flex items-center justify-center gap-3 shadow-lg">
-      <UserCircle className="w-4 h-4" />
-      SIMULATING AS: {roleLabel} — All actions tracked for cleanup
+    <div className="fixed top-0 left-0 right-0 z-[110] bg-purple-600 text-white text-center py-2 px-4 font-bold text-sm flex items-center justify-center gap-2 sm:gap-3 shadow-lg">
+      <UserCircle className="w-4 h-4 flex-shrink-0" />
+      <span className="truncate">SIMULATING AS: {roleLabel}<span className="hidden sm:inline"> — All actions tracked</span></span>
       <button
         onClick={handleEndAndCleanup}
         disabled={ending}
-        className="ml-2 px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg text-xs font-semibold transition-colors disabled:opacity-50"
+        className="ml-1 sm:ml-2 px-3 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-xs font-semibold transition-colors disabled:opacity-50 flex-shrink-0 whitespace-nowrap"
       >
-        {ending ? 'Cleaning up...' : 'End & Clean Up'}
+        {ending ? 'Cleaning...' : 'End & Clean'}
       </button>
     </div>
   )

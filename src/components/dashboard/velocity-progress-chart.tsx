@@ -173,7 +173,7 @@ export function VelocityProgressChart({
 
   return (
     <div className={`command-panel ${className}`}>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
         <div>
           <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
             <TrendingUp className="w-5 h-5 text-cyan" />
@@ -184,25 +184,25 @@ export function VelocityProgressChart({
         <div className="text-right">
           <div className="flex items-center gap-2 mb-1">
             <TrendingUp className="w-4 h-4 text-green-400" />
-            <span className="text-2xl font-bold text-green-400">+{improvement} MPH</span>
+            <span className="text-xl sm:text-2xl font-bold text-green-400">+{improvement} MPH</span>
           </div>
           <p className="text-xs text-cyan-700 dark:text-white">Total Improvement</p>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="p-4 rounded-xl bg-cyan-50/50 border border-cyan-200/40">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6">
+        <div className="p-3 sm:p-4 rounded-xl bg-cyan-50/50 border border-cyan-200/40">
           <p className="text-xs text-cyan-700 dark:text-white mb-1">Current</p>
-          <p className="text-2xl font-bold text-cyan">{currentVelocity} MPH</p>
+          <p className="text-xl sm:text-2xl font-bold text-cyan">{currentVelocity} MPH</p>
         </div>
-        <div className="p-4 rounded-xl bg-cyan-50/50 border border-cyan-200/40">
+        <div className="p-3 sm:p-4 rounded-xl bg-cyan-50/50 border border-cyan-200/40">
           <p className="text-xs text-cyan-700 dark:text-white mb-1">Goal</p>
-          <p className="text-2xl font-bold text-orange">{goalVelocity} MPH</p>
+          <p className="text-xl sm:text-2xl font-bold text-orange">{goalVelocity} MPH</p>
         </div>
-        <div className="p-4 rounded-xl bg-cyan-50/50 border border-cyan-200/40">
+        <div className="p-3 sm:p-4 rounded-xl bg-cyan-50/50 border border-cyan-200/40">
           <p className="text-xs text-cyan-700 dark:text-white mb-1">Progress</p>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white">
+          <p className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
             {goalVelocity > 0 ? Math.round((currentVelocity / goalVelocity) * 100) : 100}%
           </p>
         </div>

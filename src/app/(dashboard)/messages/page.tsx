@@ -276,7 +276,7 @@ export default function MessagesPage() {
               <>
                 {/* Header */}
                 <div className="p-3 sm:p-4 border-b border-slate-200 dark:border-white/10 flex items-center gap-3 sticky top-0 z-10 backdrop-blur-xl bg-white/80 dark:bg-slate-900/80">
-                  <button onClick={() => setSelectedConv(null)} className="md:hidden p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10">
+                  <button onClick={() => setSelectedConv(null)} className="md:hidden p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-white/10">
                     <ArrowLeft className="w-5 h-5 text-slate-600 dark:text-white" />
                   </button>
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange to-cyan flex items-center justify-center text-white font-bold text-sm flex-shrink-0">

@@ -143,7 +143,7 @@ export default function CoursesPage() {
           <button
             key={f.value}
             onClick={() => setFilter(f.value as any)}
-            className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+            className={`px-4 py-2 min-h-[44px] rounded-xl text-sm font-semibold transition-all ${
               filter === f.value
                 ? 'bg-orange text-white shadow-lg shadow-orange/30'
                 : 'glass-card text-slate-700 dark:text-white hover:bg-cyan-50/50'

@@ -115,7 +115,7 @@ export function DrillFilter({ onFilterChange }: DrillFilterProps) {
                     onClick={() =>
                       updateFilter('category', filters.category === cat.value ? null : cat.value)
                     }
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    className={`px-4 py-2 min-h-[44px] rounded-lg text-sm font-medium transition-all ${
                       filters.category === cat.value
                         ? 'bg-orange text-white shadow-glow-orange'
                         : 'bg-cyan-50/50 text-cyan-600 hover:bg-white/10 border border-cyan-200/40'
@@ -139,7 +139,7 @@ export function DrillFilter({ onFilterChange }: DrillFilterProps) {
                     onClick={() =>
                       updateFilter('difficulty', filters.difficulty === diff.value ? null : diff.value)
                     }
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    className={`px-4 py-2 min-h-[44px] rounded-lg text-sm font-medium transition-all ${
                       filters.difficulty === diff.value
                         ? 'bg-orange text-white shadow-glow-orange'
                         : 'bg-cyan-50/50 text-cyan-600 hover:bg-white/10 border border-cyan-200/40'
