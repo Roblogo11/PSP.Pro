@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { User, Bell, Lock, Mail, MapPin, Save, Check, Medal, ShieldCheck, Download, Trash2, AlertTriangle, Eye, EyeOff, Star } from 'lucide-react'
+import { User, Bell, Lock, Mail, MapPin, Save, Check, Medal, ShieldCheck, Download, Trash2, AlertTriangle, Eye, EyeOff, Star, CalendarDays } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { toastError } from '@/lib/toast'
@@ -34,6 +34,7 @@ function SettingsInner() {
   const [deleting, setDeleting] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [exporting, setExporting] = useState(false)
+  const [exportingCalendar, setExportingCalendar] = useState(false)
 
   // Security tab state
   const [currentPassword, setCurrentPassword] = useState('')
@@ -297,6 +298,24 @@ function SettingsInner() {
       toastError('Failed to export data')
     } finally {
       setExporting(false)
+    }
+  }
+
+  const handleCalendarExport = async () => {
+    setExportingCalendar(true)
+    try {
+      const tokenRes = await fetch('/api/calendar/token', { method: 'POST' })
+      const { token } = await tokenRes.json()
+      if (!token) throw new Error('Could not generate calendar token')
+      const exportUrl = `/api/calendar/export?token=${token}`
+      const a = document.createElement('a')
+      a.href = exportUrl
+      a.download = 'psp-sessions.ics'
+      a.click()
+    } catch (err: any) {
+      toastError('Failed to export calendar')
+    } finally {
+      setExportingCalendar(false)
     }
   }
 
@@ -922,6 +941,22 @@ function SettingsInner() {
                 >
                   <Download className="w-4 h-4" />
                   {exporting ? 'Preparing export...' : 'Download My Data (JSON)'}
+                </button>
+              </section>
+
+              {/* Calendar Export */}
+              <section className="border-t border-white/10 pt-6">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">Sync to Calendar</h3>
+                <p className="text-sm text-cyan-700 dark:text-white/70 mb-4">
+                  Download your upcoming sessions as a .ics file to import into Google Calendar, Apple Calendar, or Outlook.
+                </p>
+                <button
+                  onClick={handleCalendarExport}
+                  disabled={exportingCalendar || isImpersonating}
+                  className="flex items-center gap-2 px-5 py-2.5 bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 rounded-xl hover:bg-cyan-500/30 transition-colors disabled:opacity-50 text-sm font-semibold"
+                >
+                  <CalendarDays className="w-4 h-4" />
+                  {exportingCalendar ? 'Generating...' : 'Export to Calendar (.ics)'}
                 </button>
               </section>
 
