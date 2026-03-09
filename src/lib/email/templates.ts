@@ -643,6 +643,7 @@ export function getSessionReminderEmail(data: SessionReminderEmailData) {
 </html>`,
     text: `Session Reminder - Tomorrow!\n\nHey ${data.athleteName}!\n\nYou have a session tomorrow:\n\nTraining: ${data.serviceName}\nDate: ${data.date}\nTime: ${data.startTime} - ${data.endTime}\nCoach: ${data.coachName}\nLocation: ${data.location}\n\nView your session: ${data.dashboardUrl}\n\nProgression Over Perfection 🔥\n\nPSP.Pro | Virginia Beach, VA`,
   }
+}
 
 // ─── Staff: New Contact Submission Notification ──────────────────────────────
 
@@ -746,5 +747,4 @@ export function getContactNotificationEmail(data: ContactNotificationData) {
 </html>`,
     text: `New Inquiry from ${data.name}\n\nEmail: ${data.email}\nPhone: ${data.phone || 'Not provided'}\nInterest: ${data.interest || 'Not specified'}\n\nMessage:\n${data.message}\n\nSubmitted: ${data.submittedAt}\n\nView in admin: https://propersports.pro/admin/submissions`,
   }
-}
 }
