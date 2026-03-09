@@ -26,6 +26,8 @@ export default function MembershipsPage() {
   const [profile, setProfile] = useState<any>(null)
   const [currentTier, setCurrentTier] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [upgrading, setUpgrading] = useState(false)
+  const [upgradeError, setUpgradeError] = useState<string | null>(null)
   const [showFaq, setShowFaq] = useState<number | null>(null)
 
   useEffect(() => {
@@ -54,12 +56,29 @@ export default function MembershipsPage() {
     }
   }
 
-  const handleUpgradeElite = () => {
-    if (profile) {
-      // TODO: Integrate Stripe Checkout for Elite subscription
-      router.push('/settings?upgrade=elite')
-    } else {
+  const handleUpgradeElite = async () => {
+    if (!profile) {
       router.push('/signup?plan=elite')
+      return
+    }
+    setUpgrading(true)
+    setUpgradeError(null)
+    try {
+      const res = await fetch('/api/stripe/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tier_slug: 'elite_membership' }),
+      })
+      const data = await res.json()
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        setUpgradeError(data.error || 'Something went wrong. Please try again.')
+        setUpgrading(false)
+      }
+    } catch (err) {
+      setUpgradeError('Connection error. Please try again.')
+      setUpgrading(false)
     }
   }
 
@@ -121,10 +140,11 @@ export default function MembershipsPage() {
               </button>
               <button
                 onClick={handleUpgradeElite}
-                className="px-8 py-4 rounded-xl bg-gradient-to-r from-orange to-orange/80 text-white font-bold shadow-glow-orange hover:shadow-glow-orange/50 transition-all flex items-center justify-center gap-2"
+                disabled={upgrading}
+                className="px-8 py-4 rounded-xl bg-gradient-to-r from-orange to-orange/80 text-white font-bold shadow-glow-orange hover:shadow-glow-orange/50 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Upgrade to Elite
-                <ArrowRight className="w-5 h-5" />
+                {upgrading ? 'Redirecting to checkout...' : 'Upgrade to Elite'}
+                {!upgrading && <ArrowRight className="w-5 h-5" />}
               </button>
             </div>
           </div>
@@ -193,7 +213,7 @@ export default function MembershipsPage() {
                   <p className="text-sm text-slate-500 dark:text-white/50">Monthly subscription</p>
                 </div>
                 <div className="mb-8">
-                  <span className="text-5xl font-bold text-slate-900 dark:text-white">$60</span>
+                  <span className="text-5xl font-bold text-slate-900 dark:text-white">$30</span>
                   <span className="text-slate-500 dark:text-white/50">/month</span>
                 </div>
 
@@ -213,16 +233,21 @@ export default function MembershipsPage() {
                   ))}
                 </ul>
 
+                {upgradeError && (
+                  <p className="text-sm text-red-400 mb-3 text-center">{upgradeError}</p>
+                )}
                 <button
                   onClick={handleUpgradeElite}
-                  disabled={currentTier === 'elite'}
+                  disabled={currentTier === 'elite' || upgrading}
                   className={`w-full py-3 rounded-xl font-bold transition-all ${
                     currentTier === 'elite'
                       ? 'bg-orange/20 text-orange cursor-default'
-                      : 'bg-gradient-to-r from-orange to-orange/80 text-white hover:shadow-glow-orange/50 shadow-lg'
+                      : upgrading
+                        ? 'bg-orange/60 text-white cursor-not-allowed'
+                        : 'bg-gradient-to-r from-orange to-orange/80 text-white hover:shadow-glow-orange/50 shadow-lg'
                   }`}
                 >
-                  {currentTier === 'elite' ? 'Current Plan' : 'Upgrade to Elite'}
+                  {currentTier === 'elite' ? 'Current Plan' : upgrading ? 'Redirecting...' : 'Upgrade to Elite'}
                 </button>
               </div>
             </div>
@@ -288,10 +313,11 @@ export default function MembershipsPage() {
               </p>
               <button
                 onClick={handleUpgradeElite}
-                className="px-8 py-4 rounded-xl bg-gradient-to-r from-orange to-orange/80 text-white font-bold shadow-lg hover:shadow-glow-orange/50 transition-all inline-flex items-center gap-2"
+                disabled={upgrading}
+                className="px-8 py-4 rounded-xl bg-gradient-to-r from-orange to-orange/80 text-white font-bold shadow-lg hover:shadow-glow-orange/50 transition-all inline-flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Start Your Elite Journey
-                <ArrowRight className="w-5 h-5" />
+                {upgrading ? 'Redirecting to checkout...' : 'Start Your Elite Journey'}
+                {!upgrading && <ArrowRight className="w-5 h-5" />}
               </button>
             </div>
           </div>

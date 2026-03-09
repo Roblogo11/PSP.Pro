@@ -41,7 +41,7 @@ export default function MembershipRequiredPage() {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <Link href="/pricing" className="btn-primary px-8 py-4 flex items-center gap-2 justify-center">
+              <Link href="/memberships" className="btn-primary px-8 py-4 flex items-center gap-2 justify-center">
                 <Package className="w-5 h-5" />
                 <span>View Memberships & Pricing</span>
                 <ArrowRight className="w-5 h-5" />

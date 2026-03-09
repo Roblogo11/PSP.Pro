@@ -65,7 +65,7 @@ export default async function DashboardLayout({
       const isMemberRoute = MEMBER_ONLY_ROUTES.some(route => pathname.includes(route))
 
       if (isMemberRoute) {
-        // Member-only routes require an active package (subscription or session package)
+        // Member-only routes: active session package OR active Elite membership
         const { data: activePackage } = await supabase
           .from('athlete_packages')
           .select('id')
@@ -76,11 +76,19 @@ export default async function DashboardLayout({
           .limit(1)
           .single()
 
-        if (!activePackage) {
+        const { data: activeMembership } = await supabase
+          .from('athlete_memberships')
+          .select('id')
+          .eq('athlete_id', user.id)
+          .eq('status', 'active')
+          .limit(1)
+          .single()
+
+        if (!activePackage && !activeMembership) {
           redirect('/membership-required')
         }
       } else if (!isOpenRoute) {
-        // Non-open, non-member routes: need at least a paid booking or active package
+        // Non-open, non-member routes: need at least a paid booking, active package, or active membership
         const { data: activePackage } = await supabase
           .from('athlete_packages')
           .select('id')
@@ -99,7 +107,15 @@ export default async function DashboardLayout({
           .limit(1)
           .single()
 
-        if (!activePackage && !activeBooking) {
+        const { data: activeMembership } = await supabase
+          .from('athlete_memberships')
+          .select('id')
+          .eq('athlete_id', user.id)
+          .eq('status', 'active')
+          .limit(1)
+          .single()
+
+        if (!activePackage && !activeBooking && !activeMembership) {
           redirect('/membership-required')
         }
       }

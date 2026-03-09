@@ -404,7 +404,7 @@ export default function HomePage() {
               <div className="p-8">
                 <h3 className="text-2xl font-display font-bold mb-2 text-white">Monthly Membership</h3>
                 <div className="mb-4">
-                  <span className="text-5xl font-bold text-gradient-orange">$60</span>
+                  <span className="text-5xl font-bold text-gradient-orange">$30</span>
                   <span className="text-cyan-700 dark:text-white"> / mo</span>
                 </div>
                 <ul className="space-y-3 mb-6">

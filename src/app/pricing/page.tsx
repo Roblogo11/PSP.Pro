@@ -257,7 +257,7 @@ export default function PricingPage() {
             <div className="absolute -top-3 right-4 px-3 py-0.5 bg-gradient-to-r from-orange to-orange/80 text-white text-xs font-bold rounded-full">Most Popular</div>
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white">Elite</h3>
-              <span className="text-2xl font-bold text-gradient-orange">$60<span className="text-sm font-normal text-slate-500 dark:text-white/50">/mo</span></span>
+              <span className="text-2xl font-bold text-gradient-orange">$30<span className="text-sm font-normal text-slate-500 dark:text-white/50">/mo</span></span>
             </div>
             <ul className="space-y-2 text-sm">
               {[
