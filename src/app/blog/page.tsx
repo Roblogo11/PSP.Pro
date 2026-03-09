@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Calendar, Clock, ArrowRight, BookOpen, TrendingUp, Loader2, CheckCircle } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
+import { SpokeNav } from '@/components/navigation/spoke-nav'
 import { createClient } from '@/lib/supabase/client'
 import { BLOG_POSTS } from '@/lib/blog-posts'
 
@@ -295,6 +296,7 @@ export default function BlogPage() {
         </div>
       </div>
       </main>
+      <SpokeNav page="blog" />
     </div>
   )
 }

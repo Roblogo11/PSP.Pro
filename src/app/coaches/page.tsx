@@ -1,7 +1,7 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import Link from 'next/link'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
-import { FunnelNav } from '@/components/navigation/funnel-nav'
+import { SpokeNav } from '@/components/navigation/spoke-nav'
 import { Users, Star, Calendar } from 'lucide-react'
 
 export const revalidate = 60
@@ -116,7 +116,7 @@ export default async function CoachesPage() {
         </div>
       </main>
 
-      <FunnelNav />
+      <SpokeNav page="coaches" />
     </div>
   )
 }

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ChevronDown, HelpCircle, Search, Sparkles, MessageSquare, ArrowRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
+import { SpokeNav } from '@/components/navigation/spoke-nav'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 
 interface FAQItem {
@@ -319,6 +320,7 @@ export default function FAQPage() {
         </div>
       </div>
       </main>
+      <SpokeNav page="faq" />
     </div>
   )
 }

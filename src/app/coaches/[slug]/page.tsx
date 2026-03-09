@@ -2,7 +2,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
-import { FunnelNav } from '@/components/navigation/funnel-nav'
+import { SpokeNav } from '@/components/navigation/spoke-nav'
 import { Star, Award, Calendar, ChevronLeft } from 'lucide-react'
 
 export const revalidate = 60
@@ -149,7 +149,11 @@ export default async function CoachProfilePage({ params }: { params: { slug: str
         </div>
       </main>
 
-      <FunnelNav />
+      <SpokeNav
+        page="coach-profile"
+        forwardPath={`/booking?coach=${coach.id}`}
+        forwardLabel={`Book ${coach.full_name?.split(' ')[0] ?? 'a Session'}`}
+      />
     </div>
   )
 }
