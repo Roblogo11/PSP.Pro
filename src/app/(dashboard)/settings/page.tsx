@@ -900,7 +900,7 @@ function SettingsInner() {
               </section>
 
               {/* Marketing Preferences */}
-              <section className="border-t border-white/10 pt-6">
+              <section className="border-t border-slate-200 dark:border-white/10 pt-6">
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Marketing Preferences</h3>
                 <div className="flex items-center justify-between p-4 bg-cyan-900/20 rounded-xl mb-4">
                   <div>
@@ -929,7 +929,7 @@ function SettingsInner() {
               </section>
 
               {/* Download Data */}
-              <section className="border-t border-white/10 pt-6">
+              <section className="border-t border-slate-200 dark:border-white/10 pt-6">
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">Download Your Data</h3>
                 <p className="text-sm text-cyan-700 dark:text-white/70 mb-4">
                   Export a copy of all your personal data, bookings, performance metrics, and account info as a JSON file.
@@ -937,7 +937,7 @@ function SettingsInner() {
                 <button
                   onClick={handleExportData}
                   disabled={exporting || isImpersonating}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 rounded-xl hover:bg-cyan-500/30 transition-colors disabled:opacity-50 text-sm font-semibold"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-cyan/10 border border-cyan/30 text-cyan-700 dark:text-cyan-300 rounded-xl hover:bg-cyan/20 transition-colors disabled:opacity-50 text-sm font-semibold"
                 >
                   <Download className="w-4 h-4" />
                   {exporting ? 'Preparing export...' : 'Download My Data (JSON)'}
@@ -945,7 +945,7 @@ function SettingsInner() {
               </section>
 
               {/* Calendar Export */}
-              <section className="border-t border-white/10 pt-6">
+              <section className="border-t border-slate-200 dark:border-white/10 pt-6">
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">Sync to Calendar</h3>
                 <p className="text-sm text-cyan-700 dark:text-white/70 mb-4">
                   Download your upcoming sessions as a .ics file to import into Google Calendar, Apple Calendar, or Outlook.
@@ -953,7 +953,7 @@ function SettingsInner() {
                 <button
                   onClick={handleCalendarExport}
                   disabled={exportingCalendar || isImpersonating}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 rounded-xl hover:bg-cyan-500/30 transition-colors disabled:opacity-50 text-sm font-semibold"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-cyan/10 border border-cyan/30 text-cyan-700 dark:text-cyan-300 rounded-xl hover:bg-cyan/20 transition-colors disabled:opacity-50 text-sm font-semibold"
                 >
                   <CalendarDays className="w-4 h-4" />
                   {exportingCalendar ? 'Generating...' : 'Export to Calendar (.ics)'}
@@ -966,7 +966,7 @@ function SettingsInner() {
                   <AlertTriangle className="w-5 h-5" />
                   Danger Zone
                 </h3>
-                <p className="text-sm text-white/60 mb-4">
+                <p className="text-sm text-slate-600 dark:text-white/60 mb-4">
                   Permanently delete your account and all associated data. This cannot be undone.
                 </p>
                 {!showDeleteModal ? (

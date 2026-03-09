@@ -62,7 +62,7 @@ const athleteNavItems: NavItem[] = [
   { label: 'Report', mobileLabel: 'Report', href: '/progress-report', icon: FileBarChart, color: 'text-indigo-400', memberOnly: true },
   { label: 'Achievements', mobileLabel: 'Awards', href: '/achievements', icon: Trophy, color: 'text-yellow-400', memberOnly: true },
   { label: 'Leaderboards', mobileLabel: 'Ranks', href: '/leaderboards', icon: Medal, color: 'text-amber-400' },
-  { label: 'My Lessons', mobileLabel: 'Lessons', href: '/sessions', icon: Calendar, color: 'text-purple-400', badgeKey: 'upcomingSessions' },
+  { label: 'My Lessons', mobileLabel: 'My Lessons', href: '/sessions', icon: Calendar, color: 'text-purple-400', badgeKey: 'upcomingSessions' },
   { label: 'Book Lessons', mobileLabel: 'Book', href: '/booking', icon: Clock, color: 'text-blue-400', badgeKey: 'sessionsRemaining' },
   { label: 'Courses', mobileLabel: 'Courses', href: '/courses', icon: BookOpen, color: 'text-pink-400', memberOnly: true },
   { label: 'Pop Quiz', mobileLabel: 'Quiz', href: '/questionnaires', icon: ClipboardCheck, color: 'text-emerald-400', memberOnly: true },

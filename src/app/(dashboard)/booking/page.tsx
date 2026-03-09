@@ -7,7 +7,7 @@ import { getLocalDateString } from '@/lib/utils/local-date'
 import { Calendar } from '@/components/booking/calendar'
 import { ServiceSelector } from '@/components/booking/service-selector'
 import { TimeSlotPicker } from '@/components/booking/time-slot-picker'
-import { CheckCircle2, ArrowRight, ArrowLeft, Loader2, CalendarDays, CreditCard, Wallet, Tag, Sparkles } from 'lucide-react'
+import { CheckCircle2, ArrowRight, ArrowLeft, Loader2, CalendarDays, CreditCard, Wallet, Tag, Sparkles, RefreshCw, X } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { toastError } from '@/lib/toast'
 
@@ -43,6 +43,8 @@ export default function BookingPage() {
   const preselectedServiceId = searchParams.get('service')
   const preselectedCoachId = searchParams.get('coach')
   const orgId = searchParams.get('org')
+  const rescheduleBookingId = searchParams.get('reschedule')
+  const isRescheduleMode = !!rescheduleBookingId
 
   // Fetch org context if ?org= param present
   useEffect(() => {
@@ -182,8 +184,8 @@ export default function BookingPage() {
 
     const { data } = await query
     if (data) {
-      const unique = [...new Set(data.map((s: any) => s.slot_date))]
-      setAvailableDates(unique.map((d: string) => new Date(d + 'T00:00:00')))
+      const unique = [...new Set(data.map((s: any) => s.slot_date as string))]
+      setAvailableDates(unique.map((d) => new Date(d + 'T00:00:00')))
     }
   }
 
@@ -246,6 +248,40 @@ export default function BookingPage() {
       }
     }
     return price
+  }
+
+  const handleTransferBooking = async () => {
+    if (!selectedServiceId || !selectedDate || !selectedSlotId || isImpersonating || !rescheduleBookingId) return
+    setSubmitting(true)
+    try {
+      const slot = timeSlots.find(s => s.id === selectedSlotId)
+      if (!slot) throw new Error('Slot not found')
+
+      const response = await fetch('/api/bookings/reschedule', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          originalBookingId: rescheduleBookingId,
+          newSlotId: selectedSlotId,
+          serviceId: selectedServiceId,
+          date: getLocalDateString(selectedDate),
+          startTime: slot.start_time,
+          endTime: slot.end_time,
+          durationMinutes: slot.duration_minutes,
+          location: slot.location,
+          coachId: slot.coach_id,
+        }),
+      })
+
+      const data = await response.json()
+      if (!response.ok || data.error) throw new Error(data.error || 'Reschedule failed')
+
+      router.push('/sessions?rescheduled=true')
+    } catch (err: any) {
+      toastError(err.message || 'Failed to reschedule. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const handleConfirmBooking = async () => {
@@ -411,6 +447,23 @@ export default function BookingPage() {
           Schedule your next training session in just a few clicks
         </p>
       </div>
+
+      {/* Reschedule Mode Banner */}
+      {isRescheduleMode && (
+        <div className="mb-6 p-4 rounded-xl bg-cyan/10 border border-cyan/30 flex items-center gap-3">
+          <RefreshCw className="w-5 h-5 text-cyan flex-shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-slate-900 dark:text-white">Reschedule Mode</p>
+            <p className="text-xs text-cyan-700 dark:text-white">Pick a new date and time — no additional payment required</p>
+          </div>
+          <button
+            onClick={() => router.push('/sessions')}
+            className="flex items-center gap-1 text-xs text-cyan-700 dark:text-white hover:text-orange transition-colors flex-shrink-0"
+          >
+            <X className="w-4 h-4" /> Cancel
+          </button>
+        </div>
+      )}
 
       {/* Canceled Alert */}
       {canceled && (
@@ -625,74 +678,108 @@ export default function BookingPage() {
                   </p>
                 </div>
 
-                {/* Payment Method Toggle */}
-                <div className="p-4 rounded-lg bg-cyan-50/50 border border-cyan-200/40">
-                  <p className="text-sm text-cyan-800 dark:text-white mb-3 font-semibold">Payment Method</p>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod('card')}
-                      className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all text-left ${
-                        paymentMethod === 'card'
-                          ? 'border-orange bg-orange/10 text-slate-900 dark:text-white'
-                          : 'border-white/10 bg-white/5 text-cyan-700 dark:text-cyan-300 hover:border-white/20'
-                      }`}
-                    >
-                      <CreditCard className="w-5 h-5 flex-shrink-0" />
-                      <div>
-                        <p className="font-semibold text-sm">Pay Online</p>
-                        <p className="text-xs opacity-70">Card via Stripe</p>
-                      </div>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod('on_site')}
-                      className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all text-left ${
-                        paymentMethod === 'on_site'
-                          ? 'border-orange bg-orange/10 text-slate-900 dark:text-white'
-                          : 'border-white/10 bg-white/5 text-cyan-700 dark:text-cyan-300 hover:border-white/20'
-                      }`}
-                    >
-                      <Wallet className="w-5 h-5 flex-shrink-0" />
-                      <div>
-                        <p className="font-semibold text-sm">Pay at Location</p>
-                        <p className="text-xs opacity-70">Cash or card on site</p>
-                      </div>
-                    </button>
+                {/* Payment Method Toggle — hidden in reschedule mode */}
+                {!isRescheduleMode && (
+                  <div className="p-4 rounded-lg bg-cyan-50/50 border border-cyan-200/40">
+                    <p className="text-sm text-cyan-800 dark:text-white mb-3 font-semibold">Payment Method</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setPaymentMethod('card')}
+                        className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all text-left ${
+                          paymentMethod === 'card'
+                            ? 'border-orange bg-orange/10 text-slate-900 dark:text-white'
+                            : 'border-white/10 bg-white/5 text-cyan-700 dark:text-cyan-300 hover:border-white/20'
+                        }`}
+                      >
+                        <CreditCard className="w-5 h-5 flex-shrink-0" />
+                        <div>
+                          <p className="font-semibold text-sm">Pay Online</p>
+                          <p className="text-xs opacity-70">Card via Stripe</p>
+                        </div>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPaymentMethod('on_site')}
+                        className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all text-left ${
+                          paymentMethod === 'on_site'
+                            ? 'border-orange bg-orange/10 text-slate-900 dark:text-white'
+                            : 'border-white/10 bg-white/5 text-cyan-700 dark:text-cyan-300 hover:border-white/20'
+                        }`}
+                      >
+                        <Wallet className="w-5 h-5 flex-shrink-0" />
+                        <div>
+                          <p className="font-semibold text-sm">Pay at Location</p>
+                          <p className="text-xs opacity-70">Cash or card on site</p>
+                        </div>
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
-              <button
-                onClick={handleConfirmBooking}
-                disabled={submitting || isImpersonating}
-                className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-50"
-              >
-                {isImpersonating ? (
-                  <span>Read-only mode — booking disabled</span>
-                ) : submitting ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Processing...</span>
-                  </>
-                ) : paymentMethod === 'on_site' ? (
-                  <>
-                    <span>Confirm Booking</span>
-                    <ArrowRight className="w-5 h-5" />
-                  </>
-                ) : (
-                  <>
-                    <span>Proceed to Payment</span>
-                    <ArrowRight className="w-5 h-5" />
-                  </>
-                )}
-              </button>
-
-              <p className="text-xs text-cyan-800 dark:text-white text-center mt-4">
-                {paymentMethod === 'on_site'
-                  ? 'Your booking will be pending until confirmed. Please bring payment to your session.'
-                  : "You'll be redirected to Stripe to complete your payment securely"}
-              </p>
+              {isRescheduleMode ? (
+                <>
+                  <button
+                    onClick={handleTransferBooking}
+                    disabled={submitting || isImpersonating}
+                    className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    {submitting ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>Transferring...</span>
+                      </>
+                    ) : (
+                      <>
+                        <RefreshCw className="w-5 h-5" />
+                        <span>Transfer Session</span>
+                      </>
+                    )}
+                  </button>
+                  <p className="text-xs text-cyan-800 dark:text-white text-center mt-3">
+                    Your existing booking will be moved to this new time — no additional charge.
+                  </p>
+                  <button
+                    onClick={() => router.push('/sessions')}
+                    className="w-full mt-3 flex items-center justify-center gap-1 text-sm text-cyan-700 dark:text-white hover:text-orange transition-colors"
+                  >
+                    <X className="w-4 h-4" /> Cancel Transfer
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={handleConfirmBooking}
+                    disabled={submitting || isImpersonating}
+                    className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    {isImpersonating ? (
+                      <span>Read-only mode — booking disabled</span>
+                    ) : submitting ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>Processing...</span>
+                      </>
+                    ) : paymentMethod === 'on_site' ? (
+                      <>
+                        <span>Confirm Booking</span>
+                        <ArrowRight className="w-5 h-5" />
+                      </>
+                    ) : (
+                      <>
+                        <span>Proceed to Payment</span>
+                        <ArrowRight className="w-5 h-5" />
+                      </>
+                    )}
+                  </button>
+                  <p className="text-xs text-cyan-800 dark:text-white text-center mt-4">
+                    {paymentMethod === 'on_site'
+                      ? 'Your booking will be pending until confirmed. Please bring payment to your session.'
+                      : "You'll be redirected to Stripe to complete your payment securely"}
+                  </p>
+                </>
+              )}
             </div>
           )}
         </div>

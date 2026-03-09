@@ -17,6 +17,7 @@ import {
   LayoutDashboard,
   LogIn,
   LogOut,
+  Zap,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Calendar as CalendarIcon, Clock, MapPin, Video, CheckCircle2, XCircle, AlertCircle, X, CalendarPlus, ThumbsUp, HelpCircle, ThumbsDown } from 'lucide-react'
 import { format } from 'date-fns'
 import { createClient } from '@/lib/supabase/client'
@@ -13,6 +13,7 @@ import { toastSuccess, toastError } from '@/lib/toast'
 
 export default function SessionsPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { profile, isImpersonating, impersonatedUserId, loading: profileLoading } = useUserRole()
   const effectiveUserId = impersonatedUserId || profile?.id
   const { sessions, upcomingSessions, pastSessions, loading: sessionsLoading } = useUserSessions(effectiveUserId)
@@ -23,6 +24,14 @@ export default function SessionsPage() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [calendarUrl, setCalendarUrl] = useState<string | null>(null)
   const [rsvpUpdating, setRsvpUpdating] = useState<string | null>(null)
+
+  // Show success toast after reschedule
+  useEffect(() => {
+    if (searchParams.get('rescheduled') === 'true') {
+      toastSuccess('Session rescheduled successfully!')
+      router.replace('/sessions')
+    }
+  }, [])
 
   // Fetch calendar sync URL
   useEffect(() => {

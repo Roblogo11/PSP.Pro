@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { rateLimit, getClientIP } from '@/lib/rate-limit'
 
 // GET /api/messages — list conversations for current user
@@ -95,6 +96,7 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = await createClient()
+    const adminClient = createAdminClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
@@ -111,15 +113,15 @@ export async function POST(request: NextRequest) {
 
     // If no conversationId, create new conversation with recipient
     if (!targetConversationId && recipientId) {
-      // Check if conversation already exists between these two users
-      const { data: existingParticipant } = await supabase
+      // Check if conversation already exists between these two users (use admin to bypass RLS)
+      const { data: existingParticipant } = await adminClient
         .from('conversation_participants')
         .select('conversation_id')
         .eq('user_id', user.id)
 
       if (existingParticipant) {
         for (const ep of existingParticipant) {
-          const { data: otherParticipant } = await supabase
+          const { data: otherParticipant } = await adminClient
             .from('conversation_participants')
             .select('conversation_id')
             .eq('conversation_id', ep.conversation_id)
@@ -133,22 +135,23 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      // Create new conversation if none found
+      // Create new conversation if none found (use admin to bypass RLS)
       if (!targetConversationId) {
-        const { data: conv } = await supabase
+        const { data: conv, error: convError } = await adminClient
           .from('conversations')
           .insert({})
           .select('id')
           .single()
 
-        if (!conv) {
+        if (convError || !conv) {
+          console.error('Failed to create conversation:', convError)
           return NextResponse.json({ error: 'Failed to create conversation' }, { status: 500 })
         }
 
         targetConversationId = conv.id
 
         // Add both participants
-        await supabase.from('conversation_participants').insert([
+        await adminClient.from('conversation_participants').insert([
           { conversation_id: targetConversationId, user_id: user.id },
           { conversation_id: targetConversationId, user_id: recipientId },
         ])
@@ -159,8 +162,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No conversation or recipient specified' }, { status: 400 })
     }
 
-    // Send message
-    const { data: message, error } = await supabase
+    // Send message (admin client bypasses RLS — sender_id is set explicitly)
+    const { data: message, error } = await adminClient
       .from('messages')
       .insert({
         conversation_id: targetConversationId,
@@ -171,11 +174,12 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (error) {
+      console.error('Failed to send message:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
     // Update conversation timestamp
-    await supabase
+    await adminClient
       .from('conversations')
       .update({ updated_at: new Date().toISOString() })
       .eq('id', targetConversationId)

@@ -566,45 +566,26 @@ export default function AthleteLockerPage() {
         )}
       </div>
 
-      {/* Bento Grid Layout */}
-      <div data-tour="locker-stats" className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 mb-6">
-        {/* Quick Stats - Top Row - NOW WITH REAL DATA */}
-        <StatCard
-          title="Total Sessions"
-          value={stats?.totalSessions.toString() || '0'}
-          subtitle="This season"
-          icon={Activity}
-          className="lg:col-span-1"
-        />
-        <StatCard
-          title="Avg Velocity"
-          value={stats?.avgVelocity ? `${stats.avgVelocity} mph` : 'No data'}
-          subtitle="Last 10 sessions"
-          icon={Target}
-          className="lg:col-span-1"
-        />
-        <StatCard
-          title="Drills Completed"
-          value={stats?.totalDrills.toString() || '0'}
-          subtitle="All time"
-          icon={Dumbbell}
-          className="lg:col-span-1"
-        />
-        <StatCard
-          title="Current Streak"
-          value={stats?.currentStreak ? `${stats.currentStreak} day${stats.currentStreak !== 1 ? 's' : ''}` : '0 days'}
-          subtitle={stats?.currentStreak ? 'Keep it going!' : 'Start your streak!'}
-          icon={Flame}
-          className="lg:col-span-2"
-        />
+      {/* Stats Strip — horizontal scroll on mobile */}
+      <div data-tour="locker-stats" className="flex gap-3 overflow-x-auto pb-2 mb-6 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-4 sm:overflow-visible">
+        {[
+          { label: 'Sessions', value: stats?.totalSessions.toString() || '0', sub: 'This season', icon: Activity, color: 'text-cyan-600' },
+          { label: 'Avg Velocity', value: stats?.avgVelocity ? `${stats.avgVelocity} mph` : '—', sub: 'Last 10', icon: Target, color: 'text-orange' },
+          { label: 'Drills Done', value: stats?.totalDrills.toString() || '0', sub: 'All time', icon: Dumbbell, color: 'text-green-500' },
+          { label: 'Streak', value: stats?.currentStreak ? `${stats.currentStreak}d` : '0d', sub: stats?.currentStreak ? 'Keep going!' : 'Start today!', icon: Flame, color: 'text-orange' },
+        ].map((s) => (
+          <div key={s.label} className="flex-shrink-0 w-36 sm:w-auto command-panel flex items-center gap-3 py-3 px-4">
+            <s.icon className={`w-5 h-5 ${s.color} flex-shrink-0`} />
+            <div className="min-w-0">
+              <div className="text-lg font-bold text-slate-900 dark:text-white leading-tight">{s.value}</div>
+              <div className="text-xs text-cyan-700 dark:text-white truncate">{s.label}</div>
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* Main Content Grid */}
-      <div data-tour="locker-chart" className="grid grid-cols-1 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 mb-6">
-        {/* Velocity Chart - Takes 3 columns on desktop - NOW WITH REAL DATA */}
-        <VelocityChart velocityData={stats?.recentVelocities || []} />
-
-        {/* Next Session Card - Takes 2 columns on desktop - NOW WITH REAL DATA */}
+      {/* Next Session + Quick Rebook */}
+      <div data-tour="locker-chart" className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 mb-6">
         {stats?.nextSession ? (
           <NextSessionCard
             sessionDate={stats.nextSession}
@@ -613,86 +594,36 @@ export default function AthleteLockerPage() {
             bookingId={stats.nextSessionId ?? undefined}
           />
         ) : (
-          <div className="command-panel col-span-full lg:col-span-2 flex flex-col items-center justify-center py-12">
+          <div className="command-panel flex flex-col items-center justify-center py-10">
             <p className="text-cyan-700 dark:text-white mb-4">No upcoming sessions</p>
             <Link href="/booking">
               <button className="btn-primary">Book a Session</button>
             </Link>
           </div>
         )}
-      </div>
 
-      {/* Progress & Activity Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mb-6">
-        {/* Progress Rings */}
-        <div className="command-panel">
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">
-            Your Progress
-          </h2>
-          <div className="grid grid-cols-2 gap-6">
-            <ProgressRing
-              progress={stats?.totalDrills ? Math.min(Math.round((stats.totalDrills / Math.max(stats.totalDrills + 5, 10)) * 100), 100) : 0}
-              label="Drills Complete"
-              value={`${stats?.totalDrills ?? 0}`}
-              size={110}
-            />
-            <ProgressRing
-              progress={stats?.avgVelocity ? Math.min(Math.round((stats.avgVelocity / 80) * 100), 100) : 0}
-              label="Avg Velocity"
-              value={stats?.avgVelocity ? `${stats.avgVelocity} MPH` : '--'}
-              size={110}
-              color="#10B981"
-            />
-          </div>
-        </div>
-
-        {/* Activity Feed */}
-        <div className="command-panel lg:col-span-2">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-              Recent Activity
-            </h2>
-            <Link href="/sessions">
-              <button className="text-sm text-cyan-700 dark:text-white hover:text-orange transition-colors">
-                View All
-              </button>
-            </Link>
-          </div>
-          <ActivityFeed activities={recentActivity} maxItems={4} />
-        </div>
-      </div>
-
-      {/* Achievement Badges Section */}
-      <div className="command-panel mb-6">
-        <AchievementBadges />
-      </div>
-
-      {/* Review Game Stats */}
-      <div className="mb-6">
-        <ReviewGameStats />
-      </div>
-
-      {/* Quick Rebook Card */}
-      {lastBooking && !isImpersonating && (
-        <div data-tour="locker-rebook" className="command-panel mb-6">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-orange/20 rounded-xl flex items-center justify-center flex-shrink-0">
-              <RotateCcw className="w-6 h-6 text-orange" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-slate-900 dark:text-white">Book Again</h3>
-              <p className="text-sm text-cyan-700 dark:text-white truncate">
-                {lastBooking.serviceName} with {lastBooking.coachName}
-              </p>
-            </div>
+        {lastBooking && !isImpersonating ? (
+          <div data-tour="locker-rebook" className="command-panel flex flex-col justify-center">
+            <h3 className="font-bold text-slate-900 dark:text-white mb-1">Book Again</h3>
+            <p className="text-sm text-cyan-700 dark:text-white mb-4 truncate">
+              {lastBooking.serviceName} with {lastBooking.coachName}
+            </p>
             <Link href={`/booking?service=${lastBooking.serviceId}&coach=${lastBooking.coachId}`}>
-              <button className="btn-primary text-sm px-4 py-2 whitespace-nowrap">
-                Rebook
+              <button className="btn-primary w-full flex items-center justify-center gap-2">
+                <RotateCcw className="w-4 h-4" /> Rebook
               </button>
             </Link>
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="command-panel flex flex-col items-center justify-center py-10">
+            <Calendar className="w-10 h-10 text-cyan-700 dark:text-white mb-3" />
+            <p className="text-cyan-700 dark:text-white mb-4 text-sm text-center">Ready to train? Book your first session.</p>
+            <Link href="/booking">
+              <button className="btn-ghost text-sm">Browse Sessions</button>
+            </Link>
+          </div>
+        )}
+      </div>
 
       {/* Your Courses Section */}
       <div className="command-panel mb-6">
@@ -827,6 +758,52 @@ export default function AthleteLockerPage() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Velocity Chart */}
+      <div data-tour="locker-chart" className="mb-6">
+        <VelocityChart velocityData={stats?.recentVelocities || []} />
+      </div>
+
+      {/* Progress & Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 mb-6">
+        <div className="command-panel">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Your Progress</h2>
+          <div className="grid grid-cols-2 gap-6">
+            <ProgressRing
+              progress={stats?.totalDrills ? Math.min(Math.round((stats.totalDrills / Math.max(stats.totalDrills + 5, 10)) * 100), 100) : 0}
+              label="Drills Complete"
+              value={`${stats?.totalDrills ?? 0}`}
+              size={110}
+            />
+            <ProgressRing
+              progress={stats?.avgVelocity ? Math.min(Math.round((stats.avgVelocity / 80) * 100), 100) : 0}
+              label="Avg Velocity"
+              value={stats?.avgVelocity ? `${stats.avgVelocity} MPH` : '--'}
+              size={110}
+              color="#10B981"
+            />
+          </div>
+        </div>
+        <div className="command-panel lg:col-span-2">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Recent Activity</h2>
+            <Link href="/sessions">
+              <button className="text-sm text-cyan-700 dark:text-white hover:text-orange transition-colors">View All</button>
+            </Link>
+          </div>
+          <ActivityFeed activities={recentActivity} maxItems={4} />
+        </div>
+      </div>
+
+      {/* Achievement Badges */}
+      <div className="command-panel mb-6">
+        <AchievementBadges />
+      </div>
+
+      {/* Review Game Stats */}
+      <div className="mb-6">
+        <ReviewGameStats />
       </div>
     </div>
   )
