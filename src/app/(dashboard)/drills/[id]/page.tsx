@@ -101,6 +101,24 @@ export default function DrillDetailPage() {
     }
   }
 
+  const getEmbedUrl = (url: string) => {
+    if (!url) return url
+    // Already an embed URL — just ensure nocookie
+    if (url.includes('youtube.com/embed/') || url.includes('youtube-nocookie.com/embed/')) {
+      return url.replace('youtube.com/embed/', 'youtube-nocookie.com/embed/')
+    }
+    // youtu.be/VIDEO_ID
+    const shortMatch = url.match(/youtu\.be\/([a-zA-Z0-9_-]+)/)
+    if (shortMatch) return `https://www.youtube-nocookie.com/embed/${shortMatch[1]}`
+    // youtube.com/watch?v=VIDEO_ID
+    const watchMatch = url.match(/[?&]v=([a-zA-Z0-9_-]+)/)
+    if (watchMatch) return `https://www.youtube-nocookie.com/embed/${watchMatch[1]}`
+    // Vimeo
+    const vimeoMatch = url.match(/vimeo\.com\/(\d+)/)
+    if (vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}`
+    return url
+  }
+
   const formatDuration = (seconds: number) => {
     if (!seconds || isNaN(seconds)) return '—'
     const mins = Math.floor(seconds / 60)
@@ -136,7 +154,7 @@ export default function DrillDetailPage() {
   }
 
   return (
-    <div className="min-h-screen px-3 py-4 md:p-6 lg:p-10">
+    <div className="px-3 py-4 md:p-6 lg:p-10 pb-24">
       {/* Back Button */}
       <button
         onClick={() => router.back()}
@@ -150,14 +168,15 @@ export default function DrillDetailPage() {
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Video Player */}
-          <div className="glass-card overflow-hidden">
+          <div className="glass-card overflow-hidden rounded-2xl">
             <div className="relative aspect-video bg-cyan-900 flex items-center justify-center">
               {drill.video_url ? (
                 <iframe
-                  src={drill.video_url}
-                  className="w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  src={getEmbedUrl(drill.video_url)}
+                  className="absolute inset-0 w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
+                  referrerPolicy="strict-origin-when-cross-origin"
                 />
               ) : (
                 <div className="flex flex-col items-center gap-4">
