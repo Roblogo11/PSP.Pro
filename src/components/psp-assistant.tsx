@@ -231,7 +231,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['membership', 'monthly', 'subscribe', 'unlimited', 'subscription', 'membership required', 'access denied', 'cant access dashboard', 'locked out'],
     title: 'Memberships & Access',
-    response: 'To access the full training dashboard, you need an active membership or session package.\n\nMonthly Membership — $60/mo:\n• Unlimited group session access\n• Discounted 1-on-1 sessions\n• Priority scheduling\n• Full PSP.Pro dashboard access\n• Progress tracking & analytics\n\nSession Packages also unlock dashboard access:\n• 5-Pack: $350 (valid 90 days)\n• 10-Pack: $675 (valid 180 days)\n• 20-Pack: $1,300 (valid 365 days)\n\nWithout an active plan, you\'ll see the "Membership Required" page instead of the dashboard. Coaches and admins always have full access.\n\nVisit the Pricing page to choose a plan!',
+    response: 'To access the full training dashboard, you need an active membership or session package.\n\nMonthly Membership — $30/mo:\n• Unlimited group session access\n• Discounted 1-on-1 sessions\n• Priority scheduling\n• Full PSP.Pro dashboard access\n• Progress tracking & analytics\n\nSession Packages also unlock dashboard access:\n• 5-Pack: $350 (valid 90 days)\n• 10-Pack: $675 (valid 180 days)\n• 20-Pack: $1,300 (valid 365 days)\n\nWithout an active plan, you\'ll see the "Membership Required" page instead of the dashboard. Coaches and admins always have full access.\n\nVisit the Pricing page to choose a plan!',
     actions: [{ label: 'View Pricing', href: '/pricing' }, { label: 'Contact Us', href: '/contact' }],
   },
 
