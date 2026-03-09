@@ -9,6 +9,8 @@ import { HomeButton } from '@/components/layout/home-button'
 const OPEN_ROUTES = [
   '/booking', '/sessions', '/locker',
   '/settings', '/guide', '/leaderboards',
+  '/admin', // admin pages handle their own staff-only checks internally
+  '/messages',
 ]
 
 // Routes that require an active membership package (not just a single booking)
