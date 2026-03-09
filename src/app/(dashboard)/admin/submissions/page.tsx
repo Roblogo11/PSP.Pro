@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useUserRole } from '@/lib/hooks/use-user-role'
-import { createClient } from '@/lib/supabase/client'
 import { Inbox, Mail, Phone, User, Calendar, Tag, ChevronDown, ChevronUp, Loader2, ArrowLeft, Search } from 'lucide-react'
 
 interface Submission {
@@ -19,7 +18,6 @@ interface Submission {
 export default function SubmissionsPage() {
   const router = useRouter()
   const { isAdmin, isCoach, loading } = useUserRole()
-  const supabase = createClient()
 
   const [submissions, setSubmissions] = useState<Submission[]>([])
   const [fetching, setFetching] = useState(true)
@@ -32,16 +30,13 @@ export default function SubmissionsPage() {
 
   useEffect(() => {
     async function fetchSubmissions() {
-      const { data } = await supabase
-        .from('contact_submissions')
-        .select('id, name, email, phone, interest, message, created_at')
-        .order('created_at', { ascending: false })
-        .limit(200)
-      setSubmissions(data || [])
+      const res = await fetch('/api/admin/submissions')
+      const data = await res.json()
+      setSubmissions(data.submissions || [])
       setFetching(false)
     }
     fetchSubmissions()
-  }, [supabase])
+  }, [])
 
   const filtered = submissions.filter(s =>
     !search ||
