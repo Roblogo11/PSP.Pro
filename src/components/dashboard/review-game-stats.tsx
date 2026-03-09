@@ -143,8 +143,8 @@ export function ReviewGameStats() {
           <Trophy className="w-4 h-4 text-green-400" />
           <p className="text-xs text-green-400 font-semibold">
             {score.perfectGames === 1
-              ? 'You&apos;ve scored a perfect game! 🎉'
-              : `${score.perfectGames} perfect games! You&apos;re a rating master! 🏆`}
+              ? "You've scored a perfect game! 🎉"
+              : `${score.perfectGames} perfect games! You're a rating master! 🏆`}
           </p>
         </div>
       )}

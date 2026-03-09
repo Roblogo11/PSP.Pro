@@ -11,6 +11,9 @@ export interface UserStats {
   totalQuizzes: number
   currentStreak: number
   nextSession: Date | null
+  nextSessionId: string | null
+  nextSessionLocation: string | null
+  nextSessionService: string | null
   recentVelocities: Array<{ date: Date; value: number }>
 }
 
@@ -37,7 +40,7 @@ export function useUserStats(userId: string | undefined) {
         // Fetch next upcoming session
         const { data: upcomingSession } = await supabase
           .from('bookings')
-          .select('booking_date, start_time')
+          .select('id, booking_date, start_time, location, service_name')
           .eq('athlete_id', userId)
           .in('status', ['confirmed', 'pending'])
           .gte('booking_date', getLocalDateString())
@@ -125,6 +128,9 @@ export function useUserStats(userId: string | undefined) {
           totalQuizzes: quizzesCount || 0,
           currentStreak,
           nextSession: nextSessionDate,
+          nextSessionId: upcomingSession?.id ?? null,
+          nextSessionLocation: upcomingSession?.location ?? null,
+          nextSessionService: upcomingSession?.service_name ?? null,
           recentVelocities,
         })
       } catch (error) {

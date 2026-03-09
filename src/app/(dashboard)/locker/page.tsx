@@ -65,6 +65,7 @@ export default function AthleteLockerPage() {
   const [assignedDrills, setAssignedDrills] = useState<AssignedDrill[]>([])
   const [enrolledCourses, setEnrolledCourses] = useState<EnrolledCourse[]>([])
   const [lastBooking, setLastBooking] = useState<LastBooking | null>(null)
+  const [recentActivity, setRecentActivity] = useState<any[]>([])
 
   // Coach/admin stats
   const [coachStats, setCoachStats] = useState({
@@ -206,6 +207,63 @@ export default function AthleteLockerPage() {
     }
 
     fetchLastBooking()
+  }, [effectiveUserId, isCoach, isAdmin, isImpersonating])
+
+  // Fetch recent activity (bookings + drill completions)
+  useEffect(() => {
+    const showAthleteView = isImpersonating || (!isCoach && !isAdmin)
+    if (!effectiveUserId || !showAthleteView) return
+
+    async function fetchRecentActivity() {
+      const supabase = createClient()
+
+      // Recent bookings
+      const { data: bookings } = await supabase
+        .from('bookings')
+        .select('id, booking_date, start_time, service_name, status, created_at')
+        .eq('athlete_id', effectiveUserId!)
+        .in('status', ['confirmed', 'pending', 'completed'])
+        .order('created_at', { ascending: false })
+        .limit(5)
+
+      // Recent drill completions
+      const { data: drills } = await supabase
+        .from('drill_completions')
+        .select('id, completed_at, drill:drill_id(title)')
+        .eq('user_id', effectiveUserId!)
+        .order('completed_at', { ascending: false })
+        .limit(5)
+
+      const activities: any[] = []
+
+      for (const b of (bookings || [])) {
+        activities.push({
+          id: `booking-${b.id}`,
+          type: b.status === 'completed' ? 'session_completed' : 'goal_set',
+          title: b.status === 'completed' ? 'Session Completed' : 'Session Booked',
+          description: b.service_name || 'Training Session',
+          timestamp: new Date(b.created_at),
+          color: b.status === 'completed' ? '#3B82F6' : '#10B981',
+        })
+      }
+
+      for (const d of (drills || [])) {
+        activities.push({
+          id: `drill-${d.id}`,
+          type: 'drill_completed',
+          title: 'Drill Completed',
+          description: (d.drill as any)?.title || 'Training Drill',
+          timestamp: new Date(d.completed_at),
+          color: '#10B981',
+        })
+      }
+
+      // Sort by timestamp descending
+      activities.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
+      setRecentActivity(activities)
+    }
+
+    fetchRecentActivity()
   }, [effectiveUserId, isCoach, isAdmin, isImpersonating])
 
   // Fetch coach/admin quick stats + upcoming sessions
@@ -548,7 +606,12 @@ export default function AthleteLockerPage() {
 
         {/* Next Session Card - Takes 2 columns on desktop - NOW WITH REAL DATA */}
         {stats?.nextSession ? (
-          <NextSessionCard sessionDate={stats.nextSession} />
+          <NextSessionCard
+            sessionDate={stats.nextSession}
+            location={stats.nextSessionLocation ?? undefined}
+            type={stats.nextSessionService ?? undefined}
+            bookingId={stats.nextSessionId ?? undefined}
+          />
         ) : (
           <div className="command-panel col-span-full lg:col-span-2 flex flex-col items-center justify-center py-12">
             <p className="text-cyan-700 dark:text-white mb-4">No upcoming sessions</p>
@@ -595,7 +658,7 @@ export default function AthleteLockerPage() {
               </button>
             </Link>
           </div>
-          <ActivityFeed maxItems={4} />
+          <ActivityFeed activities={recentActivity} maxItems={4} />
         </div>
       </div>
 

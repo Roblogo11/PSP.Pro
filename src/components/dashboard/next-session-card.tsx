@@ -3,17 +3,20 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Calendar, Clock, MapPin } from 'lucide-react'
+import Link from 'next/link'
 
 interface NextSessionCardProps {
   sessionDate: Date
   location?: string
   type?: string
+  bookingId?: string
 }
 
 export function NextSessionCard({
   sessionDate,
-  location = 'PSP Training Center',
-  type = 'Speed & Mechanics',
+  location = 'Coastal Sports Center, Chesapeake VA',
+  type = 'Training Session',
+  bookingId,
 }: NextSessionCardProps) {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -105,13 +108,15 @@ export function NextSessionCard({
       </div>
 
       {/* CTA */}
-      <motion.button
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        className="btn-primary w-full mt-6"
-      >
-        View Session Details
-      </motion.button>
+      <Link href="/sessions">
+        <motion.div
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="btn-primary w-full mt-6 text-center cursor-pointer"
+        >
+          View Session Details
+        </motion.div>
+      </Link>
     </motion.div>
   )
 }

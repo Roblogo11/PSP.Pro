@@ -164,30 +164,20 @@ export default function BookingSuccessPage() {
               <span>Go to Dashboard</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <button
-              onClick={async () => {
-                try {
-                  const res = await fetch('/api/calendar/token')
-                  const data = await res.json()
-                  if (data.url) {
-                    await navigator.clipboard.writeText(data.url)
-                    alert('Calendar subscription URL copied! Paste it into Google Calendar, Apple Calendar, or Outlook.')
-                  }
-                } catch {
-                  window.open('/api/calendar/export', '_blank')
-                }
-              }}
+            <a
+              href="/api/calendar/export"
+              download="psp-session.ics"
               className="btn-ghost inline-flex items-center justify-center gap-2"
             >
               <CalendarPlus className="w-4 h-4" />
-              <span>Add to Calendar</span>
-            </button>
+              <span className="text-inherit">Add to Calendar</span>
+            </a>
             <Link
               href="/booking"
               className="btn-ghost inline-flex items-center justify-center gap-2"
             >
               <Calendar className="w-4 h-4" />
-              <span>Book Another Session</span>
+              <span className="text-inherit">Book Another Session</span>
             </Link>
           </div>
 

@@ -8,9 +8,10 @@ interface CalendarProps {
   onSelectDate: (date: Date) => void
   availableDates?: Date[]
   minDate?: Date
+  onMonthChange?: (month: Date) => void
 }
 
-export function Calendar({ selectedDate, onSelectDate, availableDates = [], minDate }: CalendarProps) {
+export function Calendar({ selectedDate, onSelectDate, availableDates = [], minDate, onMonthChange }: CalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(selectedDate || new Date())
 
   const monthNames = [
@@ -27,11 +28,15 @@ export function Calendar({ selectedDate, onSelectDate, availableDates = [], minD
   }
 
   const goToPreviousMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1))
+    const m = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1)
+    setCurrentMonth(m)
+    onMonthChange?.(m)
   }
 
   const goToNextMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1))
+    const m = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1)
+    setCurrentMonth(m)
+    onMonthChange?.(m)
   }
 
   const isDateAvailable = (date: Date) => {
@@ -94,8 +99,8 @@ export function Calendar({ selectedDate, onSelectDate, availableDates = [], minD
               selected
                 ? 'bg-gradient-to-br from-orange via-orange-500 to-orange-600 text-white shadow-2xl shadow-orange/50 scale-110 ring-2 ring-orange/30'
                 : available
-                ? 'bg-cyan-50/50 border border-cyan-200/40 text-white hover:bg-gradient-to-br hover:from-orange/20 hover:to-cyan/10 hover:border-cyan/30 hover:shadow-lg'
-                : 'text-cyan-800 bg-white/[0.02]'
+                ? 'bg-cyan-50/50 border border-cyan-200/40 text-slate-800 dark:text-white hover:bg-gradient-to-br hover:from-orange/20 hover:to-cyan/10 hover:border-cyan/30 hover:shadow-lg'
+                : 'text-slate-400 dark:text-cyan-800 bg-white/[0.02]'
             }
             ${today && !selected ? 'ring-2 ring-cyan shadow-lg shadow-cyan/30' : ''}
           `}

@@ -34,6 +34,8 @@ export default function BookingPage() {
   const [promoValidating, setPromoValidating] = useState(false)
   const [promoResult, setPromoResult] = useState<{ valid: boolean; discount_type?: string; discount_value?: number; label?: string } | null>(null)
   const [membershipTier, setMembershipTier] = useState<string>('basic')
+  const [availableDates, setAvailableDates] = useState<Date[]>([])
+  const [calendarMonth, setCalendarMonth] = useState<Date>(new Date())
   const [orgContext, setOrgContext] = useState<{ name: string; logo_url: string | null; primary_color: string; secondary_color: string; tagline: string | null; slug: string } | null>(null)
 
   // Check for URL params
@@ -163,14 +165,44 @@ export default function BookingPage() {
     }
   }
 
+  const fetchAvailableDatesForMonth = async (month: Date, serviceId: string) => {
+    const year = month.getFullYear()
+    const m = month.getMonth()
+    const firstDay = `${year}-${String(m + 1).padStart(2, '0')}-01`
+    const lastDay = `${year}-${String(m + 1).padStart(2, '0')}-${new Date(year, m + 1, 0).getDate()}`
+
+    let query = supabase
+      .from('available_slots')
+      .select('slot_date')
+      .eq('is_available', true)
+      .gte('slot_date', firstDay)
+      .lte('slot_date', lastDay)
+
+    if (preselectedCoachId) query = query.eq('coach_id', preselectedCoachId)
+
+    const { data } = await query
+    if (data) {
+      const unique = [...new Set(data.map((s: any) => s.slot_date))]
+      setAvailableDates(unique.map((d: string) => new Date(d + 'T00:00:00')))
+    }
+  }
+
   const handleServiceSelect = (serviceId: string) => {
     setSelectedServiceId(serviceId)
     setCurrentStep('date')
     setSelectedDate(null)
     setSelectedSlotId(null)
+    fetchAvailableDatesForMonth(calendarMonth, serviceId)
   }
 
   const handleDateSelect = (date: Date) => {
+    // Check if this date has available slots before navigating
+    const dateStr = getLocalDateString(date)
+    const hasSlots = availableDates.some(d => getLocalDateString(d) === dateStr)
+    if (!hasSlots && availableDates.length > 0) {
+      toastError('No time slots available for this date. Please select a highlighted date.')
+      return
+    }
     setSelectedDate(date)
     setCurrentStep('time')
     setSelectedSlotId(null)
@@ -488,7 +520,12 @@ export default function BookingPage() {
               <Calendar
                 selectedDate={selectedDate}
                 onSelectDate={handleDateSelect}
+                availableDates={availableDates}
                 minDate={new Date()}
+                onMonthChange={(month) => {
+                  setCalendarMonth(month)
+                  if (selectedServiceId) fetchAvailableDatesForMonth(month, selectedServiceId)
+                }}
               />
             </div>
           )}
@@ -552,19 +589,19 @@ export default function BookingPage() {
                     <Tag className="w-4 h-4" />
                     Promo Code
                   </p>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 min-w-0">
                     <input
                       type="text"
                       value={promoCode}
                       onChange={(e) => { setPromoCode(e.target.value.toUpperCase()); setPromoResult(null) }}
                       placeholder="Enter code"
-                      className="flex-1 px-3 py-2 rounded-lg bg-white dark:bg-white/10 border border-slate-200 dark:border-white/20 text-sm text-slate-900 dark:text-white placeholder:text-slate-400"
+                      className="min-w-0 flex-1 px-3 py-2 rounded-lg bg-white dark:bg-white/10 border border-slate-200 dark:border-white/20 text-sm text-slate-900 dark:text-white placeholder:text-slate-400"
                     />
                     <button
                       type="button"
                       onClick={validatePromoCode}
                       disabled={!promoCode.trim() || promoValidating}
-                      className="px-4 py-2 rounded-lg bg-cyan/20 text-cyan font-semibold text-sm hover:bg-cyan/30 transition-all disabled:opacity-50"
+                      className="shrink-0 px-4 py-2 rounded-lg bg-cyan/20 text-cyan font-semibold text-sm hover:bg-cyan/30 transition-all disabled:opacity-50"
                     >
                       {promoValidating ? 'Checking...' : 'Apply'}
                     </button>
