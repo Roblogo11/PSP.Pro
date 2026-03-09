@@ -256,6 +256,13 @@ export default function AdminDashboard() {
       color: '#F97316',
     },
     {
+      title: 'View Submissions',
+      description: 'Contact & Join the Team forms',
+      icon: Inbox,
+      href: '/admin/submissions',
+      color: '#F97316',
+    },
+    {
       title: 'Create Drill',
       description: 'Add new drill to library',
       icon: Dumbbell,

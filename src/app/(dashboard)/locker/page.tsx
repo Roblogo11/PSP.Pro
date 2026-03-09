@@ -19,6 +19,7 @@ import {
   BookOpen,
   RotateCcw,
   ShieldCheck,
+  Inbox,
 } from 'lucide-react'
 import { VelocityChart } from '@/components/dashboard/velocity-chart'
 import { NextSessionCard } from '@/components/dashboard/next-session-card'
@@ -392,6 +393,7 @@ export default function AthleteLockerPage() {
   if (!isImpersonating && (isCoach || isAdmin)) {
     const quickLinks = [
       { title: 'Book for Athlete', desc: 'Reserve a slot for a client', icon: UserPlus, href: '/admin/bookings?action=book', color: '#F97316' },
+      { title: 'Submissions', desc: 'Contact & leads inbox', icon: Inbox, href: '/admin/submissions', color: '#F97316' },
       { title: 'Athletes', desc: `${coachStats.totalAthletes} registered`, icon: Users, href: '/admin/athletes', color: '#B8301A' },
       { title: 'Bookings', desc: `${coachStats.pendingBookings} pending`, icon: Calendar, href: '/admin/bookings', color: '#00B4D8' },
       { title: 'Drills', desc: `${coachStats.totalDrills} in library`, icon: Dumbbell, href: '/admin/drills', color: '#10B981' },
