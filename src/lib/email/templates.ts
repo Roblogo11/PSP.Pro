@@ -643,4 +643,108 @@ export function getSessionReminderEmail(data: SessionReminderEmailData) {
 </html>`,
     text: `Session Reminder - Tomorrow!\n\nHey ${data.athleteName}!\n\nYou have a session tomorrow:\n\nTraining: ${data.serviceName}\nDate: ${data.date}\nTime: ${data.startTime} - ${data.endTime}\nCoach: ${data.coachName}\nLocation: ${data.location}\n\nView your session: ${data.dashboardUrl}\n\nProgression Over Perfection 🔥\n\nPSP.Pro | Virginia Beach, VA`,
   }
+
+// ─── Staff: New Contact Submission Notification ──────────────────────────────
+
+interface ContactNotificationData {
+  name: string
+  email: string
+  phone?: string | null
+  interest?: string | null
+  message: string
+  submittedAt: string
+}
+
+export function getContactNotificationEmail(data: ContactNotificationData) {
+  return {
+    subject: `New Inquiry from ${data.name} — PSP.Pro`,
+    html: `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#0f172a;font-family:'Inter',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0f172a;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#ea580c,#f97316);padding:28px 32px;border-radius:16px 16px 0 0;">
+              <p style="margin:0;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);">PSP.Pro Staff Alert</p>
+              <h1 style="margin:8px 0 0;font-size:26px;font-weight:800;color:#fff;">New Inquiry Submitted</h1>
+            </td>
+          </tr>
+          <!-- Body -->
+          <tr>
+            <td style="background:#1e293b;padding:32px;border-radius:0 0 16px 16px;">
+              <p style="margin:0 0 24px;font-size:15px;color:rgba(255,255,255,0.7);">
+                Someone filled out the Join the Team form. Here's what they submitted:
+              </p>
+
+              <!-- Contact Details -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;margin-bottom:24px;">
+                <tr>
+                  <td style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08);">
+                    <p style="margin:0;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.4);">Name</p>
+                    <p style="margin:4px 0 0;font-size:16px;font-weight:700;color:#fff;">${data.name}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08);">
+                    <p style="margin:0;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.4);">Email</p>
+                    <p style="margin:4px 0 0;font-size:15px;color:#00B4D8;">${data.email}</p>
+                  </td>
+                </tr>
+                ${data.phone ? `
+                <tr>
+                  <td style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08);">
+                    <p style="margin:0;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.4);">Phone</p>
+                    <p style="margin:4px 0 0;font-size:15px;color:#fff;">${data.phone}</p>
+                  </td>
+                </tr>` : ''}
+                ${data.interest ? `
+                <tr>
+                  <td style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08);">
+                    <p style="margin:0;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.4);">Interest / Sport</p>
+                    <p style="margin:4px 0 0;font-size:15px;color:#fff;text-transform:capitalize;">${data.interest.replace(/-/g, ' ')}</p>
+                  </td>
+                </tr>` : ''}
+                <tr>
+                  <td style="padding:16px 20px;">
+                    <p style="margin:0;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.4);">Message</p>
+                    <p style="margin:8px 0 0;font-size:14px;color:rgba(255,255,255,0.85);line-height:1.6;white-space:pre-wrap;">${data.message}</p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- CTA -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center">
+                    <a href="https://propersports.pro/admin/submissions" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#ea580c,#f97316);color:#fff;font-size:15px;font-weight:700;text-decoration:none;border-radius:12px;">
+                      View All Submissions →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:24px 0 0;font-size:12px;color:rgba(255,255,255,0.3);text-align:center;">
+                Submitted ${data.submittedAt} · PSP.Pro Admin Panel
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px;text-align:center;">
+              <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.2);">© ${new Date().getFullYear()} Proper Sports Performance · Virginia Beach, VA</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`,
+    text: `New Inquiry from ${data.name}\n\nEmail: ${data.email}\nPhone: ${data.phone || 'Not provided'}\nInterest: ${data.interest || 'Not specified'}\n\nMessage:\n${data.message}\n\nSubmitted: ${data.submittedAt}\n\nView in admin: https://propersports.pro/admin/submissions`,
+  }
+}
 }

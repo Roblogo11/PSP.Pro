@@ -23,7 +23,7 @@ import { getLocalDateString } from '@/lib/utils/local-date'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
 import { Tooltip, InfoBanner } from '@/components/ui/tooltip'
-import { Lightbulb, AlertTriangle, CreditCard, ToggleLeft, ToggleRight, UserCircle, Trash2, Eye, Search, XCircle as XCircleIcon, UserPlus } from 'lucide-react'
+import { Lightbulb, AlertTriangle, CreditCard, ToggleLeft, ToggleRight, UserCircle, Trash2, Eye, Search, XCircle as XCircleIcon, UserPlus, Inbox } from 'lucide-react'
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -333,6 +333,14 @@ export default function AdminDashboard() {
       href: '/admin/org',
       color: '#6366f1',
       stat: 'Manage Orgs',
+    },
+    {
+      title: 'Submissions',
+      description: 'Contact & Join the Team forms',
+      icon: Inbox,
+      href: '/admin/submissions',
+      color: '#F97316',
+      stat: 'View Inquiries',
     },
     {
       title: 'Platform Settings',

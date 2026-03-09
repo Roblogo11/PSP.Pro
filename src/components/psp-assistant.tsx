@@ -1166,6 +1166,56 @@ const KNOWLEDGE_BASE: KBEntry[] = [
     followUp: ['How do I sign up my child?', 'What is the cancellation policy?', 'Tell me about pricing'],
   },
 
+  // ── CONTACT SUBMISSIONS / ADMIN INBOX ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['contact submissions', 'form submissions', 'join the team form', 'where do i see inquiries', 'new inquiry', 'admin submissions', 'contact inbox', 'prospect form', 'form data', 'who filled out', 'new signup form', 'view submissions', 'contact notification'],
+    title: 'Contact & Form Submissions',
+    response: 'All contact and "Join the Team" form submissions are saved to the database and viewable in the Admin Panel.\n\nHow it works:\n• Visitors fill out the form at /get-started or /contact\n• You instantly get an email notification at propersportsperformance@gmail.com\n• The email includes their name, email, phone, sport interest, and full message\n• Click "View All Submissions →" in the email to open the admin page\n\nAdmin Submissions Page (/admin/submissions):\n• Full list of all inquiries, newest first\n• Search by name, email, or message content\n• Click any row to expand full details\n• One-tap "Reply via Email" button opens your email client pre-addressed\n• One-tap "Call" button if they left a phone number\n• Shows sport interest, submission timestamp, and full message\n\nFind it in the Admin Control Center under the "Submissions" card.',
+    actions: [{ label: 'View Submissions', href: '/admin/submissions' }, { label: 'Admin Panel', href: '/admin' }],
+    followUp: ['How do I reply to an inquiry?', 'Where does the Join the Team form go?', 'How do I add an athlete?'],
+  },
+
+  // ── RESCHEDULE / TRANSFER SESSION ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['reschedule', 'transfer session', 'move booking', 'change date', 'switch session', 'reschedule booking', 'transfer token', 'cancel transfer', 'change my session time', 'book new time'],
+    title: 'Reschedule / Transfer a Session',
+    response: 'You can reschedule a confirmed or pending booking to a new time slot — no extra charge!\n\nHow to reschedule:\n1. Go to My Sessions (/sessions)\n2. Find your session and click "Reschedule"\n3. The Booking page opens in Transfer Mode\n4. A blue banner at the top confirms you\'re in reschedule mode\n5. Pick a new date and time slot like normal\n6. On the confirmation step, tap "Transfer Session" instead of paying\n7. Your original booking is cancelled and a new one is created preserving your original payment\n\nTo cancel the transfer:\n• While on the booking page in Transfer Mode, click "Cancel Transfer" link below the button\n• This takes you back to your sessions without making any changes\n\nNote: You can only reschedule to future dates. The new slot must be available.',
+    actions: [{ label: 'My Sessions', href: '/sessions' }, { label: 'Book a Session', href: '/booking' }],
+    followUp: ['How do I cancel a session?', 'What is the cancellation policy?', 'How do I book a session?'],
+  },
+
+  // ── SPOKE NAV / PAGE NAVIGATION ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['spoke nav', 'page nav', 'coaches nav', 'memberships nav', 'blog nav', 'faq nav', 'spoke pages', 'bottom bar coaches', 'navigation on coaches page', 'how do i go back from coaches', 'bottom bar memberships'],
+    title: 'Page Navigation (Spoke Pages)',
+    response: 'Non-funnel pages (Coaches, Memberships, Blog, FAQ, Vault) have their own tailored bottom navigation bar.\n\nEach page has a custom back/forward flow:\n• Coaches → back to Pricing, forward to Book a Session\n• Coach Profile → back to All Coaches, forward to Book [Coach Name]\n• Memberships → back to Pricing, forward to Join the Team\n• Blog → back to Home, forward to Join the Team\n• FAQ → back to Home, forward to Join the Team\n• Vault → back to Home, forward to Join the Team\n\nThe bar appears at the bottom of the page with a back button on the left and a highlighted action button on the right — same visual style as the main funnel navigation.',
+    actions: [{ label: 'View Coaches', href: '/coaches' }, { label: 'Memberships', href: '/memberships' }],
+    followUp: ['What is the funnel nav?', 'How do I get to memberships?', 'Show me the coaches'],
+  },
+
+  // ── ACTIVITY FEED / LOCKER ROOM ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['activity feed', 'recent activity', 'locker activity', 'what shows in activity', 'no activity showing', 'activity empty', 'recent sessions locker', 'locker feed'],
+    title: 'Locker Room Activity Feed',
+    response: 'The Locker Room shows your Recent Activity — a live feed of your latest training events.\n\nWhat appears in the activity feed:\n• Confirmed, pending, and completed bookings (last 5)\n• Drill completions\n• Each item shows the session type, date, status badge, and timestamp\n\nThe feed is ordered by most recent first and shows up to 4 items at a time.\n\nIf it looks empty: make sure you have at least one booking or completed drill. New accounts start with an empty feed until you book your first session!',
+    actions: [{ label: 'Go to Locker', href: '/locker' }, { label: 'Book a Session', href: '/booking' }],
+    followUp: ['How do I book a session?', 'How do I complete a drill?', 'What is the Locker Room?'],
+  },
+
+  // ── DRILL PAGE / VIDEO ──
+  // ════════════════════════════════════════════════════════════
+  {
+    keywords: ['drill video not working', 'youtube not loading', 'video blocked', 'drill video error', 'can\'t watch drill', 'iframe blocked', 'video embed'],
+    title: 'Drill Video Issues',
+    response: 'All drill videos use the youtube-nocookie.com embed format to avoid cross-origin blocking.\n\nIf a video isn\'t loading:\n• Make sure your browser allows embedded iframes\n• Try disabling any browser extensions that block iframes (Privacy Badger, uBlock etc.)\n• Check your network — some school/corporate networks block YouTube\n• The video player requires JavaScript to be enabled\n\nIf a coach uploaded a video URL that isn\'t loading, they should use:\n• youtube.com/watch?v=ID or youtu.be/ID (auto-converted to embed)\n• vimeo.com/ID (auto-converted to embed)\n\nThe platform automatically converts all YouTube/Vimeo URLs to the correct embed format.',
+    actions: [{ label: 'Drill Library', href: '/drills' }],
+    followUp: ['How do I complete a drill?', 'How do I add a drill as a coach?', 'What drills are available?'],
+  },
+
   // ── SPOTLIGHT TOUR / DR. PROP WALKTHROUGH ──
   // ════════════════════════════════════════════════════════════
   {

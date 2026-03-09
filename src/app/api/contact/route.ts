@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { rateLimit, getClientIP } from '@/lib/rate-limit'
+import { sendEmail } from '@/lib/email/send'
+import { getContactNotificationEmail } from '@/lib/email/templates'
 
 export async function POST(request: NextRequest) {
   try {
@@ -46,6 +48,17 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       )
     }
+
+    // Fire-and-forget staff notification
+    const emailData = getContactNotificationEmail({
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      phone: phone?.trim() || null,
+      interest: interest || null,
+      message: message.trim(),
+      submittedAt: new Date().toLocaleString('en-US', { timeZone: 'America/New_York', dateStyle: 'medium', timeStyle: 'short' }) + ' ET',
+    })
+    sendEmail({ to: 'propersportsperformance@gmail.com', ...emailData }).catch(() => {})
 
     return NextResponse.json({ success: true })
   } catch (error) {
