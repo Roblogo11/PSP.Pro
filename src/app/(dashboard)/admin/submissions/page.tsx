@@ -25,7 +25,7 @@ export default function SubmissionsPage() {
   const [search, setSearch] = useState('')
 
   useEffect(() => {
-    if (!loading && !isAdmin && !isCoach) router.replace('/admin')
+    if (!loading && !isAdmin && !isCoach) router.replace('/locker')
   }, [loading, isAdmin, isCoach, router])
 
   useEffect(() => {
