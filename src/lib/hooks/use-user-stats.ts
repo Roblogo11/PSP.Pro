@@ -20,6 +20,8 @@ export interface UserStats {
 export function useUserStats(userId: string | undefined) {
   const [stats, setStats] = useState<UserStats | null>(null)
   const [loading, setLoading] = useState(true)
+  // createClient() returns a stable instance — do NOT put it in the dep array
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const supabase = createClient()
 
   useEffect(() => {
@@ -146,7 +148,8 @@ export function useUserStats(userId: string | undefined) {
     // Refresh stats every 30 seconds
     const interval = setInterval(loadStats, 30000)
     return () => clearInterval(interval)
-  }, [userId, supabase])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId])
 
   return { stats, loading }
 }

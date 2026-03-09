@@ -13,6 +13,15 @@ export default function BookingSuccessPage() {
 
   const [loading, setLoading] = useState(!isOnSite)
   const [error, setError] = useState<string | null>(null)
+  const [calendarUrl, setCalendarUrl] = useState<string | null>(null)
+
+  useEffect(() => {
+    // Fetch calendar token for the Add to Calendar button
+    fetch('/api/calendar/token')
+      .then(r => r.json())
+      .then(d => { if (d.url) setCalendarUrl(d.url) })
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     // Pay on site — no Stripe verification needed
@@ -164,14 +173,24 @@ export default function BookingSuccessPage() {
               <span>Go to Dashboard</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <a
-              href="/api/calendar/export"
-              download="psp-session.ics"
-              className="btn-ghost inline-flex items-center justify-center gap-2"
-            >
-              <CalendarPlus className="w-4 h-4" />
-              <span className="text-inherit">Add to Calendar</span>
-            </a>
+            {calendarUrl ? (
+              <a
+                href={calendarUrl}
+                download="psp-sessions.ics"
+                className="btn-ghost inline-flex items-center justify-center gap-2"
+              >
+                <CalendarPlus className="w-4 h-4" />
+                <span className="text-inherit">Add to Calendar</span>
+              </a>
+            ) : (
+              <Link
+                href="/settings"
+                className="btn-ghost inline-flex items-center justify-center gap-2"
+              >
+                <CalendarPlus className="w-4 h-4" />
+                <span className="text-inherit">Add to Calendar</span>
+              </Link>
+            )}
             <Link
               href="/booking"
               className="btn-ghost inline-flex items-center justify-center gap-2"
