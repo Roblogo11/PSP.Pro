@@ -74,7 +74,7 @@ const defaultActivities: Activity[] = [
   },
 ]
 
-export function ActivityFeed({ activities = defaultActivities, maxItems = 5 }: ActivityFeedProps) {
+export function ActivityFeed({ activities = [], maxItems = 5 }: ActivityFeedProps) {
   const displayActivities = activities.slice(0, maxItems)
 
   return (

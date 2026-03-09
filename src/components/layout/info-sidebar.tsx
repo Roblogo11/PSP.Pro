@@ -12,7 +12,6 @@ import {
   HelpCircle,
   ChevronLeft,
   ChevronRight,
-  Zap,
   Home,
   Package,
   LayoutDashboard,
@@ -36,7 +35,6 @@ const navItems: NavItem[] = [
   { label: 'Blog & Tips', href: '/blog', icon: BookOpen },
   { label: 'Contact Us', href: '/contact', icon: Mail },
   { label: 'FAQ', href: '/faq', icon: HelpCircle },
-  { label: 'Thank You', href: '/thank-you', icon: Zap },
 ]
 
 

@@ -309,11 +309,6 @@ export default function GetStartedPage() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/pricing">
-            <button className="btn-ghost px-8 py-4">
-              View Pricing
-            </button>
-          </Link>
           <button
             onClick={() => setShowConfirm(true)}
             className="btn-primary px-8 py-4 flex items-center gap-2 justify-center"
@@ -321,6 +316,11 @@ export default function GetStartedPage() {
             <span>Submit & Get Started</span>
             <ArrowRight className="w-5 h-5" />
           </button>
+          <Link href="/pricing">
+            <button className="btn-ghost px-8 py-4">
+              View Pricing
+            </button>
+          </Link>
         </div>
 
         <p className="text-slate-500 dark:text-white/80 text-sm mt-6">
@@ -404,13 +404,23 @@ export default function GetStartedPage() {
             </ol>
 
             <button
-              onClick={() => {
-                const subject = encodeURIComponent(`PSP.Pro New Athlete Inquiry: ${formData.firstName} ${formData.lastName}`)
-                const body = encodeURIComponent(
-                  `Name: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nAge: ${formData.age}\nPosition: ${formData.position}\nExperience: ${formData.experience}\nGoals: ${formData.goals.join(', ')}\nAvailability: ${formData.availability}\n\nAdditional Info:\n${formData.additionalInfo}`
-                )
-                window.open(`mailto:info@propersports.pro?subject=${subject}&body=${body}`, '_self')
-                setTimeout(() => router.push('/signup'), 500)
+              onClick={async () => {
+                try {
+                  await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      name: `${formData.firstName} ${formData.lastName}`,
+                      email: formData.email,
+                      phone: formData.phone,
+                      interest: formData.position,
+                      message: `Age: ${formData.age}\nExperience: ${formData.experience}\nGoals: ${formData.goals.join(', ')}\nAvailability: ${formData.availability}\n\nAdditional Info:\n${formData.additionalInfo}`,
+                    }),
+                  })
+                } catch {
+                  // silently continue regardless
+                }
+                router.push('/signup')
               }}
               className="btn-primary w-full py-4 flex items-center gap-2 justify-center"
             >

@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     // Prevent admin/coach from accidentally self-deleting via this endpoint
     const { data: profile } = await adminClient
       .from('profiles')
-      .select('role')
+      .select('*')
       .eq('id', user.id)
       .single()
 
@@ -31,6 +31,24 @@ export async function POST(request: NextRequest) {
         { error: 'Master admin accounts cannot be self-deleted. Contact system administrator.' },
         { status: 403 }
       )
+    }
+
+    // Archive the account before deletion (non-fatal if it fails)
+    try {
+      const [bookingsRes, metricsRes] = await Promise.all([
+        adminClient.from('bookings').select('*').eq('user_id', user.id),
+        adminClient.from('athlete_performance_metrics').select('*').eq('user_id', user.id),
+      ])
+      await adminClient.from('archived_accounts').insert({
+        original_user_id: user.id,
+        email: user.email,
+        profile_snapshot: profile ?? null,
+        bookings_snapshot: bookingsRes.data ?? [],
+        metrics_snapshot: metricsRes.data ?? [],
+        archived_at: new Date().toISOString(),
+      })
+    } catch (archiveErr) {
+      console.error('Archive failed (non-fatal):', archiveErr)
     }
 
     // Delete the user from Supabase Auth — cascades to profiles via FK

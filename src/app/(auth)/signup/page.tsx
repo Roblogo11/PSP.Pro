@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Mail, Lock, User, Calendar, Loader2, ArrowRight, ShieldCheck } from 'lucide-react'
+import { Mail, Lock, User, Calendar, Loader2, ArrowRight, ShieldCheck, RotateCcw } from 'lucide-react'
 
 export default function SignupPage() {
   const router = useRouter()
@@ -15,6 +15,31 @@ export default function SignupPage() {
   const [underThirteen, setUnderThirteen] = useState(false)
   const [selectedSports, setSelectedSports] = useState<string[]>(['softball'])
   const [newsletterConsent, setNewsletterConsent] = useState(false)
+  // Archive restore
+  const [archiveInfo, setArchiveInfo] = useState<{ archiveId: string; archivedAt: string; name: string | null } | null>(null)
+  const [restoreLoading, setRestoreLoading] = useState(false)
+  const archiveCheckTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const handleEmailBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+    const email = e.target.value.trim()
+    if (!email) return
+    if (archiveCheckTimeout.current) clearTimeout(archiveCheckTimeout.current)
+    try {
+      const res = await fetch('/api/auth/check-archive', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      const data = await res.json()
+      if (data.found) {
+        setArchiveInfo({ archiveId: data.archiveId, archivedAt: data.archivedAt, name: data.name })
+      } else {
+        setArchiveInfo(null)
+      }
+    } catch {
+      // silently ignore
+    }
+  }
 
   const handleAgeChange = (value: string) => {
     setAge(value)
@@ -152,7 +177,18 @@ export default function SignupPage() {
         }).catch(err => console.error('Parent notify failed (non-fatal):', err))
       }
 
-      // 6. Success — navigate to FAQ (membership purchase required)
+      // 6. Restore archived data if user opted in
+      const restoreArchiveId = sessionStorage.getItem('restore_archive_id')
+      if (restoreArchiveId) {
+        sessionStorage.removeItem('restore_archive_id')
+        fetch('/api/auth/restore-account', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ archiveId: restoreArchiveId }),
+        }).catch(err => console.error('Restore failed (non-fatal):', err))
+      }
+
+      // 7. Success — navigate to FAQ (membership purchase required)
       router.refresh()
       router.push('/faq?welcome=true')
       return
@@ -181,6 +217,45 @@ export default function SignupPage() {
         {error && (
           <div role="alert" className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20">
             <p className="text-sm text-red-400">{error}</p>
+          </div>
+        )}
+
+        {/* Archive Restore Banner */}
+        {archiveInfo && (
+          <div className="mb-6 p-4 rounded-xl bg-cyan/10 border border-cyan/30">
+            <div className="flex items-start gap-3">
+              <RotateCcw className="w-5 h-5 text-cyan shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-slate-900 dark:text-white mb-1">
+                  Welcome back{archiveInfo.name ? `, ${archiveInfo.name}` : ''}!
+                </p>
+                <p className="text-xs text-slate-600 dark:text-white/70 mb-3">
+                  We found a previous account deleted on {new Date(archiveInfo.archivedAt).toLocaleDateString()}. Want to restore your profile, sessions, and metrics?
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setRestoreLoading(true)
+                      // Restore happens after signup completes — store archiveId for post-signup
+                      sessionStorage.setItem('restore_archive_id', archiveInfo.archiveId)
+                      setArchiveInfo(null)
+                      setRestoreLoading(false)
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-cyan/20 hover:bg-cyan/30 text-cyan text-xs font-semibold transition-colors"
+                  >
+                    {restoreLoading ? 'Saving...' : 'Yes, restore my data'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setArchiveInfo(null); sessionStorage.removeItem('restore_archive_id') }}
+                    className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-500 dark:text-white/50 text-xs transition-colors"
+                  >
+                    Start fresh
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -218,6 +293,7 @@ export default function SignupPage() {
                 type="email"
                 required
                 autoComplete="email"
+                onBlur={handleEmailBlur}
                 className="w-full pl-12 pr-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
                 placeholder={underThirteen ? 'parent@example.com' : 'athlete@example.com'}
               />
@@ -425,7 +501,7 @@ export default function SignupPage() {
               onChange={(e) => setNewsletterConsent(e.target.checked)}
               className="mt-1 w-4 h-4 rounded border-cyan-700/40 bg-cyan-900/30 text-orange focus:ring-cyan/50"
             />
-            <label htmlFor="newsletterConsent" className="text-sm text-white/60">
+            <label htmlFor="newsletterConsent" className="text-sm text-slate-500 dark:text-white/60">
               I'd like to receive training tips, updates, and news from PSP.Pro. (Optional — unsubscribe anytime)
             </label>
           </div>
