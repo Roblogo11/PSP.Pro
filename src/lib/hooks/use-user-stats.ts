@@ -42,14 +42,14 @@ export function useUserStats(userId: string | undefined) {
         // Fetch next upcoming session
         const { data: upcomingSession } = await supabase
           .from('bookings')
-          .select('id, booking_date, start_time, location, service_name')
+          .select('id, booking_date, start_time, location, service:service_id(name)')
           .eq('athlete_id', userId)
           .in('status', ['confirmed', 'pending'])
           .gte('booking_date', getLocalDateString())
           .order('booking_date', { ascending: true })
           .order('start_time', { ascending: true })
           .limit(1)
-          .single()
+          .maybeSingle()
 
         // Fetch drill completions
         const { count: drillsCount } = await supabase
@@ -132,7 +132,7 @@ export function useUserStats(userId: string | undefined) {
           nextSession: nextSessionDate,
           nextSessionId: upcomingSession?.id ?? null,
           nextSessionLocation: upcomingSession?.location ?? null,
-          nextSessionService: upcomingSession?.service_name ?? null,
+          nextSessionService: (upcomingSession?.service as any)?.name ?? null,
           recentVelocities,
         })
       } catch (error) {
