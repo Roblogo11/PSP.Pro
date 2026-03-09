@@ -15,6 +15,7 @@ import { ImpersonationBanner } from '@/components/impersonation-banner'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Analytics } from '@vercel/analytics/next'
 import { CookieConsent } from '@/components/cookie-consent'
+import { ScrollRestoration } from '@/components/scroll-restoration'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -115,6 +116,7 @@ export default function RootLayout({
           <ImpersonationBanner />
           <StripeTestBanner />
           <CookieConsent />
+          <ScrollRestoration />
           <AthleticOSBackground />
           <CommandPalette />
           <Suspense fallback={null}>
