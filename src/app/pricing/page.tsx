@@ -410,7 +410,7 @@ export default function PricingPage() {
 
         <div className="mt-6 p-4 bg-cyan-900/20 rounded-xl border border-orange/10">
           <p className="text-center">
-            <span className="font-bold text-orange">Package Benefits:</span> Mix pitching & hitting &bull; Transfer to family &bull; Pause for injuries &bull; Satisfaction guaranteed
+            <span className="font-bold text-orange">Package Benefits:</span> Same session type only (individual or group) &bull; Transfer to family &bull; Pause for injuries &bull; Satisfaction guaranteed
           </p>
         </div>
       </div>
