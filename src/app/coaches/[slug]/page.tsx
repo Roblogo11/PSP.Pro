@@ -2,7 +2,6 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
-import { FunnelNav } from '@/components/navigation/funnel-nav'
 import { Star, Award, Calendar, ChevronLeft } from 'lucide-react'
 
 export const revalidate = 60
@@ -149,7 +148,6 @@ export default async function CoachProfilePage({ params }: { params: { slug: str
         </div>
       </main>
 
-      <FunnelNav />
     </div>
   )
 }

@@ -6,7 +6,6 @@ import Image from 'next/image'
 import { Mail, Phone, MapPin, Send, Loader2, MessageSquare, Package, Rocket, Info, ArrowRight, LayoutDashboard } from 'lucide-react'
 import { GoogleReviews } from '@/components/google-reviews'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
-import { FunnelNav } from '@/components/navigation/funnel-nav'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { toastError } from '@/lib/toast'
 
@@ -358,7 +357,6 @@ export default function ContactPage() {
       </div>
       </main>
 
-      <FunnelNav />
     </div>
   )
 }

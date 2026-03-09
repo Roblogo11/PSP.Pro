@@ -10,7 +10,6 @@ import {
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
-import { FunnelNav } from '@/components/navigation/funnel-nav'
 
 const COMPARISON_FEATURES = [
   { label: 'PSP Pro Dashboard', basic: 'Limited', elite: 'Full Access', icon: BarChart3 },
@@ -104,7 +103,6 @@ export default function MembershipsPage() {
   return (
     <>
       <InfoSidebar />
-      <FunnelNav />
       <div className="min-h-screen">
         {/* ─── Hero Section ──────────────────────────────────────────── */}
         <section className="relative pt-32 pb-20 px-4 overflow-hidden">

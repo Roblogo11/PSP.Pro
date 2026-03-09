@@ -3,12 +3,10 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Home, CheckCircle, Calendar, Target, ArrowRight, Package, Info } from 'lucide-react'
-import { FunnelNav } from '@/components/navigation/funnel-nav'
 
 export default function ThankYouPage() {
   return (
     <div className="flex min-h-screen">
-      <FunnelNav />
       <main className="flex-1 relative">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">

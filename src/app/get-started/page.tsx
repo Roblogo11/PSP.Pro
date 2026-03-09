@@ -6,7 +6,6 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { User, Target, Calendar, CheckCircle, ArrowRight, Mail, Phone, MapPin, Package, Info, Rocket, X } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
-import { FunnelNav } from '@/components/navigation/funnel-nav'
 
 export default function GetStartedPage() {
   const router = useRouter()
@@ -366,8 +365,6 @@ export default function GetStartedPage() {
       </div>
       </div>
       </main>
-
-      <FunnelNav />
 
       {/* What Happens Next Modal */}
       {showConfirm && (
