@@ -20,6 +20,8 @@ export interface UserSession {
 export function useUserSessions(userId: string | undefined) {
   const [sessions, setSessions] = useState<UserSession[]>([])
   const [loading, setLoading] = useState(true)
+  // createClient() returns a stable instance — do NOT put it in the dep array
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const supabase = createClient()
 
   useEffect(() => {
@@ -51,7 +53,9 @@ export function useUserSessions(userId: string | undefined) {
         // Transform bookings to UserSession format
         const transformedBookings: UserSession[] = (bookings || []).map((booking: any) => {
           const sessionDate = new Date(booking.booking_date)
-          const isUpcoming = sessionDate >= new Date()
+          // Compare date-only (strip time) so today's sessions still show as upcoming
+          const todayStr = new Date().toISOString().split('T')[0]
+          const isUpcoming = booking.booking_date >= todayStr
 
           return {
             id: booking.id,
@@ -85,7 +89,8 @@ export function useUserSessions(userId: string | undefined) {
     // Refresh every minute
     const interval = setInterval(loadSessions, 60000)
     return () => clearInterval(interval)
-  }, [userId, supabase])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId])
 
   const upcomingSessions = sessions.filter(s => s.status === 'upcoming')
   const pastSessions = sessions.filter(s => s.status === 'completed' || s.status === 'cancelled')
