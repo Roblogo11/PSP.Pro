@@ -22,13 +22,32 @@ interface KBEntry {
   role?: RoleFilter // which role sees this entry (default: 'all')
 }
 
-// ─── Quick Actions ───────────────────────────────────────────
-const QUICK_ACTIONS = [
-  { label: 'Book a Session', href: '/booking' },
-  { label: 'Pricing', href: '/pricing' },
-  { label: 'Contact Us', href: '/contact' },
-  { label: 'My Dashboard', href: '/locker' },
-]
+// ─── Quick Actions (role-aware, generated at runtime) ────────
+function getQuickActions(userRole: RoleFilter) {
+  if (userRole === 'coach') {
+    return [
+      { label: 'Calendar', href: '/admin/bookings' },
+      { label: 'Availability', href: '/admin/availability' },
+      { label: 'Manage Athletes', href: '/admin/athletes' },
+      { label: 'My Dashboard', href: '/locker' },
+    ]
+  }
+  if (userRole === 'athlete') {
+    return [
+      { label: 'Book a Session', href: '/booking' },
+      { label: 'My Dashboard', href: '/locker' },
+      { label: 'My Sessions', href: '/sessions' },
+      { label: 'Pricing', href: '/pricing' },
+    ]
+  }
+  // visitor — not logged in
+  return [
+    { label: 'Join the Team', href: '/get-started' },
+    { label: 'View Pricing', href: '/pricing' },
+    { label: 'Login', href: '/login' },
+    { label: 'Contact Us', href: '/contact' },
+  ]
+}
 
 // ─── Contextual Suggestions (based on current page) ─────────
 const PAGE_SUGGESTIONS: Record<string, { label: string; query: string }[]> = {
@@ -1252,7 +1271,7 @@ function findBestMatch(query: string, userRole: RoleFilter): KBEntry {
     keywords: [],
     title: `Let's Figure This Out${roleName ? `, ${roleName}` : ''}!`,
     response: `No worries — I got you! Here's what I can help with:\n\n• Training programs & what sports we offer\n• Pricing, packages & how to save big\n• Booking sessions step by step${roleHint}\n• Account settings & login help\n• Location, hours & contact info\n• Walk through ANY page on the site\n\nTry asking "walk me through the pricing page" or "how do I book a session" — I know every page inside and out! Let's get after it!`,
-    actions: QUICK_ACTIONS.map(a => ({ label: a.label, href: a.href })),
+    actions: getQuickActions(userRole),
     followUp: userRole === 'coach'
       ? ['How do I create a course?', 'How do I create a quiz?', 'How do I book for an athlete?']
       : userRole === 'athlete'
@@ -1364,6 +1383,17 @@ export function PSPAssistant() {
     }
   }
 
+  // Rewrite dashboard-only hrefs to login redirect for visitors
+  const rewriteActionsForRole = (actions?: { label: string; href: string }[]) => {
+    if (!actions || userRole !== 'visitor') return actions
+    const dashboardPaths = ['/booking', '/locker', '/sessions', '/progress', '/drills', '/achievements', '/courses', '/messages', '/settings']
+    return actions.map(a => {
+      const needsAuth = dashboardPaths.some(p => a.href === p || a.href.startsWith(p + '?'))
+      if (needsAuth) return { label: a.label, href: `/login?redirect=${encodeURIComponent(a.href)}` }
+      return a
+    })
+  }
+
   const handleQuery = (query: string) => {
     if (!query.trim() || isTyping) return
 
@@ -1397,7 +1427,7 @@ export function PSPAssistant() {
         content: match.shortResponse!,
         fullContent: hypedResponse,
         moduleTitle: match.title,
-        module: { ...match, title: '' },
+        module: { ...match, title: '', actions: rewriteActionsForRole(match.actions) },
         ...(attachTour ? { tourPage: pathname } : {}),
       }
       const typingId = `typing-${Date.now()}`
@@ -1433,7 +1463,7 @@ export function PSPAssistant() {
           ...(isFirst ? { moduleTitle: match.title } : {}),
           // Actions, followUp, tourPage on last bubble only
           ...(isLast ? {
-            module: { ...match, title: '' },
+            module: { ...match, title: '', actions: rewriteActionsForRole(match.actions) },
             ...(attachTour ? { tourPage: pathname } : {}),
           } : {}),
         }
