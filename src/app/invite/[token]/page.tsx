@@ -254,7 +254,7 @@ export default function InvitePage() {
         </div>
 
         <p className="text-center text-xs text-white/20 mt-4">
-          PSP.Pro · Proper Sports Performance · Virginia Beach, VA
+          PSP.Pro · Proper Sports Performance · Chesapeake, VA
         </p>
       </div>
     </div>

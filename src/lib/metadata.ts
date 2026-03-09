@@ -12,11 +12,13 @@ const BASE_URL = 'https://propersports.pro'
 const DEFAULT_IMAGE = '/images/PSP-black-300x99-1.webp'
 
 const LOCATION_KEYWORDS = [
+  'Chesapeake',
   'Virginia Beach',
   'Norfolk',
+  'Portsmouth',
+  'Suffolk',
   '757',
   'Hampton Roads',
-  'Chesapeake',
   'Hampton',
   'Newport News',
   'Coastal Virginia',
@@ -30,8 +32,8 @@ export function generateLocalMetadata({
   keywords = [],
   image = DEFAULT_IMAGE,
 }: LocalMetadataOptions): Metadata {
-  const fullTitle = `${title} | Virginia Beach | PSP.Pro`
-  const fullDescription = `${description} Serving Virginia Beach, Norfolk, Chesapeake & the 757 area.`
+  const fullTitle = `${title} | Chesapeake, VA | PSP.Pro`
+  const fullDescription = `${description} Based in Chesapeake, VA — serving Virginia Beach, Norfolk, Portsmouth, Suffolk & all of Hampton Roads.`
   const url = `${BASE_URL}${path}`
   const imageUrl = image.startsWith('http') ? image : `${BASE_URL}${image}`
 

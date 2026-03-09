@@ -193,10 +193,10 @@ export default function PrivacyPage() {
               </a>
             </p>
             <p>
-              <strong className="text-white">Address:</strong> Proper Sports Performance, Virginia Beach, VA
+              <strong className="text-white">Address:</strong> Proper Sports Performance, Chesapeake, VA
             </p>
             <p>
-              <strong className="text-white">Phone:</strong> (757) 555-0100
+              <strong className="text-white">Phone:</strong> (757) 377-2089
             </p>
           </div>
         </section>

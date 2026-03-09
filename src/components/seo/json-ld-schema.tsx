@@ -4,18 +4,24 @@ export function JsonLdSchema() {
     '@type': 'SportsActivityLocation',
     name: 'PSP.Pro - ProPer Sports Performance',
     description:
-      'Elite softball, basketball, and soccer training in Virginia Beach. Master mechanics, build speed, and dominate your sport with data-driven performance coaching.',
+      'Elite softball, basketball, and soccer training based in Chesapeake, VA. Serving Virginia Beach, Norfolk, Portsmouth, Suffolk & all of Hampton Roads.',
     url: 'https://propersports.pro',
     logo: 'https://propersports.pro/images/PSP-black-300x99-1.webp',
     image: 'https://propersports.pro/images/PSP-black-300x99-1.webp',
-    email: 'info@propersports.pro',
+    email: 'propersportsperformance@gmail.com',
+    telephone: '+17573772089',
     address: {
       '@type': 'PostalAddress',
-      addressLocality: 'Virginia Beach',
+      addressLocality: 'Chesapeake',
       addressRegion: 'VA',
       addressCountry: 'US',
     },
     areaServed: [
+      {
+        '@type': 'City',
+        name: 'Chesapeake',
+        sameAs: 'https://en.wikipedia.org/wiki/Chesapeake,_Virginia',
+      },
       {
         '@type': 'City',
         name: 'Virginia Beach',
@@ -28,13 +34,13 @@ export function JsonLdSchema() {
       },
       {
         '@type': 'City',
-        name: 'Chesapeake',
-        sameAs: 'https://en.wikipedia.org/wiki/Chesapeake,_Virginia',
+        name: 'Portsmouth',
+        sameAs: 'https://en.wikipedia.org/wiki/Portsmouth,_Virginia',
       },
       {
         '@type': 'City',
-        name: 'Hampton',
-        sameAs: 'https://en.wikipedia.org/wiki/Hampton,_Virginia',
+        name: 'Suffolk',
+        sameAs: 'https://en.wikipedia.org/wiki/Suffolk,_Virginia',
       },
     ],
     sport: ['Softball', 'Basketball', 'Soccer'],

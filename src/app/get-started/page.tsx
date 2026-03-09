@@ -4,12 +4,13 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { User, Target, Calendar, CheckCircle, ArrowRight, Mail, Phone, MapPin, Package, Info, Rocket } from 'lucide-react'
+import { User, Target, Calendar, CheckCircle, ArrowRight, Mail, Phone, MapPin, Package, Info, Rocket, X } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
 
 export default function GetStartedPage() {
   const router = useRouter()
+  const [showConfirm, setShowConfirm] = useState(false)
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -49,7 +50,13 @@ export default function GetStartedPage() {
           <p className="text-white/80">
             Fill out this quick form and our coaching staff will reach out within 24 hours to get you started.
           </p>
-          <p className="text-white/60 text-sm mt-3">
+          <p className="text-white/80 text-sm mt-4">
+            Ready to start today?{' '}
+            <Link href="/signup" className="text-orange hover:text-orange-400 font-semibold transition-colors underline">
+              Create your account directly →
+            </Link>
+          </p>
+          <p className="text-white/60 text-sm mt-2">
             Already a member?{' '}
             <Link href="/login" className="text-orange hover:text-orange-400 font-semibold transition-colors underline">
               Log in here
@@ -308,24 +315,17 @@ export default function GetStartedPage() {
             </button>
           </Link>
           <button
-            onClick={() => {
-              const subject = encodeURIComponent(`PSP.Pro New Athlete Inquiry: ${formData.firstName} ${formData.lastName}`)
-              const body = encodeURIComponent(
-                `Name: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nAge: ${formData.age}\nPosition: ${formData.position}\nExperience: ${formData.experience}\nGoals: ${formData.goals.join(', ')}\nAvailability: ${formData.availability}\n\nAdditional Info:\n${formData.additionalInfo}`
-              )
-              window.open(`mailto:info@propersports.pro?subject=${subject}&body=${body}`, '_self')
-              setTimeout(() => router.push('/signup'), 500)
-            }}
+            onClick={() => setShowConfirm(true)}
             className="btn-primary px-8 py-4 flex items-center gap-2 justify-center"
           >
-            <span>Submit & Book Session</span>
+            <span>Submit & Get Started</span>
             <ArrowRight className="w-5 h-5" />
           </button>
         </div>
 
         <p className="text-slate-500 dark:text-white/80 text-sm mt-6">
           <MapPin className="w-4 h-4 inline mr-1" />
-          Training Location: Virginia Beach, VA
+          Training Location: Chesapeake, VA
         </p>
       </div>
 
@@ -368,6 +368,58 @@ export default function GetStartedPage() {
       </main>
 
       <FunnelNav />
+
+      {/* What Happens Next Modal */}
+      {showConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-md w-full p-8 relative">
+            <button
+              onClick={() => setShowConfirm(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="text-center mb-6">
+              <div className="w-14 h-14 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="w-8 h-8 text-green-500" />
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">You&apos;re All Set!</h2>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">Here&apos;s what happens next:</p>
+            </div>
+
+            <ol className="space-y-4 mb-8">
+              <li className="flex items-start gap-3">
+                <span className="w-6 h-6 rounded-full bg-orange/20 text-orange text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
+                <p className="text-slate-700 dark:text-slate-300 text-sm"><strong>Your info goes to our coaches</strong> — we&apos;ll review your goals and availability within 24 hours.</p>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="w-6 h-6 rounded-full bg-orange/20 text-orange text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
+                <p className="text-slate-700 dark:text-slate-300 text-sm"><strong>A coach will reach out</strong> via email or phone to confirm your first session and answer any questions.</p>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="w-6 h-6 rounded-full bg-orange/20 text-orange text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>
+                <p className="text-slate-700 dark:text-slate-300 text-sm"><strong>Create your free account</strong> so you can book sessions, track progress, and access the dashboard — we&apos;ll take you there now.</p>
+              </li>
+            </ol>
+
+            <button
+              onClick={() => {
+                const subject = encodeURIComponent(`PSP.Pro New Athlete Inquiry: ${formData.firstName} ${formData.lastName}`)
+                const body = encodeURIComponent(
+                  `Name: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nAge: ${formData.age}\nPosition: ${formData.position}\nExperience: ${formData.experience}\nGoals: ${formData.goals.join(', ')}\nAvailability: ${formData.availability}\n\nAdditional Info:\n${formData.additionalInfo}`
+                )
+                window.open(`mailto:info@propersports.pro?subject=${subject}&body=${body}`, '_self')
+                setTimeout(() => router.push('/signup'), 500)
+              }}
+              className="btn-primary w-full py-4 flex items-center gap-2 justify-center"
+            >
+              <span>Got it — Create My Account</span>
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

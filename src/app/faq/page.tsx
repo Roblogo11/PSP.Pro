@@ -92,7 +92,7 @@ const FAQ_DATA: FAQItem[] = [
     id: 13,
     category: 'Facility & Equipment',
     question: 'Where is your facility located?',
-    answer: 'We\'re located in Virginia Beach, VA, serving the entire Hampton Roads and 757 area. Our exact address will be provided upon booking confirmation.',
+    answer: 'We\'re based in Chesapeake, VA, serving athletes throughout Virginia Beach, Norfolk, Portsmouth, Suffolk, and the entire Hampton Roads / 757 area. Our exact address will be provided upon booking confirmation.',
   },
   {
     id: 14,

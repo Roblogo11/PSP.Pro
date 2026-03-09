@@ -60,7 +60,7 @@ export default function ContactPage() {
           </div>
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Message Sent!</h1>
           <p className="mb-6">
-            Thanks for reaching out! We&apos;ll get back to you within 24 hours.
+            A PSP coach will personally reach out within 24 hours. In the meantime, feel free to explore our training programs or book a session.
           </p>
           <button
             onClick={() => setSubmitted(false)}
@@ -91,10 +91,10 @@ export default function ContactPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/80 to-slate-950/90" />
         <div className="relative z-10 text-center max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
-            Get in <span className="text-gradient-orange">Touch</span>
+            Talk to a <span className="text-gradient-orange">Coach</span>
           </h1>
           <p className="text-xl text-white max-w-2xl mx-auto">
-            Ready to elevate your game? Have questions about our training programs? We&apos;re here to help you reach your athletic potential.
+            Questions about training? Ready to get started? Send us a message and a PSP coach will personally reach out within 24 hours.
           </p>
         </div>
       </div>
@@ -110,7 +110,7 @@ export default function ContactPage() {
             </div>
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Location</h3>
             <p>
-              Virginia Beach, VA<br />
+              Chesapeake, VA<br />
               Hampton Roads / 757 Area
             </p>
           </div>
@@ -170,7 +170,8 @@ export default function ContactPage() {
         {/* Contact Form */}
         <div className="lg:col-span-2">
           <div className="command-panel p-8">
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Send Us a Message</h2>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Send a Message to Our Coaches</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">Rachel or Loren will personally follow up — usually same day.</p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Name */}

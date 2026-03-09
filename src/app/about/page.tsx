@@ -29,13 +29,13 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/80 to-slate-950/90" />
         <div className="relative z-10 text-center max-w-3xl mx-auto">
           <div className="inline-block mb-4 px-4 py-2 bg-orange/10 border border-orange/20 rounded-full">
-            <span className="text-orange font-semibold">Serving Virginia Beach &amp; Hampton Roads</span>
+            <span className="text-orange font-semibold">Based in Chesapeake, Serving Hampton Roads</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
             About <span className="text-gradient-orange">PSP.Pro</span>
           </h1>
           <p className="text-xl text-white mb-6 max-w-2xl mx-auto leading-relaxed">
-            Elite softball, basketball, and soccer training serving Virginia Beach and the Hampton Roads region — focused on skill development and mechanics improvement.
+            Elite softball, basketball, and soccer training based in Chesapeake, VA — serving the Hampton Roads region with focused skill development and mechanics improvement.
           </p>
           <p className="text-2xl font-bold text-white">
             Progression Over Perfection
@@ -105,7 +105,7 @@ export default function AboutPage() {
         </div>
 
         <p className="text-lg text-slate-600 dark:text-white leading-relaxed mb-8">
-          Since 2017, Loren &amp; Rachel Bagley have owned and operated Proper Sports Performance — bringing elite-level coaching to athletes of all ages across Virginia Beach and Hampton Roads.
+          Since 2017, Loren &amp; Rachel Bagley have owned and operated Proper Sports Performance — bringing elite-level coaching to athletes of all ages across Chesapeake and Hampton Roads.
         </p>
 
         {/* Loren */}
@@ -204,7 +204,7 @@ export default function AboutPage() {
 
         {/* CTA to coaches page */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link href="/coaches" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-orange to-amber-500 text-white font-bold rounded-xl hover:from-orange/90 hover:to-amber-500/90 transition-all shadow-lg shadow-orange/20 text-sm">
+          <Link href="/booking" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-orange to-amber-500 text-white font-bold rounded-xl hover:from-orange/90 hover:to-amber-500/90 transition-all shadow-lg shadow-orange/20 text-sm">
             <Calendar className="w-4 h-4" />
             Book a Session
           </Link>
@@ -258,14 +258,14 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Location</h2>
         </div>
 
-        <h3 className="text-xl font-bold mb-3 text-white">Serving Virginia Beach & Hampton Roads</h3>
+        <h3 className="text-xl font-bold mb-3 text-white">Based in Chesapeake, Serving Hampton Roads</h3>
 
         <p className="text-lg text-slate-600 dark:text-white leading-relaxed mb-4">
-          We serve athletes throughout Virginia Beach, Chesapeake, Norfolk, and the surrounding 757 area — bringing elite coaching to your community.
+          Our home base is Chesapeake, VA — and we serve athletes throughout the 757: Virginia Beach, Norfolk, Portsmouth, Suffolk, and the surrounding Hampton Roads area.
         </p>
 
         <p className="text-slate-500 dark:text-white/80 mb-6">
-          Serving Virginia Beach, Chesapeake, Norfolk, and surrounding areas
+          Chesapeake · Virginia Beach · Norfolk · Portsmouth · Suffolk · Hampton Roads
         </p>
 
         <div className="grid md:grid-cols-2 gap-6">

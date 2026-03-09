@@ -196,7 +196,7 @@ export function PrintableReport({
       {/* Footer */}
       <div style={{ marginTop: '32px', paddingTop: '16px', borderTop: '1px solid #e5e7eb', textAlign: 'center' }}>
         <p style={{ fontSize: '12px', color: '#9ca3af', margin: '0' }}>
-          PSP.Pro · Proper Sports Performance · Virginia Beach, VA · propersports.pro
+          PSP.Pro · Proper Sports Performance · Chesapeake, VA · propersports.pro
         </p>
         <p style={{ fontSize: '11px', color: '#d1d5db', margin: '4px 0 0', fontStyle: 'italic' }}>
           Progression Over Perfection

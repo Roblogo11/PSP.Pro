@@ -58,7 +58,7 @@ export default async function AuthLayout({
       {/* Footer */}
       <footer className="relative z-10 px-6 py-6 text-center text-sm text-cyan-800 dark:text-white">
         <p>
-          © {new Date().getFullYear()} Proper Sports Performance. Based in Virginia Beach, VA.
+          © {new Date().getFullYear()} Proper Sports Performance. Based in Chesapeake, VA.
         </p>
       </footer>
     </div>

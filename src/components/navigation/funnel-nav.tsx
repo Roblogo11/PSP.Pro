@@ -217,36 +217,34 @@ export function FunnelNav({ className = '', desktopOnly = false }: FunnelNavProp
             {/* Mobile Navigation */}
             <div className="md:hidden">
               <div className="flex items-center justify-between mb-2">
-                {/* Left: ThemeToggle + Step counter */}
-                <div className="flex items-center gap-2">
+                {/* Left: ThemeToggle + Back button */}
+                <div className="flex items-center gap-2 shrink-0">
                   <ThemeToggle />
                   {prev && (
-                    <>
-                      <button
-                        onClick={() => handleNavigation(prev.path)}
-                        className="flex items-center gap-1 text-xs text-gray-400 hover:text-secondary transition-colors active:scale-95"
-                      >
-                        <ArrowLeft className="w-3 h-3" />
-                        <span>{prev.name}</span>
-                      </button>
-                      <div className="w-px h-3 bg-gray-600/50" />
-                    </>
+                    <button
+                      onClick={() => handleNavigation(prev.path)}
+                      className="flex items-center gap-1 text-xs text-gray-400 hover:text-secondary transition-colors active:scale-95"
+                    >
+                      <ArrowLeft className="w-3 h-3" />
+                      <span className="max-w-[60px] truncate">{prev.name}</span>
+                    </button>
                   )}
-                  <span className="text-xs font-semibold text-slate-900 dark:text-white">
-                    Step {currentIndex + 1} <span className="text-gray-500 dark:text-gray-400 font-normal">of 6</span>
-                  </span>
                 </div>
+                {/* Center: Step counter */}
+                <span className="text-xs font-semibold text-slate-900 dark:text-white whitespace-nowrap">
+                  Step {currentIndex + 1} of 6
+                </span>
                 {/* Right: Next button */}
                 {next ? (
                   <button
                     onClick={() => handleNavigation(next.path)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-secondary to-accent shadow-md shadow-secondary/30 active:scale-95 transition-all"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-secondary to-accent shadow-md shadow-secondary/30 active:scale-95 transition-all shrink-0"
                   >
                     <span className="text-xs font-bold text-white">{next.name}</span>
                     <ArrowRight className="w-3.5 h-3.5 text-white" />
                   </button>
                 ) : (
-                  <span className="text-xs font-semibold text-secondary">
+                  <span className="text-xs font-semibold text-secondary whitespace-nowrap">
                     {STEP_LABELS[STEP_TO_FUNNEL_INDEX.indexOf(currentIndex)] ?? 'Done'}
                   </span>
                 )}

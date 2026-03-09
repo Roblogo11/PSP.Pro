@@ -161,7 +161,7 @@ export default function HomePage() {
           </h2>
 
           <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto" style={{ color: '#ffffff' }}>
-            Elite softball, basketball, and soccer training in Virginia Beach. Master mechanics, build speed,
+            Elite softball, basketball, and soccer training based in Chesapeake, VA. Master mechanics, build speed,
             and dominate your sport with data-driven performance.
           </p>
 
@@ -596,10 +596,10 @@ export default function HomePage() {
           <div className="glass-card p-12 text-center">
             <MapPin className="w-12 h-12 mx-auto mb-6" style={{ color: '#B8301A' }} />
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4 text-white">
-              Located in Virginia Beach
+              Based in Chesapeake, VA
             </h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto text-cyan-700 dark:text-white">
-              Proudly serving athletes in Virginia Beach, Norfolk, Chesapeake, and Hampton Roads.
+              Proudly serving athletes throughout Chesapeake, Virginia Beach, Norfolk, Portsmouth, Suffolk, and all of Hampton Roads.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center text-cyan-700 dark:text-white">
               <div className="flex items-center gap-2">
@@ -665,9 +665,9 @@ export default function HomePage() {
             <div>
               <h4 className="font-semibold mb-4" style={{ color: footerHeadingColor }}>Contact</h4>
               <ul className="space-y-2 text-sm text-cyan-700 dark:text-white">
-                <li>Virginia Beach, VA</li>
-                <li>info@propersports.pro</li>
-                <li>(757) 555-0100</li>
+                <li>Chesapeake, VA</li>
+                <li>propersportsperformance@gmail.com</li>
+                <li>(757) 377-2089 · (757) 770-0206</li>
               </ul>
             </div>
           </div>

@@ -645,7 +645,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['contact', 'email', 'phone', 'reach out', 'get in touch', 'message', 'support', 'help me', 'talk to someone', 'response time'],
     title: 'Contact Us',
-    response: 'Reach out to us anytime:\n\n📧 Email: propersportsperformance@gmail.com\n📞 Rachel: (757) 377-2089\n📞 Loren: (757) 770-0206\n📍 Location: Virginia Beach, VA — serving all of Hampton Roads / 757\n⏰ Hours: Mon-Fri 3-9PM, Sat 9AM-5PM\n\nThe Contact page has a form with:\n• Name and email (required)\n• Phone number\n• Interest dropdown (1-on-1, group, assessment, packages, other)\n• Message (required)\n\nWe typically respond within 24 hours on business days!',
+    response: 'Reach out to us anytime:\n\n📧 Email: propersportsperformance@gmail.com\n📞 Rachel: (757) 377-2089\n📞 Loren: (757) 770-0206\n📍 Location: Chesapeake, VA — serving Virginia Beach, Norfolk, Portsmouth, Suffolk & all of Hampton Roads / 757\n⏰ Hours: Mon-Fri 3-9PM, Sat 9AM-5PM\n\nThe Contact page has a form with:\n• Name and email (required)\n• Phone number\n• Interest dropdown (1-on-1, group, assessment, packages, other)\n• Message (required)\n\nWe typically respond within 24 hours on business days!',
     actions: [{ label: 'Contact Us', href: '/contact' }],
   },
 

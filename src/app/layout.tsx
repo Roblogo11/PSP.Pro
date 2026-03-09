@@ -32,18 +32,21 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'PSP.Pro - Elite Softball, Basketball & Soccer Training | Virginia Beach',
+  title: 'PSP.Pro - Elite Softball, Basketball & Soccer Training | Chesapeake, VA',
   description:
-    'ProPer Sports Performance - Elite softball, basketball, and soccer training in Virginia Beach. Master mechanics, build speed, and dominate your sport with data-driven performance.',
+    'ProPer Sports Performance - Elite softball, basketball, and soccer training based in Chesapeake, VA. Serving Virginia Beach, Norfolk, Portsmouth, Suffolk & Hampton Roads.',
   keywords: [
+    'Chesapeake',
     'Virginia Beach',
+    'Norfolk',
+    'Portsmouth',
+    'Suffolk',
+    'Hampton Roads',
     'softball training',
     'basketball training',
     'soccer training',
-    'velocity tracking',
     'sports performance',
     'athletic training',
-    'Hampton Roads',
     '757',
   ],
   authors: [{ name: 'Proper Sports Performance' }],
@@ -54,9 +57,9 @@ export const metadata: Metadata = {
     canonical: 'https://propersports.pro',
   },
   openGraph: {
-    title: 'PSP.Pro - Elite Softball, Basketball & Soccer Training | Virginia Beach',
+    title: 'PSP.Pro - Elite Softball, Basketball & Soccer Training | Chesapeake, VA',
     description:
-      'Elite softball, basketball, and soccer training in Virginia Beach. Master mechanics, build speed, and dominate your sport with data-driven performance.',
+      'Elite softball, basketball, and soccer training based in Chesapeake, VA. Serving Virginia Beach, Norfolk, Portsmouth, Suffolk & Hampton Roads.',
     url: 'https://propersports.pro',
     siteName: 'PSP.Pro',
     images: [
@@ -72,9 +75,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'PSP.Pro - Elite Softball, Basketball & Soccer Training | Virginia Beach',
+    title: 'PSP.Pro - Elite Softball, Basketball & Soccer Training | Chesapeake, VA',
     description:
-      'Elite softball, basketball, and soccer training in Virginia Beach. Master mechanics, build speed, and dominate your sport.',
+      'Elite softball, basketball, and soccer training based in Chesapeake, VA. Serving Hampton Roads — Virginia Beach, Norfolk, Portsmouth & Suffolk.',
     images: [siteConfig.meta.ogImage],
     creator: '@propersports',
   },

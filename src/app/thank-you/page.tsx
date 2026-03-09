@@ -165,7 +165,7 @@ export default function ThankYouPage() {
         </div>
 
         <p className="text-sm text-slate-500 dark:text-white/60 mt-8">
-          ProPer Sports Performance &bull; Virginia Beach, VA
+          ProPer Sports Performance &bull; Chesapeake, VA
         </p>
       </div>
       </div>

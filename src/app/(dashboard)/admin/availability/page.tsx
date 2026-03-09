@@ -90,7 +90,7 @@ export default function AvailabilityManagementPage() {
   const fetchServices = async () => {
     const { data, error: fetchError } = await supabase
       .from('services')
-      .select('id, name')
+      .select('id, name, max_participants')
       .eq('is_active', true)
       .order('name')
 
@@ -177,16 +177,27 @@ export default function AvailabilityManagementPage() {
     }
 
     // Use upsert to skip duplicates instead of failing on unique constraint
-    const { data: insertedData, error: insertError } = await supabase
-      .from('available_slots')
-      .upsert(slotsToInsert, { onConflict: 'coach_id,slot_date,start_time', ignoreDuplicates: true })
-      .select('id')
+    // Retry up to 3 times on network failures (TypeError: Load failed on weak connections)
+    let insertedData: { id: string }[] | null = null
+    let insertError: { message: string } | null = null
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      const result = await supabase
+        .from('available_slots')
+        .upsert(slotsToInsert, { onConflict: 'coach_id,slot_date,start_time', ignoreDuplicates: true })
+        .select('id')
+      insertedData = result.data
+      insertError = result.error
+      if (!insertError) break
+      const isNetworkError = insertError.message?.includes('Load failed') || insertError.message?.includes('fetch') || insertError.message?.includes('network')
+      if (!isNetworkError || attempt === 3) break
+      await new Promise(r => setTimeout(r, attempt * 1000))
+    }
 
     setSubmitting(false)
 
     if (insertError) {
       console.error('Failed to create slot:', insertError)
-      setError(`Failed to create time slot: ${insertError.message}`)
+      setError(`Failed to create time slot: ${insertError.message}. Please check your connection and try again.`)
       return
     }
 
@@ -552,13 +563,21 @@ export default function AvailabilityManagementPage() {
               </label>
               <select
                 value={formData.serviceId}
-                onChange={e => setFormData({ ...formData, serviceId: e.target.value })}
+                onChange={e => {
+                  const selectedService = services.find(s => s.id === e.target.value)
+                  const maxP = selectedService?.max_participants
+                  setFormData({
+                    ...formData,
+                    serviceId: e.target.value,
+                    maxBookings: maxP && maxP > 1 ? maxP : formData.maxBookings,
+                  })
+                }}
                 className={inputClasses}
               >
                 <option value="">Any Service</option>
                 {services.map(service => (
                   <option key={service.id} value={service.id}>
-                    {service.name}
+                    {service.name}{service.max_participants > 1 ? ` (up to ${service.max_participants})` : ''}
                   </option>
                 ))}
               </select>
@@ -621,11 +640,23 @@ export default function AvailabilityManagementPage() {
                 type="number"
                 required
                 min="1"
-                max="20"
+                max="100"
                 value={formData.maxBookings}
                 onChange={e => setFormData({ ...formData, maxBookings: parseInt(e.target.value) })}
                 className={inputClasses}
               />
+              {formData.serviceId && (() => {
+                const svc = services.find(s => s.id === formData.serviceId)
+                if (!svc) return null
+                const isGroup = svc.max_participants > 1
+                return (
+                  <p className={`text-xs mt-1 ${formData.maxBookings < (svc.max_participants || 1) && isGroup ? 'text-yellow-400' : 'text-cyan-600 dark:text-white/50'}`}>
+                    {isGroup
+                      ? `This service supports up to ${svc.max_participants} athletes${formData.maxBookings < svc.max_participants ? ` — consider setting to ${svc.max_participants}` : ' ✓'}`
+                      : '1-on-1 service — 1 booking per slot'}
+                  </p>
+                )
+              })()}
             </div>
 
             {/* Repeat Toggle */}

@@ -139,8 +139,8 @@ export function GoogleReviews() {
           <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
             Match the <span className="text-gradient-orange">Owner's Rating</span>
           </h2>
-          <p className="text-lg text-cyan-800 dark:text-white max-w-2xl mx-auto mb-6">
-            Read each review and guess what rating they gave us. Can you match all 6?
+          <p className="text-lg text-cyan-800 dark:text-white max-w-sm mx-auto mb-6">
+            Read each review and guess what rating they gave us. Can you match all&nbsp;6?
           </p>
 
           {/* Click to Play Button */}

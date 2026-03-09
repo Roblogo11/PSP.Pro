@@ -104,7 +104,7 @@ export default function MembershipsPage() {
   return (
     <>
       <InfoSidebar />
-      <FunnelNav desktopOnly />
+      <FunnelNav />
       <div className="min-h-screen">
         {/* ─── Hero Section ──────────────────────────────────────────── */}
         <section className="relative pt-32 pb-20 px-4 overflow-hidden">

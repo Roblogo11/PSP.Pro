@@ -45,8 +45,8 @@ export default function PricingPage() {
   } | null>(null)
 
   // Dynamic CTA based on auth state
-  const ctaHref = (isCoach || isAdmin) ? '/admin/services' : profile ? '/booking' : '/get-started'
-  const ctaLabel = (isCoach || isAdmin) ? 'Lesson Builder' : profile ? 'Book Now' : 'Join the Team'
+  const ctaHref = (isCoach || isAdmin) ? '/admin/services' : profile ? '/booking' : '/login?redirect=/booking'
+  const ctaLabel = (isCoach || isAdmin) ? 'Lesson Builder' : profile ? 'Book Now' : 'Sign In to Book'
 
   useEffect(() => {
     async function fetchPricing() {
@@ -179,7 +179,7 @@ export default function PricingPage() {
             Training <span className="text-gradient-orange">Programs</span>
           </h1>
           <p className="text-xl text-white">
-            Elite softball, basketball & soccer training in Virginia Beach
+            Elite softball, basketball & soccer training in Chesapeake & Hampton Roads
           </p>
         </div>
       </div>
