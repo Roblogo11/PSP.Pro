@@ -1,6 +1,7 @@
 'use client'
 
 import { VelocityVault } from '@/components/web3/velocity-vault'
+import { FunnelNav } from '@/components/navigation/funnel-nav'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Home, ArrowLeft } from 'lucide-react'
@@ -24,6 +25,8 @@ export default function VaultPage() {
         <VelocityVault />
       </main>
 
+      {/* Funnel Navigation */}
+      <FunnelNav />
     </div>
   )
 }

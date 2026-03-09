@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Zap, Users, Package, Check, CheckCircle, Award, Info, Rocket, Mail, ArrowRight, LayoutDashboard, Shield, RefreshCw, Dumbbell } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
+import { FunnelNav } from '@/components/navigation/funnel-nav'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { getCategoryTextColor, isGroupCategory } from '@/lib/category-colors'
@@ -459,6 +460,7 @@ export default function PricingPage() {
       </div>
       </main>
 
+      <FunnelNav />
     </div>
   )
 }

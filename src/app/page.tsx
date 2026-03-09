@@ -20,6 +20,7 @@ import {
   LayoutDashboard,
 } from 'lucide-react'
 import { GoogleReviews } from '@/components/google-reviews'
+import { FunnelNav } from '@/components/navigation/funnel-nav'
 import { OptimizedImage } from '@/components/ui/optimized-image'
 import { PLACEHOLDER_IMAGES } from '@/lib/placeholder-images'
 import { useUserRole } from '@/lib/hooks/use-user-role'
@@ -676,6 +677,8 @@ export default function HomePage() {
         </div>
       </footer>
 
+      {/* Funnel Navigation */}
+      <FunnelNav />
     </main>
   )
 }

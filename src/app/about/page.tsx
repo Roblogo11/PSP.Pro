@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Target, Users, MapPin, Award, TrendingUp, Zap, Package, Rocket, Mail, ArrowRight, LayoutDashboard, Star, Calendar } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
+import { FunnelNav } from '@/components/navigation/funnel-nav'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 
 export default function AboutPage() {
@@ -364,6 +365,7 @@ export default function AboutPage() {
       </div>
       </main>
 
+      <FunnelNav />
     </div>
   )
 }
