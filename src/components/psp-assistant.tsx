@@ -1616,7 +1616,7 @@ export function PSPAssistant() {
               {/* Quick Actions */}
               <div className="flex-shrink-0 px-4 py-2.5 border-b border-white/5 bg-white/5">
                 <div className="flex flex-wrap gap-1.5">
-                  {QUICK_ACTIONS.map((action, i) => (
+                  {getQuickActions(userRole).map((action, i) => (
                     <Link
                       key={i}
                       href={action.href}
