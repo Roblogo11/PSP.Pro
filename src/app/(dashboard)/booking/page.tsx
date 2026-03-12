@@ -75,6 +75,7 @@ export default function BookingPage() {
       if (match) {
         setSelectedServiceId(match.id)
         setCurrentStep('date')
+        fetchAvailableDatesForMonth(calendarMonth, match.id)
       }
     }
   }, [preselectedServiceId, services, selectedServiceId])
@@ -131,6 +132,9 @@ export default function BookingPage() {
       .eq('is_available', true)
       .order('start_time', { ascending: true })
 
+    // Filter by selected service (also include "Any Service" slots with null service_id)
+    query = query.or(`service_id.eq.${selectedServiceId},service_id.is.null`)
+
     // Filter by coach if pre-selected via URL param
     if (preselectedCoachId) {
       query = query.eq('coach_id', preselectedCoachId)
@@ -179,6 +183,9 @@ export default function BookingPage() {
       .eq('is_available', true)
       .gte('slot_date', firstDay)
       .lte('slot_date', lastDay)
+
+    // Filter by selected service (also include "Any Service" slots with null service_id)
+    query = query.or(`service_id.eq.${serviceId},service_id.is.null`)
 
     if (preselectedCoachId) query = query.eq('coach_id', preselectedCoachId)
 

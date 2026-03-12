@@ -55,7 +55,7 @@ export default function AvailabilityManagementPage() {
     location: '',
     maxBookings: 1,
     repeat: false,
-    repeatFrequency: 'weekly' as 'weekly' | 'monthly',
+    repeatFrequency: 'daily' as 'daily' | 'weekly' | 'monthly',
     repeatCount: 4,
   })
 
@@ -154,7 +154,7 @@ export default function AvailabilityManagementPage() {
     // Parse date parts directly to avoid timezone shift (toISOString converts to UTC)
     const [baseYear, baseMonth, baseDay] = formData.slotDate.split('-').map(Number)
     const totalSlots = formData.repeat ? formData.repeatCount : 1
-    const intervalDays = formData.repeatFrequency === 'weekly' ? 7 : 30
+    const intervalDays = formData.repeatFrequency === 'daily' ? 1 : formData.repeatFrequency === 'weekly' ? 7 : 30
 
     for (let i = 0; i < totalSlots; i++) {
       const slotDate = new Date(baseYear, baseMonth - 1, baseDay + i * intervalDays)
@@ -208,7 +208,7 @@ export default function AvailabilityManagementPage() {
         ? `Created ${created} slot${created !== 1 ? 's' : ''} (${skipped} already existed)`
         : created === 1
           ? 'Time slot created!'
-          : `${created} ${formData.repeatFrequency} time slots created!`
+          : `${created} time slots created (${formData.repeatFrequency})!`
     )
     setFormData({
       serviceId: '',
@@ -218,7 +218,7 @@ export default function AvailabilityManagementPage() {
       location: '',
       maxBookings: 1,
       repeat: false,
-      repeatFrequency: 'weekly',
+      repeatFrequency: 'daily',
       repeatCount: 4,
     })
     setShowForm(false)
@@ -678,9 +678,10 @@ export default function AvailabilityManagementPage() {
                 <div className="mt-3 flex flex-wrap items-center gap-3 ml-8">
                   <select
                     value={formData.repeatFrequency}
-                    onChange={e => setFormData({ ...formData, repeatFrequency: e.target.value as 'weekly' | 'monthly' })}
+                    onChange={e => setFormData({ ...formData, repeatFrequency: e.target.value as 'daily' | 'weekly' | 'monthly' })}
                     className="px-3 py-2 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50"
                   >
+                    <option value="daily">Daily</option>
                     <option value="weekly">Weekly</option>
                     <option value="monthly">Monthly</option>
                   </select>
@@ -690,8 +691,13 @@ export default function AvailabilityManagementPage() {
                     onChange={e => setFormData({ ...formData, repeatCount: parseInt(e.target.value) })}
                     className="px-3 py-2 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-lg text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50"
                   >
-                    {[2, 3, 4, 6, 8, 10, 12].map(n => (
-                      <option key={n} value={n}>{n} {formData.repeatFrequency === 'weekly' ? 'weeks' : 'months'}</option>
+                    {(formData.repeatFrequency === 'daily'
+                      ? [2, 3, 4, 5, 6, 7]
+                      : formData.repeatFrequency === 'weekly'
+                        ? [2, 3, 4, 6, 8, 10, 12]
+                        : [2, 3, 4, 6, 8, 10, 12]
+                    ).map(n => (
+                      <option key={n} value={n}>{n} {formData.repeatFrequency === 'daily' ? 'days' : formData.repeatFrequency === 'weekly' ? 'weeks' : 'months'}</option>
                     ))}
                   </select>
                   {formData.slotDate && (
