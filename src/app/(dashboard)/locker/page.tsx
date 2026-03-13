@@ -284,6 +284,7 @@ export default function AthleteLockerPage() {
           .from('profiles')
           .select('*', { count: 'exact', head: true })
           .eq('role', 'athlete')
+          .is('archived_at', null)
 
         // Upcoming sessions
         let sessionsQuery = supabase

@@ -52,6 +52,7 @@ export async function GET(request: NextRequest) {
       .select('id, email')
       .in('id', limitedIds)
       .eq('role', 'athlete')
+      .is('archived_at', null)
 
     if (fetchError) {
       console.error('Error fetching profiles:', fetchError)

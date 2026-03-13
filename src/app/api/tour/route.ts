@@ -27,10 +27,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const adminClient = createAdminClient()
+    const { data: callerProfile } = await adminClient
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    const isStaff = ['coach', 'admin', 'master_admin'].includes(callerProfile?.role || '')
+
     const tourId = randomUUID()
 
     // Record in simulation_sessions table with type = 'tour'
-    const adminClient = createAdminClient()
     const { error: insertError } = await adminClient
       .from('simulation_sessions')
       .insert({
@@ -78,22 +86,24 @@ export async function POST(request: NextRequest) {
       maxAge,
     })
 
-    // Auto-enable Stripe test mode during tour
-    response.cookies.set('stripe_test_mode', 'true', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge,
-    })
+    // Auto-enable Stripe test mode during tour — staff only
+    if (isStaff) {
+      response.cookies.set('stripe_test_mode', 'true', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge,
+      })
 
-    response.cookies.set('stripe_test_mode_ui', 'true', {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge,
-    })
+      response.cookies.set('stripe_test_mode_ui', 'true', {
+        httpOnly: false,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge,
+      })
+    }
 
     return response
   } catch (error: any) {

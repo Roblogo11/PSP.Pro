@@ -16,7 +16,7 @@ export default function SignupPage() {
   const [selectedSports, setSelectedSports] = useState<string[]>(['softball'])
   const [newsletterConsent, setNewsletterConsent] = useState(false)
   // Archive restore
-  const [archiveInfo, setArchiveInfo] = useState<{ archiveId: string; archivedAt: string; name: string | null } | null>(null)
+  const [archiveInfo, setArchiveInfo] = useState<{ archiveId: string } | null>(null)
   const [restoreLoading, setRestoreLoading] = useState(false)
   const archiveCheckTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -32,7 +32,7 @@ export default function SignupPage() {
       })
       const data = await res.json()
       if (data.found) {
-        setArchiveInfo({ archiveId: data.archiveId, archivedAt: data.archivedAt, name: data.name })
+        setArchiveInfo({ archiveId: data.archiveId })
       } else {
         setArchiveInfo(null)
       }
@@ -227,10 +227,10 @@ export default function SignupPage() {
               <RotateCcw className="w-5 h-5 text-cyan shrink-0 mt-0.5" />
               <div className="flex-1">
                 <p className="text-sm font-semibold text-slate-900 dark:text-white mb-1">
-                  Welcome back{archiveInfo.name ? `, ${archiveInfo.name}` : ''}!
+                  Welcome back!
                 </p>
                 <p className="text-xs text-slate-600 dark:text-white/70 mb-3">
-                  We found a previous account deleted on {new Date(archiveInfo.archivedAt).toLocaleDateString()}. Want to restore your profile, sessions, and metrics?
+                  We found a previous account for this email. Want to restore your profile, sessions, and metrics?
                 </p>
                 <div className="flex gap-2">
                   <button

@@ -78,6 +78,7 @@ export default function VideoAnalysisPage() {
         .from('profiles')
         .select('id, full_name')
         .eq('role', 'athlete')
+        .is('archived_at', null)
         .order('full_name')
         .then(({ data }: { data: any }) => setAthletes(data || []))
     }

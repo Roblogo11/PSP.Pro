@@ -113,6 +113,26 @@ export async function POST(request: NextRequest) {
 
     // If no conversationId, create new conversation with recipient
     if (!targetConversationId && recipientId) {
+      // Verify at least one party is staff (prevent athlete-to-athlete messaging)
+      const { data: senderProfile } = await adminClient
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+      const { data: recipientProfile } = await adminClient
+        .from('profiles')
+        .select('role')
+        .eq('id', recipientId)
+        .single()
+
+      const staffRoles = ['coach', 'admin', 'master_admin']
+      const senderIsStaff = staffRoles.includes(senderProfile?.role || '')
+      const recipientIsStaff = staffRoles.includes(recipientProfile?.role || '')
+
+      if (!senderIsStaff && !recipientIsStaff) {
+        return NextResponse.json({ error: 'Messages can only be sent to or from coaches/staff' }, { status: 403 })
+      }
+
       // Check if conversation already exists between these two users (use admin to bypass RLS)
       const { data: existingParticipant } = await adminClient
         .from('conversation_participants')

@@ -24,7 +24,9 @@ export async function POST(req: NextRequest) {
 
     const { org_id } = await req.json().catch(() => ({}))
     const stripe = getStripeLiveInstance()
-    const origin = req.headers.get('origin') || 'https://propersports.pro'
+    const allowedOrigins = [process.env.NEXT_PUBLIC_SITE_URL, 'http://localhost:3000', 'https://psp-pro.vercel.app', 'https://propersports.pro'].filter(Boolean) as string[]
+    const requestOrigin = req.headers.get('origin')
+    const origin = requestOrigin && allowedOrigins.includes(requestOrigin) ? requestOrigin : (process.env.NEXT_PUBLIC_SITE_URL || 'https://propersports.pro')
 
     // If org_id provided, check if org already has a Stripe account
     if (org_id) {

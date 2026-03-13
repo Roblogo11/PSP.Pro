@@ -12,6 +12,18 @@ export async function GET(req: NextRequest) {
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
     const adminClient = createAdminClient()
+
+    // Verify caller is staff
+    const { data: callerProfile } = await adminClient
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (!callerProfile || !['coach', 'admin', 'master_admin'].includes(callerProfile.role)) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
     const org_id = req.nextUrl.searchParams.get('org_id')
 
     // If org_id provided, check org-level Stripe account first
