@@ -291,7 +291,7 @@ export default function AdminCoursesPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 pb-24 lg:pb-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -321,11 +321,19 @@ export default function AdminCoursesPage() {
           {courses.map(course => (
             <div key={course.id} className="glass-card p-5 rounded-2xl border border-cyan-200/40 hover:border-cyan/40 transition-all">
               {/* Thumbnail */}
-              {course.thumbnail_url && (
-                <div className="mb-4 rounded-xl overflow-hidden aspect-video bg-slate-800">
-                  <img src={course.thumbnail_url} alt={course.title} className="w-full h-full object-cover" />
+              <div className="mb-4 rounded-xl overflow-hidden aspect-video bg-slate-800">
+                {course.thumbnail_url ? (
+                  <img
+                    src={course.thumbnail_url}
+                    alt={course.title}
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.parentElement?.querySelector('.thumb-fallback')?.classList.remove('hidden') }}
+                  />
+                ) : null}
+                <div className={`thumb-fallback w-full h-full flex items-center justify-center ${course.thumbnail_url ? 'hidden' : ''}`}>
+                  <BookOpen className="w-10 h-10 text-cyan-600" />
                 </div>
-              )}
+              </div>
 
               {/* Info */}
               <div className="flex items-start justify-between mb-2">

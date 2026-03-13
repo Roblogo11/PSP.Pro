@@ -285,7 +285,7 @@ export default function ServicesManagerPage() {
   }
 
   return (
-    <div className="px-3 py-4 md:p-6 max-w-7xl mx-auto">
+    <div className="px-3 py-4 md:p-6 pb-24 lg:pb-8 max-w-7xl mx-auto">
       {/* Toast */}
       {toast && (
         <div className={`fixed top-4 right-4 z-50 flex items-center gap-2 px-4 py-3 rounded-xl shadow-lg border transition-all animate-in slide-in-from-top-2 ${
@@ -566,10 +566,10 @@ export default function ServicesManagerPage() {
               !service.is_active ? 'opacity-60' : ''
             }`}
           >
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+              <div className="flex-1 min-w-0">
                 {/* Header */}
-                <div className="flex items-center gap-3 mb-2">
+                <div className="flex flex-wrap items-center gap-2 mb-2">
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white">{service.name}</h3>
                   <span className={`px-3 py-1 rounded-lg text-xs font-semibold uppercase border ${getCatColor(service.category)}`}>
                     {service.category}
@@ -592,7 +592,7 @@ export default function ServicesManagerPage() {
                 )}
 
                 {/* Details */}
-                <div className="flex items-center gap-6 text-sm">
+                <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm">
                   <div className="flex items-center gap-2">
                     <DollarSign className="w-4 h-4 text-green-400" />
                     <span className="text-slate-900 dark:text-white font-semibold">{formatPrice(service.price_cents)}</span>
@@ -617,7 +617,7 @@ export default function ServicesManagerPage() {
               </div>
 
               {/* Actions */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
                 {/* Active toggle */}
                 <button
                   onClick={() => handleToggleActive(service)}

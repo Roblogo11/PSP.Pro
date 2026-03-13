@@ -88,7 +88,7 @@ export default function HomePage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-cyan-700 dark:text-white">Loading...</p>
+          <p className="text-white/80">Loading...</p>
         </div>
       </div>
     )
@@ -143,7 +143,7 @@ export default function HomePage() {
                 filter: 'drop-shadow(0 0 20px rgba(0, 180, 216, 0.4)) brightness(0) invert(1)',
               }}
             />
-            <p className="text-sm mt-2 text-cyan-700 dark:text-white">PSP.Pro</p>
+            <p className="text-sm mt-2 text-white/80">PSP.Pro</p>
           </div>
 
           {/* Tagline */}
@@ -204,14 +204,14 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-20">
             {/* Book Session - Role-aware link */}
             <Link href={bookingHref}>
-              <div className="command-panel p-6 hover:scale-105 transition-all duration-300 cursor-pointer border-orange/20 hover:border-orange/50 group">
-                <div className="w-12 h-12 bg-gradient-to-br from-orange to-orange-600 rounded-xl flex items-center justify-center shadow-glow-orange mb-4 group-hover:shadow-glow-orange-intense">
+              <div className="command-panel p-6 hover:scale-105 transition-all duration-300 cursor-pointer border-orange/20 hover:border-orange/50 group text-center md:text-left">
+                <div className="w-12 h-12 bg-gradient-to-br from-orange to-orange-600 rounded-xl flex items-center justify-center shadow-glow-orange mb-4 group-hover:shadow-glow-orange-intense mx-auto md:mx-0">
                   <Clock className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">
                   {(isCoach || isAdmin) ? 'Manage Bookings' : 'Book a Session'}
                 </h3>
-                <p className="text-cyan-700 dark:text-white text-sm">
+                <p className="text-white/80 text-sm">
                   {(isCoach || isAdmin)
                     ? 'View and manage all training sessions and athlete bookings'
                     : 'Schedule 1-on-1 training, group sessions, or video analysis with our coaches'
@@ -222,12 +222,12 @@ export default function HomePage() {
 
             {/* View Pricing */}
             <Link href="/pricing">
-              <div className="command-panel p-6 hover:scale-105 transition-all duration-300 cursor-pointer border-cyan/20 hover:border-cyan/50 group">
-                <div className="w-12 h-12 bg-gradient-to-br from-cyan to-blue-500 rounded-xl flex items-center justify-center shadow-glow-cyan mb-4">
+              <div className="command-panel p-6 hover:scale-105 transition-all duration-300 cursor-pointer border-cyan/20 hover:border-cyan/50 group text-center md:text-left">
+                <div className="w-12 h-12 bg-gradient-to-br from-cyan to-blue-500 rounded-xl flex items-center justify-center shadow-glow-cyan mb-4 mx-auto md:mx-0">
                   <Award className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">View Pricing</h3>
-                <p className="text-cyan-700 dark:text-white text-sm">
+                <p className="text-white/80 text-sm">
                   Explore training packages, session rates, and save up to $200 on bundles
                 </p>
               </div>
@@ -235,12 +235,12 @@ export default function HomePage() {
 
             {/* Meet Coaches */}
             <Link href="/about">
-              <div className="command-panel p-6 hover:scale-105 transition-all duration-300 cursor-pointer border-purple-500/20 hover:border-purple-500/50 group">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center shadow-glow-purple mb-4">
+              <div className="command-panel p-6 hover:scale-105 transition-all duration-300 cursor-pointer border-purple-500/20 hover:border-purple-500/50 group text-center md:text-left">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center shadow-glow-purple mb-4 mx-auto md:mx-0">
                   <Users className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Meet Our Coaches</h3>
-                <p className="text-cyan-700 dark:text-white text-sm">
+                <p className="text-white/80 text-sm">
                   College & pro experience with proven results in velocity and mechanics
                 </p>
               </div>
@@ -258,7 +258,7 @@ export default function HomePage() {
               <div key={index} className="glass-card p-6 hover:scale-105 transition-transform duration-300">
                 <stat.icon className="w-8 h-8 mx-auto mb-3" style={{ color: stat.color }} />
                 <div className="text-3xl font-bold mb-1 text-white">{stat.value}</div>
-                <div className="text-sm text-cyan-700 dark:text-white">{stat.label}</div>
+                <div className="text-sm text-white/80">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -316,10 +316,10 @@ export default function HomePage() {
                     <h3 className="text-2xl font-display font-bold mb-2 text-white">{service.name}</h3>
                     <div className="mb-4">
                       <span className="text-5xl font-bold text-gradient-orange">${(service.price_cents / 100).toFixed(0)}</span>
-                      <span className="text-cyan-700 dark:text-white"> / {service.duration_minutes} min</span>
+                      <span className="text-white/80"> / {service.duration_minutes} min</span>
                     </div>
                     {service.description && (
-                      <p className="text-sm text-cyan-700 dark:text-white mb-6">{service.description}</p>
+                      <p className="text-sm text-white/80 mb-6">{service.description}</p>
                     )}
                     <Link href={bookingHref}>
                       <button className={idx === 0 ? 'btn-primary w-full' : 'btn-ghost w-full'}>
@@ -350,9 +350,9 @@ export default function HomePage() {
                     <h3 className="text-2xl font-display font-bold mb-2 text-white">1-on-1 Skills Training</h3>
                     <div className="mb-4">
                       <span className="text-5xl font-bold text-gradient-orange">$75</span>
-                      <span className="text-cyan-700 dark:text-white"> / 60 min</span>
+                      <span className="text-white/80"> / 60 min</span>
                     </div>
-                    <p className="text-sm text-cyan-700 dark:text-white mb-6">Individual technical skills and mechanics training for your sport</p>
+                    <p className="text-sm text-white/80 mb-6">Individual technical skills and mechanics training for your sport</p>
                     <Link href={bookingHref}>
                       <button className="btn-primary w-full">{(isCoach || isAdmin) ? 'Manage Sessions' : 'Book Session'}</button>
                     </Link>
@@ -375,9 +375,9 @@ export default function HomePage() {
                     <h3 className="text-2xl font-display font-bold mb-2 text-white">1-on-1 Performance</h3>
                     <div className="mb-4">
                       <span className="text-5xl font-bold text-gradient-orange">$75</span>
-                      <span className="text-cyan-700 dark:text-white"> / 60 min</span>
+                      <span className="text-white/80"> / 60 min</span>
                     </div>
-                    <p className="text-sm text-cyan-700 dark:text-white mb-6">Personalized athletic performance and sport-specific development</p>
+                    <p className="text-sm text-white/80 mb-6">Personalized athletic performance and sport-specific development</p>
                     <Link href={bookingHref}>
                       <button className="btn-ghost w-full">{(isCoach || isAdmin) ? 'Manage Sessions' : 'Book Session'}</button>
                     </Link>
@@ -405,7 +405,7 @@ export default function HomePage() {
                 <h3 className="text-2xl font-display font-bold mb-2 text-white">Monthly Membership</h3>
                 <div className="mb-4">
                   <span className="text-5xl font-bold text-gradient-orange">$30</span>
-                  <span className="text-cyan-700 dark:text-white"> / mo</span>
+                  <span className="text-white/80"> / mo</span>
                 </div>
                 <ul className="space-y-3 mb-6">
                   {[
@@ -431,7 +431,7 @@ export default function HomePage() {
           <div className="max-w-2xl mx-auto mt-8">
             <div className="p-6 rounded-xl bg-cyan-900/30 border border-orange/20 text-center">
               <p className="text-white font-semibold mb-3">Save with Session Packages</p>
-              <div className="flex flex-wrap justify-center gap-6 text-sm text-cyan-700 dark:text-white">
+              <div className="flex flex-wrap justify-center gap-6 text-sm text-white/80">
                 <p>5 Sessions — <span className="text-orange font-bold">$350</span> <span className="text-cyan text-xs">(save $25)</span></p>
                 <p>10 Sessions — <span className="text-orange font-bold">$675</span> <span className="text-cyan text-xs">(save $75)</span></p>
                 <p>20 Sessions — <span className="text-orange font-bold">$1,300</span> <span className="text-cyan text-xs">(save $200)</span></p>
@@ -483,12 +483,12 @@ export default function HomePage() {
                     <h3 className="text-2xl font-display font-bold mb-2 text-white">{service.name}</h3>
                     <div className="mb-4">
                       <span className="text-5xl font-bold text-gradient-orange">${(service.price_cents / 100).toFixed(0)}</span>
-                      <span className="text-cyan-700 dark:text-white"> / {service.duration_minutes} min</span>
+                      <span className="text-white/80"> / {service.duration_minutes} min</span>
                     </div>
                     {service.description && (
-                      <p className="text-sm text-cyan-700 dark:text-white mb-4">{service.description}</p>
+                      <p className="text-sm text-white/80 mb-4">{service.description}</p>
                     )}
-                    <div className="flex items-center gap-2 text-sm text-cyan-700 dark:text-white mb-6">
+                    <div className="flex items-center gap-2 text-sm text-white/80 mb-6">
                       <Users className="w-4 h-4 text-cyan" />
                       <span>Max {service.max_participants} athletes</span>
                     </div>
@@ -516,10 +516,10 @@ export default function HomePage() {
                     <h3 className="text-2xl font-display font-bold mb-2 text-white">Speed & Agility</h3>
                     <div className="mb-4">
                       <span className="text-5xl font-bold text-gradient-orange">$50</span>
-                      <span className="text-cyan-700 dark:text-white"> / 90 min</span>
+                      <span className="text-white/80"> / 90 min</span>
                     </div>
-                    <p className="text-sm text-cyan-700 dark:text-white mb-4">Small group speed training and athletic development</p>
-                    <div className="flex items-center gap-2 text-sm text-cyan-700 dark:text-white mb-6">
+                    <p className="text-sm text-white/80 mb-4">Small group speed training and athletic development</p>
+                    <div className="flex items-center gap-2 text-sm text-white/80 mb-6">
                       <Users className="w-4 h-4 text-cyan" />
                       <span>Max 6 athletes</span>
                     </div>
@@ -544,10 +544,10 @@ export default function HomePage() {
                     <h3 className="text-2xl font-display font-bold mb-2 text-white">Small Group Training</h3>
                     <div className="mb-4">
                       <span className="text-5xl font-bold text-gradient-orange">$40</span>
-                      <span className="text-cyan-700 dark:text-white"> / 75 min</span>
+                      <span className="text-white/80"> / 75 min</span>
                     </div>
-                    <p className="text-sm text-cyan-700 dark:text-white mb-4">Semi-private training session (2-4 athletes)</p>
-                    <div className="flex items-center gap-2 text-sm text-cyan-700 dark:text-white mb-6">
+                    <p className="text-sm text-white/80 mb-4">Semi-private training session (2-4 athletes)</p>
+                    <div className="flex items-center gap-2 text-sm text-white/80 mb-6">
                       <Users className="w-4 h-4 text-cyan" />
                       <span>Max 4 athletes</span>
                     </div>
@@ -572,10 +572,10 @@ export default function HomePage() {
                     <h3 className="text-2xl font-display font-bold mb-2 text-white">Strength & Conditioning</h3>
                     <div className="mb-4">
                       <span className="text-5xl font-bold text-gradient-orange">$65</span>
-                      <span className="text-cyan-700 dark:text-white"> / 60 min</span>
+                      <span className="text-white/80"> / 60 min</span>
                     </div>
-                    <p className="text-sm text-cyan-700 dark:text-white mb-4">Sport-specific strength training and conditioning</p>
-                    <div className="flex items-center gap-2 text-sm text-cyan-700 dark:text-white mb-6">
+                    <p className="text-sm text-white/80 mb-4">Sport-specific strength training and conditioning</p>
+                    <div className="flex items-center gap-2 text-sm text-white/80 mb-6">
                       <Users className="w-4 h-4 text-cyan" />
                       <span>Max 4 athletes</span>
                     </div>
@@ -598,15 +598,15 @@ export default function HomePage() {
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4 text-white">
               Based in Chesapeake, VA
             </h2>
-            <p className="text-xl mb-8 max-w-2xl mx-auto text-cyan-700 dark:text-white">
+            <p className="text-xl mb-8 max-w-2xl mx-auto text-white/80">
               Proudly serving athletes throughout Chesapeake, Virginia Beach, Norfolk, Portsmouth, Suffolk, and all of Hampton Roads.
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center text-cyan-700 dark:text-white">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row gap-6 items-center justify-center text-white/80">
+              <div className="flex items-center justify-center gap-2">
                 <Clock className="w-5 h-5" style={{ color: '#B8301A' }} />
                 <span className="text-white">Mon-Fri: 3PM - 9PM</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center gap-2">
                 <Clock className="w-5 h-5" style={{ color: '#B8301A' }} />
                 <span className="text-white">Sat: 9AM - 5PM</span>
               </div>
@@ -618,10 +618,10 @@ export default function HomePage() {
       {/* CTA Section */}
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 text-white">
+          <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 text-slate-900 dark:text-white">
             Ready to Level Up?
           </h2>
-          <p className="text-xl mb-8 text-cyan-700 dark:text-white">
+          <p className="text-xl mb-8 text-slate-700 dark:text-white/80">
             Join hundreds of athletes who are improving their game with data-driven training.
           </p>
           <Link href={profile ? ((isCoach || isAdmin) ? '/admin' : '/locker') : '/get-started'}>
@@ -642,13 +642,13 @@ export default function HomePage() {
                 <Zap className="w-6 h-6" style={{ color: '#B8301A' }} />
                 <span className="font-display font-bold text-lg" style={{ color: footerHeadingColor }}>PSP.Pro</span>
               </div>
-              <p className="text-sm text-cyan-700 dark:text-white">
+              <p className="text-sm text-slate-600 dark:text-white/80">
                 Progression Over Perfection
               </p>
             </div>
             <div>
               <h4 className="font-semibold mb-4" style={{ color: footerHeadingColor }}>Platform</h4>
-              <ul className="space-y-2 text-sm text-cyan-700 dark:text-white">
+              <ul className="space-y-2 text-sm text-slate-600 dark:text-white/80">
                 <li><Link href="/locker" className="hover:text-orange transition-colors">Dashboard</Link></li>
                 <li><Link href="/drills" className="hover:text-orange transition-colors">Membership Training</Link></li>
                 <li><Link href="/login" className="hover:text-orange transition-colors">Login</Link></li>
@@ -657,21 +657,21 @@ export default function HomePage() {
             </div>
             <div>
               <h4 className="font-semibold mb-4" style={{ color: footerHeadingColor }}>Company</h4>
-              <ul className="space-y-2 text-sm text-cyan-700 dark:text-white">
+              <ul className="space-y-2 text-sm text-slate-600 dark:text-white/80">
                 <li><Link href="/about" className="hover:text-orange transition-colors">About</Link></li>
                 <li><Link href="/contact" className="hover:text-orange transition-colors">Contact</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4" style={{ color: footerHeadingColor }}>Contact</h4>
-              <ul className="space-y-2 text-sm text-cyan-700 dark:text-white">
+              <ul className="space-y-2 text-sm text-slate-600 dark:text-white/80">
                 <li>Chesapeake, VA</li>
                 <li>propersportsperformance@gmail.com</li>
                 <li>(757) 377-2089 · (757) 770-0206</li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-cyan-200/40 pt-8 text-center text-sm text-cyan-700 dark:text-white">
+          <div className="border-t border-cyan-200/40 pt-8 text-center text-sm text-slate-600 dark:text-white/80">
             <p>&copy; {new Date().getFullYear()} Proper Sports Performance. All rights reserved.</p>
           </div>
         </div>

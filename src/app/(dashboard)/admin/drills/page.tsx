@@ -587,6 +587,7 @@ export default function DrillsManagementPage() {
                         src={drill.thumbnail_url}
                         alt={drill.title}
                         className="w-full h-full object-cover"
+                        onError={(e) => { e.currentTarget.src = ''; e.currentTarget.style.display = 'none' }}
                       />
                     </div>
                   ) : (

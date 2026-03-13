@@ -122,7 +122,7 @@ export default function CoursesPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 pb-24 lg:pb-8">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
@@ -173,12 +173,16 @@ export default function CoursesPage() {
               {/* Thumbnail */}
               <div className="aspect-video bg-slate-800 relative overflow-hidden">
                 {course.thumbnail_url ? (
-                  <img src={course.thumbnail_url} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <BookOpen className="w-12 h-12 text-cyan-600" />
-                  </div>
-                )}
+                  <img
+                    src={course.thumbnail_url}
+                    alt={course.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.parentElement?.querySelector('.thumb-fallback')?.classList.remove('hidden') }}
+                  />
+                ) : null}
+                <div className={`thumb-fallback w-full h-full flex items-center justify-center ${course.thumbnail_url ? 'hidden' : ''}`}>
+                  <BookOpen className="w-12 h-12 text-cyan-600" />
+                </div>
                 {/* Overlay badge */}
                 {course.enrolled && course.progress > 0 && (
                   <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-slate-700">
