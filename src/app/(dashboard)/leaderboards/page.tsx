@@ -75,6 +75,7 @@ export default function LeaderboardsPage() {
           .select('id, full_name, avatar_url, region')
           .eq('leaderboard_opt_in', true)
           .eq('role', 'athlete')
+          .is('archived_at', null)
 
         if (regionFilter !== 'all') {
           profilesQuery = profilesQuery.eq('region', regionFilter)

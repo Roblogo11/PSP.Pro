@@ -1,6 +1,8 @@
 import { createClient as createServerClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { NextRequest, NextResponse } from 'next/server'
+import { auditLog } from '@/lib/audit'
+import { getClientIP } from '@/lib/rate-limit'
 
 export async function DELETE(request: NextRequest) {
   try {
@@ -24,9 +26,10 @@ export async function DELETE(request: NextRequest) {
       .eq('id', user.id)
       .single()
 
-    if (!profile || !['admin', 'master_admin'].includes(profile.role)) {
+    // Only master_admin can permanently delete
+    if (!profile || profile.role !== 'master_admin') {
       return NextResponse.json(
-        { error: 'Forbidden - admin access required' },
+        { error: 'Forbidden - only master admin can permanently delete athletes' },
         { status: 403 }
       )
     }
@@ -49,6 +52,27 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
+    // Verify athlete is archived first (must archive before permanent delete)
+    const { data: athlete } = await supabaseAdmin
+      .from('profiles')
+      .select('id, full_name, email, archived_at')
+      .eq('id', athleteId)
+      .single()
+
+    if (!athlete) {
+      return NextResponse.json(
+        { error: 'Athlete not found' },
+        { status: 404 }
+      )
+    }
+
+    if (!athlete.archived_at) {
+      return NextResponse.json(
+        { error: 'Athlete must be archived before permanent deletion. Archive the athlete first.' },
+        { status: 400 }
+      )
+    }
+
     // Delete the user from auth (this will cascade delete the profile)
     const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(
       athleteId
@@ -59,9 +83,18 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to delete athlete' }, { status: 400 })
     }
 
+    auditLog({
+      userId: user.id,
+      action: 'athlete_permanently_deleted',
+      resourceType: 'profile',
+      resourceId: athleteId,
+      metadata: { athlete_name: athlete.full_name, athlete_email: athlete.email },
+      ip: getClientIP(request),
+    })
+
     return NextResponse.json({
       success: true,
-      message: 'Athlete deleted successfully',
+      message: 'Athlete permanently deleted',
     })
   } catch (error: any) {
     console.error('Error deleting athlete:', error)

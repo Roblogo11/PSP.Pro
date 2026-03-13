@@ -32,7 +32,7 @@ export default function AdminImportsPage() {
   useEffect(() => {
     async function fetchData() {
       const [{ data: athleteData }, { data: importData }] = await Promise.all([
-        supabase.from('profiles').select('id, full_name').eq('role', 'athlete').order('full_name'),
+        supabase.from('profiles').select('id, full_name').eq('role', 'athlete').is('archived_at', null).order('full_name'),
         supabase.from('device_imports').select('*, athlete:athlete_id(full_name)').order('created_at', { ascending: false }).limit(20),
       ])
       if (athleteData) setAthletes(athleteData)

@@ -158,7 +158,7 @@ export default function AdminQuestionnairesPage() {
     setSelectedAthletes([])
     setAssignDueDate('')
     setAssignNotes('')
-    const { data } = await supabase.from('profiles').select('id, full_name').eq('role', 'athlete').order('full_name')
+    const { data } = await supabase.from('profiles').select('id, full_name').eq('role', 'athlete').is('archived_at', null).order('full_name')
     setAthletes(data || [])
   }
 

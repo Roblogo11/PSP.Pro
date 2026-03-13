@@ -566,6 +566,107 @@ Privacy Policy: https://propersports.pro/privacy
   }
 }
 
+// ── Welcome Email (coach-created athlete accounts) ────────────────────
+interface WelcomeAthleteEmailData {
+  athleteName: string
+  coachName: string
+  resetPasswordUrl: string
+  loginUrl: string
+}
+
+export function getWelcomeAthleteEmail(data: WelcomeAthleteEmailData) {
+  return {
+    subject: `Welcome to PSP.Pro — Set Up Your Account`,
+    html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to PSP.Pro</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #004663 0%, #0088AB 100%); color: #ffffff;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 40px auto; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1);">
+    <tr>
+      <td style="padding: 40px 30px; text-align: center; background: linear-gradient(135deg, rgba(0, 180, 216, 0.2) 0%, rgba(255, 75, 43, 0.1) 100%);">
+        <h1 style="margin: 0; font-size: 32px; font-weight: bold; color: #ffffff;">PSP.Pro</h1>
+        <p style="margin: 8px 0 0 0; font-size: 14px; color: rgba(255, 255, 255, 0.7); letter-spacing: 0.2em; text-transform: uppercase;">Proper Sports Performance</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 30px 30px 20px; text-align: center;">
+        <div style="display: inline-block; width: 80px; height: 80px; background: rgba(0, 180, 216, 0.2); border-radius: 50%; line-height: 80px; font-size: 40px; text-align: center;">🎉</div>
+        <h2 style="margin: 20px 0 0; font-size: 28px; font-weight: bold; color: #ffffff;">Welcome to the Team!</h2>
+        <p style="margin: 8px 0 0; font-size: 16px; color: rgba(255, 255, 255, 0.7);">Coach ${data.coachName} created an account for you</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 20px 30px;">
+        <p style="margin: 0 0 16px; font-size: 16px; color: rgba(255, 255, 255, 0.85); line-height: 1.6;">
+          Hey ${data.athleteName}! Your training account on <strong style="color: #00B4D8;">PSP.Pro</strong> is ready.
+          To get started, set your password using the button below.
+        </p>
+        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.1);">
+          <h3 style="margin: 0 0 12px; font-size: 16px; color: #00B4D8;">Getting started is easy:</h3>
+          <ol style="margin: 0; padding: 0 0 0 20px; color: rgba(255, 255, 255, 0.8); font-size: 14px; line-height: 2;">
+            <li>Click the button below to set your password</li>
+            <li>Log in to your dashboard</li>
+            <li>Book your first session or explore your training tools</li>
+          </ol>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 10px 30px 30px; text-align: center;">
+        <a href="${data.resetPasswordUrl}" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #FF4B2B 0%, #FF7F50 100%); color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 20px rgba(255, 75, 43, 0.3);">Set Your Password</a>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 0 30px 20px; text-align: center;">
+        <p style="margin: 0; font-size: 13px; color: rgba(255, 255, 255, 0.4);">
+          If the button doesn't work, copy this link:<br>
+          <a href="${data.resetPasswordUrl}" style="color: #00B4D8; word-break: break-all; font-size: 12px;">${data.resetPasswordUrl}</a>
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 0 30px 10px; text-align: center;">
+        <p style="margin: 0; font-size: 14px; color: rgba(255, 255, 255, 0.5);">
+          Questions? Reply to this email or contact <a href="mailto:support@propersports.pro" style="color: #00B4D8; text-decoration: none;">support@propersports.pro</a>
+        </p>
+      </td>
+    </tr>
+    ${getEmailFooter()}
+  </table>
+</body>
+</html>
+    `,
+    text: `
+Welcome to PSP.Pro!
+
+Hey ${data.athleteName}!
+
+Coach ${data.coachName} created a training account for you on PSP.Pro (Proper Sports Performance).
+
+To get started, set your password here:
+${data.resetPasswordUrl}
+
+Then log in at: ${data.loginUrl}
+
+Getting started:
+1. Set your password using the link above
+2. Log in to your dashboard
+3. Book your first session or explore your training tools
+
+Questions? Contact support@propersports.pro
+
+Progression Over Perfection!
+
+© ${new Date().getFullYear()} Proper Sports Performance | Virginia Beach, VA
+    `.trim(),
+  }
+}
+
 interface SessionReminderEmailData {
   athleteName: string
   serviceName: string

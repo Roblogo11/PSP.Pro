@@ -21,6 +21,9 @@ import {
   Target,
   CheckCircle,
   Award,
+  Archive,
+  ArchiveRestore,
+  AlertTriangle,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
@@ -38,6 +41,7 @@ interface Athlete {
   updated_at: string
   account_type: string | null
   child_name: string | null
+  archived_at: string | null
 }
 
 interface AthleteStats {
@@ -69,10 +73,16 @@ export default function AthletesManagementPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [typeFilter, setTypeFilter] = useState<string>('all')
 
+  const isMasterAdmin = profile?.role === 'master_admin'
+
+  // View states
+  const [showArchived, setShowArchived] = useState(false)
+
   // Modal states
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [archiveModalOpen, setArchiveModalOpen] = useState(false)
   const [viewModalOpen, setViewModalOpen] = useState(false)
   const [selectedAthlete, setSelectedAthlete] = useState<Athlete | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -116,7 +126,7 @@ export default function AthletesManagementPage() {
         // Load all athletes WITH emails (after migration 020)
         const { data: athletesData, error: athletesError } = await supabase
           .from('profiles')
-          .select('id, full_name, email, avatar_url, athlete_type, age, role, created_at, updated_at, account_type, child_name')
+          .select('id, full_name, email, avatar_url, athlete_type, age, role, created_at, updated_at, account_type, child_name, archived_at')
           .eq('role', 'athlete')
           .order('full_name')
 
@@ -199,8 +209,13 @@ export default function AthletesManagementPage() {
     loadAthletes()
   }, [profile, isCoach])
 
-  // Filter athletes
-  const filteredAthletes = athletes.filter((athlete) => {
+  // Separate active and archived athletes
+  const activeAthletes = athletes.filter(a => !a.archived_at)
+  const archivedAthletes = athletes.filter(a => !!a.archived_at)
+
+  // Filter athletes based on current view
+  const baseAthletes = showArchived ? archivedAthletes : activeAthletes
+  const filteredAthletes = baseAthletes.filter((athlete) => {
     const matchesSearch = athlete.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       athlete.email?.toLowerCase().includes(searchQuery.toLowerCase())
 
@@ -301,18 +316,18 @@ export default function AthletesManagementPage() {
       const supabase = createClient()
       const { data: athletesData } = await supabase
         .from('profiles')
-        .select('id, full_name, avatar_url, athlete_type, age, role, created_at, updated_at, account_type, child_name')
+        .select('id, full_name, email, avatar_url, athlete_type, age, role, created_at, updated_at, account_type, child_name, archived_at')
         .eq('role', 'athlete')
         .order('full_name')
 
       const athletesWithSchema = (athletesData || []).map((athlete: any) => ({
         ...athlete,
-        email: null
+        email: athlete.email || null
       }))
       setAthletes(athletesWithSchema)
       setCreateModalOpen(false)
       resetForm()
-      showSuccess('Athlete created successfully! They can now log in with their email.')
+      showSuccess('Athlete created! A welcome email with password setup link has been sent.')
     } catch (error: any) {
       console.error('Error creating athlete:', error)
       toastError(`Failed to create athlete: ${error.message}`)
@@ -327,15 +342,20 @@ export default function AthletesManagementPage() {
     setIsProcessing(true)
     try {
       // Use API route with adminClient to bypass profiles RLS (id = auth.uid())
+      const updatePayload: Record<string, unknown> = {
+        athlete_id: selectedAthlete.id,
+        full_name: formData.full_name,
+        athlete_type: formData.athlete_type,
+        age: formData.age,
+      }
+      // Admins can update email
+      if (isAdmin && formData.email && formData.email !== selectedAthlete.email) {
+        updatePayload.email = formData.email
+      }
       const response = await fetch('/api/admin/update-athlete', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          athlete_id: selectedAthlete.id,
-          full_name: formData.full_name,
-          athlete_type: formData.athlete_type,
-          age: formData.age,
-        }),
+        body: JSON.stringify(updatePayload),
       })
 
       const data = await response.json()
@@ -345,7 +365,7 @@ export default function AthletesManagementPage() {
       const supabase = createClient()
       const { data: athletesData } = await supabase
         .from('profiles')
-        .select('id, full_name, email, avatar_url, athlete_type, age, role, created_at, updated_at, account_type, child_name')
+        .select('id, full_name, email, avatar_url, athlete_type, age, role, created_at, updated_at, account_type, child_name, archived_at')
         .eq('role', 'athlete')
         .order('full_name')
 
@@ -388,6 +408,60 @@ export default function AthletesManagementPage() {
     } catch (error: any) {
       console.error('Error deleting athlete:', error)
       toastError(`Failed to delete athlete: ${error.message}`)
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  const handleArchiveAthlete = async () => {
+    if (!selectedAthlete) return
+
+    setIsProcessing(true)
+    try {
+      const response = await fetch('/api/admin/archive-athlete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ athlete_id: selectedAthlete.id }),
+      })
+
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || 'Failed to archive athlete')
+
+      // Update local state — mark as archived
+      setAthletes(athletes.map(a =>
+        a.id === selectedAthlete.id ? { ...a, archived_at: new Date().toISOString() } : a
+      ))
+      setArchiveModalOpen(false)
+      setSelectedAthlete(null)
+      showSuccess('Athlete archived successfully. They can be restored from the Archived tab.')
+    } catch (error: any) {
+      console.error('Error archiving athlete:', error)
+      toastError(`Failed to archive athlete: ${error.message}`)
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  const handleRestoreAthlete = async (athlete: Athlete) => {
+    setIsProcessing(true)
+    try {
+      const response = await fetch('/api/admin/archive-athlete', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ athlete_id: athlete.id }),
+      })
+
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || 'Failed to restore athlete')
+
+      // Update local state — clear archived_at
+      setAthletes(athletes.map(a =>
+        a.id === athlete.id ? { ...a, archived_at: null } : a
+      ))
+      showSuccess(`${athlete.full_name} restored to active roster!`)
+    } catch (error: any) {
+      console.error('Error restoring athlete:', error)
+      toastError(`Failed to restore athlete: ${error.message}`)
     } finally {
       setIsProcessing(false)
     }
@@ -497,7 +571,7 @@ export default function AthletesManagementPage() {
             <Users className="w-6 h-6 text-orange" />
             <span className="text-sm text-cyan-800 dark:text-white">Total</span>
           </div>
-          <p className="text-3xl font-bold text-slate-900 dark:text-white">{athletes.length}</p>
+          <p className="text-3xl font-bold text-slate-900 dark:text-white">{activeAthletes.length}</p>
           <p className="text-sm text-cyan-800 dark:text-white">Active Athletes</p>
         </div>
         <div className="command-panel-active">
@@ -506,7 +580,7 @@ export default function AthletesManagementPage() {
             <span className="text-sm text-cyan-800 dark:text-white">Soccer</span>
           </div>
           <p className="text-3xl font-bold text-slate-900 dark:text-white">
-            {athletes.filter(a => a.athlete_type === 'soccer').length}
+            {activeAthletes.filter(a => a.athlete_type === 'soccer').length}
           </p>
           <p className="text-sm text-cyan-800 dark:text-white">Soccer Players</p>
         </div>
@@ -516,7 +590,7 @@ export default function AthletesManagementPage() {
             <span className="text-sm text-cyan-800 dark:text-white">Basketball</span>
           </div>
           <p className="text-3xl font-bold text-slate-900 dark:text-white">
-            {athletes.filter(a => a.athlete_type === 'basketball').length}
+            {activeAthletes.filter(a => a.athlete_type === 'basketball').length}
           </p>
           <p className="text-sm text-cyan-800 dark:text-white">Basketball Players</p>
         </div>
@@ -526,10 +600,36 @@ export default function AthletesManagementPage() {
             <span className="text-sm text-cyan-800 dark:text-white">Softball</span>
           </div>
           <p className="text-3xl font-bold text-slate-900 dark:text-white">
-            {athletes.filter(a => a.athlete_type === 'softball').length}
+            {activeAthletes.filter(a => a.athlete_type === 'softball').length}
           </p>
           <p className="text-sm text-cyan-800 dark:text-white">Softball Players</p>
         </div>
+      </div>
+
+      {/* Active / Archived Toggle */}
+      <div className="flex gap-2 mb-6">
+        <button
+          onClick={() => setShowArchived(false)}
+          className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all ${
+            !showArchived
+              ? 'bg-orange text-white'
+              : 'bg-cyan-900/20 text-cyan-800 dark:text-white/60 hover:text-white hover:bg-cyan-900/40'
+          }`}
+        >
+          <Users className="w-4 h-4 inline mr-2" />
+          Active ({activeAthletes.length})
+        </button>
+        <button
+          onClick={() => setShowArchived(true)}
+          className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all ${
+            showArchived
+              ? 'bg-orange text-white'
+              : 'bg-cyan-900/20 text-cyan-800 dark:text-white/60 hover:text-white hover:bg-cyan-900/40'
+          }`}
+        >
+          <Archive className="w-4 h-4 inline mr-2" />
+          Archived ({archivedAthletes.length})
+        </button>
       </div>
 
       {/* Search and Filters */}
@@ -653,28 +753,63 @@ export default function AthletesManagementPage() {
 
               {/* Actions */}
               <div className="flex gap-2 mt-4 pt-4 border-t border-white/5">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    openEditModal(athlete)
-                  }}
-                  className="flex-1 btn-ghost text-sm py-2 border-orange/30 hover:border-orange/50 hover:text-orange"
-                >
-                  <Edit className="w-4 h-4 mr-2" />
-                  Edit
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    setSelectedAthlete(athlete)
-                    setDeleteModalOpen(true)
-                  }}
-                  className="btn-ghost text-sm py-2 px-4 border-red-500/30 hover:border-red-500/50 hover:text-red-400"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                {showArchived ? (
+                  <>
+                    {/* Archived view: Restore + Permanent Delete (master admin only) */}
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        handleRestoreAthlete(athlete)
+                      }}
+                      className="flex-1 btn-ghost text-sm py-2 border-green-500/30 hover:border-green-500/50 hover:text-green-400"
+                      disabled={isProcessing}
+                    >
+                      <ArchiveRestore className="w-4 h-4 mr-2" />
+                      Restore
+                    </button>
+                    {isMasterAdmin && (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          setSelectedAthlete(athlete)
+                          setDeleteModalOpen(true)
+                        }}
+                        className="btn-ghost text-sm py-2 px-4 border-red-500/30 hover:border-red-500/50 hover:text-red-400"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {/* Active view: Edit + Archive */}
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        openEditModal(athlete)
+                      }}
+                      className="flex-1 btn-ghost text-sm py-2 border-orange/30 hover:border-orange/50 hover:text-orange"
+                    >
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        setSelectedAthlete(athlete)
+                        setArchiveModalOpen(true)
+                      }}
+                      className="btn-ghost text-sm py-2 px-4 border-amber-500/30 hover:border-amber-500/50 hover:text-amber-400"
+                      title="Archive athlete"
+                    >
+                      <Archive className="w-4 h-4" />
+                    </button>
+                  </>
+                )}
               </div>
             </Link>
           )
@@ -687,9 +822,11 @@ export default function AthletesManagementPage() {
           <p className="text-cyan-800 dark:text-white text-lg mb-4">
             {searchQuery || typeFilter !== 'all'
               ? 'No athletes match your filters'
+              : showArchived
+              ? 'No archived athletes'
               : 'No athletes yet'}
           </p>
-          {!searchQuery && typeFilter === 'all' && (
+          {!searchQuery && typeFilter === 'all' && !showArchived && (
             <button
               onClick={() => {
                 resetForm()
@@ -748,11 +885,14 @@ export default function AthletesManagementPage() {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="john@example.com"
-                    disabled={editModalOpen}
+                    disabled={editModalOpen && !isAdmin}
                     className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 dark:text-white focus:outline-none focus:border-orange/50 disabled:opacity-50"
                   />
-                  {editModalOpen && (
-                    <p className="text-xs text-cyan-800 dark:text-white mt-1">Email cannot be changed</p>
+                  {editModalOpen && !isAdmin && (
+                    <p className="text-xs text-cyan-800 dark:text-white mt-1">Only admins can change email</p>
+                  )}
+                  {editModalOpen && isAdmin && (
+                    <p className="text-xs text-amber-400 mt-1">Changing email will update their login credentials</p>
                   )}
                 </div>
               </div>
@@ -860,15 +1000,67 @@ export default function AthletesManagementPage() {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/* Archive Confirmation Modal */}
+      {archiveModalOpen && selectedAthlete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="glass-card max-w-md w-full p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center">
+                <Archive className="w-5 h-5 text-amber-400" />
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Archive Athlete</h2>
+            </div>
+            <p className="text-cyan-700 dark:text-white mb-4">
+              Archive <span className="font-bold text-slate-900 dark:text-white">{selectedAthlete.full_name}</span>?
+            </p>
+            <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl mb-6">
+              <p className="text-sm text-amber-300">
+                Their profile and all data will be preserved but hidden from the active roster.
+                You can restore them anytime from the Archived tab.
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setArchiveModalOpen(false)
+                  setSelectedAthlete(null)
+                }}
+                className="btn-ghost flex-1"
+                disabled={isProcessing}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleArchiveAthlete}
+                className="flex-1 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold transition-all"
+                disabled={isProcessing}
+              >
+                {isProcessing ? 'Archiving...' : 'Archive Athlete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Permanent Delete Confirmation Modal (master_admin only, archived athletes only) */}
       {deleteModalOpen && selectedAthlete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="glass-card max-w-md w-full p-6">
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Delete Athlete</h2>
-            <p className="text-cyan-700 dark:text-white mb-6">
-              Are you sure you want to delete <span className="font-bold text-slate-900 dark:text-white">{selectedAthlete.full_name}</span>?
-              This will permanently delete all their sessions, drills, and progress data. This action cannot be undone.
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-red-500/20 border border-red-500/30 flex items-center justify-center">
+                <AlertTriangle className="w-5 h-5 text-red-400" />
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Permanently Delete</h2>
+            </div>
+            <p className="text-cyan-700 dark:text-white mb-4">
+              Permanently delete <span className="font-bold text-slate-900 dark:text-white">{selectedAthlete.full_name}</span>?
             </p>
+            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl mb-6">
+              <p className="text-sm text-red-300">
+                This will permanently delete their account, all sessions, drills, progress data, and login credentials.
+                This action <strong>cannot be undone</strong>.
+              </p>
+            </div>
             <div className="flex gap-3">
               <button
                 onClick={() => {
@@ -885,7 +1077,7 @@ export default function AthletesManagementPage() {
                 className="flex-1 px-6 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold transition-all"
                 disabled={isProcessing}
               >
-                {isProcessing ? 'Deleting...' : 'Delete Athlete'}
+                {isProcessing ? 'Deleting...' : 'Delete Forever'}
               </button>
             </div>
           </div>

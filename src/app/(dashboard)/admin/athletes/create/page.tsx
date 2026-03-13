@@ -330,7 +330,7 @@ export default function CreateAthletePage() {
       {/* Info Box */}
       <div className="mt-6 p-4 rounded-xl bg-cyan/5 border border-cyan/20">
         <p className="text-sm text-cyan-700 dark:text-white">
-          <strong>Note:</strong> Athletes will receive a confirmation email and can change their password after first login.
+          <strong>Note:</strong> Athletes will receive a welcome email with a link to set their password. They can then log in and start booking sessions.
         </p>
       </div>
     </div>

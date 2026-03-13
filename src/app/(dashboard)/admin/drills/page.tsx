@@ -134,6 +134,7 @@ export default function DrillsManagementPage() {
           .from('profiles')
           .select('id, full_name, avatar_url')
           .eq('role', 'athlete')
+          .is('archived_at', null)
           .order('full_name')
 
         if (athletesError) throw athletesError

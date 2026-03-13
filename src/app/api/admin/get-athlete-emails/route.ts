@@ -3,15 +3,15 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 /**
- * GET /api/admin/get-athlete-emails
- * Returns athlete emails from auth.users (not accessible client-side)
+ * GET /api/admin/get-athlete-emails?ids=id1,id2,id3
+ * Returns athlete emails from profiles table (email column added in migration 020)
+ * Falls back to Supabase Auth admin API for any missing emails
  * Only accessible by coaches and admins
  */
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient()
 
-    // Check if user is authenticated and has coach/admin role
     const {
       data: { user },
       error: authError,
@@ -21,7 +21,6 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Check user role (use admin client to bypass RLS timing)
     const adminClient = createAdminClient()
     const { data: profile, error: profileError } = await adminClient
       .from('profiles')
@@ -37,20 +36,21 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
     }
 
-    // Get athlete IDs from request
     const searchParams = request.nextUrl.searchParams
-    const athleteIds = searchParams.get('ids')?.split(',') || []
+    const athleteIds = searchParams.get('ids')?.split(',').filter(Boolean) || []
 
     if (athleteIds.length === 0) {
       return NextResponse.json({ emails: {} })
     }
 
-    // Fetch emails from auth.users via service role
-    // Note: This requires using the service role client to access auth.users
-    const { data: profiles, error: fetchError } = await supabase
+    // Limit to 50 IDs per request to prevent abuse
+    const limitedIds = athleteIds.slice(0, 50)
+
+    // Fetch emails from profiles table (email column exists since migration 020)
+    const { data: profiles, error: fetchError } = await adminClient
       .from('profiles')
-      .select('id')
-      .in('id', athleteIds)
+      .select('id, email')
+      .in('id', limitedIds)
       .eq('role', 'athlete')
 
     if (fetchError) {
@@ -58,16 +58,36 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch profiles' }, { status: 500 })
     }
 
-    // Build email map (id -> email)
-    // Note: We need to fetch from auth.users which requires admin access
-    // For now, return a placeholder that shows this needs server-side implementation
     const emailMap: Record<string, string> = {}
+    const missingEmailIds: string[] = []
 
-    // TODO: Implement with Supabase Admin SDK or Edge Function
-    // For now, return empty map - coaches will need to contact athletes via other means
+    // First pass: get emails from profiles table
     profiles?.forEach(p => {
-      emailMap[p.id] = 'Email not available (contact support)' // Placeholder
+      if (p.email) {
+        emailMap[p.id] = p.email
+      } else {
+        missingEmailIds.push(p.id)
+      }
     })
+
+    // Second pass: for any profiles without email in the table, try auth admin API
+    if (missingEmailIds.length > 0) {
+      for (const id of missingEmailIds) {
+        try {
+          const { data: authUser } = await adminClient.auth.admin.getUserById(id)
+          if (authUser?.user?.email) {
+            emailMap[id] = authUser.user.email
+            // Backfill the email to profiles table for future queries
+            await adminClient
+              .from('profiles')
+              .update({ email: authUser.user.email })
+              .eq('id', id)
+          }
+        } catch {
+          // Skip silently — email not available for this user
+        }
+      }
+    }
 
     return NextResponse.json({ emails: emailMap })
   } catch (error: any) {

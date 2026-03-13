@@ -258,7 +258,7 @@ export default function AdminCoursesPage() {
   const openEnrollModal = async (course: Course) => {
     setEnrollCourse(course)
     setSelectedAthletes([])
-    const { data } = await supabase.from('profiles').select('id, full_name').eq('role', 'athlete').order('full_name')
+    const { data } = await supabase.from('profiles').select('id, full_name').eq('role', 'athlete').is('archived_at', null).order('full_name')
     setAthletes(data || [])
   }
 

@@ -134,6 +134,7 @@ export default function AdminDashboard() {
           .from('profiles')
           .select('*', { count: 'exact', head: true })
           .eq('role', 'athlete')
+          .is('archived_at', null)
 
         // Get upcoming sessions count (coaches see only their sessions)
         let sessionsQuery = supabase
@@ -738,6 +739,7 @@ function SimulationPanel() {
           .from('profiles')
           .select('id, full_name, email')
           .eq('role', 'athlete')
+          .is('archived_at', null)
           .order('full_name', { ascending: true })
 
         if (data) {

@@ -218,7 +218,7 @@ export default function AdminBookingsPage() {
     const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
 
     const [athleteRes, slotRes, serviceRes] = await Promise.all([
-      supabase.from('profiles').select('id, full_name').eq('role', 'athlete').order('full_name'),
+      supabase.from('profiles').select('id, full_name').eq('role', 'athlete').is('archived_at', null).order('full_name'),
       (() => {
         let query = supabase.from('available_slots').select('id, slot_date, start_time, end_time, location, service:service_id(name), coach:coach_id(full_name), current_bookings, max_bookings').eq('is_available', true).gte('slot_date', todayStr)
         // Coaches (and coach-impersonation view) only see their own slots; admins see all
