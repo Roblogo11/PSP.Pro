@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     const adminClient = createAdminClient()
 
     const body = await request.json()
-    const { serviceId, slotId, date, startTime, endTime, durationMinutes, location, coachId } = body
+    const { serviceId, slotId, date, startTime, endTime, durationMinutes, location, coachId, promoCode } = body
 
     if (!serviceId || !slotId || !date || !startTime || !endTime) {
       return NextResponse.json({ error: 'Missing required booking fields' }, { status: 400 })
@@ -88,7 +88,45 @@ export async function POST(request: NextRequest) {
       amountCents = Math.round(amountCents * 0.9)
     }
 
-    // Create booking with pending status
+    // Apply promo code discount
+    let promoApplied = false
+    let promoDiscountLabel = ''
+    let promoCodeId: string | null = null
+    if (promoCode) {
+      const { data: promo } = await adminClient
+        .from('promo_codes')
+        .select('*')
+        .eq('code', promoCode.toUpperCase().trim())
+        .eq('is_active', true)
+        .single()
+
+      if (promo) {
+        const now = new Date()
+        const notExpired = !promo.expires_at || new Date(promo.expires_at) > now
+        const notMaxedOut = !promo.max_uses || promo.current_uses < promo.max_uses
+        const meetsMinimum = amountCents >= (promo.min_amount_cents || 0)
+        const validType = promo.applies_to === 'all' || promo.applies_to === 'booking'
+
+        if (notExpired && notMaxedOut && meetsMinimum && validType) {
+          if (promo.discount_type === 'percentage') {
+            amountCents = Math.round(amountCents * (1 - promo.discount_value / 100))
+            promoDiscountLabel = `${promo.discount_value}% off`
+          } else {
+            amountCents = Math.max(0, amountCents - promo.discount_value)
+            promoDiscountLabel = `$${(promo.discount_value / 100).toFixed(2)} off`
+          }
+          promoApplied = true
+          promoCodeId = promo.id
+
+          // Increment promo usage
+          await adminClient.rpc('increment_promo_usage', { promo_id: promo.id })
+        }
+      }
+    }
+
+    const isFreeBooking = amountCents === 0
+
+    // Create booking — confirmed + paid if free (100% promo), otherwise pending
     const { data: booking, error: bookingError } = await adminClient
       .from('bookings')
       .insert({
@@ -101,13 +139,15 @@ export async function POST(request: NextRequest) {
         end_time: endTime,
         duration_minutes: durationMinutes || service.duration_minutes,
         location: location || slot.location,
-        status: 'pending',
+        status: isFreeBooking ? 'confirmed' : 'pending',
         amount_cents: amountCents,
-        payment_status: 'pending',
-        notes: 'Pay on site',
-        internal_notes: isElite
-          ? `Pay-on-site booking. Elite 10% discount applied (original: $${(service.price_cents / 100).toFixed(2)})`
-          : 'Athlete selected pay-on-site at booking',
+        payment_status: isFreeBooking ? 'paid' : 'pending',
+        notes: isFreeBooking ? `Free booking — promo code applied (${promoDiscountLabel})` : 'Pay on site',
+        internal_notes: [
+          isElite ? `Elite 10% discount applied (original: $${(service.price_cents / 100).toFixed(2)})` : null,
+          promoApplied ? `Promo code "${promoCode}" applied: ${promoDiscountLabel}` : null,
+          !isFreeBooking && !promoApplied ? 'Athlete selected pay-on-site at booking' : null,
+        ].filter(Boolean).join('. '),
       })
       .select('id')
       .single()
@@ -163,7 +203,7 @@ export async function POST(request: NextRequest) {
           startTime,
           endTime,
           location: location || slot.location || 'PSP.Pro Facility',
-          paymentMethod: 'on_site',
+          paymentMethod: isFreeBooking ? 'promo' : 'on_site',
         })
         await sendEmail({ to: coach.email, ...coachEmail })
       }

@@ -10,8 +10,10 @@ export default function BookingSuccessPage() {
   const sessionId = searchParams.get('session_id')
   const method = searchParams.get('method')
   const isOnSite = method === 'on_site'
+  const isPromo = method === 'promo'
+  const isDirectBooking = isOnSite || isPromo
 
-  const [loading, setLoading] = useState(!isOnSite)
+  const [loading, setLoading] = useState(!isDirectBooking)
   const [error, setError] = useState<string | null>(null)
   const [calendarUrl, setCalendarUrl] = useState<string | null>(null)
 
@@ -24,8 +26,8 @@ export default function BookingSuccessPage() {
   }, [])
 
   useEffect(() => {
-    // Pay on site — no Stripe verification needed
-    if (isOnSite) return
+    // Pay on site or 100% promo — no Stripe verification needed
+    if (isDirectBooking) return
 
     if (!sessionId) {
       setError('No session ID found. Please try booking again.')
@@ -50,7 +52,7 @@ export default function BookingSuccessPage() {
     }
 
     verifyPayment()
-  }, [sessionId, isOnSite])
+  }, [sessionId, isDirectBooking])
 
   if (loading) {
     return (
@@ -97,7 +99,9 @@ export default function BookingSuccessPage() {
             {isOnSite ? 'Booking Submitted!' : 'Booking Confirmed! 🎉'}
           </h1>
           <p className="text-lg text-cyan-700 dark:text-white mb-8">
-            {isOnSite
+            {isPromo
+              ? 'Your promo code has been applied — your session is booked at no charge!'
+              : isOnSite
               ? 'Your session is pending confirmation. Please bring payment to your session.'
               : 'Your training session has been successfully booked and paid for.'}
           </p>
@@ -106,7 +110,7 @@ export default function BookingSuccessPage() {
           <div className="bg-cyan-50/50 border border-cyan-200/40 rounded-xl p-6 mb-8 text-left">
             <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">What happens next?</h2>
             <ul className="space-y-3 text-sm text-cyan-700 dark:text-white">
-              {isOnSite ? (
+              {isOnSite && !isPromo ? (
                 <>
                   <li className="flex items-start gap-3">
                     <span className="w-6 h-6 bg-orange/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -201,7 +205,7 @@ export default function BookingSuccessPage() {
           </div>
 
           {/* Session ID */}
-          {sessionId && !isOnSite && (
+          {sessionId && !isDirectBooking && (
             <p className="text-xs text-cyan-800 dark:text-white mt-6">
               Confirmation ID: <span className="font-mono">{sessionId.slice(0, 20)}...</span>
             </p>

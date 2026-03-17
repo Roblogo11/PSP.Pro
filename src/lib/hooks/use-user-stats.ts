@@ -110,7 +110,7 @@ export function useUserStats(userId: string | undefined) {
         let nextSessionDate: Date | null = null
         if (upcomingSession) {
           const [hours, minutes] = upcomingSession.start_time.split(':')
-          nextSessionDate = new Date(upcomingSession.booking_date)
+          nextSessionDate = new Date(upcomingSession.booking_date + 'T00:00:00')
           nextSessionDate.setHours(parseInt(hours), parseInt(minutes))
         }
 

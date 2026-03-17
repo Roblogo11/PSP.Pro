@@ -113,6 +113,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Guard: $0 bookings should use the direct booking flow, not Stripe
+    if (finalPrice <= 0) {
+      return NextResponse.json(
+        { error: 'Total is $0 — please use the direct booking option instead of Stripe checkout.' },
+        { status: 400 }
+      )
+    }
+
     // Determine if we can do a split payment
     const connectAccount = coachConnectData?.data
     const canSplit = connectAccount?.charges_enabled && connectAccount?.stripe_account_id

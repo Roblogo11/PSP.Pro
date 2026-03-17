@@ -52,7 +52,7 @@ export function useUserSessions(userId: string | undefined) {
 
         // Transform bookings to UserSession format
         const transformedBookings: UserSession[] = (bookings || []).map((booking: any) => {
-          const sessionDate = new Date(booking.booking_date)
+          const sessionDate = new Date(booking.booking_date + 'T00:00:00')
           // Compare date-only (strip time) so today's sessions still show as upcoming
           const todayStr = new Date().toISOString().split('T')[0]
           const isUpcoming = booking.booking_date >= todayStr

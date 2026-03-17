@@ -461,7 +461,7 @@ export default function AthleteLockerPage() {
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {coachSessions.map((session) => {
-                const sessionDate = new Date(session.booking_date)
+                const sessionDate = new Date(session.booking_date + 'T00:00:00')
                 const formattedDate = sessionDate.toLocaleDateString('en-US', {
                   weekday: 'short', month: 'short', day: 'numeric',
                 })

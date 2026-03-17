@@ -505,7 +505,7 @@ export default function AdminDashboard() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {upcomingSessions.map((session) => {
-              const sessionDate = new Date(session.booking_date)
+              const sessionDate = new Date(session.booking_date + 'T00:00:00')
               const formattedDate = sessionDate.toLocaleDateString('en-US', {
                 weekday: 'short',
                 month: 'short',

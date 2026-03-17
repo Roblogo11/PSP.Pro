@@ -63,7 +63,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Check if session is in the past
-    const isPastSession = new Date(session.booking_date) < new Date()
+    const isPastSession = new Date(session.booking_date + 'T00:00:00') < new Date()
 
     // Master admins can delete any session
     if (profile.role === 'master_admin') {
@@ -203,7 +203,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const isPastSession = new Date(session.booking_date) < new Date()
+    const isPastSession = new Date(session.booking_date + 'T00:00:00') < new Date()
     const hasAthlete = !!session.athlete_id
     const isMasterAdmin = profile.role === 'master_admin'
 

@@ -167,7 +167,7 @@ export default function AnalyticsPage() {
 
         const monthlyMap: Record<string, number> = {}
         for (const b of (monthlyData || []).filter((b: any) => b.payment_status === 'paid')) {
-          const month = new Date(b.booking_date).toLocaleDateString('en-US', { month: 'short', year: '2-digit' })
+          const month = new Date(b.booking_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', year: '2-digit' })
           monthlyMap[month] = (monthlyMap[month] || 0) + (b.amount_cents || 0) / 100
         }
 
@@ -595,7 +595,7 @@ export default function AnalyticsPage() {
                       </p>
                       <p className="text-sm text-cyan-800 dark:text-white">
                         {booking.service?.name || 'Training Session'} &bull;{' '}
-                        {new Date(booking.booking_date).toLocaleDateString()}
+                        {new Date(booking.booking_date + 'T00:00:00').toLocaleDateString()}
                       </p>
                     </div>
                     <div className="text-right">

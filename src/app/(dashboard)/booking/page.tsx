@@ -314,8 +314,8 @@ export default function BookingPage() {
         throw new Error('Service or slot not found')
       }
 
-      if (paymentMethod === 'on_site') {
-        // Pay on site — create booking directly without Stripe
+      // Bypass Stripe when total is $0 (100% promo) or paying on site
+      if (paymentMethod === 'on_site' || getDisplayPrice() === 0) {
         const response = await fetch('/api/bookings/pay-on-site', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -329,6 +329,7 @@ export default function BookingPage() {
             location: slot.location,
             coachId: slot.coach_id,
             ...(orgId && { orgId }),
+            ...(getDisplayPrice() === 0 && promoResult?.valid && promoCode ? { promoCode: promoCode.trim() } : {}),
           }),
         })
 
@@ -338,7 +339,7 @@ export default function BookingPage() {
           throw new Error(data.error || 'Failed to create booking')
         }
 
-        router.push('/booking/success?method=on_site')
+        router.push(getDisplayPrice() === 0 ? '/booking/success?method=promo' : '/booking/success?method=on_site')
       } else {
         // Pay online — Stripe Checkout
         const response = await fetch('/api/stripe/checkout', {
