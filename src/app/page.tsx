@@ -48,22 +48,32 @@ export default function HomePage() {
   // Featured services from database — grouped dynamically by category
   const [featuredIndividual, setFeaturedIndividual] = useState<FeaturedService[]>([])
   const [featuredGroup, setFeaturedGroup] = useState<FeaturedService[]>([])
+  const [elitePriceCents, setElitePriceCents] = useState<number>(6000)
 
   useEffect(() => {
     const fetchFeatured = async () => {
       try {
         const supabase = createClient()
-        const { data, error } = await supabase
-          .from('services')
-          .select('id, name, description, duration_minutes, price_cents, category, max_participants, homepage_image_url, homepage_order')
-          .eq('featured_on_homepage', true)
-          .eq('is_active', true)
-          .order('homepage_order', { ascending: true })
+        const [{ data, error }, { data: tierData }] = await Promise.all([
+          supabase
+            .from('services')
+            .select('id, name, description, duration_minutes, price_cents, category, max_participants, homepage_image_url, homepage_order')
+            .eq('featured_on_homepage', true)
+            .eq('is_active', true)
+            .order('homepage_order', { ascending: true }),
+          supabase
+            .from('membership_tiers')
+            .select('price_cents')
+            .eq('slug', 'elite_membership')
+            .single(),
+        ])
 
         if (error) {
           console.error('Error fetching featured services:', error)
           return
         }
+
+        if (tierData?.price_cents) setElitePriceCents(tierData.price_cents)
 
         if (data) {
           // Non-group categories go to "individual" section, group categories go to "group" section
@@ -404,7 +414,7 @@ export default function HomePage() {
               <div className="p-8">
                 <h3 className="text-2xl font-display font-bold mb-2 text-white">Monthly Membership</h3>
                 <div className="mb-4">
-                  <span className="text-5xl font-bold text-gradient-orange">$30</span>
+                  <span className="text-5xl font-bold text-gradient-orange">${Math.round(elitePriceCents / 100)}</span>
                   <span className="text-white/80"> / mo</span>
                 </div>
                 <ul className="space-y-3 mb-6">

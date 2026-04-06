@@ -34,6 +34,7 @@ export default function PricingPage() {
   const [services, setServices] = useState<PricingService[]>(DEFAULT_SERVICES)
   const [packages, setPackages] = useState<PricingPackage[]>(DEFAULT_PACKAGES)
   const [loading, setLoading] = useState(true)
+  const [elitePriceCents, setElitePriceCents] = useState<number>(6000)
 
   // Member package state
   const [memberPackage, setMemberPackage] = useState<{
@@ -53,7 +54,7 @@ export default function PricingPage() {
       try {
         const supabase = createClient()
 
-        const [servicesRes, packagesRes] = await Promise.all([
+        const [servicesRes, packagesRes, tierRes] = await Promise.all([
           supabase
             .from('services')
             .select('id, name, description, duration_minutes, price_cents, category, max_participants, is_active, video_url')
@@ -64,6 +65,11 @@ export default function PricingPage() {
             .select('id, name, description, sessions_included, price_cents, validity_days, is_active')
             .eq('is_active', true)
             .order('sessions_included', { ascending: true }),
+          supabase
+            .from('membership_tiers')
+            .select('price_cents')
+            .eq('slug', 'elite_membership')
+            .single(),
         ])
 
         if (servicesRes.data && servicesRes.data.length > 0) {
@@ -71,6 +77,9 @@ export default function PricingPage() {
         }
         if (packagesRes.data && packagesRes.data.length > 0) {
           setPackages(packagesRes.data)
+        }
+        if (tierRes.data?.price_cents) {
+          setElitePriceCents(tierRes.data.price_cents)
         }
       } catch (err) {
         console.error('Error fetching pricing:', err)
@@ -257,7 +266,7 @@ export default function PricingPage() {
             <div className="absolute -top-3 right-4 px-3 py-0.5 bg-gradient-to-r from-orange to-orange/80 text-white text-xs font-bold rounded-full">Most Popular</div>
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white">Elite</h3>
-              <span className="text-2xl font-bold text-gradient-orange">$60<span className="text-sm font-normal text-slate-500 dark:text-white/50">/mo</span></span>
+              <span className="text-2xl font-bold text-gradient-orange">${Math.round(elitePriceCents / 100)}<span className="text-sm font-normal text-slate-500 dark:text-white/50">/mo</span></span>
             </div>
             <ul className="space-y-2 text-sm">
               {[

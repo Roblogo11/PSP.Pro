@@ -29,11 +29,15 @@ export default function MembershipsPage() {
   const [upgrading, setUpgrading] = useState(false)
   const [upgradeError, setUpgradeError] = useState<string | null>(null)
   const [showFaq, setShowFaq] = useState<number | null>(null)
+  const [elitePriceCents, setElitePriceCents] = useState<number>(6000)
 
   useEffect(() => {
     const checkAuth = async () => {
       const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
+      const [{ data: { user } }, { data: tierData }] = await Promise.all([
+        supabase.auth.getUser(),
+        supabase.from('membership_tiers').select('price_cents').eq('slug', 'elite_membership').single(),
+      ])
       if (user) {
         const { data: prof } = await supabase
           .from('profiles')
@@ -43,6 +47,7 @@ export default function MembershipsPage() {
         setProfile(prof)
         setCurrentTier(prof?.membership_tier || 'basic')
       }
+      if (tierData?.price_cents) setElitePriceCents(tierData.price_cents)
       setLoading(false)
     }
     checkAuth()
@@ -212,7 +217,7 @@ export default function MembershipsPage() {
                   <p className="text-sm text-slate-500 dark:text-white/50">Monthly subscription</p>
                 </div>
                 <div className="mb-8">
-                  <span className="text-5xl font-bold text-slate-900 dark:text-white">$60</span>
+                  <span className="text-5xl font-bold text-slate-900 dark:text-white">${Math.round(elitePriceCents / 100)}</span>
                   <span className="text-slate-500 dark:text-white/50">/month</span>
                 </div>
 
