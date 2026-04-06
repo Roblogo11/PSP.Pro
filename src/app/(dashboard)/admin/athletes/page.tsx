@@ -140,60 +140,55 @@ export default function AthletesManagementPage() {
 
         setAthletes(athletesWithSchema)
 
-        // Load stats for each athlete from real performance metrics
+        // Load stats for all athletes in 4 bulk queries instead of N×5 queries
         if (athletesData && athletesData.length > 0) {
+          const athleteIds = athletesData.map((a: any) => a.id)
+
+          const [
+            { data: bookingsData },
+            { data: metricsData },
+            { data: assignedData },
+          ] = await Promise.all([
+            supabase
+              .from('bookings')
+              .select('athlete_id')
+              .in('athlete_id', athleteIds)
+              .eq('status', 'completed'),
+            supabase
+              .from('athlete_performance_metrics')
+              .select('athlete_id, throwing_velocity_mph, throwing_velocity_avg_mph')
+              .in('athlete_id', athleteIds),
+            supabase
+              .from('assigned_drills')
+              .select('user_id, completed')
+              .in('user_id', athleteIds),
+          ])
+
           const statsMap: Record<string, AthleteStats> = {}
 
           for (const athlete of athletesData) {
-            // Get total sessions from bookings
-            const { count: sessionCount } = await supabase
-              .from('bookings')
-              .select('*', { count: 'exact', head: true })
-              .eq('athlete_id', athlete.id)
-              .eq('status', 'completed')
+            const id = athlete.id
 
-            // Get performance metrics
-            const { data: metricsData } = await supabase
-              .from('athlete_performance_metrics')
-              .select('throwing_velocity_mph, throwing_velocity_avg_mph')
-              .eq('athlete_id', athlete.id)
-              .order('test_date', { ascending: false })
-              .limit(10)
+            const sessions = (bookingsData || []).filter((b: any) => b.athlete_id === id)
+            const metrics = (metricsData || []).filter((m: any) => m.athlete_id === id)
+            const drills = (assignedData || []).filter((d: any) => d.user_id === id)
 
-            const avgVelocity = metricsData && metricsData.length > 0
-              ? metricsData.reduce((sum: number, v: any) => sum + (v.throwing_velocity_avg_mph || v.throwing_velocity_mph || 0), 0) / metricsData.length
+            const velocities = metrics
+              .map((v: any) => v.throwing_velocity_avg_mph || v.throwing_velocity_mph || 0)
+              .filter((v: number) => v > 0)
+
+            const avgVelocity = velocities.length > 0
+              ? velocities.reduce((s: number, v: number) => s + v, 0) / velocities.length
               : null
+            const maxVelocity = velocities.length > 0 ? Math.max(...velocities) : null
 
-            const maxVelocity = metricsData && metricsData.length > 0
-              ? Math.max(...metricsData.map((v: any) => v.throwing_velocity_mph || 0).filter((v: number) => v > 0))
-              : null
-
-            // Get total metrics count
-            const { count: metricsCount } = await supabase
-              .from('athlete_performance_metrics')
-              .select('*', { count: 'exact', head: true })
-              .eq('athlete_id', athlete.id)
-
-            // Get assigned drills count
-            const { count: assignedCount } = await supabase
-              .from('assigned_drills')
-              .select('*', { count: 'exact', head: true })
-              .eq('user_id', athlete.id)
-
-            // Get pending (not completed) drills
-            const { count: pendingCount } = await supabase
-              .from('assigned_drills')
-              .select('*', { count: 'exact', head: true })
-              .eq('user_id', athlete.id)
-              .eq('completed', false)
-
-            statsMap[athlete.id] = {
-              total_sessions: sessionCount || 0,
-              drills_completed: metricsCount || 0,
+            statsMap[id] = {
+              total_sessions: sessions.length,
+              drills_completed: metrics.length,
               avg_velocity: avgVelocity ? parseFloat(avgVelocity.toFixed(1)) : null,
               max_velocity: maxVelocity ? parseFloat(maxVelocity.toFixed(1)) : null,
-              assigned_drills: assignedCount || 0,
-              pending_drills: pendingCount || 0,
+              assigned_drills: drills.length,
+              pending_drills: drills.filter((d: any) => !d.completed).length,
             }
           }
 
