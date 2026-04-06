@@ -212,7 +212,7 @@ export default function MembershipsPage() {
                   <p className="text-sm text-slate-500 dark:text-white/50">Monthly subscription</p>
                 </div>
                 <div className="mb-8">
-                  <span className="text-5xl font-bold text-slate-900 dark:text-white">$30</span>
+                  <span className="text-5xl font-bold text-slate-900 dark:text-white">$60</span>
                   <span className="text-slate-500 dark:text-white/50">/month</span>
                 </div>
 

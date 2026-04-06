@@ -24,6 +24,9 @@ import {
   Dumbbell,
   FileBarChart,
   Loader2,
+  Pencil,
+  Mail,
+  Phone,
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -144,6 +147,7 @@ interface AthleteProfile {
   id: string
   full_name: string
   email: string | null
+  phone: string | null
   athlete_type: string | null
   age: number | null
   avatar_url: string | null
@@ -214,6 +218,52 @@ export default function AthleteDetailPage() {
 
   // Send progress report
   const [sendingReport, setSendingReport] = useState(false)
+
+  // Edit athlete profile
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [editName, setEditName] = useState('')
+  const [editChildName, setEditChildName] = useState('')
+  const [editPhone, setEditPhone] = useState('')
+  const [editSaving, setEditSaving] = useState(false)
+
+  const openEditModal = () => {
+    if (!athlete) return
+    setEditName(athlete.full_name || '')
+    setEditChildName(athlete.child_name || '')
+    setEditPhone(athlete.phone || '')
+    setShowEditModal(true)
+  }
+
+  const handleSaveProfile = async () => {
+    if (!athlete || editSaving) return
+    setEditSaving(true)
+    try {
+      const res = await fetch('/api/admin/update-athlete', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          athlete_id: athlete.id,
+          full_name: editName.trim() || undefined,
+          child_name: athlete.account_type === 'parent_guardian' ? (editChildName.trim() || null) : undefined,
+          phone: editPhone.trim() || null,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to update')
+      setAthlete(prev => prev ? {
+        ...prev,
+        full_name: editName.trim() || prev.full_name,
+        child_name: athlete.account_type === 'parent_guardian' ? (editChildName.trim() || null) : prev.child_name,
+        phone: editPhone.trim() || null,
+      } : prev)
+      setShowEditModal(false)
+      toastSuccess('Profile updated')
+    } catch (err: any) {
+      toastError(err.message || 'Failed to update profile')
+    } finally {
+      setEditSaving(false)
+    }
+  }
 
   const handleSendProgressReport = async () => {
     if (sendingReport || !athleteId) return
@@ -548,24 +598,43 @@ export default function AthleteDetailPage() {
             </h1>
             {athlete.account_type === 'parent_guardian' && (
               <p className="text-sm text-purple-400 mb-1">
-                Managed by {athlete.full_name} ({athlete.email})
+                Parent account: {athlete.full_name}
               </p>
             )}
             <div className="flex items-center gap-4 text-cyan-800 dark:text-white flex-wrap">
               <span>{athlete.athlete_type || 'Athlete'}</span>
               {athlete.age && <span>Age: {athlete.age}</span>}
-              {athlete.account_type !== 'parent_guardian' && athlete.email && (
-                <span className="hidden md:inline">{athlete.email}</span>
-              )}
               {athlete.account_type === 'parent_guardian' && (
                 <span className="inline-block px-2 py-1 bg-purple-500/20 border border-purple-500/30 rounded-lg text-xs text-purple-400 font-semibold">
                   Parent Account
                 </span>
               )}
             </div>
+            {/* Contact info — always visible to coach/admin */}
+            <div className="flex flex-col gap-1 mt-3">
+              {athlete.email && (
+                <a href={`mailto:${athlete.email}`} className="flex items-center gap-2 text-sm text-cyan-700 dark:text-cyan-300 hover:underline">
+                  <Mail className="w-3.5 h-3.5" />
+                  {athlete.email}
+                </a>
+              )}
+              {athlete.phone && (
+                <a href={`tel:${athlete.phone}`} className="flex items-center gap-2 text-sm text-cyan-700 dark:text-cyan-300 hover:underline">
+                  <Phone className="w-3.5 h-3.5" />
+                  {athlete.phone}
+                </a>
+              )}
+            </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
+            <button
+              onClick={openEditModal}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-cyan-300/40 dark:border-white/10 bg-white/60 dark:bg-white/5 text-cyan-800 dark:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-white/10 transition-all text-sm font-semibold"
+            >
+              <Pencil className="w-4 h-4" />
+              Edit Profile
+            </button>
             <button
               onClick={handleSendProgressReport}
               disabled={sendingReport}
@@ -1036,6 +1105,88 @@ export default function AthleteDetailPage() {
           </div>
         )}
       </div>
+
+      {/* Edit Profile Modal */}
+      {showEditModal && athlete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="w-full max-w-md command-panel rounded-2xl p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white">Edit Athlete Profile</h2>
+              <button onClick={() => setShowEditModal(false)} className="p-2 rounded-lg hover:bg-white/10">
+                <X className="w-5 h-5 text-slate-500 dark:text-white/50" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {athlete.account_type === 'parent_guardian' ? (
+                <>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-500 dark:text-white/50 uppercase mb-1">Athlete Name (Child)</label>
+                    <input
+                      type="text"
+                      value={editChildName}
+                      onChange={e => setEditChildName(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-slate-900 dark:text-white text-sm"
+                      placeholder="Child's name"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-500 dark:text-white/50 uppercase mb-1">Parent / Guardian Name</label>
+                    <input
+                      type="text"
+                      value={editName}
+                      onChange={e => setEditName(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-slate-900 dark:text-white text-sm"
+                      placeholder="Parent name"
+                    />
+                  </div>
+                </>
+              ) : (
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 dark:text-white/50 uppercase mb-1">Full Name</label>
+                  <input
+                    type="text"
+                    value={editName}
+                    onChange={e => setEditName(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-slate-900 dark:text-white text-sm"
+                    placeholder="Athlete name"
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 dark:text-white/50 uppercase mb-1">Phone</label>
+                <input
+                  type="tel"
+                  value={editPhone}
+                  onChange={e => setEditPhone(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-slate-900 dark:text-white text-sm"
+                  placeholder="(555) 000-0000"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 dark:text-white/50 uppercase mb-1">Email (read-only)</label>
+                <p className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-400 dark:text-white/40 text-sm">{athlete.email || '—'}</p>
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <button onClick={() => setShowEditModal(false)} className="flex-1 py-2.5 rounded-xl border border-white/10 text-slate-600 dark:text-white/60 hover:bg-white/5 text-sm font-semibold">
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveProfile}
+                disabled={editSaving}
+                className="flex-1 btn-primary flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {editSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                {editSaving ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
