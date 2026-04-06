@@ -918,6 +918,21 @@ html:not(.dark) .home-page .command-panel .text-purple-400 {
   }
 }
 
+/* ─── Dashboard Layout Fix ───────────────────────────────────── */
+/* main#dashboard-main is the scroll container (h-[100dvh] overflow-y-auto).
+   Pages use min-h-screen inside it — that's fine for tall pages.
+   This ensures no child can overflow horizontally out of the main panel. */
+#dashboard-main {
+  /* Prevent any child from bleeding outside the scroll container */
+  contain: inline-size;
+}
+
+/* Tables inside dashboard must scroll horizontally within their card,
+   not push the page wider */
+#dashboard-main table {
+  min-width: 0;
+}
+
 /* ─── Print Styles (PDF Export) ─────────────────────────────── */
 @media print {
   /* Hide everything except the printable report */
