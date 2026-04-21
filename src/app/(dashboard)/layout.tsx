@@ -38,7 +38,7 @@ export default async function DashboardLayout({
 
     // Check user role — prefer admin client (bypasses RLS timing), fall back to regular client
     let profile: { role: string } | null = null
-    const hasServiceKey = !!process.env.SUPABASE_SERVICE_ROLE_KEY
+    const hasServiceKey = !!process.env.SUPABASE_SECRET_KEY
     if (hasServiceKey) {
       const adminClient = createAdminClient()
       const { data } = await adminClient
