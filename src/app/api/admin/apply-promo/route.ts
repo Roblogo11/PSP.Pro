@@ -126,22 +126,31 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Update booking
-    const { error: updateError } = await adminClient
+    // Update booking. promo_code column added in migration 057;
+    // if it's missing, retry without it (the discount + audit note still apply).
+    const baseUpdate: Record<string, unknown> = {
+      amount_cents: newAmount,
+      internal_notes: [
+        `Promo "${promo.code}" applied by ${profile.role} (-$${(discountCents / 100).toFixed(2)})`,
+        refundId ? `Stripe refund: ${refundId}` : null,
+      ].filter(Boolean).join(' | '),
+    }
+
+    let updateResult = await adminClient
       .from('bookings')
-      .update({
-        amount_cents: newAmount,
-        promo_code: promo.code,
-        internal_notes: [
-          // preserve existing internal notes — we're appending
-          `Promo "${promo.code}" applied by ${profile.role} (-$${(discountCents / 100).toFixed(2)})`,
-          refundId ? `Stripe refund: ${refundId}` : null,
-        ].filter(Boolean).join(' | '),
-      })
+      .update({ ...baseUpdate, promo_code: promo.code })
       .eq('id', booking_id)
 
-    if (updateError) {
-      return NextResponse.json({ error: `Failed to update booking: ${updateError.message}` }, { status: 500 })
+    if (updateResult.error?.message?.includes('promo_code')) {
+      console.warn('apply-promo: promo_code column missing (migration 057 pending), retrying without it')
+      updateResult = await adminClient
+        .from('bookings')
+        .update(baseUpdate)
+        .eq('id', booking_id)
+    }
+
+    if (updateResult.error) {
+      return NextResponse.json({ error: `Failed to update booking: ${updateResult.error.message}` }, { status: 500 })
     }
 
     // Increment promo usage

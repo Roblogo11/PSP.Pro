@@ -173,32 +173,62 @@ export async function POST(request: NextRequest) {
       promoApplied ? `Promo: ${promoApplied.code} (-$${(promoApplied.discount_cents / 100).toFixed(2)})` : null,
     ].filter(Boolean).join(' | ')
 
-    const { data: booking, error: bookingError } = await adminClient
+    // Build the insert payload. `child_id` only exists after migration 057;
+    // if Postgres complains about it, retry without it.
+    const baseInsert: Record<string, unknown> = {
+      athlete_id,
+      coach_id: slot.coach_id,
+      service_id,
+      slot_id,
+      booking_date: slot.slot_date,
+      start_time: slot.start_time,
+      end_time: slot.end_time,
+      duration_minutes: service.duration_minutes,
+      location: slot.location,
+      status: 'confirmed', // admin-created bookings are auto-confirmed
+      amount_cents: amountCents,
+      payment_status: paymentStatus,
+      notes: notes || `Booked by staff (${payment_method})`,
+      internal_notes: internalNote,
+      promo_code: promoApplied?.code || null,
+    }
+
+    // Strip optional fields if their columns don't exist yet
+    const stripIfMissing = (obj: Record<string, unknown>, key: string) => {
+      const next = { ...obj }
+      delete next[key]
+      return next
+    }
+
+    let bookingResult = await adminClient
       .from('bookings')
-      .insert({
-        athlete_id,
-        coach_id: slot.coach_id,
-        service_id,
-        slot_id,
-        child_id: resolvedChildId,
-        booking_date: slot.slot_date,
-        start_time: slot.start_time,
-        end_time: slot.end_time,
-        duration_minutes: service.duration_minutes,
-        location: slot.location,
-        status: 'confirmed', // admin-created bookings are auto-confirmed
-        amount_cents: amountCents,
-        payment_status: paymentStatus,
-        notes: notes || `Booked by staff (${payment_method})`,
-        internal_notes: internalNote,
-        promo_code: promoApplied?.code || null,
-      })
+      .insert({ ...baseInsert, child_id: resolvedChildId })
       .select('id')
       .single()
 
-    if (bookingError) {
+    if (bookingResult.error?.message?.includes('child_id')) {
+      console.warn('create-booking: child_id column missing (migration 057 pending), retrying without it')
+      bookingResult = await adminClient
+        .from('bookings')
+        .insert(baseInsert)
+        .select('id')
+        .single()
+    }
+    if (bookingResult.error?.message?.includes('promo_code')) {
+      console.warn('create-booking: promo_code column missing (migration 057 pending), retrying without it')
+      bookingResult = await adminClient
+        .from('bookings')
+        .insert(stripIfMissing(baseInsert, 'promo_code'))
+        .select('id')
+        .single()
+    }
+
+    const booking = bookingResult.data
+    const bookingError = bookingResult.error
+
+    if (bookingError || !booking) {
       console.error('Booking creation error:', bookingError)
-      return NextResponse.json({ error: `Failed to create booking: ${bookingError.message}` }, { status: 500 })
+      return NextResponse.json({ error: `Failed to create booking: ${bookingError?.message || 'unknown'}` }, { status: 500 })
     }
 
     // Slot count is handled by the BEFORE INSERT trigger (handle_booking_count)

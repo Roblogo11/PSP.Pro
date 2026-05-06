@@ -153,23 +153,40 @@ export default function AdminBookingsPage() {
   const fetchBookings = async () => {
     setLoading(true)
 
-    let query = supabase
-      .from('bookings')
-      .select(`
+    // Try the multi-child-aware query first; fall back if migration 057 hasn't run
+    // (child_id column won't exist → Postgres will 400). This keeps the bookings
+    // list working in environments where the migration is still pending.
+    const baseSelect = `
+        *,
+        athlete:athlete_id (full_name, account_type, child_name),
+        coach:coach_id (full_name),
+        service:service_id (name)
+      `
+    const withChildSelect = `
         *,
         athlete:athlete_id (full_name, account_type, child_name),
         child:child_id (child_name),
         coach:coach_id (full_name),
         service:service_id (name)
-      `)
-      .order('booking_date', { ascending: false })
-      .order('start_time', { ascending: false })
+      `
 
-    if (filter !== 'all') {
-      query = query.eq('status', filter)
+    const buildQuery = (sel: string) => {
+      let q = supabase
+        .from('bookings')
+        .select(sel)
+        .order('booking_date', { ascending: false })
+        .order('start_time', { ascending: false })
+      if (filter !== 'all') q = q.eq('status', filter)
+      return q
     }
 
-    const { data, error } = await query
+    let { data, error } = await buildQuery(withChildSelect)
+    if (error) {
+      console.warn('Bookings: child_id select failed (migration 057 may be pending), retrying without it:', error.message)
+      const fallback = await buildQuery(baseSelect)
+      data = fallback.data
+      error = fallback.error
+    }
 
     if (data) {
       setBookings(data)

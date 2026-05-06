@@ -45,6 +45,13 @@ ALTER TABLE bookings
 
 CREATE INDEX IF NOT EXISTS idx_bookings_child ON bookings(child_id);
 
+-- ── Bookings: promo_code column ───────────────────────────────────
+-- Tracks which promo code was applied (admin can apply to existing bookings;
+-- new bookings can also be created with one). Stored as the upper-case promo
+-- string for reporting/audit; the live promo_codes table is the source of truth.
+ALTER TABLE bookings
+  ADD COLUMN IF NOT EXISTS promo_code TEXT;
+
 -- ── Metrics: track which child the metrics are for ────────────────
 ALTER TABLE athlete_performance_metrics
   ADD COLUMN IF NOT EXISTS child_id UUID REFERENCES parent_children(id) ON DELETE SET NULL;
