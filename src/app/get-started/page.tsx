@@ -75,10 +75,11 @@ export default function GetStartedPage() {
 
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
+            <label htmlFor="gs-firstName" className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
               First Name *
             </label>
             <input
+              id="gs-firstName"
               type="text"
               value={formData.firstName}
               onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
@@ -88,10 +89,11 @@ export default function GetStartedPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
+            <label htmlFor="gs-lastName" className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
               Last Name *
             </label>
             <input
+              id="gs-lastName"
               type="text"
               value={formData.lastName}
               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
@@ -101,11 +103,12 @@ export default function GetStartedPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2 flex items-center gap-2">
+            <label htmlFor="gs-email" className="block text-sm font-semibold text-slate-600 dark:text-white mb-2 flex items-center gap-2">
               <Mail className="w-4 h-4" />
               Email Address *
             </label>
             <input
+              id="gs-email"
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -115,11 +118,12 @@ export default function GetStartedPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2 flex items-center gap-2">
+            <label htmlFor="gs-phone" className="block text-sm font-semibold text-slate-600 dark:text-white mb-2 flex items-center gap-2">
               <Phone className="w-4 h-4" />
               Phone Number *
             </label>
             <input
+              id="gs-phone"
               type="tel"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -129,10 +133,11 @@ export default function GetStartedPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
+            <label htmlFor="gs-age" className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
               Age *
             </label>
             <input
+              id="gs-age"
               type="number"
               value={formData.age}
               onChange={(e) => setFormData({ ...formData, age: e.target.value })}
@@ -142,10 +147,11 @@ export default function GetStartedPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
+            <label htmlFor="gs-position" className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
               Sport / Position *
             </label>
             <select
+              id="gs-position"
               value={formData.position}
               onChange={(e) => setFormData({ ...formData, position: e.target.value })}
               className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
@@ -202,10 +208,11 @@ export default function GetStartedPage() {
         </div>
 
         <div className="mb-6">
-          <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
+          <label htmlFor="gs-experience" className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
             Experience Level *
           </label>
           <select
+            id="gs-experience"
             value={formData.experience}
             onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
             className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
@@ -266,10 +273,11 @@ export default function GetStartedPage() {
         </div>
 
         <div className="mb-6">
-          <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
+          <label htmlFor="gs-availability" className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
             Preferred Training Days *
           </label>
           <select
+            id="gs-availability"
             value={formData.availability}
             onChange={(e) => setFormData({ ...formData, availability: e.target.value })}
             className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white focus:border-orange focus:outline-none transition-colors"
@@ -284,10 +292,11 @@ export default function GetStartedPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
+          <label htmlFor="gs-additionalInfo" className="block text-sm font-semibold text-slate-600 dark:text-white mb-2">
             Additional Information
           </label>
           <textarea
+            id="gs-additionalInfo"
             value={formData.additionalInfo}
             onChange={(e) => setFormData({ ...formData, additionalInfo: e.target.value })}
             rows={4}

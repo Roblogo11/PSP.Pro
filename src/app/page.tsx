@@ -164,11 +164,11 @@ export default function HomePage() {
           </div>
 
           {/* Main Headline */}
-          <h2 className="text-3xl sm:text-5xl md:text-7xl font-display font-bold mb-6 leading-tight text-white">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-display font-bold mb-6 leading-tight text-white">
             Train Like a Pro.
             <br />
             <span className="text-gradient-orange">Perform Like a Champion.</span>
-          </h2>
+          </h1>
 
           <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto" style={{ color: '#ffffff' }}>
             Elite softball, basketball, and soccer training based in Chesapeake, VA. Master mechanics, build speed,

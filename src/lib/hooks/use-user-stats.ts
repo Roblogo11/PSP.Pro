@@ -122,7 +122,7 @@ export function useUserStats(userId: string | undefined) {
             date: new Date(v.test_date),
             value: (v.throwing_velocity_mph ?? v.exit_velocity_mph) as number | null,
           }))
-          .filter((v) => typeof v.value === 'number')
+          .filter((v: { date: Date; value: number | null }) => typeof v.value === 'number')
           .reverse() as Array<{ date: Date; value: number }>
 
         setStats({

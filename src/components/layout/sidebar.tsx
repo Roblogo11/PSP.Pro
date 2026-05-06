@@ -241,9 +241,9 @@ export function Sidebar() {
                     <Zap className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h1 className="font-display text-lg font-bold text-slate-800 dark:text-white group-hover:text-orange transition-colors">
+                    <span className="font-display text-lg font-bold text-slate-800 dark:text-white group-hover:text-orange transition-colors block">
                       PSP.Pro
-                    </h1>
+                    </span>
                     <p className="text-xs text-cyan-700 dark:text-white">PSP.Pro</p>
                   </div>
                 </motion.div>
