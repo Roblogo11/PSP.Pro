@@ -101,6 +101,9 @@ export default function AdminBookingsPage() {
   const [editNotes, setEditNotes] = useState({ coach_notes: '', internal_notes: '' })
   const [editSubmitting, setEditSubmitting] = useState(false)
   const [editSuccess, setEditSuccess] = useState<string | null>(null)
+  const [promoInput, setPromoInput] = useState('')
+  const [promoSubmitting, setPromoSubmitting] = useState(false)
+  const [promoMsg, setPromoMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null)
 
   // Book for athlete modal
   const [showBookForAthlete, setShowBookForAthlete] = useState(false)
@@ -154,7 +157,8 @@ export default function AdminBookingsPage() {
       .from('bookings')
       .select(`
         *,
-        athlete:athlete_id (full_name),
+        athlete:athlete_id (full_name, account_type, child_name),
+        child:child_id (child_name),
         coach:coach_id (full_name),
         service:service_id (name)
       `)
@@ -182,6 +186,8 @@ export default function AdminBookingsPage() {
       internal_notes: booking.internal_notes || '',
     })
     setEditSuccess(null)
+    setPromoInput('')
+    setPromoMsg(null)
   }
 
   // Save booking edits (notes + status)
@@ -207,6 +213,43 @@ export default function AdminBookingsPage() {
     setEditSuccess('Booking updated!')
     fetchBookings()
     setTimeout(() => { setEditBooking(null); setEditSuccess(null) }, 1500)
+  }
+
+  const handleApplyPromo = async () => {
+    if (!editBooking || !promoInput.trim()) return
+    setPromoSubmitting(true)
+    setPromoMsg(null)
+    try {
+      const res = await fetch('/api/admin/apply-promo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          booking_id: editBooking.id,
+          promo_code: promoInput.trim(),
+          // For paid (Stripe) bookings, default to issuing the partial refund.
+          // For pay-on-site / pending, no refund needed.
+          refund_difference: editBooking.payment_status === 'paid',
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to apply promo')
+
+      const refundLine = data.refund_id
+        ? ` Refund issued: $${(data.discount_cents / 100).toFixed(2)}.`
+        : ''
+      setPromoMsg({
+        type: 'ok',
+        text: `Applied "${data.promo_code}" — saved $${(data.discount_cents / 100).toFixed(2)}. New total: $${(data.new_amount_cents / 100).toFixed(2)}.${refundLine}`,
+      })
+      setPromoInput('')
+      fetchBookings()
+      // Update local editBooking copy so the modal reflects new amount immediately
+      setEditBooking((prev: any) => prev ? { ...prev, amount_cents: data.new_amount_cents, promo_code: data.promo_code } : prev)
+    } catch (err: any) {
+      setPromoMsg({ type: 'err', text: err.message || 'Failed to apply promo' })
+    } finally {
+      setPromoSubmitting(false)
+    }
   }
 
   // Fetch data for book-for-athlete modal
@@ -404,6 +447,20 @@ export default function AdminBookingsPage() {
     const ampm = hour >= 12 ? 'PM' : 'AM'
     const formattedHour = hour % 12 || 12
     return `${formattedHour}:${minutes} ${ampm}`
+  }
+
+  // Display name for athlete on the schedule.
+  // For parent_guardian accounts, prefer the child's name (so coach sees the player, not the parent).
+  const getDisplayName = (booking: any): string => {
+    const childOnBooking = booking?.child?.child_name
+    const parentChildFallback = booking?.athlete?.account_type === 'parent_guardian' ? booking?.athlete?.child_name : null
+    return (
+      childOnBooking ||
+      parentChildFallback ||
+      booking?.athlete?.full_name ||
+      booking?.athlete_name ||
+      'Unknown'
+    )
   }
 
   const getStatusColor = (status: string) => {
@@ -747,7 +804,12 @@ export default function AdminBookingsPage() {
                               <div className="flex items-center gap-1.5 min-w-0">
                                 <User className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
                                 <span className="text-sm text-slate-800 dark:text-slate-200 truncate">
-                                  {booking.athlete?.full_name || booking.athlete_name || 'Unknown'}
+                                  {getDisplayName(booking)}
+                                  {booking.athlete?.account_type === 'parent_guardian' && booking.athlete?.full_name && (
+                                    <span className="text-xs text-slate-500 dark:text-slate-400 ml-1">
+                                      (parent: {booking.athlete.full_name})
+                                    </span>
+                                  )}
                                 </span>
                               </div>
                               <span className={`text-xs font-semibold flex-shrink-0 ${getPaymentStatusColor(booking.payment_status)}`}>
@@ -1018,7 +1080,10 @@ export default function AdminBookingsPage() {
                     <tr key={booking.id} className="border-b border-white/5 hover:bg-cyan-50/50 transition-colors">
                       <td className="py-4 px-4">
                         <div>
-                          <p className="text-sm font-semibold text-slate-900 dark:text-white">{booking.athlete?.full_name}</p>
+                          <p className="text-sm font-semibold text-slate-900 dark:text-white">{getDisplayName(booking)}</p>
+                          {booking.athlete?.account_type === 'parent_guardian' && booking.athlete?.full_name && (
+                            <p className="text-xs text-cyan-700 dark:text-cyan-300/70">parent: {booking.athlete.full_name}</p>
+                          )}
                         </div>
                       </td>
                       <td className="py-4 px-4">
@@ -1186,6 +1251,48 @@ export default function AdminBookingsPage() {
                 </p>
               </div>
             </div>
+
+            {/* Apply Promo */}
+            {editBooking.status !== 'cancelled' && (
+              <div className="mb-4 p-3 rounded-xl bg-orange/5 border border-orange/20">
+                <p className="text-xs font-semibold text-orange mb-2">Apply Promo Code</p>
+                {editBooking.promo_code ? (
+                  <p className="text-xs text-cyan-700 dark:text-white/70">
+                    Already applied: <span className="font-semibold">{editBooking.promo_code}</span>
+                  </p>
+                ) : (
+                  <>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={promoInput}
+                        onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
+                        placeholder="PROMO2026"
+                        className="flex-1 px-3 py-2 rounded-lg bg-white dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 text-slate-900 dark:text-white text-sm uppercase"
+                      />
+                      <button
+                        onClick={handleApplyPromo}
+                        disabled={promoSubmitting || !promoInput.trim()}
+                        className="px-4 py-2 rounded-lg bg-orange/20 text-orange hover:bg-orange/30 text-xs font-semibold disabled:opacity-50 flex items-center gap-1.5"
+                      >
+                        {promoSubmitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                        Apply
+                      </button>
+                    </div>
+                    {editBooking.payment_status === 'paid' && (
+                      <p className="text-[11px] text-cyan-700 dark:text-white/50 mt-1.5">
+                        This booking is already paid via Stripe — applying a promo will issue a partial refund for the difference.
+                      </p>
+                    )}
+                    {promoMsg && (
+                      <p className={`text-[11px] mt-2 ${promoMsg.type === 'ok' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                        {promoMsg.text}
+                      </p>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
 
             {/* Editable Notes */}
             <div className="space-y-4">

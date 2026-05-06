@@ -182,16 +182,21 @@ export default function InvitePage() {
 
             <div>
               <label className="block text-sm font-semibold text-white/70 mb-1.5">
-                {underThirteen ? 'Parent/Guardian Name' : 'Full Name'}
+                {underThirteen ? 'Parent/Guardian Name' : 'Athlete’s Full Name'}
               </label>
               <input
                 type="text"
                 value={fullName}
                 onChange={e => setFullName(e.target.value)}
-                placeholder={underThirteen ? 'Parent/Guardian name' : 'Jane Smith'}
+                placeholder={underThirteen ? 'Parent/Guardian name' : "Player's full name"}
                 required
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:border-orange focus:outline-none transition-colors"
               />
+              {!underThirteen && (
+                <p className="mt-1.5 text-xs text-white/50">
+                  Enter the athlete&apos;s name — not the parent&apos;s. This is what your coach sees on the schedule.
+                </p>
+              )}
             </div>
 
             <div>

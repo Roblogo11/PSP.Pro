@@ -46,3 +46,6 @@ next-env.d.ts
 /public/media/**/*.avi
 /public/media/**/*.webm
 !/public/media/**/metadata.json
+
+# Playwright MCP local browser data
+.playwright-mcp/

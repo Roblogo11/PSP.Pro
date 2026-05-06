@@ -32,18 +32,17 @@ export const SPORT_METRICS: Record<string, MetricDef[]> = {
     { key: 'infield_velocity', label: 'Infield Velocity', unit: 'mph', jsonKey: true },
     // Pitcher Velocity by pitch type
     { key: 'velo_fastball', label: 'Fastball Velocity', unit: 'mph', jsonKey: true },
-    { key: 'velo_changeup', label: 'Change Up Velocity', unit: 'mph', jsonKey: true },
-    { key: 'velo_offspeed', label: 'Off Speed Velocity', unit: 'mph', jsonKey: true },
-    { key: 'velo_curveball', label: 'Curve Ball Velocity', unit: 'mph', jsonKey: true },
-    { key: 'velo_screwball', label: 'Screw Ball Velocity', unit: 'mph', jsonKey: true },
+    { key: 'velo_changeup', label: 'Change-up Velocity', unit: 'mph', jsonKey: true },
     { key: 'velo_dropball', label: 'Drop Ball Velocity', unit: 'mph', jsonKey: true },
     { key: 'velo_riseball', label: 'Rise Ball Velocity', unit: 'mph', jsonKey: true },
-    // Pitch Accuracy by location
+    { key: 'velo_screwball', label: 'Screwball Velocity', unit: 'mph', jsonKey: true },
+    { key: 'velo_curveball', label: 'Curveball Velocity', unit: 'mph', jsonKey: true },
+    // Pitch Accuracy % by zone (5-zone strike grid)
     { key: 'acc_middle', label: 'Accuracy — Middle', unit: '%', jsonKey: true },
-    { key: 'acc_inside', label: 'Accuracy — Inside', unit: '%', jsonKey: true },
-    { key: 'acc_outside', label: 'Accuracy — Outside', unit: '%', jsonKey: true },
-    { key: 'acc_high', label: 'Accuracy — High', unit: '%', jsonKey: true },
-    { key: 'acc_low', label: 'Accuracy — Low', unit: '%', jsonKey: true },
+    { key: 'acc_inside_low', label: 'Accuracy — Inside Low', unit: '%', jsonKey: true },
+    { key: 'acc_inside_high', label: 'Accuracy — Inside High', unit: '%', jsonKey: true },
+    { key: 'acc_outside_low', label: 'Accuracy — Outside Low', unit: '%', jsonKey: true },
+    { key: 'acc_outside_high', label: 'Accuracy — Outside High', unit: '%', jsonKey: true },
   ],
   basketball: [
     { key: 'three_point_pct', label: '3-Point %', unit: '%', jsonKey: true },

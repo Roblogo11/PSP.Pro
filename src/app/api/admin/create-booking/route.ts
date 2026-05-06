@@ -26,16 +26,42 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { athlete_id, slot_id, service_id, payment_method, notes } = body as {
+    const { athlete_id, slot_id, service_id, payment_method, notes, child_id, promo_code } = body as {
       athlete_id: string
       slot_id: string
       service_id: string
       payment_method: 'on_site' | 'comp' | 'package'
       notes?: string
+      child_id?: string | null
+      promo_code?: string | null
     }
 
     if (!athlete_id || !slot_id || !service_id) {
       return NextResponse.json({ error: 'athlete_id, slot_id, and service_id are required' }, { status: 400 })
+    }
+
+    // If child_id provided, verify it belongs to this parent account
+    let resolvedChildId: string | null = null
+    if (child_id) {
+      const { data: childRow } = await adminClient
+        .from('parent_children')
+        .select('id, parent_id')
+        .eq('id', child_id)
+        .single()
+      if (!childRow || childRow.parent_id !== athlete_id) {
+        return NextResponse.json({ error: 'child_id does not belong to athlete_id' }, { status: 400 })
+      }
+      resolvedChildId = child_id
+    } else {
+      // Auto-pick the parent's active child if applicable
+      const { data: athleteProfile } = await adminClient
+        .from('profiles')
+        .select('account_type, active_child_id')
+        .eq('id', athlete_id)
+        .single()
+      if (athleteProfile?.account_type === 'parent_guardian' && athleteProfile.active_child_id) {
+        resolvedChildId = athleteProfile.active_child_id
+      }
     }
 
     // Fetch slot details
@@ -71,6 +97,39 @@ export async function POST(request: NextRequest) {
     // Determine amount and payment status
     let amountCents = service.price_cents
     let paymentStatus = 'pending'
+    let promoApplied: { code: string; discount_cents: number } | null = null
+
+    // Apply promo code (if provided) — admin-applied promos validate the same as customer-facing
+    if (promo_code) {
+      const trimmedPromo = promo_code.trim().toUpperCase()
+      const { data: promo } = await adminClient
+        .from('promo_codes')
+        .select('id, code, discount_type, discount_value, max_uses, current_uses, expires_at, is_active, min_amount_cents')
+        .eq('code', trimmedPromo)
+        .eq('is_active', true)
+        .single()
+
+      if (!promo) {
+        return NextResponse.json({ error: 'Invalid promo code' }, { status: 400 })
+      }
+      if (promo.expires_at && new Date(promo.expires_at) < new Date()) {
+        return NextResponse.json({ error: 'Promo code has expired' }, { status: 400 })
+      }
+      if (promo.max_uses && promo.current_uses >= promo.max_uses) {
+        return NextResponse.json({ error: 'Promo code has reached its usage limit' }, { status: 400 })
+      }
+      if (promo.min_amount_cents && amountCents < promo.min_amount_cents) {
+        return NextResponse.json({ error: `Promo requires minimum $${(promo.min_amount_cents / 100).toFixed(2)}` }, { status: 400 })
+      }
+
+      const discountCents = promo.discount_type === 'percentage'
+        ? Math.floor(amountCents * (promo.discount_value / 100))
+        : Math.min(promo.discount_value, amountCents)
+      amountCents = Math.max(0, amountCents - discountCents)
+      promoApplied = { code: promo.code, discount_cents: discountCents }
+
+      await adminClient.rpc('increment_promo_usage', { promo_id: promo.id })
+    }
 
     if (payment_method === 'comp') {
       amountCents = 0
@@ -109,6 +168,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Create the booking
+    const internalNote = [
+      `Created by ${profile.role} via admin panel. Payment: ${payment_method}`,
+      promoApplied ? `Promo: ${promoApplied.code} (-$${(promoApplied.discount_cents / 100).toFixed(2)})` : null,
+    ].filter(Boolean).join(' | ')
+
     const { data: booking, error: bookingError } = await adminClient
       .from('bookings')
       .insert({
@@ -116,6 +180,7 @@ export async function POST(request: NextRequest) {
         coach_id: slot.coach_id,
         service_id,
         slot_id,
+        child_id: resolvedChildId,
         booking_date: slot.slot_date,
         start_time: slot.start_time,
         end_time: slot.end_time,
@@ -125,7 +190,8 @@ export async function POST(request: NextRequest) {
         amount_cents: amountCents,
         payment_status: paymentStatus,
         notes: notes || `Booked by staff (${payment_method})`,
-        internal_notes: `Created by ${profile.role} via admin panel. Payment: ${payment_method}`,
+        internal_notes: internalNote,
+        promo_code: promoApplied?.code || null,
       })
       .select('id')
       .single()

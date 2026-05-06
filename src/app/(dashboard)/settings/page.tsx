@@ -7,6 +7,7 @@ import { useUserRole } from '@/lib/hooks/use-user-role'
 import { toastError } from '@/lib/toast'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
+import ChildrenManager from '@/components/parent/children-manager'
 
 function SettingsInner() {
   const router = useRouter()
@@ -25,6 +26,7 @@ function SettingsInner() {
   const [region, setRegion] = useState('')
   const [childName, setChildName] = useState('')
   const [childAge, setChildAge] = useState('')
+  const [activeChildId, setActiveChildId] = useState<string | null>(null)
 
   // Privacy tab state
   const [newsletterConsent, setNewsletterConsent] = useState(false)
@@ -83,7 +85,7 @@ function SettingsInner() {
       const supabase = createClient()
       const { data } = await supabase
         .from('profiles')
-        .select('leaderboard_opt_in, region, newsletter_consent, notification_preferences, bio, specialties, profile_slug, years_experience, certifications, child_name, child_age')
+        .select('leaderboard_opt_in, region, newsletter_consent, notification_preferences, bio, specialties, profile_slug, years_experience, certifications, child_name, child_age, active_child_id')
         .eq('id', profile.id)
         .single()
 
@@ -92,6 +94,7 @@ function SettingsInner() {
         setRegion(data.region || '')
         setChildName(data.child_name || '')
         setChildAge(data.child_age ? String(data.child_age) : '')
+        setActiveChildId(data.active_child_id || null)
         setNewsletterConsent(data.newsletter_consent || false)
         if (data.notification_preferences) {
           setNotifications({
@@ -130,10 +133,8 @@ function SettingsInner() {
         updated_at: new Date().toISOString(),
       }
 
-      if (profile.account_type === 'parent_guardian') {
-        updateData.child_name = childName || null
-        updateData.child_age = childAge ? parseInt(childAge) : null
-      }
+      // Note: child_name / child_age are now managed via ChildrenManager
+      // (parent_children table). Active child mirrors back to profiles via DB trigger.
 
       const { error } = await supabase
         .from('profiles')
@@ -439,33 +440,11 @@ function SettingsInner() {
                 </div>
 
                 {profile.account_type === 'parent_guardian' && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-purple-600 dark:text-purple-300 mb-2">
-                        Child&apos;s Name
-                      </label>
-                      <input
-                        type="text"
-                        value={childName}
-                        onChange={(e) => setChildName(e.target.value)}
-                        placeholder="Child's full name"
-                        className="w-full px-4 py-3 bg-cyan-900/30 border border-purple-500/30 rounded-xl text-slate-900 dark:text-white focus:border-purple-400 focus:outline-none transition-colors"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-purple-600 dark:text-purple-300 mb-2">
-                        Child&apos;s Age
-                      </label>
-                      <input
-                        type="number"
-                        value={childAge}
-                        onChange={(e) => setChildAge(e.target.value)}
-                        placeholder="12"
-                        min="5"
-                        max="17"
-                        className="w-full px-4 py-3 bg-cyan-900/30 border border-purple-500/30 rounded-xl text-slate-900 dark:text-white focus:border-purple-400 focus:outline-none transition-colors"
-                      />
-                    </div>
+                  <div className="pt-4 mt-4 border-t border-cyan-200/40">
+                    <ChildrenManager
+                      activeChildId={activeChildId}
+                      onActiveChildChange={(id) => setActiveChildId(id)}
+                    />
                   </div>
                 )}
 

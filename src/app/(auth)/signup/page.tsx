@@ -264,7 +264,7 @@ export default function SignupPage() {
           {/* Full Name Field */}
           <div>
             <label htmlFor="fullName" className="block text-sm font-medium  mb-2">
-              {underThirteen ? 'Parent/Guardian Name' : 'Full Name'}
+              {underThirteen ? 'Parent/Guardian Name' : 'Athlete’s Full Name'}
             </label>
             <div className="relative">
               <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 " />
@@ -275,8 +275,13 @@ export default function SignupPage() {
                 required
                 autoComplete="name"
                 className="w-full pl-12 pr-4 py-3 bg-cyan-900/30 border border-cyan-700/50 rounded-xl text-white placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-orange/50 transition-all"
-                placeholder={underThirteen ? 'Parent/Guardian name' : 'John Smith'}
+                placeholder={underThirteen ? 'Parent/Guardian name' : "Player's full name"}
               />
+            {!underThirteen && (
+              <p className="mt-1.5 text-xs text-cyan-400/80">
+                Enter the athlete&apos;s name here — not the parent&apos;s. This is what your coach sees on the schedule.
+              </p>
+            )}
             </div>
           </div>
 

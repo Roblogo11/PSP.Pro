@@ -27,6 +27,8 @@ import {
   Pencil,
   Mail,
   Phone,
+  Clock,
+  CalendarDays,
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -60,18 +62,17 @@ const SPORT_METRICS: Record<string, MetricDef[]> = {
     { key: 'infield_velocity', label: 'Infield Velocity', unit: 'mph', placeholder: '58.0' },
     // Pitcher Velocity by pitch type
     { key: 'velo_fastball', label: 'Fastball Velocity', unit: 'mph', placeholder: '62.0' },
-    { key: 'velo_changeup', label: 'Change Up Velocity', unit: 'mph', placeholder: '48.0' },
-    { key: 'velo_offspeed', label: 'Off Speed Velocity', unit: 'mph', placeholder: '50.0' },
-    { key: 'velo_curveball', label: 'Curve Ball Velocity', unit: 'mph', placeholder: '46.0' },
-    { key: 'velo_screwball', label: 'Screw Ball Velocity', unit: 'mph', placeholder: '50.0' },
+    { key: 'velo_changeup', label: 'Change-up Velocity', unit: 'mph', placeholder: '48.0' },
     { key: 'velo_dropball', label: 'Drop Ball Velocity', unit: 'mph', placeholder: '54.0' },
     { key: 'velo_riseball', label: 'Rise Ball Velocity', unit: 'mph', placeholder: '56.0' },
-    // Pitch Accuracy by location
+    { key: 'velo_screwball', label: 'Screwball Velocity', unit: 'mph', placeholder: '50.0' },
+    { key: 'velo_curveball', label: 'Curveball Velocity', unit: 'mph', placeholder: '46.0' },
+    // Pitch Accuracy % by zone (5-zone strike grid)
     { key: 'acc_middle', label: 'Accuracy — Middle', unit: '%', placeholder: '70.0' },
-    { key: 'acc_inside', label: 'Accuracy — Inside', unit: '%', placeholder: '60.0' },
-    { key: 'acc_outside', label: 'Accuracy — Outside', unit: '%', placeholder: '60.0' },
-    { key: 'acc_high', label: 'Accuracy — High', unit: '%', placeholder: '55.0' },
-    { key: 'acc_low', label: 'Accuracy — Low', unit: '%', placeholder: '65.0' },
+    { key: 'acc_inside_low', label: 'Accuracy — Inside Low', unit: '%', placeholder: '60.0' },
+    { key: 'acc_inside_high', label: 'Accuracy — Inside High', unit: '%', placeholder: '55.0' },
+    { key: 'acc_outside_low', label: 'Accuracy — Outside Low', unit: '%', placeholder: '60.0' },
+    { key: 'acc_outside_high', label: 'Accuracy — Outside High', unit: '%', placeholder: '55.0' },
   ],
   basketball: [
     { key: 'three_pt_pct', label: '3-Point Shooting %', unit: '%', placeholder: '35.0' },
@@ -156,6 +157,20 @@ interface AthleteProfile {
   child_age: number | null
 }
 
+interface AthleteBooking {
+  id: string
+  booking_date: string
+  start_time: string | null
+  end_time: string | null
+  status: string
+  payment_status: string | null
+  amount_cents: number | null
+  notes: string | null
+  coach_notes: string | null
+  service: { name: string | null } | null
+  coach: { full_name: string | null } | null
+}
+
 interface PerformanceMetric {
   id: string
   test_date: string
@@ -205,6 +220,8 @@ export default function AthleteDetailPage() {
 
   const [athlete, setAthlete] = useState<AthleteProfile | null>(null)
   const [metrics, setMetrics] = useState<PerformanceMetric[]>([])
+  const [bookings, setBookings] = useState<AthleteBooking[]>([])
+  const [bookingsLoading, setBookingsLoading] = useState(true)
   const [loading, setLoading] = useState(true)
   const [showAddMetricForm, setShowAddMetricForm] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -224,6 +241,7 @@ export default function AthleteDetailPage() {
   const [editName, setEditName] = useState('')
   const [editChildName, setEditChildName] = useState('')
   const [editPhone, setEditPhone] = useState('')
+  const [editEmail, setEditEmail] = useState('')
   const [editSaving, setEditSaving] = useState(false)
 
   const openEditModal = () => {
@@ -231,6 +249,7 @@ export default function AthleteDetailPage() {
     setEditName(athlete.full_name || '')
     setEditChildName(athlete.child_name || '')
     setEditPhone(athlete.phone || '')
+    setEditEmail(athlete.email || '')
     setShowEditModal(true)
   }
 
@@ -238,6 +257,8 @@ export default function AthleteDetailPage() {
     if (!athlete || editSaving) return
     setEditSaving(true)
     try {
+      const trimmedEmail = editEmail.trim().toLowerCase()
+      const emailChanged = isAdmin && trimmedEmail !== (athlete.email || '').toLowerCase()
       const res = await fetch('/api/admin/update-athlete', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -246,6 +267,7 @@ export default function AthleteDetailPage() {
           full_name: editName.trim() || undefined,
           child_name: athlete.account_type === 'parent_guardian' ? (editChildName.trim() || null) : undefined,
           phone: editPhone.trim() || null,
+          ...(emailChanged ? { email: trimmedEmail } : {}),
         }),
       })
       const data = await res.json()
@@ -255,6 +277,7 @@ export default function AthleteDetailPage() {
         full_name: editName.trim() || prev.full_name,
         child_name: athlete.account_type === 'parent_guardian' ? (editChildName.trim() || null) : prev.child_name,
         phone: editPhone.trim() || null,
+        email: emailChanged ? trimmedEmail : prev.email,
       } : prev)
       setShowEditModal(false)
       toastSuccess('Profile updated')
@@ -336,6 +359,43 @@ export default function AthleteDetailPage() {
 
     loadData()
   }, [profile, isCoach, athleteId])
+
+  // Load this athlete's bookings (coach-scoped if user is a coach, all if admin)
+  useEffect(() => {
+    if (!profile || !athleteId) return
+
+    async function loadBookings() {
+      try {
+        const supabase = createClient()
+        let query = supabase
+          .from('bookings')
+          .select(`
+            id, booking_date, start_time, end_time, status, payment_status,
+            amount_cents, notes, coach_notes,
+            service:services(name),
+            coach:profiles!bookings_coach_id_fkey(full_name)
+          `)
+          .eq('athlete_id', athleteId)
+          .order('booking_date', { ascending: false })
+          .limit(50)
+
+        // Coaches only see bookings they're the coach on; admins see everything
+        if (!isAdmin && profile?.id) {
+          query = query.eq('coach_id', profile.id)
+        }
+
+        const { data, error } = await query
+        if (error) throw error
+        setBookings((data as unknown as AthleteBooking[]) || [])
+      } catch (err) {
+        console.error('Error loading athlete bookings:', err)
+      } finally {
+        setBookingsLoading(false)
+      }
+    }
+
+    loadBookings()
+  }, [profile, isAdmin, athleteId])
 
   const resetForm = () => {
     setFormValues({})
@@ -677,6 +737,99 @@ export default function AthleteDetailPage() {
             )
           })}
         </div>
+      </div>
+
+      {/* Athlete Bookings */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+            <CalendarDays className="w-5 h-5 text-orange" />
+            Appointments
+          </h2>
+          <span className="text-xs text-slate-500 dark:text-white/50">
+            {isAdmin ? 'All bookings' : 'Your bookings with this athlete'}
+          </span>
+        </div>
+
+        {bookingsLoading ? (
+          <div className="glass-card p-6 text-center text-slate-500 dark:text-white/50 text-sm">Loading…</div>
+        ) : bookings.length === 0 ? (
+          <div className="glass-card p-6 text-center text-slate-500 dark:text-white/50 text-sm">No appointments yet.</div>
+        ) : (
+          (() => {
+            const todayKey = getLocalDateString()
+            const upcoming = bookings.filter(b => b.booking_date >= todayKey && b.status !== 'cancelled')
+            const past = bookings.filter(b => b.booking_date < todayKey || b.status === 'cancelled')
+            const renderRow = (b: AthleteBooking) => (
+              <div key={b.id} className="flex items-center justify-between gap-3 py-3 border-b border-cyan-200/20 dark:border-white/5 last:border-0">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                      {b.service?.name || 'Session'}
+                    </span>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide ${
+                      b.status === 'cancelled'
+                        ? 'bg-red-500/15 text-red-500'
+                        : b.status === 'completed'
+                          ? 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-400'
+                          : b.status === 'no-show'
+                            ? 'bg-slate-500/15 text-slate-500'
+                            : 'bg-green-500/15 text-green-600 dark:text-green-400'
+                    }`}>
+                      {b.status}
+                    </span>
+                    {b.payment_status && b.payment_status !== 'paid' && (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-yellow-500/15 text-yellow-600">
+                        {b.payment_status}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3 mt-1 text-xs text-slate-500 dark:text-white/50">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      {new Date(b.booking_date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                    </span>
+                    {b.start_time && (
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {b.start_time.slice(0, 5)}
+                      </span>
+                    )}
+                    {b.coach?.full_name && (
+                      <span className="truncate">w/ {b.coach.full_name}</span>
+                    )}
+                  </div>
+                </div>
+                <Link
+                  href={`/admin/bookings?id=${b.id}`}
+                  className="text-xs text-orange hover:underline whitespace-nowrap"
+                >
+                  Open
+                </Link>
+              </div>
+            )
+            return (
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="glass-card p-4">
+                  <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                    Upcoming ({upcoming.length})
+                  </h3>
+                  {upcoming.length === 0 ? (
+                    <p className="text-xs text-slate-500 dark:text-white/40">None scheduled.</p>
+                  ) : upcoming.slice(0, 8).map(renderRow)}
+                </div>
+                <div className="glass-card p-4">
+                  <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                    Recent ({past.length})
+                  </h3>
+                  {past.length === 0 ? (
+                    <p className="text-xs text-slate-500 dark:text-white/40">No past sessions.</p>
+                  ) : past.slice(0, 8).map(renderRow)}
+                </div>
+              </div>
+            )
+          })()
+        )}
       </div>
 
       {/* ─── Add Metric Modal ───────────────────────────────────────── */}
@@ -1165,10 +1318,24 @@ export default function AthleteDetailPage() {
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-500 dark:text-white/50 uppercase mb-1">Email (read-only)</label>
-                <p className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-400 dark:text-white/40 text-sm">{athlete.email || '—'}</p>
-              </div>
+              {isAdmin ? (
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 dark:text-white/50 uppercase mb-1">Email (login)</label>
+                  <input
+                    type="email"
+                    value={editEmail}
+                    onChange={e => setEditEmail(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-slate-900 dark:text-white text-sm"
+                    placeholder="athlete@example.com"
+                  />
+                  <p className="mt-1 text-xs text-slate-500 dark:text-white/40">Changing email updates the account login.</p>
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 dark:text-white/50 uppercase mb-1">Email (admin only)</label>
+                  <p className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-400 dark:text-white/40 text-sm">{athlete.email || '—'}</p>
+                </div>
+              )}
             </div>
 
             <div className="flex gap-3 mt-6">
