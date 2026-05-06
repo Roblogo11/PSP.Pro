@@ -11,7 +11,7 @@ import { useUserRole } from '@/lib/hooks/use-user-role'
 export default function AvailabilityManagementPage() {
   const supabase = createClient()
   const router = useRouter()
-  const { isCoach, isAdmin, loading: roleLoading } = useUserRole()
+  const { isCoach, isAdmin, isSimulating, isImpersonatingCoach, impersonatedCoachId, loading: roleLoading } = useUserRole()
   const [slots, setSlots] = useState<any[]>([])
   const [services, setServices] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -129,7 +129,18 @@ export default function AvailabilityManagementPage() {
       .order('slot_date', { ascending: true })
       .order('start_time', { ascending: true })
 
-    if (!isAdmin) {
+    // Admins (and master_admins) see ALL coaches' slots.
+    // When simulating/impersonating a coach, scope to that coach's slots so the
+    // master can preview what the coach actually sees, not what `user.id`
+    // (which is still the master_admin) is the coach for.
+    // Otherwise (a real coach), scope to their own slots.
+    if (isImpersonatingCoach && impersonatedCoachId) {
+      query = query.eq('coach_id', impersonatedCoachId)
+    } else if (isSimulating) {
+      // Simulated coach role but no specific coach picked → no slots make sense.
+      // Show none rather than misleading "everything".
+      query = query.eq('coach_id', user.id)
+    } else if (!isAdmin) {
       query = query.eq('coach_id', user.id)
     }
 

@@ -170,6 +170,13 @@ export default function AdminBookingsPage() {
         service:service_id (name)
       `
 
+    // When master_admin is impersonating a coach, scope to that coach's bookings
+    // so the simulation reflects what the real coach would actually see.
+    // Real coaches (no admin role) get scoped to their own bookings.
+    const scopedCoachId = isImpersonatingCoach && impersonatedCoachId
+      ? impersonatedCoachId
+      : (!isAdmin && profile?.id ? profile.id : null)
+
     const buildQuery = (sel: string) => {
       let q = supabase
         .from('bookings')
@@ -177,6 +184,7 @@ export default function AdminBookingsPage() {
         .order('booking_date', { ascending: false })
         .order('start_time', { ascending: false })
       if (filter !== 'all') q = q.eq('status', filter)
+      if (scopedCoachId) q = q.eq('coach_id', scopedCoachId)
       return q
     }
 
