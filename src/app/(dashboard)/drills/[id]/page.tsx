@@ -188,9 +188,9 @@ export default function DrillDetailPage() {
           </div>
 
           {/* Title & Meta */}
-          <div className="glass-card p-8">
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex-1">
+          <div className="glass-card p-6 sm:p-8">
+            <div className="flex flex-col gap-4 mb-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex-1 min-w-0">
                 <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white mb-4">
                   {drill.title}
                 </h1>
@@ -198,19 +198,19 @@ export default function DrillDetailPage() {
               </div>
 
               {isImpersonating ? (
-                <div className="ml-4 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-500 font-semibold flex items-center gap-2 text-sm">
+                <div className="px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-500 font-semibold flex items-center justify-center gap-2 text-sm w-full sm:w-auto sm:ml-4">
                   Read-only mode
                 </div>
               ) : !isCompleted ? (
                 <button
                   onClick={markAsCompleted}
-                  className="btn-primary flex items-center gap-2 ml-4"
+                  className="btn-primary flex items-center justify-center gap-2 w-full sm:w-auto sm:ml-4"
                 >
                   <CheckCircle className="w-5 h-5" />
                   Mark Complete
                 </button>
               ) : (
-                <div className="ml-4 px-4 py-2 bg-green-400/10 border border-green-400/20 rounded-xl text-green-400 font-semibold flex items-center gap-2">
+                <div className="px-4 py-2 bg-green-400/10 border border-green-400/20 rounded-xl text-green-400 font-semibold flex items-center justify-center gap-2 w-full sm:w-auto sm:ml-4">
                   <CheckCircle className="w-5 h-5" />
                   Completed {completionCount}x
                 </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Building2, Users, MapPin, Loader2, ArrowRight, CheckCircle, Star, Zap } from 'lucide-react'
@@ -31,8 +31,8 @@ interface OrgData {
   }[]
 }
 
-export default function OrgLandingPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(params)
+export default function OrgLandingPage({ params }: { params: { slug: string } }) {
+  const { slug } = params
   const [org, setOrg] = useState<OrgData | null>(null)
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)

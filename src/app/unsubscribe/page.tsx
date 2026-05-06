@@ -94,7 +94,7 @@ function UnsubscribeContent() {
         </div>
 
         <p className="text-white/30 text-xs mt-6">
-          © {new Date().getFullYear()} Proper Sports Performance · Virginia Beach, VA
+          © {new Date().getFullYear()} Proper Sports Performance · Chesapeake, VA
         </p>
       </div>
     </div>
