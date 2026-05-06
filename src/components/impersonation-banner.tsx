@@ -28,6 +28,17 @@ export function ImpersonationBanner() {
   }, [])
 
   const isActive = !!(userName || coachName)
+
+  // When the banner is visible, pad the body so fixed-top page content doesn't get clipped.
+  useEffect(() => {
+    if (isActive) {
+      document.body.classList.add('has-impersonation-banner')
+    } else {
+      document.body.classList.remove('has-impersonation-banner')
+    }
+    return () => document.body.classList.remove('has-impersonation-banner')
+  }, [isActive])
+
   if (!isActive) return null
 
   const handleExit = async () => {

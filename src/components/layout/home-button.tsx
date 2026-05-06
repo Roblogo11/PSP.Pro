@@ -13,7 +13,7 @@ export function HomeButton() {
     <Link
       href="/"
       aria-label="Go to home page"
-      className="fixed top-3 right-3 z-[105] flex items-center justify-center w-9 h-9 rounded-xl
+      className="hidden lg:flex fixed top-3 right-3 z-[105] items-center justify-center w-9 h-9 rounded-xl
         bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm
         border border-slate-200 dark:border-white/10
         text-slate-500 dark:text-slate-400

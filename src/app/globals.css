@@ -927,6 +927,17 @@ html:not(.dark) .home-page .command-panel .text-purple-400 {
   contain: inline-size;
 }
 
+/* ─── Impersonation / Simulation banner offsets ───────────────── */
+/* When the fixed-top banner is visible, push page content down so the
+   page heading doesn't sit underneath it. ~40px = banner height. */
+body.has-impersonation-banner #dashboard-main,
+body.has-simulation-banner #dashboard-main {
+  padding-top: 40px;
+}
+body.has-impersonation-banner.has-simulation-banner #dashboard-main {
+  padding-top: 80px;
+}
+
 /* Tables inside dashboard must scroll horizontally within their card,
    not push the page wider */
 #dashboard-main table {

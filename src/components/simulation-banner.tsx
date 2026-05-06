@@ -18,6 +18,16 @@ export function SimulationBanner() {
     return () => clearInterval(interval)
   }, [])
 
+  // Pad dashboard main when banner is visible so page headings don't get clipped.
+  useEffect(() => {
+    if (simulatedRole) {
+      document.body.classList.add('has-simulation-banner')
+    } else {
+      document.body.classList.remove('has-simulation-banner')
+    }
+    return () => document.body.classList.remove('has-simulation-banner')
+  }, [simulatedRole])
+
   if (!simulatedRole) return null
 
   const handleEndAndCleanup = async () => {

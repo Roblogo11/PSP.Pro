@@ -32,9 +32,10 @@ export function useUserStats(userId: string | undefined) {
 
     async function loadStats() {
       try {
-        // Fetch total sessions
+        // Total completed sessions = completed bookings (the 'sessions' table doesn't exist;
+        // bookings IS the source of truth).
         const { count: sessionsCount } = await supabase
-          .from('sessions')
+          .from('bookings')
           .select('*', { count: 'exact', head: true })
           .eq('athlete_id', userId)
           .eq('status', 'completed')
@@ -64,18 +65,19 @@ export function useUserStats(userId: string | undefined) {
           .eq('user_id', userId)
           .eq('completed', true)
 
-        // Fetch recent velocity data (last 10 sessions)
+        // Recent velocity history — pulled from athlete_performance_metrics
+        // (legacy code queried `sessions.peak_velocity`, but that table/column never existed).
         const { data: velocityData } = await supabase
-          .from('sessions')
-          .select('completed_at, peak_velocity')
+          .from('athlete_performance_metrics')
+          .select('test_date, throwing_velocity_mph, exit_velocity_mph')
           .eq('athlete_id', userId)
-          .eq('status', 'completed')
-          .not('peak_velocity', 'is', null)
-          .order('completed_at', { ascending: false })
+          .order('test_date', { ascending: false })
           .limit(10)
 
-        // Calculate average velocity
-        const velocities = velocityData?.map((v: any) => v.peak_velocity).filter(Boolean) as number[] || []
+        // Pick the most-populated velocity field for this athlete (throwing or exit).
+        const velocities = (velocityData || [])
+          .map((v: any) => v.throwing_velocity_mph ?? v.exit_velocity_mph)
+          .filter((v: any) => typeof v === 'number') as number[]
         const avgVelocity = velocities.length > 0
           ? Math.round(velocities.reduce((a, b) => a + b, 0) / velocities.length)
           : null
@@ -114,14 +116,14 @@ export function useUserStats(userId: string | undefined) {
           nextSessionDate.setHours(parseInt(hours), parseInt(minutes))
         }
 
-        // Format velocity history
+        // Format velocity history (oldest → newest for chart)
         const recentVelocities = (velocityData || [])
-          .filter((v: any) => v.peak_velocity !== null)
           .map((v: any) => ({
-            date: new Date(v.completed_at),
-            value: v.peak_velocity as number,
+            date: new Date(v.test_date),
+            value: (v.throwing_velocity_mph ?? v.exit_velocity_mph) as number | null,
           }))
-          .reverse() // Oldest to newest for chart
+          .filter((v) => typeof v.value === 'number')
+          .reverse() as Array<{ date: Date; value: number }>
 
         setStats({
           totalSessions: sessionsCount || 0,

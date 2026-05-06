@@ -218,10 +218,10 @@ export default function AthleteLockerPage() {
     async function fetchRecentActivity() {
       const supabase = createClient()
 
-      // Recent bookings
+      // Recent bookings (joins service for the name; service_name column doesn't exist)
       const { data: bookings } = await supabase
         .from('bookings')
-        .select('id, booking_date, start_time, service_name, status, created_at')
+        .select('id, booking_date, start_time, status, created_at, service:service_id (name)')
         .eq('athlete_id', effectiveUserId!)
         .in('status', ['confirmed', 'pending', 'completed'])
         .order('created_at', { ascending: false })
@@ -242,7 +242,7 @@ export default function AthleteLockerPage() {
           id: `booking-${b.id}`,
           type: b.status === 'completed' ? 'session_completed' : 'goal_set',
           title: b.status === 'completed' ? 'Session Completed' : 'Session Booked',
-          description: b.service_name || 'Training Session',
+          description: (b.service as any)?.name || 'Training Session',
           timestamp: new Date(b.created_at),
           color: b.status === 'completed' ? '#3B82F6' : '#10B981',
         })

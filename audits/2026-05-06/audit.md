@@ -47,6 +47,47 @@ Each route is scored on:
 - **Console**: 0 errors, 2 info.
 - **Screenshot**: [admin-mobile.png](screenshots/admin-mobile.png)
 
+#### `/admin/services` — Lesson Builder
+- **Status**: 🟡→🟢 Healed
+- **Visual bug**: Page header used `flex items-center justify-between` with no mobile stack → title clipped behind "New Lesson Type" button on 390px.
+- **Fix**: stacked layout below `sm:` breakpoint, full-width button on mobile.
+- **Featured banner copy**: "3/6 Featured Slots — Homepage shows up to 2 individual + 3 group" — clear.
+- **Logic**: services list loads, badges render (GROUP, FEATURED), action row (toggle/feature/edit/delete) works.
+
+#### `/admin/promos` — Promo Codes
+- **Status**: 🟡→🟢 Healed (header overflow same pattern, same fix).
+- **Logic**: 3 codes listed (FREE4ME, SHELTONFAM, DCAA2026 with 37 uses). All controls present.
+
+#### `/admin/courses` — Course Builder
+- **Status**: 🟡→🟢 Healed (header overflow same pattern).
+
+#### `/admin/questionnaires` — Pop Quiz
+- **Status**: 🟡→🟢 Healed (header overflow same pattern).
+
+#### `/admin/drills` — Drill Library
+- **Status**: 🟡→🟢 Healed
+- **Visual bug**: TWO buttons (Bulk Import + Create Drill) stacked horizontally, each clipping the title.
+- **Fix**: stacked vertically on mobile, full-width.
+- **Stats**: 13 drills, all active, all with video, 100 athletes.
+
+#### `/admin/athletes` — Athlete Roster
+- **Status**: 🟡→🟢 Healed (header overflow with Invite Link + Add Athlete).
+- **Stats accurate**: 100 athletes, 6 soccer, 2 basketball, 92 softball.
+
+#### `/admin/media` — Content Hub
+- **Status**: 🔴→🟡 Partially healed
+- **Visual bug**: header overflow + dark page bg makes "Manage blog posts and media" subtitle barely readable.
+- **🔴 Logic bug**: 6 broken blog cover images (404 on .jpg files).
+- **Root cause**: Migration 039 seeded `.jpg` paths; only `.webp` files exist in `public/images/`.
+- **Fix**: New migration `058_fix_blog_image_extensions.sql` rewrites `.jpg`/`.jpeg` → `.webp` in `blog_posts.cover_image` and `blog_posts.content`.
+- **Action required**: Run migration 058 on Supabase.
+- **Screenshot**: [admin-media-mobile.png](screenshots/admin-media-mobile.png)
+
+#### `/admin/analytics` — Platform Analytics
+- **Status**: 🟢 Pass
+- **Logic**: $2,015 revenue, 160 bookings, 46 athletes, growth % calculations rendering.
+- **Visual**: Tabs (7d/30d/90d) clean, stat cards stack on mobile.
+
 #### `/admin/availability` — Time slot manager
 - **Status**: 🔴→🟢 Healed
 - **Logic bug**: Page filtered slots by `coach_id = user.id` for everyone — admins/master_admins saw 0 slots.
