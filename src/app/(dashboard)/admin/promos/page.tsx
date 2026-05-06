@@ -107,7 +107,7 @@ export default function AdminPromosPage() {
 
   return (
     <div className="min-h-screen px-3 py-4 md:p-8 pb-24 lg:pb-8">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col gap-4 mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <Tag className="w-8 h-8 text-orange" />
           <div>
@@ -117,7 +117,7 @@ export default function AdminPromosPage() {
         </div>
         <button
           onClick={() => setShowCreate(!showCreate)}
-          className="btn-primary flex items-center gap-2"
+          className="btn-primary flex items-center justify-center gap-2 w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" />
           New Code

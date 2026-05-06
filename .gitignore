@@ -49,3 +49,13 @@ next-env.d.ts
 
 # Playwright MCP local browser data
 .playwright-mcp/
+
+# audit screenshots from playwright sessions
+*-mobile.png
+*-desktop.png
+signup-mobile-*.png
+athlete-profile-*.png
+athletes-list-*.png
+admin-bookings-*.png
+edit-profile-modal-*.png
+metric-form-*.png

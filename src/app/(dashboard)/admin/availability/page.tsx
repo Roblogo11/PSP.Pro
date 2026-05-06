@@ -108,7 +108,8 @@ export default function AvailabilityManagementPage() {
       return
     }
 
-    const { data, error: fetchError } = await supabase
+    // Coaches see only their own slots; admins/master_admins see ALL coaches' slots.
+    let query = supabase
       .from('available_slots')
       .select(`
         id,
@@ -124,10 +125,15 @@ export default function AvailabilityManagementPage() {
         service:service_id (name),
         coach:coach_id (full_name)
       `)
-      .eq('coach_id', user.id)
       .gte('slot_date', getLocalDateString())
       .order('slot_date', { ascending: true })
       .order('start_time', { ascending: true })
+
+    if (!isAdmin) {
+      query = query.eq('coach_id', user.id)
+    }
+
+    const { data, error: fetchError } = await query
 
     if (fetchError) {
       console.error('Failed to fetch slots:', fetchError)

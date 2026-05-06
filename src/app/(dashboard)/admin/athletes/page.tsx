@@ -528,7 +528,7 @@ export default function AthletesManagementPage() {
       )}
 
       {/* Page Header */}
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex flex-col gap-4 mb-8 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
             Athlete <span className="text-gradient-orange">Management</span>
@@ -537,21 +537,21 @@ export default function AthletesManagementPage() {
             Manage your athletes, track progress, and assign training
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2">
           <button
             onClick={() => {
               setNewlyGeneratedUrl(null)
               fetchInviteLinks()
               setInviteModalOpen(true)
             }}
-            className="btn-ghost flex items-center gap-2"
+            className="btn-ghost flex items-center justify-center gap-2 w-full sm:w-auto"
           >
             <Link2 className="w-5 h-5" />
             Invite Link
           </button>
           <Link
             href="/admin/athletes/create"
-            className="btn-primary flex items-center gap-2"
+            className="btn-primary flex items-center justify-center gap-2 w-full sm:w-auto"
           >
             <Plus className="w-5 h-5" />
             Add Athlete

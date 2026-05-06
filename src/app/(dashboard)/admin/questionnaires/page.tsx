@@ -206,7 +206,7 @@ export default function AdminQuestionnairesPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col gap-4 mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
             Pop <span className="text-gradient-orange">Quiz</span>
@@ -215,7 +215,7 @@ export default function AdminQuestionnairesPage() {
             Create and assign quizzes to test your athletes' game IQ
           </p>
         </div>
-        <button onClick={openNewForm} className="btn-primary flex items-center gap-2 text-sm">
+        <button onClick={openNewForm} className="btn-primary flex items-center justify-center gap-2 text-sm w-full sm:w-auto">
           <Plus className="w-4 h-4" />
           New Quiz
         </button>

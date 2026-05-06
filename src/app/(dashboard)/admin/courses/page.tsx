@@ -293,7 +293,7 @@ export default function AdminCoursesPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 pb-24 lg:pb-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col gap-4 mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
             Manage <span className="text-gradient-orange">Courses</span>
@@ -302,7 +302,7 @@ export default function AdminCoursesPage() {
             Create video course bundles for your athletes
           </p>
         </div>
-        <button onClick={openNewForm} className="btn-primary flex items-center gap-2 text-sm">
+        <button onClick={openNewForm} className="btn-primary flex items-center justify-center gap-2 text-sm w-full sm:w-auto">
           <Plus className="w-4 h-4" />
           New Course
         </button>

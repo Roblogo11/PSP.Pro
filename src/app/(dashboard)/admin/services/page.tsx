@@ -300,14 +300,14 @@ export default function ServicesManagerPage() {
 
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-2">Lesson <span className="text-gradient-orange">Builder</span></h1>
             <p className="text-cyan-700 dark:text-white">Create and manage your lesson types, pricing, and categories</p>
           </div>
           <button
             onClick={handleNew}
-            className="btn-primary flex items-center gap-2"
+            className="btn-primary flex items-center justify-center gap-2 w-full sm:w-auto"
           >
             <Plus className="w-5 h-5" />
             New Lesson Type

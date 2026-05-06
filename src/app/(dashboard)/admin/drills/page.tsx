@@ -451,7 +451,7 @@ export default function DrillsManagementPage() {
       )}
 
       {/* Page Header */}
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex flex-col gap-4 mb-8 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
             {isAdmin ? (
@@ -467,9 +467,9 @@ export default function DrillsManagementPage() {
             }
           </p>
         </div>
-        <div className="flex gap-3">
-          <Link href="/admin/drills/import">
-            <button className="btn-ghost flex items-center gap-2 border-cyan/30 hover:border-cyan/50 hover:text-cyan">
+        <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
+          <Link href="/admin/drills/import" className="w-full sm:w-auto">
+            <button className="btn-ghost flex items-center justify-center gap-2 border-cyan/30 hover:border-cyan/50 hover:text-cyan w-full sm:w-auto">
               <Upload className="w-5 h-5" />
               Bulk Import
             </button>
@@ -479,7 +479,7 @@ export default function DrillsManagementPage() {
               resetForm()
               setCreateModalOpen(true)
             }}
-            className="btn-primary flex items-center gap-2"
+            className="btn-primary flex items-center justify-center gap-2 w-full sm:w-auto"
           >
             <Plus className="w-5 h-5" />
             Create Drill
