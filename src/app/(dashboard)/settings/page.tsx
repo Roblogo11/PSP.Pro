@@ -374,6 +374,21 @@ function SettingsInner() {
         <p className="text-cyan-800 dark:text-white text-lg">Manage your account preferences and settings</p>
       </div>
 
+      {/* Impersonation notice — settings always show YOUR account, not the impersonated user's */}
+      {isImpersonating && (
+        <div className="mb-6 p-4 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-semibold text-amber-700 dark:text-amber-300">
+              Settings show your own account
+            </p>
+            <p className="text-xs text-amber-600 dark:text-amber-400/80 mt-0.5">
+              You&apos;re currently viewing as another player (read-only). To change someone else&apos;s settings, exit impersonation and use the admin tools.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Success Message */}
       {saveSuccess && (
         <div className="mb-6 p-4 bg-green-500/20 border border-green-500/30 rounded-xl flex items-center gap-3 animate-fade-in">
