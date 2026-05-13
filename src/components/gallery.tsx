@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { X, Play, Image as ImageIcon, ChevronLeft, ChevronRight } from 'lucide-react'
+import NextImage from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface GalleryItem {
@@ -131,10 +132,12 @@ export function Gallery() {
             className="group relative aspect-square rounded-xl overflow-hidden cursor-pointer glass-card-hover"
             onClick={() => openLightbox(index)}
           >
-            <img
+            <NextImage
               src={item.thumbnail}
               alt={item.title}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-cover group-hover:scale-110 transition-transform duration-500"
             />
 
             {/* Overlay */}
@@ -206,10 +209,13 @@ export function Gallery() {
               className="max-w-6xl max-h-[90vh] w-full"
               onClick={(e) => e.stopPropagation()}
             >
-              <img
+              <NextImage
                 src={filteredItems[lightboxIndex].url}
                 alt={filteredItems[lightboxIndex].title}
-                className="w-full h-full object-contain rounded-xl"
+                width={1920}
+                height={1080}
+                sizes="(max-width: 1280px) 100vw, 1280px"
+                className="w-full h-auto object-contain rounded-xl"
               />
 
               {/* Info */}

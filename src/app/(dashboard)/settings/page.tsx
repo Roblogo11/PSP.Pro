@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { User, Bell, Lock, Mail, MapPin, Save, Check, Medal, ShieldCheck, Download, Trash2, AlertTriangle, Eye, EyeOff, Star, CalendarDays } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
@@ -68,17 +68,7 @@ function SettingsInner() {
   const [coachSaveSuccess, setCoachSaveSuccess] = useState(false)
   const [coachSaveError, setCoachSaveError] = useState('')
 
-  // Load user data
-  useEffect(() => {
-    if (profile) {
-      setFullName(profile.full_name || '')
-      setEmail(profile.email || '')
-      // Load additional fields from database
-      loadUserDetails()
-    }
-  }, [profile])
-
-  const loadUserDetails = async () => {
+  const loadUserDetails = useCallback(async () => {
     if (!profile) return
 
     try {
@@ -114,7 +104,17 @@ function SettingsInner() {
     } catch (error) {
       console.error('Error loading user details:', error)
     }
-  }
+  }, [profile])
+
+  // Load user data
+  useEffect(() => {
+    if (profile) {
+      setFullName(profile.full_name || '')
+      setEmail(profile.email || '')
+      // Load additional fields from database
+      loadUserDetails()
+    }
+  }, [profile, loadUserDetails])
 
   const handleSaveProfile = async () => {
     if (!profile || isImpersonating) return

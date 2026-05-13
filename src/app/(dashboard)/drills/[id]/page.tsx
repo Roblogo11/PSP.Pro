@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Database } from '@/types/database.types'
@@ -29,13 +29,7 @@ export default function DrillDetailPage() {
   const [isCompleted, setIsCompleted] = useState(false)
   const [completionCount, setCompletionCount] = useState(0)
 
-  useEffect(() => {
-    if (params.id) {
-      fetchDrill(params.id as string)
-    }
-  }, [params.id, impersonatedUserId])
-
-  const fetchDrill = async (id: string) => {
+  const fetchDrill = useCallback(async (id: string) => {
     try {
       const supabase = createClient()
 
@@ -75,7 +69,13 @@ export default function DrillDetailPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [impersonatedUserId])
+
+  useEffect(() => {
+    if (params.id) {
+      fetchDrill(params.id as string)
+    }
+  }, [params.id, impersonatedUserId, fetchDrill])
 
   const markAsCompleted = async () => {
     if (isImpersonating) return

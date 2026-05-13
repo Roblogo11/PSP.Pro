@@ -134,10 +134,13 @@ export default function HomePage() {
         <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 text-center">
           {/* Logo */}
           <div className="mb-8">
-            <img
+            <Image
               src="/images/PSP-black-300x99-1.webp"
               alt="PSP.Pro Logo"
-              className="h-20 mx-auto"
+              width={300}
+              height={99}
+              priority
+              className="h-20 w-auto mx-auto"
               style={{
                 filter: 'drop-shadow(0 0 20px rgba(0, 180, 216, 0.4)) brightness(0) invert(1)',
               }}

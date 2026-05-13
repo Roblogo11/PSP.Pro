@@ -23,6 +23,7 @@ import {
 import { createClient } from '@/lib/supabase/client'
 import { Tooltip } from '@/components/ui/tooltip'
 import { useUserRole } from '@/lib/hooks/use-user-role'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { MediaPicker } from '@/components/media-picker'
 
@@ -150,7 +151,7 @@ export default function DrillsManagementPage() {
     }
 
     loadData()
-  }, [profile, isCoach])
+  }, [profile, isCoach, isAdmin])
 
   // Filter drills
   const filteredDrills = drills.filter((drill) => {
@@ -585,11 +586,13 @@ export default function DrillsManagementPage() {
                   {/* Thumbnail */}
                   {drill.thumbnail_url ? (
                     <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-cyan-900 flex-shrink-0">
-                      <img
+                      <Image
                         src={drill.thumbnail_url}
                         alt={drill.title}
-                        className="w-full h-full object-cover"
-                        onError={(e) => { e.currentTarget.src = ''; e.currentTarget.style.display = 'none' }}
+                        fill
+                        sizes="96px"
+                        className="object-cover"
+                        onError={(e) => { (e.currentTarget as HTMLImageElement).src = ''; (e.currentTarget as HTMLImageElement).style.display = 'none' }}
                       />
                     </div>
                   ) : (
@@ -1132,9 +1135,11 @@ export default function DrillsManagementPage() {
                       />
                       <div className="flex items-center gap-3">
                         {athlete.avatar_url ? (
-                          <img
+                          <Image
                             src={athlete.avatar_url}
                             alt={athlete.full_name}
+                            width={32}
+                            height={32}
                             className="w-8 h-8 rounded-full object-cover"
                           />
                         ) : (

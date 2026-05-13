@@ -80,7 +80,7 @@ export default function AdminDashboard() {
     }
 
     checkTestMode()
-  }, [profile])
+  }, [profile, isMasterAdmin])
 
   const handleToggleTestMode = async () => {
     if (togglingTestMode) return
@@ -182,7 +182,7 @@ export default function AdminDashboard() {
     }
 
     loadAdminStats()
-  }, [profile, isCoach])
+  }, [profile, isCoach, isAdmin])
 
   // Load upcoming sessions
   useEffect(() => {
@@ -230,7 +230,7 @@ export default function AdminDashboard() {
     }
 
     loadUpcomingSessions()
-  }, [profile, isCoach])
+  }, [profile, isCoach, isAdmin])
 
   if (loading || loadingStats || !profile) {
     return (
@@ -736,6 +736,9 @@ function SimulationPanel() {
       }
     }
     fetchAthletes()
+    // athletes.length is intentionally excluded: it's a one-time-fetch guard that
+    // becomes truthy via setAthletes inside this effect — including it would loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showPlayerSelect])
 
   // Fetch coaches when coach selector is opened
@@ -761,6 +764,9 @@ function SimulationPanel() {
       }
     }
     fetchCoaches()
+    // coaches.length is intentionally excluded: it's a one-time-fetch guard that
+    // becomes truthy via setCoaches inside this effect — including it would loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showCoachSelect])
 
   // ── Simulation handlers ──

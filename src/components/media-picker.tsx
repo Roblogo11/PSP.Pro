@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { X, Search, Image as ImageIcon, Link as LinkIcon, Check, Loader2 } from 'lucide-react'
+import NextImage from 'next/image'
 
 interface MediaItem {
   id: string
@@ -80,7 +81,7 @@ export function MediaPicker({ value, onChange, label = 'Image', hint, className 
         <div className="flex-1 min-h-[44px] rounded-lg border border-slate-300 dark:border-white/10 bg-white dark:bg-slate-900/40 overflow-hidden flex items-center">
           {value ? (
             <div className="flex items-center gap-2 w-full px-2 py-1">
-              <img src={value} alt="" className="w-10 h-10 rounded object-cover bg-slate-100 dark:bg-slate-800" onError={(e) => { e.currentTarget.style.opacity = '0.3' }} />
+              <NextImage src={value} alt="" width={40} height={40} className="w-10 h-10 rounded object-cover bg-slate-100 dark:bg-slate-800" onError={(e) => { (e.currentTarget as HTMLImageElement).style.opacity = '0.3' }} />
               <span className="text-xs text-slate-600 dark:text-white/70 truncate flex-1" title={value}>{value}</span>
               <button
                 type="button"
@@ -208,10 +209,12 @@ export function MediaPicker({ value, onChange, label = 'Image', hint, className 
                             }`}
                             title={item.title || item.filename}
                           >
-                            <img
+                            <NextImage
                               src={item.thumbnail || item.url}
                               alt={item.title || item.filename}
-                              className="w-full h-full object-cover bg-slate-100 dark:bg-slate-800 group-hover:scale-105 transition-transform"
+                              fill
+                              sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                              className="object-cover bg-slate-100 dark:bg-slate-800 group-hover:scale-105 transition-transform"
                               loading="lazy"
                             />
                             {selected && (
@@ -249,6 +252,7 @@ export function MediaPicker({ value, onChange, label = 'Image', hint, className 
                 {urlInput && (
                   <div className="mt-4">
                     <p className="text-xs font-semibold text-slate-700 dark:text-white mb-2">Preview</p>
+                    {/* eslint-disable-next-line @next/next/no-img-element -- preview accepts arbitrary user-pasted URLs from any domain, which next/image's remotePatterns would block */}
                     <img
                       src={urlInput}
                       alt="Preview"

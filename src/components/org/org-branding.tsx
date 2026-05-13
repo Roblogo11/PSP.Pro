@@ -60,7 +60,7 @@ export function OrgBrandingProvider({ org, children }: OrgBrandingProviderProps)
       root.style.removeProperty('--org-secondary')
       root.removeAttribute('data-org')
     }
-  }, [org?.id, org?.primary_color, org?.secondary_color])
+  }, [org, org?.id, org?.primary_color, org?.secondary_color])
 
   return <>{children}</>
 }

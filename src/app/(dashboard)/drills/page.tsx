@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { DrillFilter, FilterState } from '@/components/drills/drill-filter'
 import { DrillGrid } from '@/components/drills/drill-grid'
@@ -21,12 +21,7 @@ export default function DrillsPage() {
     hoursSpent: 0,
   })
 
-  useEffect(() => {
-    fetchDrills()
-    fetchUserStats()
-  }, [impersonatedUserId])
-
-  const fetchDrills = async () => {
+  const fetchDrills = useCallback(async () => {
     try {
       const supabase = createClient()
       const { data, error } = await supabase
@@ -37,16 +32,20 @@ export default function DrillsPage() {
 
       if (error) throw error
 
-      setDrills(data || [])
-      setFilteredDrills(data || [])
+      const list = data || []
+      setDrills(list)
+      setFilteredDrills(list)
+      // Update stats total here so we don't need to depend on drills.length
+      // inside fetchUserStats (which would create a re-render cycle).
+      setStats((prev) => ({ ...prev, total: list.length }))
     } catch (error) {
       console.error('Error fetching drills:', error)
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  const fetchUserStats = async () => {
+  const fetchUserStats = useCallback(async () => {
     try {
       const supabase = createClient()
 
@@ -67,12 +66,16 @@ export default function DrillsPage() {
       setStats((prev) => ({
         ...prev,
         completed: count || 0,
-        total: drills.length,
       }))
     } catch (error) {
       console.error('Error fetching user stats:', error)
     }
-  }
+  }, [impersonatedUserId])
+
+  useEffect(() => {
+    fetchDrills()
+    fetchUserStats()
+  }, [impersonatedUserId, fetchDrills, fetchUserStats])
 
   const handleFilterChange = (filters: FilterState) => {
     let filtered = [...drills]

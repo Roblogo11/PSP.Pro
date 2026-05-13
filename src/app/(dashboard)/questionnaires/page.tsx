@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { ClipboardCheck, CheckCircle, XCircle, Clock, Loader2, ChevronRight } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
@@ -43,11 +43,7 @@ export default function QuestionnairesPage() {
 
   const effectiveUserId = impersonatedUserId || profile?.id
 
-  useEffect(() => {
-    if (effectiveUserId) fetchAssignments()
-  }, [effectiveUserId])
-
-  const fetchAssignments = async () => {
+  const fetchAssignments = useCallback(async () => {
     setLoading(true)
     const { data } = await supabase
       .from('assigned_questionnaires')
@@ -57,7 +53,11 @@ export default function QuestionnairesPage() {
 
     setAssignments((data || []) as Assignment[])
     setLoading(false)
-  }
+  }, [supabase, effectiveUserId])
+
+  useEffect(() => {
+    if (effectiveUserId) fetchAssignments()
+  }, [effectiveUserId, fetchAssignments])
 
   const startQuiz = (assignment: Assignment) => {
     setActiveAssignment(assignment)

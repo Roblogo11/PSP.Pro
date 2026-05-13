@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import {
   Calendar,
@@ -136,21 +136,8 @@ export default function AdminBookingsPage() {
 
   // Auto-open "Book for Athlete" modal via ?action=book
   const searchParams = useSearchParams()
-  useEffect(() => {
-    if (searchParams.get('action') === 'book' && !roleLoading && (isCoach || isAdmin)) {
-      openBookForAthlete()
-      // Clean URL without reload
-      window.history.replaceState(null, '', '/admin/bookings')
-    }
-  }, [searchParams, roleLoading, isCoach, isAdmin])
 
-  useEffect(() => {
-    if (!roleLoading && (isCoach || isAdmin)) {
-      fetchBookings()
-    }
-  }, [filter, roleLoading, isCoach, isAdmin])
-
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     setLoading(true)
 
     // Try the multi-child-aware query first; fall back if migration 057 hasn't run
@@ -201,7 +188,7 @@ export default function AdminBookingsPage() {
     }
 
     setLoading(false)
-  }
+  }, [supabase, filter, isImpersonatingCoach, impersonatedCoachId, isAdmin, profile?.id])
 
   // Open edit modal
   const openEditBooking = (booking: any) => {
@@ -278,7 +265,7 @@ export default function AdminBookingsPage() {
   }
 
   // Fetch data for book-for-athlete modal
-  const openBookForAthlete = async () => {
+  const openBookForAthlete = useCallback(async () => {
     setShowBookForAthlete(true)
     setBookFormData({ athleteId: '', slotId: '', serviceId: '', paymentMethod: 'on_site', notes: '' })
 
@@ -303,7 +290,21 @@ export default function AdminBookingsPage() {
     setAthletes(athleteRes.data || [])
     setAvailableSlots(slotRes.data || [])
     setServices(serviceRes.data || [])
-  }
+  }, [supabase, isCoach, isAdmin, isImpersonatingCoach, effectiveCoachId])
+
+  useEffect(() => {
+    if (searchParams.get('action') === 'book' && !roleLoading && (isCoach || isAdmin)) {
+      openBookForAthlete()
+      // Clean URL without reload
+      window.history.replaceState(null, '', '/admin/bookings')
+    }
+  }, [searchParams, roleLoading, isCoach, isAdmin, openBookForAthlete])
+
+  useEffect(() => {
+    if (!roleLoading && (isCoach || isAdmin)) {
+      fetchBookings()
+    }
+  }, [filter, roleLoading, isCoach, isAdmin, fetchBookings])
 
   // Submit book-for-athlete
   const handleBookForAthlete = async (e: React.FormEvent) => {

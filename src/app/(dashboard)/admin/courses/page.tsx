@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import {
   Plus, Edit2, Trash2, X, Loader2, Video, Users, GripVertical,
@@ -10,6 +10,7 @@ import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
 import { toastError } from '@/lib/toast'
 import { MediaPicker } from '@/components/media-picker'
+import Image from 'next/image'
 
 interface CourseLesson {
   id?: string
@@ -93,11 +94,7 @@ export default function AdminCoursesPage() {
     }
   }, [roleLoading, profile, isCoach, isAdmin, router])
 
-  useEffect(() => {
-    if (profile) fetchCourses()
-  }, [profile])
-
-  const fetchCourses = async () => {
+  const fetchCourses = useCallback(async () => {
     setLoading(true)
     const { data } = await supabase
       .from('courses')
@@ -113,7 +110,11 @@ export default function AdminCoursesPage() {
       })))
     }
     setLoading(false)
-  }
+  }, [supabase])
+
+  useEffect(() => {
+    if (profile) fetchCourses()
+  }, [profile, fetchCourses])
 
   const openNewForm = () => {
     setEditingCourse(null)
@@ -322,13 +323,15 @@ export default function AdminCoursesPage() {
           {courses.map(course => (
             <div key={course.id} className="glass-card p-5 rounded-2xl border border-cyan-200/40 hover:border-cyan/40 transition-all">
               {/* Thumbnail */}
-              <div className="mb-4 rounded-xl overflow-hidden aspect-video bg-slate-800">
+              <div className="relative mb-4 rounded-xl overflow-hidden aspect-video bg-slate-800">
                 {course.thumbnail_url ? (
-                  <img
+                  <Image
                     src={course.thumbnail_url}
                     alt={course.title}
-                    className="w-full h-full object-cover"
-                    onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.parentElement?.querySelector('.thumb-fallback')?.classList.remove('hidden') }}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover"
+                    onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; (e.currentTarget as HTMLImageElement).parentElement?.querySelector('.thumb-fallback')?.classList.remove('hidden') }}
                   />
                 ) : null}
                 <div className={`thumb-fallback w-full h-full flex items-center justify-center ${course.thumbnail_url ? 'hidden' : ''}`}>

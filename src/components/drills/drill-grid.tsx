@@ -44,7 +44,7 @@ export function DrillGrid({ drills, loading = false }: DrillGridProps) {
             No Drills Found
           </h3>
           <p className="text-cyan-700 dark:text-white">
-            Try adjusting your filters or search terms to find what you're looking for.
+            Try adjusting your filters or search terms to find what you&apos;re looking for.
           </p>
         </div>
       </div>

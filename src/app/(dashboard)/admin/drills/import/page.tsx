@@ -169,7 +169,7 @@ Rotational Power Training,Medicine ball exercises for core rotation,https://yout
         <div className="mt-6 p-4 bg-cyan/10 border border-cyan/20 rounded-xl">
           <p className="text-cyan text-sm font-semibold mb-2">💡 Pro Tip: YouTube Video Protection</p>
           <p className="text-cyan-700 dark:text-white text-sm">
-            YouTube videos are automatically protected - they can't be downloaded by viewers,
+            YouTube videos are automatically protected - they can&apos;t be downloaded by viewers,
             are streamed securely, and you maintain full control through your YouTube channel.
           </p>
         </div>

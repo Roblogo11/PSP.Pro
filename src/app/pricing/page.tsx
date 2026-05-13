@@ -123,7 +123,7 @@ export default function PricingPage() {
     }
 
     fetchMemberPackage()
-  }, [profile?.id, isCoach, isAdmin])
+  }, [profile, profile?.id, isCoach, isAdmin])
 
   // Group services by category dynamically
   const servicesByCategory = services.reduce<Record<string, PricingService[]>>((acc, s) => {

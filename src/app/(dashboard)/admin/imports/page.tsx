@@ -40,7 +40,7 @@ export default function AdminImportsPage() {
       setLoading(false)
     }
     fetchData()
-  }, [])
+  }, [supabase])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]

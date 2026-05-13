@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { Tag, Plus, Trash2, Copy, Check, X, Loader2 } from 'lucide-react'
@@ -40,18 +40,18 @@ export default function AdminPromosPage() {
 
   const supabase = createClient()
 
-  useEffect(() => {
-    fetchPromos()
-  }, [])
-
-  const fetchPromos = async () => {
+  const fetchPromos = useCallback(async () => {
     const { data } = await supabase
       .from('promo_codes')
       .select('*')
       .order('created_at', { ascending: false })
     if (data) setPromos(data)
     setLoading(false)
-  }
+  }, [supabase])
+
+  useEffect(() => {
+    fetchPromos()
+  }, [fetchPromos])
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()

@@ -134,7 +134,7 @@ export function Testimonials() {
 
             {/* Quote */}
             <blockquote className="text-xl md:text-2xl text-white text-center mb-8 leading-relaxed">
-              "{current.quote}"
+              &quot;{current.quote}&quot;
             </blockquote>
 
             {/* Stats (if available) */}
@@ -201,7 +201,7 @@ export function Testimonials() {
                   <Star key={i} className="w-4 h-4 fill-orange text-orange" />
                 ))}
               </div>
-              <p className="text-sm text-cyan-700 dark:text-white mb-4 line-clamp-3">"{testimonial.quote}"</p>
+              <p className="text-sm text-cyan-700 dark:text-white mb-4 line-clamp-3">&quot;{testimonial.quote}&quot;</p>
               <div className="pt-3 border-t border-cyan-200/40">
                 <p className="text-sm font-bold text-white">{testimonial.name}</p>
                 <p className="text-xs text-cyan-800 dark:text-white">{testimonial.role}</p>

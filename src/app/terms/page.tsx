@@ -111,7 +111,7 @@ export default function TermsPage() {
           <ul className="list-disc list-inside text-slate-700 dark:text-white/80 space-y-2 ml-4">
             <li>Use the platform only for lawful purposes</li>
             <li>Not share your account credentials with others</li>
-            <li>Not attempt to access other users' data or accounts</li>
+            <li>Not attempt to access other users&apos; data or accounts</li>
             <li>Not interfere with platform security or functionality</li>
             <li>Not scrape, copy, or redistribute platform content without permission</li>
           </ul>

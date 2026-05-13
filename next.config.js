@@ -38,6 +38,18 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'i.ytimg.com',
       },
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.stripeassets.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.google.com',
+      },
     ],
   },
 }

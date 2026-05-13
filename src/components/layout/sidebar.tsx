@@ -185,7 +185,7 @@ export function Sidebar() {
     }
 
     fetchBadges()
-  }, [profile?.id, isCoach, isAdmin, impersonatedUserId])
+  }, [profile, profile?.id, isCoach, isAdmin, impersonatedUserId])
 
   const handleLogout = async () => {
     const supabase = createClient()

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Calendar, Clock, ArrowRight, BookOpen, TrendingUp, Loader2, CheckCircle } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { SpokeNav } from '@/components/navigation/spoke-nav'
@@ -164,10 +165,12 @@ export default function BlogPage() {
         <Link href={`/blog/${featuredPost.slug}`} className="block group">
           <div className="command-panel p-0 overflow-hidden lg:flex">
             <div className="lg:w-1/2 relative aspect-video lg:aspect-auto">
-              <img
+              <Image
                 src={featuredPost.thumbnail_url || '/images/psp pitcher.webp'}
                 alt={featuredPost.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute top-4 left-4 px-3 py-1 bg-orange rounded-full text-xs font-semibold text-white">
                 Featured
@@ -214,10 +217,12 @@ export default function BlogPage() {
                 className="glass-card-hover overflow-hidden group block"
               >
                 <div className="relative aspect-video overflow-hidden">
-                  <img
+                  <Image
                     src={post.thumbnail_url || '/images/psp pitcher.webp'}
                     alt={post.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-navy to-transparent opacity-60" />
                 </div>

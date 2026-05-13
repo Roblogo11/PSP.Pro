@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import Link from 'next/link'
+import Image from 'next/image'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { SpokeNav } from '@/components/navigation/spoke-nav'
 import { Users, Star, Calendar } from 'lucide-react'
@@ -58,7 +59,7 @@ export default async function CoachesPage() {
                       {/* Avatar */}
                       <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-orange/30 to-cyan/20 flex items-center justify-center flex-shrink-0 overflow-hidden">
                         {coach.avatar_url ? (
-                          <img src={coach.avatar_url} alt={coach.full_name} className="w-full h-full object-cover" />
+                          <Image src={coach.avatar_url} alt={coach.full_name} width={64} height={64} className="w-full h-full object-cover" />
                         ) : (
                           <span className="text-2xl font-black text-white">{coach.full_name?.[0] || 'C'}</span>
                         )}

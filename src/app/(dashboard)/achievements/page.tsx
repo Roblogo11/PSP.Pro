@@ -268,7 +268,7 @@ export default function AchievementsPage() {
           <Zap className="w-12 h-12 text-cyan mx-auto mb-4" />
           <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Keep Pushing!</h3>
           <p className="text-cyan-700 dark:text-white max-w-2xl mx-auto">
-            You're making great progress! Complete drills, ace pop quizzes, maintain your training streak, and
+            You&apos;re making great progress! Complete drills, ace pop quizzes, maintain your training streak, and
             improve your velocity to unlock more achievements.
           </p>
         </div>

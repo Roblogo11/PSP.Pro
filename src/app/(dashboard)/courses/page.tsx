@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { BookOpen, Video, Play, CheckCircle, Loader2 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface Course {
   id: string
@@ -41,11 +42,7 @@ export default function CoursesPage() {
 
   const effectiveUserId = impersonatedUserId || profile?.id
 
-  useEffect(() => {
-    if (effectiveUserId) fetchCourses()
-  }, [effectiveUserId])
-
-  const fetchCourses = async () => {
+  const fetchCourses = useCallback(async () => {
     setLoading(true)
 
     // Fetch all active courses with lesson counts
@@ -98,7 +95,11 @@ export default function CoursesPage() {
 
     setCourses(courseList)
     setLoading(false)
-  }
+  }, [supabase, effectiveUserId])
+
+  useEffect(() => {
+    if (effectiveUserId) fetchCourses()
+  }, [effectiveUserId, fetchCourses])
 
   const handleEnroll = async (courseId: string) => {
     if (!effectiveUserId) return
@@ -183,11 +184,13 @@ export default function CoursesPage() {
               {/* Thumbnail */}
               <div className="aspect-video bg-slate-800 relative overflow-hidden">
                 {course.thumbnail_url ? (
-                  <img
+                  <Image
                     src={course.thumbnail_url}
                     alt={course.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.parentElement?.querySelector('.thumb-fallback')?.classList.remove('hidden') }}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; (e.currentTarget as HTMLImageElement).parentElement?.querySelector('.thumb-fallback')?.classList.remove('hidden') }}
                   />
                 ) : null}
                 <div className={`thumb-fallback w-full h-full flex items-center justify-center ${course.thumbnail_url ? 'hidden' : ''}`}>

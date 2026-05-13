@@ -308,7 +308,7 @@ export default function FAQPage() {
         <div className="command-panel p-8 text-center">
           <h3 className="text-2xl font-bold text-white mb-4">Still Have Questions?</h3>
           <p className="text-cyan-700 dark:text-white mb-6">
-            Can't find what you're looking for? Our team is here to help!
+            Can&apos;t find what you&apos;re looking for? Our team is here to help!
           </p>
           <a
             href="/contact"

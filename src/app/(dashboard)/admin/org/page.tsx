@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { toastSuccess, toastError } from '@/lib/toast'
@@ -10,6 +10,7 @@ import {
   Copy, Trash2, UserPlus, Shield, Zap,
 } from 'lucide-react'
 import { LogoColorExtractor } from '@/components/org/logo-color-extractor'
+import Image from 'next/image'
 
 interface Org {
   id: string
@@ -76,7 +77,32 @@ export default function OrgPage() {
   const [generatingOrgLink, setGeneratingOrgLink] = useState(false)
   const [copiedOrgLinkId, setCopiedOrgLinkId] = useState<string | null>(null)
 
-  useEffect(() => { loadOrgs() }, [])
+  const loadOrgs = useCallback(async () => {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/org')
+      const data = await res.json()
+      setOrgs(data.orgs || [])
+      // Use functional setter to avoid depending on selectedOrg (which would
+      // cause re-fetches whenever selection changes).
+      if (data.orgs?.length) setSelectedOrg(prev => prev || data.orgs[0])
+    } catch {
+      toastError('Failed to load organizations')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const loadConnectStatus = useCallback(async () => {
+    if (!selectedOrg) return
+    try {
+      const res = await fetch(`/api/stripe/connect/status?org_id=${selectedOrg.id}`)
+      const data = await res.json()
+      setConnectStatus(data)
+    } catch {}
+  }, [selectedOrg])
+
+  useEffect(() => { loadOrgs() }, [loadOrgs])
   useEffect(() => {
     if (selectedOrg) {
       setBrandingForm({
@@ -91,7 +117,7 @@ export default function OrgPage() {
       loadConnectStatus()
       loadOrgInviteLinks(selectedOrg.id)
     }
-  }, [selectedOrg])
+  }, [selectedOrg, loadConnectStatus])
 
   // Handle return from Stripe onboarding
   useEffect(() => {
@@ -102,21 +128,7 @@ export default function OrgPage() {
     } else if (status === 'refresh') {
       toastError('Onboarding incomplete. Please try again.')
     }
-  }, [searchParams])
-
-  async function loadOrgs() {
-    setLoading(true)
-    try {
-      const res = await fetch('/api/org')
-      const data = await res.json()
-      setOrgs(data.orgs || [])
-      if (data.orgs?.length && !selectedOrg) setSelectedOrg(data.orgs[0])
-    } catch {
-      toastError('Failed to load organizations')
-    } finally {
-      setLoading(false)
-    }
-  }
+  }, [searchParams, loadConnectStatus])
 
   async function loadOrgDetail(orgId: string) {
     try {
@@ -126,15 +138,6 @@ export default function OrgPage() {
         setSelectedOrg(data.org)
         setOrgs(prev => prev.map(o => o.id === orgId ? data.org : o))
       }
-    } catch {}
-  }
-
-  async function loadConnectStatus() {
-    if (!selectedOrg) return
-    try {
-      const res = await fetch(`/api/stripe/connect/status?org_id=${selectedOrg.id}`)
-      const data = await res.json()
-      setConnectStatus(data)
     } catch {}
   }
 
@@ -417,7 +420,8 @@ export default function OrgPage() {
               >
                 <div className="flex items-center gap-3">
                   {org.logo_url ? (
-                    <img src={org.logo_url} alt={org.name}
+                    <Image src={org.logo_url} alt={org.name}
+                      width={32} height={32}
                       className="w-8 h-8 rounded-lg object-cover" />
                   ) : (
                     <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm"
@@ -462,7 +466,8 @@ export default function OrgPage() {
                   <div className="glass-card p-6">
                     <div className="flex items-start gap-4">
                       {selectedOrg.logo_url ? (
-                        <img src={selectedOrg.logo_url} alt={selectedOrg.name}
+                        <Image src={selectedOrg.logo_url} alt={selectedOrg.name}
+                          width={64} height={64}
                           className="w-16 h-16 rounded-2xl object-cover shadow-lg" />
                       ) : (
                         <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg"
@@ -766,7 +771,7 @@ export default function OrgPage() {
                           <Check className="w-5 h-5 text-green-500" />
                           <div>
                             <p className="font-semibold text-green-700 dark:text-green-400">Stripe Connected</p>
-                            <p className="text-sm text-green-600 dark:text-green-400/70">Payouts are enabled. Athletes' payments split automatically.</p>
+                            <p className="text-sm text-green-600 dark:text-green-400/70">Payouts are enabled. Athletes&apos; payments split automatically.</p>
                           </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4">

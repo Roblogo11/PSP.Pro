@@ -289,7 +289,7 @@ export default function AnalyticsPage() {
 
     setLoadingData(true)
     loadAnalytics()
-  }, [profile, isCoach, isAdmin, isCoachOnly, timeRange])
+  }, [profile, isCoach, isAdmin, isCoachOnly, timeRange, effectiveCoachId])
 
   if (loading || loadingData) {
     return (

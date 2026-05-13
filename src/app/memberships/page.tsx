@@ -132,7 +132,7 @@ export default function MembershipsPage() {
             </h1>
 
             <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-10">
-              A structured development pathway designed to accelerate your athlete's progress with data-driven training and professional coaching.
+              A structured development pathway designed to accelerate your athlete&apos;s progress with data-driven training and professional coaching.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -162,7 +162,7 @@ export default function MembershipsPage() {
                 Choose Your Path
               </h2>
               <p className="text-lg text-slate-600 dark:text-white/60">
-                Start free. Upgrade when you're ready to accelerate.
+                Start free. Upgrade when you&apos;re ready to accelerate.
               </p>
             </div>
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { ArrowLeft, BookOpen, CheckCircle, Circle, Lock, Play, Video, Loader2 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
@@ -46,11 +46,7 @@ export default function CourseDetailPage() {
 
   const effectiveUserId = impersonatedUserId || profile?.id
 
-  useEffect(() => {
-    if (effectiveUserId && slug) fetchCourse()
-  }, [effectiveUserId, slug])
-
-  const fetchCourse = async () => {
+  const fetchCourse = useCallback(async () => {
     setLoading(true)
 
     // Fetch course
@@ -102,7 +98,11 @@ export default function CourseDetailPage() {
     setActiveLesson(firstIncomplete || mappedLessons[0] || null)
 
     setLoading(false)
-  }
+  }, [supabase, slug, effectiveUserId])
+
+  useEffect(() => {
+    if (effectiveUserId && slug) fetchCourse()
+  }, [effectiveUserId, slug, fetchCourse])
 
   const handleEnroll = async () => {
     if (!effectiveUserId || !course) return

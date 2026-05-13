@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { getLocalDateString } from '@/lib/utils/local-date'
@@ -55,40 +55,7 @@ export default function BookingPage() {
       .catch(() => {})
   }, [orgId])
 
-  // Fetch services + membership tier on mount
-  useEffect(() => {
-    fetchServices()
-    async function fetchTier() {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        const { data } = await supabase.from('profiles').select('membership_tier').eq('id', user.id).single()
-        if (data?.membership_tier) setMembershipTier(data.membership_tier)
-      }
-    }
-    fetchTier()
-  }, [])
-
-  // Auto-select service from URL param after services load
-  useEffect(() => {
-    if (preselectedServiceId && services.length > 0 && !selectedServiceId) {
-      const match = services.find(s => s.id === preselectedServiceId)
-      if (match) {
-        setSelectedServiceId(match.id)
-        setCurrentStep('date')
-        fetchAvailableDatesForMonth(calendarMonth, match.id)
-      }
-    }
-  }, [preselectedServiceId, services, selectedServiceId])
-
-  // Fetch time slots when date is selected
-  useEffect(() => {
-    if (selectedDate && selectedServiceId) {
-      fetchTimeSlots()
-      fetchUserBookings()
-    }
-  }, [selectedDate, selectedServiceId])
-
-  const fetchServices = async () => {
+  const fetchServices = useCallback(async () => {
     let query = supabase
       .from('services')
       .select('*')
@@ -105,9 +72,22 @@ export default function BookingPage() {
     } else if (error) {
       console.error('Error fetching services:', error)
     }
-  }
+  }, [supabase, orgId])
 
-  const fetchTimeSlots = async () => {
+  // Fetch services + membership tier on mount
+  useEffect(() => {
+    fetchServices()
+    async function fetchTier() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data } = await supabase.from('profiles').select('membership_tier').eq('id', user.id).single()
+        if (data?.membership_tier) setMembershipTier(data.membership_tier)
+      }
+    }
+    fetchTier()
+  }, [fetchServices, supabase])
+
+  const fetchTimeSlots = useCallback(async () => {
     if (!selectedDate || !selectedServiceId) return
 
     setLoading(true)
@@ -151,9 +131,9 @@ export default function BookingPage() {
     }
 
     setLoading(false)
-  }
+  }, [supabase, selectedDate, selectedServiceId, preselectedCoachId])
 
-  const fetchUserBookings = async () => {
+  const fetchUserBookings = useCallback(async () => {
     if (!selectedDate) return
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
@@ -169,9 +149,9 @@ export default function BookingPage() {
     if (data) {
       setBookedSlotIds(data.map((b: any) => b.slot_id).filter(Boolean))
     }
-  }
+  }, [supabase, selectedDate])
 
-  const fetchAvailableDatesForMonth = async (month: Date, serviceId: string) => {
+  const fetchAvailableDatesForMonth = useCallback(async (month: Date, serviceId: string) => {
     const year = month.getFullYear()
     const m = month.getMonth()
     const firstDay = `${year}-${String(m + 1).padStart(2, '0')}-01`
@@ -194,7 +174,27 @@ export default function BookingPage() {
       const unique = [...new Set(data.map((s: any) => s.slot_date as string))]
       setAvailableDates(unique.map((d) => new Date(d + 'T00:00:00')))
     }
-  }
+  }, [supabase, preselectedCoachId])
+
+  // Auto-select service from URL param after services load
+  useEffect(() => {
+    if (preselectedServiceId && services.length > 0 && !selectedServiceId) {
+      const match = services.find(s => s.id === preselectedServiceId)
+      if (match) {
+        setSelectedServiceId(match.id)
+        setCurrentStep('date')
+        fetchAvailableDatesForMonth(calendarMonth, match.id)
+      }
+    }
+  }, [preselectedServiceId, services, selectedServiceId, calendarMonth, fetchAvailableDatesForMonth])
+
+  // Fetch time slots when date is selected
+  useEffect(() => {
+    if (selectedDate && selectedServiceId) {
+      fetchTimeSlots()
+      fetchUserBookings()
+    }
+  }, [selectedDate, selectedServiceId, fetchTimeSlots, fetchUserBookings])
 
   const handleServiceSelect = (serviceId: string) => {
     setSelectedServiceId(serviceId)

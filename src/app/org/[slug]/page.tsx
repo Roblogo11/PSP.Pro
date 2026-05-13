@@ -61,7 +61,7 @@ export default function OrgLandingPage({ params }: { params: { slug: string } })
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 text-white gap-4">
         <Building2 className="w-12 h-12 text-slate-600" />
         <h1 className="text-2xl font-bold">Organization Not Found</h1>
-        <p className="text-white/60">The organization <span className="font-mono text-cyan-400">/{slug}</span> doesn't exist or is inactive.</p>
+        <p className="text-white/60">The organization <span className="font-mono text-cyan-400">/{slug}</span> doesn&apos;t exist or is inactive.</p>
         <Link href="/" className="mt-2 text-cyan-400 hover:text-cyan-300 underline underline-offset-4">
           Back to PSP.Pro
         </Link>

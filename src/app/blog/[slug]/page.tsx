@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Calendar, Clock, ArrowLeft, Share2, BookOpen, Loader2 } from 'lucide-react'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { createClient } from '@/lib/supabase/client'
@@ -288,10 +289,12 @@ export default function BlogPostPage() {
         const src = imgMatch[2]
         elements.push(
           <figure key={i} className="my-8">
-            <img
+            <Image
               src={src}
               alt={alt}
-              className="w-full rounded-xl"
+              width={1200}
+              height={675}
+              className="w-full h-auto rounded-xl"
               loading="lazy"
             />
             {alt && alt !== src && (
@@ -405,10 +408,12 @@ export default function BlogPostPage() {
           {/* Hero Image */}
           {post.thumbnail_url && (
             <div className="relative aspect-video rounded-2xl overflow-hidden mb-10">
-              <img
+              <Image
                 src={post.thumbnail_url}
                 alt={post.title}
-                className="w-full h-full object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 768px"
+                className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-navy/50 to-transparent" />
             </div>
@@ -445,10 +450,12 @@ export default function BlogPostPage() {
                   <Link key={related.id} href={`/blog/${related.slug}`}>
                     <div className="glass-card-hover overflow-hidden group">
                       <div className="relative aspect-video overflow-hidden">
-                        <img
+                        <Image
                           src={related.thumbnail_url || '/images/psp pitcher.webp'}
                           alt={related.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                       </div>
                       <div className="p-5">

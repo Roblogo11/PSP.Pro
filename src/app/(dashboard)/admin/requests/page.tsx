@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { toastSuccess, toastError } from '@/lib/toast'
 import { useUserRole } from '@/lib/hooks/use-user-role'
@@ -54,13 +54,7 @@ export default function RequestsPage() {
     }
   }, [profileLoading, isMasterAdmin, router])
 
-  // Load requests
-  useEffect(() => {
-    if (!profile) return
-    loadRequests()
-  }, [profile, activeTab])
-
-  const loadRequests = async () => {
+  const loadRequests = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch(`/api/actions/request?status=${activeTab}`)
@@ -76,7 +70,13 @@ export default function RequestsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [activeTab])
+
+  // Load requests
+  useEffect(() => {
+    if (!profile) return
+    loadRequests()
+  }, [profile, activeTab, loadRequests])
 
   const handleReview = async (requestId: string, action: 'approve' | 'deny', execute: boolean = true) => {
     setProcessingId(requestId)

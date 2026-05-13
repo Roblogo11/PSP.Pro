@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { toastError } from '@/lib/toast'
 import { createClient } from '@/lib/supabase/client'
 import {
@@ -67,11 +67,7 @@ export default function AdminQuestionnairesPage() {
     }
   }, [roleLoading, profile, isCoach, isAdmin, router])
 
-  useEffect(() => {
-    if (profile) fetchQuestionnaires()
-  }, [profile])
-
-  const fetchQuestionnaires = async () => {
+  const fetchQuestionnaires = useCallback(async () => {
     setLoading(true)
     const { data } = await supabase
       .from('questionnaires')
@@ -85,7 +81,11 @@ export default function AdminQuestionnairesPage() {
       })))
     }
     setLoading(false)
-  }
+  }, [supabase])
+
+  useEffect(() => {
+    if (profile) fetchQuestionnaires()
+  }, [profile, fetchQuestionnaires])
 
   const openNewForm = () => {
     setEditingQ(null)
@@ -212,7 +212,7 @@ export default function AdminQuestionnairesPage() {
             Pop <span className="text-gradient-orange">Quiz</span>
           </h1>
           <p className="text-cyan-800 dark:text-white text-lg">
-            Create and assign quizzes to test your athletes' game IQ
+            Create and assign quizzes to test your athletes&apos; game IQ
           </p>
         </div>
         <button onClick={openNewForm} className="btn-primary flex items-center justify-center gap-2 text-sm w-full sm:w-auto">
@@ -226,7 +226,7 @@ export default function AdminQuestionnairesPage() {
         <div className="glass-card p-12 text-center">
           <ClipboardCheck className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
           <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No quizzes yet</h3>
-          <p className="text-cyan-700 dark:text-white/70 mb-4">Create true/false pop quizzes to test your athletes' game knowledge.</p>
+          <p className="text-cyan-700 dark:text-white/70 mb-4">Create true/false pop quizzes to test your athletes&apos; game knowledge.</p>
           <button onClick={openNewForm} className="btn-primary">Create Quiz</button>
         </div>
       ) : (

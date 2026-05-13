@@ -82,7 +82,7 @@ export default function VideoAnalysisPage() {
         .order('full_name')
         .then(({ data }: { data: any }) => setAthletes(data || []))
     }
-  }, [isCoach, isAdmin, profile])
+  }, [isCoach, isAdmin, profile, supabase])
 
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]

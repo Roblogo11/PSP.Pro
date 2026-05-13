@@ -1807,7 +1807,7 @@ export function PSPAssistant() {
                   </button>
                 </div>
                 <p className="text-[10px] text-white/40 mt-2 text-center">
-                  I know every page — try "walk me through" any feature
+                  I know every page — try &quot;walk me through&quot; any feature
                 </p>
               </form>
             </motion.div>

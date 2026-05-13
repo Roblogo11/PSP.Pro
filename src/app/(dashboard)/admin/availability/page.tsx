@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { getLocalDateString } from '@/lib/utils/local-date'
 import { Plus, Calendar, MapPin, Trash2, Loader2, Repeat, Edit2, X, AlertTriangle, UserPlus, CheckSquare, Square } from 'lucide-react'
@@ -66,28 +66,14 @@ export default function AvailabilityManagementPage() {
     }
   }, [roleLoading, isCoach, isAdmin, router])
 
-  useEffect(() => {
-    const init = async () => {
-      await fetchUser()
-      await fetchServices()
-    }
-    init()
-  }, [])
-
-  useEffect(() => {
-    if (user) {
-      fetchSlots()
-    }
-  }, [user])
-
-  const fetchUser = async () => {
+  const fetchUser = useCallback(async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser()
     setUser(user)
-  }
+  }, [supabase])
 
-  const fetchServices = async () => {
+  const fetchServices = useCallback(async () => {
     const { data, error: fetchError } = await supabase
       .from('services')
       .select('id, name, max_participants')
@@ -98,9 +84,9 @@ export default function AvailabilityManagementPage() {
       console.error('Failed to fetch services:', fetchError)
     }
     if (data) setServices(data)
-  }
+  }, [supabase])
 
-  const fetchSlots = async () => {
+  const fetchSlots = useCallback(async () => {
     setLoading(true)
 
     if (!user) {
@@ -152,7 +138,21 @@ export default function AvailabilityManagementPage() {
     }
     if (data) setSlots(data)
     setLoading(false)
-  }
+  }, [supabase, user, isImpersonatingCoach, impersonatedCoachId, isSimulating, isAdmin])
+
+  useEffect(() => {
+    const init = async () => {
+      await fetchUser()
+      await fetchServices()
+    }
+    init()
+  }, [fetchUser, fetchServices])
+
+  useEffect(() => {
+    if (user) {
+      fetchSlots()
+    }
+  }, [user, fetchSlots])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

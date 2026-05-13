@@ -37,17 +37,19 @@ export function useOrg(): UseOrgResult {
       const data = await res.json()
       const orgList: OrgBranding[] = data.orgs || []
       setOrgs(orgList)
-      if (orgList.length && !currentOrg) {
-        setCurrentOrg(orgList[0])
+      // Use functional setter so refreshOrgs doesn't need to depend on currentOrg
+      // (depending on it would re-fetch every time the selection changed).
+      if (orgList.length) {
+        setCurrentOrg(prev => prev || orgList[0])
       }
     } catch {
       // Not authenticated or no orgs — silently skip
     } finally {
       setLoading(false)
     }
-  }, [currentOrg])
+  }, [])
 
-  useEffect(() => { refreshOrgs() }, [])
+  useEffect(() => { refreshOrgs() }, [refreshOrgs])
 
   return { orgs, currentOrg, loading, setCurrentOrg, refreshOrgs }
 }

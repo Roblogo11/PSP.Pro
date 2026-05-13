@@ -172,7 +172,7 @@ export default function CreateAthletePage() {
             </label>
             <div className="p-3 bg-cyan-50/50 border border-cyan-200/40 rounded-xl">
               <p className="text-sm text-cyan-700 dark:text-white">
-                A secure random password is generated automatically. The athlete should use <strong>"Forgot Password"</strong> on the login page to set their own password.
+                A secure random password is generated automatically. The athlete should use <strong>&quot;Forgot Password&quot;</strong> on the login page to set their own password.
               </p>
             </div>
           </div>

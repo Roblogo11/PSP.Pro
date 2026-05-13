@@ -137,7 +137,7 @@ export function GoogleReviews() {
             <span className="text-sm font-semibold text-orange">Interactive Game</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
-            Match the <span className="text-gradient-orange">Owner's Rating</span>
+            Match the <span className="text-gradient-orange">Owner&apos;s Rating</span>
           </h2>
           <p className="text-lg text-cyan-800 dark:text-white max-w-sm mx-auto mb-6">
             Read each review and guess what rating they gave us. Can you match all&nbsp;6?
@@ -192,7 +192,7 @@ export function GoogleReviews() {
           {gameStarted && (
             <div className="glass-card p-4 max-w-2xl mx-auto mb-8">
               <p className="text-sm text-cyan-700 dark:text-white">
-                <strong className="text-white">How to Play:</strong> Read each review → Click stars to select your guess → Hit "Reveal" to see if you matched!
+                <strong className="text-white">How to Play:</strong> Read each review → Click stars to select your guess → Hit &quot;Reveal&quot; to see if you matched!
               </p>
             </div>
           )}

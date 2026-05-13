@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 import { siteConfig } from '@/config/site'
 import { Providers } from '@/providers'
@@ -103,8 +104,8 @@ export default function RootLayout({
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
         <JsonLdSchema />
-        {/* External script — no unsafe-inline needed in CSP */}
-        <script src="/theme-init.js" />
+        {/* External script — runs before paint to prevent flash-of-wrong-theme */}
+        <Script src="/theme-init.js" strategy="beforeInteractive" />
       </head>
       <body className="min-h-screen min-h-[100dvh]" suppressHydrationWarning>
         <Providers>

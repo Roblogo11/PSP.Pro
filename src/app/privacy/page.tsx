@@ -144,7 +144,7 @@ export default function PrivacyPage() {
             <p className="text-sm text-slate-700 dark:text-white/80">
               <strong className="text-slate-900 dark:text-white">Do Not Sell or Share:</strong> PSP.Pro does not sell or share personal information. If you still wish to opt out of any future data sharing, email{' '}
               <a href="mailto:privacy@propersports.pro" className="text-cyan hover:underline">privacy@propersports.pro</a>{' '}
-              with subject "Do Not Sell — California Opt-Out".
+              with subject &quot;Do Not Sell — California Opt-Out&quot;.
             </p>
           </div>
         </section>
@@ -159,24 +159,24 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">9. Children's Privacy (COPPA)</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">9. Children&apos;s Privacy (COPPA)</h2>
           <p className="text-slate-700 dark:text-white/80 leading-relaxed">
             Our services are used by athletes of all ages, including minors. Athletes under 13 may not self-register
             and must be enrolled directly by a coach or admin. Athletes ages 13–17 must provide parent or guardian
             contact information at signup, and we notify the parent or guardian when an account is created.
-            We do not use minor athletes' data for marketing or share it with third parties.
+            We do not use minor athletes&apos; data for marketing or share it with third parties.
             Parents may contact{' '}
             <a href="mailto:privacy@propersports.pro" className="text-cyan hover:underline">
               privacy@propersports.pro
             </a>{' '}
-            to review, correct, or delete their child's information at any time.
+            to review, correct, or delete their child&apos;s information at any time.
           </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">10. Changes to This Policy</h2>
           <p className="text-slate-700 dark:text-white/80 leading-relaxed">
-            We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.
+            We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the &quot;Last Updated&quot; date.
           </p>
         </section>
 

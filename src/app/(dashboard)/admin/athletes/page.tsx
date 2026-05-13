@@ -28,6 +28,7 @@ import {
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 interface Athlete {
   id: string
@@ -672,9 +673,11 @@ export default function AthletesManagementPage() {
               {/* Athlete Header */}
               <div className="flex items-start gap-3 mb-4">
                 {athlete.avatar_url ? (
-                  <img
+                  <Image
                     src={athlete.avatar_url}
                     alt={athlete.full_name}
+                    width={64}
+                    height={64}
                     className="w-16 h-16 rounded-full object-cover"
                   />
                 ) : (

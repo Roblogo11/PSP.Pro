@@ -507,7 +507,7 @@ export default function SignupPage() {
               className="mt-1 w-4 h-4 rounded border-cyan-700/40 bg-cyan-900/30 text-orange focus:ring-cyan/50"
             />
             <label htmlFor="newsletterConsent" className="text-sm text-slate-500 dark:text-white/60">
-              I'd like to receive training tips, updates, and news from PSP.Pro. (Optional — unsubscribe anytime)
+              I&apos;d like to receive training tips, updates, and news from PSP.Pro. (Optional — unsubscribe anytime)
             </label>
           </div>
 

@@ -21,6 +21,7 @@ import {
   ShieldCheck,
   Inbox,
 } from 'lucide-react'
+import Image from 'next/image'
 import { VelocityChart } from '@/components/dashboard/velocity-chart'
 import { NextSessionCard } from '@/components/dashboard/next-session-card'
 import { StatCard } from '@/components/dashboard/stat-card'
@@ -650,10 +651,12 @@ export default function AthleteLockerPage() {
                   <div className="glass-card-hover group cursor-pointer overflow-hidden">
                     <div className="relative h-32 bg-cyan-900 overflow-hidden">
                       {course.thumbnail_url ? (
-                        <img
+                        <Image
                           src={course.thumbnail_url}
                           alt={course.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          fill
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          className="object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-cyan-900 to-orange/20">
@@ -717,10 +720,12 @@ export default function AthleteLockerPage() {
                   {/* Thumbnail */}
                   <div className="relative h-36 sm:h-48 bg-cyan-900 overflow-hidden">
                     {drill.thumbnail_url ? (
-                      <img
+                      <Image
                         src={drill.thumbnail_url}
                         alt={drill.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-cyan-900 to-orange/20">

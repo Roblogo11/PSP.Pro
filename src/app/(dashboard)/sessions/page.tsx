@@ -31,7 +31,7 @@ export default function SessionsPage() {
       toastSuccess('Session rescheduled successfully!')
       router.replace('/sessions')
     }
-  }, [])
+  }, [searchParams, router])
 
   // Fetch calendar sync URL
   useEffect(() => {
@@ -423,7 +423,7 @@ export default function SessionsPage() {
               </div>
 
               <p className="text-cyan-700 dark:text-white text-sm">
-                You'll be redirected to the booking calendar to select a new time slot.
+                You&apos;ll be redirected to the booking calendar to select a new time slot.
               </p>
             </div>
 

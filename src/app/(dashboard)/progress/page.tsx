@@ -65,7 +65,7 @@ export default function ProgressPage() {
   ]
 
   // Build multi-metric chart data
-  const defaultMetricKeys = DEFAULT_CHART_METRICS[sportTab] || []
+  const defaultMetricKeys = useMemo(() => DEFAULT_CHART_METRICS[sportTab] || [], [sportTab])
   const sportMetrics = SPORT_METRICS[sportTab] || []
 
   const chartData = useMemo(() => {
