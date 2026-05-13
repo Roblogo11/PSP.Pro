@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { ArrowLeft, BookOpen, CheckCircle, Circle, Lock, Play, Video, Loader2 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { VideoPlayer } from '@/components/ui/video-player'
+import { ExpandableText } from '@/components/expandable-text'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
@@ -184,7 +185,12 @@ export default function CourseDetailPage() {
               {course.title}
             </h1>
             {course.description && (
-              <p className="text-cyan-800 dark:text-white/70 text-lg max-w-2xl">{course.description}</p>
+              <ExpandableText
+                text={course.description}
+                previewChars={260}
+                className="max-w-2xl"
+                paragraphClassName="text-cyan-800 dark:text-white/70 text-base md:text-lg leading-relaxed"
+              />
             )}
           </div>
 
@@ -222,10 +228,14 @@ export default function CourseDetailPage() {
                 <VideoPlayer url={activeLesson.video_url} title={activeLesson.title} />
               </div>
               <div className="flex items-start justify-between gap-4">
-                <div>
-                  <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-1">{activeLesson.title}</h2>
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{activeLesson.title}</h2>
                   {activeLesson.description && (
-                    <p className="text-sm text-cyan-700 dark:text-white/70">{activeLesson.description}</p>
+                    <ExpandableText
+                      text={activeLesson.description}
+                      previewChars={200}
+                      paragraphClassName="text-sm text-cyan-700 dark:text-white/70 leading-relaxed"
+                    />
                   )}
                 </div>
                 {enrolled && (
