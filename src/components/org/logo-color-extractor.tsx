@@ -122,9 +122,8 @@ export function LogoColorExtractor({
   const [error, setError] = useState('')
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  const runExtraction = useCallback((faviconUrl: string) => {
+  const runExtraction = useCallback((sourceForCanvas: string) => {
     const img = new window.Image()
-    img.crossOrigin = 'anonymous'
 
     img.onload = () => {
       try {
@@ -151,11 +150,11 @@ export function LogoColorExtractor({
     }
 
     img.onerror = () => {
-      setError('Found the favicon but the browser blocked loading it for color analysis. You can still apply it as the logo and choose colors manually below.')
+      setError('Could not read the favicon image data. You can still apply it as the logo and pick colors manually below.')
       setWorking(false)
     }
 
-    img.src = faviconUrl
+    img.src = sourceForCanvas
   }, [])
 
   const fetchSite = async () => {
@@ -177,7 +176,7 @@ export function LogoColorExtractor({
         return
       }
       setLogoUrl(data.faviconUrl)
-      runExtraction(data.faviconUrl)
+      runExtraction(data.dataUrl || data.faviconUrl)
     } catch (err: any) {
       setError(err.message || 'Failed to reach that website')
       setWorking(false)
@@ -237,7 +236,7 @@ export function LogoColorExtractor({
             <p className="text-sm font-medium text-slate-900 dark:text-white truncate">Favicon loaded</p>
             <p className="text-xs text-slate-500 dark:text-white/50 truncate">{logoUrl}</p>
           </div>
-          <button onClick={() => runExtraction(logoUrl)} disabled={working} className="text-cyan-500 hover:text-cyan-400 p-1" aria-label="Re-scan colors">
+          <button onClick={() => fetchSite()} disabled={working || !siteInput.trim()} className="text-cyan-500 hover:text-cyan-400 p-1 disabled:opacity-40" aria-label="Re-scan colors">
             <RefreshCw className={`w-4 h-4 ${working ? 'animate-spin' : ''}`} />
           </button>
         </div>

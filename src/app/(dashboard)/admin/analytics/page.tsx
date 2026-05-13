@@ -436,7 +436,7 @@ export default function AnalyticsPage() {
             <h3 className="text-base md:text-lg font-semibold text-slate-900 dark:text-white">Monthly Revenue</h3>
           </div>
           <div className="h-48 md:h-64">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <BarChart data={analytics.monthlyRevenue} margin={{ left: -10, right: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                 <XAxis dataKey="month" tick={{ fill: '#94a3b8', fontSize: 11 }} />
@@ -456,7 +456,7 @@ export default function AnalyticsPage() {
           </div>
           <div className="h-48 md:h-64">
             {analytics.statusBreakdown.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <PieChart>
                   <Pie
                     data={analytics.statusBreakdown}
@@ -529,7 +529,7 @@ export default function AnalyticsPage() {
             <h3 className="text-base md:text-lg font-semibold text-slate-900 dark:text-white">Revenue Trend</h3>
           </div>
           <div className="h-48 md:h-64">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <LineChart data={analytics.monthlyRevenue} margin={{ left: -10, right: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                 <XAxis dataKey="month" tick={{ fill: '#94a3b8', fontSize: 11 }} />
