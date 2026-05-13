@@ -405,7 +405,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Stats Grid */}
-      <div data-tour="analytics-stats" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div data-tour="analytics-stats" className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-8">
         <StatCard
           title="Total Revenue"
           value={analytics.totalRevenue.toFixed(2)}

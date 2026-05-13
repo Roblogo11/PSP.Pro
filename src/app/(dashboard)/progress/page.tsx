@@ -194,7 +194,7 @@ export default function ProgressPage() {
       </div>
 
       {/* Stats Grid */}
-      <div data-tour="progress-stats" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div data-tour="progress-stats" className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
         {progressStats.map((stat) => {
           const Icon = stat.icon
           return (

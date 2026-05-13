@@ -560,7 +560,7 @@ export default function AthletesManagementPage() {
       </div>
 
       {/* Stats */}
-      <div data-tour="athletes-stats" className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div data-tour="athletes-stats" className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8">
         <div className="command-panel-active">
           <div className="flex items-center gap-3 mb-2">
             <Users className="w-6 h-6 text-orange" />

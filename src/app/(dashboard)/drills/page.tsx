@@ -114,7 +114,7 @@ export default function DrillsPage() {
       </div>
 
       {/* Stats Row */}
-      <div data-tour="drills-stats" className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div data-tour="drills-stats" className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8">
         <div className="glass-card p-6">
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-xl bg-orange/10">
