@@ -564,7 +564,7 @@ export default function AvailabilityManagementPage() {
               Use &quot;Book for Athlete&quot; to assign a time slot to a specific player and block it from public booking.
             </p>
           </div>
-          <span className="text-orange text-sm font-semibold whitespace-nowrap">Book Now &rarr;</span>
+          <span className="text-orange dark:text-amber-300 text-sm font-bold whitespace-nowrap">Book Now &rarr;</span>
         </div>
       </Link>
 
