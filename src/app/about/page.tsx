@@ -88,14 +88,14 @@ export default function AboutPage() {
         </p>
 
         <div className="grid md:grid-cols-2 gap-6 mt-6">
-          <div className="p-6 rounded-xl bg-cyan-900/20 border border-orange/20 hover:border-orange/40 transition-all">
+          <div className="p-6 rounded-xl bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none border border-orange/20 hover:border-orange/40 transition-all">
             <h3 className="text-xl font-bold mb-3 text-orange">Softball Training</h3>
             <p className="text-slate-600 dark:text-white leading-relaxed">
               Specialized pitching, hitting, and fielding programs designed to maximize speed, power, and consistency.
             </p>
           </div>
 
-          <div className="p-6 rounded-xl bg-cyan-900/20 border border-cyan/20 hover:border-cyan/40 transition-all">
+          <div className="p-6 rounded-xl bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none border border-cyan/20 hover:border-cyan/40 transition-all">
             <h3 className="text-xl font-bold mb-3 text-cyan">Basketball & Soccer</h3>
             <p className="text-slate-600 dark:text-white leading-relaxed">
               Comprehensive athletic training focusing on speed, agility, strength, and game performance.
@@ -129,7 +129,7 @@ export default function AboutPage() {
         </p>
 
         {/* Loren */}
-        <div className="p-6 rounded-xl bg-cyan-900/20 border border-orange/20 mb-6">
+        <div className="p-6 rounded-xl bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none border border-orange/20 mb-6">
           <div className="flex items-start gap-4 mb-4">
             <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
               <Image
@@ -168,7 +168,7 @@ export default function AboutPage() {
         </div>
 
         {/* Rachel */}
-        <div className="p-6 rounded-xl bg-cyan-900/20 border border-cyan/20 mb-6">
+        <div className="p-6 rounded-xl bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none border border-cyan/20 mb-6">
           <div className="flex items-start gap-4 mb-4">
             <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
               <Image
@@ -269,14 +269,14 @@ export default function AboutPage() {
         </p>
 
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="p-6 rounded-xl bg-cyan-900/20 border border-orange/20 hover:border-orange/40 transition-all">
+          <div className="p-6 rounded-xl bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none border border-orange/20 hover:border-orange/40 transition-all">
             <h3 className="text-lg font-bold mb-3 text-orange">Data-Driven Training</h3>
             <p className="text-slate-600 dark:text-white leading-relaxed">
               Video analysis, real velocity tracking, and performance charts to measure your progress every session.
             </p>
           </div>
 
-          <div className="p-6 rounded-xl bg-cyan-900/20 border border-cyan/20 hover:border-cyan/40 transition-all">
+          <div className="p-6 rounded-xl bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none border border-cyan/20 hover:border-cyan/40 transition-all">
             <h3 className="text-lg font-bold mb-3 text-cyan">Expert Coaching</h3>
             <p className="text-slate-600 dark:text-white leading-relaxed">
               Experienced coaches dedicated to helping athletes reach their full potential.
@@ -297,25 +297,25 @@ export default function AboutPage() {
         </p>
 
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="p-6 rounded-xl bg-cyan-900/20 border border-orange/20 text-center">
+          <div className="p-6 rounded-xl bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none border border-orange/20 text-center">
             <Award className="w-12 h-12 text-orange mb-4 mx-auto" />
             <h3 className="text-xl font-bold mb-3 text-white">Excellence</h3>
             <p className="text-slate-500 dark:text-white/80">Striving for the highest standards in every training session</p>
           </div>
 
-          <div className="p-6 rounded-xl bg-cyan-900/20 border border-cyan/20 text-center">
+          <div className="p-6 rounded-xl bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none border border-cyan/20 text-center">
             <TrendingUp className="w-12 h-12 text-cyan mb-4 mx-auto" />
             <h3 className="text-xl font-bold mb-3 text-white">Progress</h3>
             <p className="text-slate-500 dark:text-white/80">Celebrating continuous improvement over perfection</p>
           </div>
 
-          <div className="p-6 rounded-xl bg-cyan-900/20 border border-orange/20 text-center">
+          <div className="p-6 rounded-xl bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none border border-orange/20 text-center">
             <Users className="w-12 h-12 text-orange mb-4 mx-auto" />
             <h3 className="text-xl font-bold mb-3 text-white">Community</h3>
             <p className="text-slate-500 dark:text-white/80">Building a supportive environment for athlete growth</p>
           </div>
 
-          <div className="p-6 rounded-xl bg-cyan-900/20 border border-cyan/20 text-center">
+          <div className="p-6 rounded-xl bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none border border-cyan/20 text-center">
             <Target className="w-12 h-12 text-cyan mb-4 mx-auto" />
             <h3 className="text-xl font-bold mb-3 text-white">Results</h3>
             <p className="text-slate-500 dark:text-white/80">Delivering measurable outcomes through proven methods</p>
