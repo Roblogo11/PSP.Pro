@@ -76,7 +76,7 @@ export function AchievementBadge({
           className={`w-20 h-20 mx-auto rounded-full flex items-center justify-center ${
             isComplete || unlocked
               ? `bg-gradient-to-br ${styles.bg} ${styles.glow}`
-              : 'bg-cyan-900/30'
+              : 'bg-slate-200 dark:bg-cyan-900/30'
           }`}
         >
           <Icon

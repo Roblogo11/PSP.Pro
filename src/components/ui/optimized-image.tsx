@@ -51,13 +51,13 @@ export function OptimizedImage({
           `}
         />
       ) : (
-        <div className="w-full h-full bg-cyan-900/30 flex items-center justify-center">
+        <div className="w-full h-full bg-slate-100 dark:bg-cyan-900/30 flex items-center justify-center">
           <p className="text-cyan-700 dark:text-white text-sm">Image unavailable</p>
         </div>
       )}
 
       {isLoading && !error && (
-        <div className="absolute inset-0 bg-cyan-900/30 animate-pulse" />
+        <div className="absolute inset-0 bg-slate-100 dark:bg-cyan-900/30 animate-pulse" />
       )}
     </div>
   )

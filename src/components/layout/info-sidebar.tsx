@@ -157,7 +157,7 @@ export function InfoSidebar({ hideMobileNav = false }: { hideMobileNav?: boolean
                     ${
                       isActive
                         ? 'bg-orange/20 border border-orange/50 text-slate-900 dark:text-white shadow-glow-orange'
-                        : 'text-slate-700 dark:text-slate-300 hover:bg-cyan-900/20 dark:hover:text-white hover:text-slate-900'
+                        : 'text-slate-700 dark:text-slate-300 hover:bg-cyan-100 dark:hover:bg-cyan-900/20 dark:hover:text-white hover:text-slate-900'
                     }
                   `}
                 >
@@ -187,7 +187,7 @@ export function InfoSidebar({ hideMobileNav = false }: { hideMobileNav?: boolean
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setCollapsed(!collapsed)}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-cyan-900/20 hover:bg-white/10 text-slate-700 dark:text-white hover:text-slate-900 dark:hover:text-white transition-all duration-200"
+            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none hover:bg-white/10 text-slate-700 dark:text-white hover:text-slate-900 dark:hover:text-white transition-all duration-200"
           >
             {collapsed ? (
               <ChevronRight className="w-5 h-5 text-slate-700 dark:text-white" />
@@ -205,7 +205,7 @@ export function InfoSidebar({ hideMobileNav = false }: { hideMobileNav?: boolean
               whileTap={{ scale: 0.95 }}
               className={`
                 w-full flex items-center gap-3 px-4 py-3 rounded-xl
-                bg-cyan-900/20 hover:bg-cyan/20 text-slate-700 dark:text-slate-300 hover:text-cyan
+                bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none hover:bg-cyan/20 text-slate-700 dark:text-slate-300 hover:text-cyan
                 border border-transparent hover:border-cyan/50
                 transition-all duration-200
                 ${collapsed ? 'justify-center' : ''}

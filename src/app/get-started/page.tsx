@@ -243,7 +243,7 @@ export default function GetStartedPage() {
                 className={`flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
                   formData.goals.includes(goal)
                     ? 'bg-orange/20 border-orange/50'
-                    : 'bg-cyan-900/20 border-cyan-700/50 hover:border-orange/30'
+                    : 'bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none border-cyan-700/50 hover:border-orange/30'
                 }`}
               >
                 <input

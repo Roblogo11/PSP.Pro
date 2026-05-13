@@ -220,7 +220,7 @@ export default function ProgressPage() {
             className={`px-5 py-2.5 rounded-xl font-semibold transition-all whitespace-nowrap ${
               sportTab === tab.key
                 ? 'bg-orange text-white shadow-glow-orange'
-                : 'bg-cyan-900/30 text-cyan-700 dark:text-white hover:bg-cyan-900 hover:text-white'
+                : 'bg-white/80 dark:bg-cyan-900/30 shadow-sm dark:shadow-none text-cyan-700 dark:text-white hover:bg-cyan-900 hover:text-white'
             }`}
           >
             {tab.label}

@@ -596,7 +596,7 @@ export default function DrillsManagementPage() {
                       />
                     </div>
                   ) : (
-                    <div className="w-24 h-24 rounded-xl bg-cyan-900/30 border border-cyan-200/40 flex items-center justify-center flex-shrink-0">
+                    <div className="w-24 h-24 rounded-xl bg-white/80 dark:bg-cyan-900/30 shadow-sm dark:shadow-none border border-cyan-200/40 flex items-center justify-center flex-shrink-0">
                       <Video className="w-8 h-8 text-cyan-700 dark:text-white" />
                     </div>
                   )}
@@ -608,7 +608,7 @@ export default function DrillsManagementPage() {
                         {drill.title}
                       </h3>
                       {!drill.published && (
-                        <span className="px-2 py-1 bg-cyan-800/30/50 border border-cyan-600/50/30 rounded-lg text-xs text-cyan-800 dark:text-white">
+                        <span className="px-2 py-1 bg-white/80 dark:bg-cyan-800/30/50 shadow-sm dark:shadow-none border border-cyan-600/50/30 rounded-lg text-xs text-cyan-800 dark:text-white">
                           Draft
                         </span>
                       )}
@@ -644,7 +644,7 @@ export default function DrillsManagementPage() {
                     {drill.tags.length > 0 && (
                       <div className="flex flex-wrap gap-2 mt-3">
                         {drill.tags.map((tag) => (
-                          <span key={tag} className="px-2 py-1 bg-cyan-900/30 rounded-lg text-xs text-cyan-700 dark:text-white">
+                          <span key={tag} className="px-2 py-1 bg-white/80 dark:bg-cyan-900/30 shadow-sm dark:shadow-none rounded-lg text-xs text-cyan-700 dark:text-white">
                             #{tag}
                           </span>
                         ))}
@@ -758,7 +758,7 @@ export default function DrillsManagementPage() {
                     className={`flex-1 px-4 py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 ${
                       videoSource === 'youtube'
                         ? 'bg-orange text-white shadow-glow-orange'
-                        : 'bg-cyan-900/30 text-cyan-600 hover:bg-cyan-900 hover:text-white border border-cyan-200/40'
+                        : 'bg-white/80 dark:bg-cyan-900/30 shadow-sm dark:shadow-none text-cyan-600 hover:bg-cyan-900 hover:text-white border border-cyan-200/40'
                     }`}
                   >
                     <Youtube className="w-5 h-5" />
@@ -769,7 +769,7 @@ export default function DrillsManagementPage() {
                     className={`flex-1 px-4 py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 ${
                       videoSource === 'upload'
                         ? 'bg-orange text-white shadow-glow-orange'
-                        : 'bg-cyan-900/30 text-cyan-600 hover:bg-cyan-900 hover:text-white border border-cyan-200/40'
+                        : 'bg-white/80 dark:bg-cyan-900/30 shadow-sm dark:shadow-none text-cyan-600 hover:bg-cyan-900 hover:text-white border border-cyan-200/40'
                     }`}
                   >
                     <Upload className="w-5 h-5" />
@@ -830,7 +830,7 @@ export default function DrillsManagementPage() {
               <button
                 type="button"
                 onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}
-                className="w-full flex items-center justify-between px-4 py-3 bg-cyan-900/20 hover:bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white transition-all"
+                className="w-full flex items-center justify-between px-4 py-3 bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none hover:bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white transition-all"
               >
                 <div className="flex items-center gap-2">
                   <span className="font-semibold">Advanced Options</span>
@@ -1115,7 +1115,7 @@ export default function DrillsManagementPage() {
                 <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-3">
                   Select Athletes <span className="text-red-400">*</span>
                 </label>
-                <div className="max-h-64 overflow-y-auto space-y-2 border border-cyan-200/40 rounded-xl p-4 bg-cyan-900/20">
+                <div className="max-h-64 overflow-y-auto space-y-2 border border-cyan-200/40 rounded-xl p-4 bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none">
                   {athletes.map((athlete) => (
                     <label
                       key={athlete.id}

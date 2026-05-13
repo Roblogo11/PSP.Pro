@@ -388,7 +388,7 @@ export default function AnalyticsPage() {
             className={`px-3 py-2 md:px-4 rounded-xl font-medium text-sm md:text-base transition-all ${
               timeRange === range
                 ? 'bg-orange text-white'
-                : 'bg-cyan-900/30 text-cyan-700 dark:text-white hover:bg-cyan-900/50'
+                : 'bg-white/80 dark:bg-cyan-900/30 shadow-sm dark:shadow-none text-cyan-700 dark:text-white hover:bg-cyan-900/50'
             }`}
           >
             {range === '7d' && 'Last 7 Days'}

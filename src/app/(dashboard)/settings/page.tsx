@@ -487,7 +487,7 @@ function SettingsInner() {
                     <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Leaderboard Settings</h3>
                   </div>
 
-                  <div className="flex items-center justify-between p-4 bg-cyan-900/20 rounded-xl mb-4">
+                  <div className="flex items-center justify-between p-4 bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none rounded-xl mb-4">
                     <div>
                       <h4 className="font-semibold text-slate-900 dark:text-white mb-1">Show on Leaderboards</h4>
                       <p className="text-sm text-cyan-800 dark:text-white">Display your best metrics on regional leaderboards</p>
@@ -567,7 +567,7 @@ function SettingsInner() {
                     desc: 'Messages and feedback from your coach',
                   },
                 ].map((item) => (
-                  <div key={item.key} className="flex items-center justify-between p-4 bg-cyan-900/20 rounded-xl">
+                  <div key={item.key} className="flex items-center justify-between p-4 bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none rounded-xl">
                     <div>
                       <h3 className="font-semibold text-slate-900 dark:text-white mb-1">{item.label}</h3>
                       <p className="text-sm text-cyan-800 dark:text-white">{item.desc}</p>
@@ -850,7 +850,7 @@ function SettingsInner() {
                 <div className="pt-4 border-t border-cyan-200/40">
                   <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Account Info</h3>
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between p-4 bg-cyan-900/20 rounded-xl">
+                    <div className="flex items-center justify-between p-4 bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none rounded-xl">
                       <div>
                         <h4 className="font-semibold text-slate-900 dark:text-white text-sm">Email</h4>
                         <p className="text-sm text-cyan-800 dark:text-white/70">{profile?.email}</p>
@@ -862,7 +862,7 @@ function SettingsInner() {
                         Change
                       </button>
                     </div>
-                    <div className="flex items-center justify-between p-4 bg-cyan-900/20 rounded-xl">
+                    <div className="flex items-center justify-between p-4 bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none rounded-xl">
                       <div>
                         <h4 className="font-semibold text-slate-900 dark:text-white text-sm">Sign-in Method</h4>
                         <p className="text-sm text-cyan-800 dark:text-white/70">Email & Password</p>
@@ -896,7 +896,7 @@ function SettingsInner() {
               {/* Marketing Preferences */}
               <section className="border-t border-slate-200 dark:border-white/10 pt-6">
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Marketing Preferences</h3>
-                <div className="flex items-center justify-between p-4 bg-cyan-900/20 rounded-xl mb-4">
+                <div className="flex items-center justify-between p-4 bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none rounded-xl mb-4">
                   <div>
                     <h4 className="font-semibold text-slate-900 dark:text-white mb-1">Training Tips & Updates</h4>
                     <p className="text-sm text-cyan-800 dark:text-white/70">Receive news, tips, and updates from PSP.Pro</p>

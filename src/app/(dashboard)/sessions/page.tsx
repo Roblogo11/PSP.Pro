@@ -189,7 +189,7 @@ export default function SessionsPage() {
             className={`px-6 py-3 rounded-xl font-semibold transition-all whitespace-nowrap ${
               filter === filterType
                 ? 'bg-orange text-white shadow-glow-orange'
-                : 'bg-cyan-900/30 text-cyan-700 dark:text-white hover:bg-cyan-900 hover:text-white'
+                : 'bg-white/80 dark:bg-cyan-900/30 shadow-sm dark:shadow-none text-cyan-700 dark:text-white hover:bg-cyan-900 hover:text-white'
             }`}
           >
             {filterType.charAt(0).toUpperCase() + filterType.slice(1)}

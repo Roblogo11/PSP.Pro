@@ -223,7 +223,7 @@ export default function LeaderboardsPage() {
             className={`px-3 py-2 md:px-5 md:py-2.5 rounded-xl font-semibold text-sm md:text-base transition-all whitespace-nowrap ${
               sportTab === tab.key
                 ? 'bg-orange text-white shadow-glow-orange'
-                : 'bg-cyan-900/30 text-cyan-700 dark:text-white hover:bg-cyan-900 hover:text-white'
+                : 'bg-white/80 dark:bg-cyan-900/30 shadow-sm dark:shadow-none text-cyan-700 dark:text-white hover:bg-cyan-900 hover:text-white'
             }`}
           >
             {tab.label}
@@ -270,7 +270,7 @@ export default function LeaderboardsPage() {
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-all ${
             verifiedOnly
               ? 'bg-green-500/20 border border-green-500/40 text-green-400'
-              : 'bg-cyan-900/30 border border-cyan-200/40 text-cyan-700 dark:text-white hover:border-green-500/40'
+              : 'bg-white/80 dark:bg-cyan-900/30 shadow-sm dark:shadow-none border border-cyan-200/40 text-cyan-700 dark:text-white hover:border-green-500/40'
           }`}
         >
           <CheckCircle2 className="w-4 h-4" />

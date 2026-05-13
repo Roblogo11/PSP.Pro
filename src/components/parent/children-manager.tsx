@@ -160,7 +160,7 @@ export default function ChildrenManager({ activeChildId, onActiveChildChange }: 
               className={`p-4 rounded-xl border transition-colors ${
                 isActive
                   ? 'bg-purple-500/10 border-purple-500/40'
-                  : 'bg-cyan-900/20 border-cyan-700/40'
+                  : 'bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none border-cyan-700/40'
               }`}
             >
               <div className="flex items-center justify-between gap-3 mb-3">
@@ -271,7 +271,7 @@ export default function ChildrenManager({ activeChildId, onActiveChildChange }: 
         })}
 
         {children.length === 0 && (
-          <div className="p-4 rounded-xl bg-cyan-900/10 border border-dashed border-cyan-700/40 text-center text-sm text-cyan-700 dark:text-white/60">
+          <div className="p-4 rounded-xl bg-white/80 dark:bg-cyan-900/10 shadow-sm dark:shadow-none border border-dashed border-cyan-700/40 text-center text-sm text-cyan-700 dark:text-white/60">
             No athletes yet. Add your first child below.
           </div>
         )}

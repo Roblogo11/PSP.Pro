@@ -230,7 +230,7 @@ export default function PricingPage() {
           </div>
           {/* Sessions progress bar */}
           <div className="mt-4">
-            <div className="w-full h-2 bg-cyan-900/30 rounded-full overflow-hidden">
+            <div className="w-full h-2 bg-slate-200 dark:bg-cyan-900/30 rounded-full overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-green-400 to-cyan rounded-full transition-all duration-500"
                 style={{ width: `${Math.max(5, ((memberPackage.sessions_total - memberPackage.sessions_used) / memberPackage.sessions_total) * 100)}%` }}
@@ -310,7 +310,7 @@ export default function PricingPage() {
                 return (
                   <div
                     key={service.id}
-                    className={`p-6 bg-cyan-900/20 rounded-xl border ${cs.border} transition-all`}
+                    className={`p-6 bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none rounded-xl border ${cs.border} transition-all`}
                   >
                     <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{service.name}</h3>
                     <div className="flex items-baseline gap-2 mb-4">
@@ -374,7 +374,7 @@ export default function PricingPage() {
             return (
               <div
                 key={pack.id}
-                className={`p-6 bg-cyan-900/20 rounded-xl border transition-all relative ${
+                className={`p-6 bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none rounded-xl border transition-all relative ${
                   isCurrentPlan
                     ? 'border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.2)]'
                     : isFeatured
@@ -417,7 +417,7 @@ export default function PricingPage() {
           })}
         </div>
 
-        <div className="mt-6 p-4 bg-cyan-900/20 rounded-xl border border-orange/10">
+        <div className="mt-6 p-4 bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none rounded-xl border border-orange/10">
           <p className="text-center">
             <span className="font-bold text-orange">Package Benefits:</span> Same session type only (individual or group) &bull; Transfer to family &bull; Pause for injuries &bull; Satisfaction guaranteed
           </p>

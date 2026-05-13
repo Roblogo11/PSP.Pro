@@ -344,7 +344,7 @@ export default function SignupPage() {
                     flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all
                     ${selectedSports.includes(sport.value)
                       ? 'bg-orange/20 border-2 border-orange/50'
-                      : 'bg-cyan-900/20 border border-cyan-700/40 hover:border-orange/30'
+                      : 'bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none border border-cyan-700/40 hover:border-orange/30'
                     }
                   `}
                 >

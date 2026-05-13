@@ -558,7 +558,7 @@ export default function AdminDashboard() {
                     >
                       <Icon className="w-5 h-5 md:w-6 md:h-6" style={{ color: section.color }} />
                     </div>
-                    <span className="text-xs text-cyan-700 dark:text-white bg-cyan-900/30 px-2 py-1 rounded-lg hidden md:inline">
+                    <span className="text-xs text-cyan-700 dark:text-white bg-white/80 dark:bg-cyan-900/30 shadow-sm dark:shadow-none px-2 py-1 rounded-lg hidden md:inline">
                       {section.stat}
                     </span>
                   </div>
@@ -567,7 +567,7 @@ export default function AdminDashboard() {
                       <h3 className="text-base md:text-xl font-bold text-slate-900 dark:text-white group-hover:text-orange transition-colors">
                         {section.title}
                       </h3>
-                      <span className="text-[10px] text-cyan-700 dark:text-white bg-cyan-900/30 px-1.5 py-0.5 rounded md:hidden">
+                      <span className="text-[10px] text-cyan-700 dark:text-white bg-white/80 dark:bg-cyan-900/30 shadow-sm dark:shadow-none px-1.5 py-0.5 rounded md:hidden">
                         {section.stat}
                       </span>
                     </div>
@@ -648,7 +648,7 @@ export default function AdminDashboard() {
         <div className="command-panel">
           <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Recent Activity</h2>
           <div className="space-y-3">
-            <div className="flex items-center gap-3 p-3 bg-cyan-900/20 rounded-xl">
+            <div className="flex items-center gap-3 p-3 bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none rounded-xl">
               <CheckCircle className="w-5 h-5 text-green-400" />
               <p className="text-sm text-cyan-700 dark:text-white">
                 System ready for athlete management and drill creation

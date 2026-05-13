@@ -243,7 +243,7 @@ Rotational Power Training,Medicine ball exercises for core rotation,https://yout
               </tr>
               <tr className="border-b border-white/5">
                 <td className="py-3 px-4 text-slate-900 dark:text-white font-mono text-sm">description</td>
-                <td className="py-3 px-4"><span className="px-2 py-1 bg-cyan-800/30/50 text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
+                <td className="py-3 px-4"><span className="px-2 py-1 bg-white/80 dark:bg-cyan-800/30/50 shadow-sm dark:shadow-none text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
                 <td className="py-3 px-4 text-cyan-700 dark:text-white text-sm">Text</td>
                 <td className="py-3 px-4 text-cyan-800 dark:text-white text-sm">Build arm strength and velocity</td>
               </tr>
@@ -261,31 +261,31 @@ Rotational Power Training,Medicine ball exercises for core rotation,https://yout
               </tr>
               <tr className="border-b border-white/5">
                 <td className="py-3 px-4 text-slate-900 dark:text-white font-mono text-sm">difficulty</td>
-                <td className="py-3 px-4"><span className="px-2 py-1 bg-cyan-800/30/50 text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
+                <td className="py-3 px-4"><span className="px-2 py-1 bg-white/80 dark:bg-cyan-800/30/50 shadow-sm dark:shadow-none text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
                 <td className="py-3 px-4 text-cyan-700 dark:text-white text-sm">beginner | intermediate | advanced</td>
                 <td className="py-3 px-4 text-cyan-800 dark:text-white text-sm">intermediate</td>
               </tr>
               <tr className="border-b border-white/5">
                 <td className="py-3 px-4 text-slate-900 dark:text-white font-mono text-sm">duration_minutes</td>
-                <td className="py-3 px-4"><span className="px-2 py-1 bg-cyan-800/30/50 text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
+                <td className="py-3 px-4"><span className="px-2 py-1 bg-white/80 dark:bg-cyan-800/30/50 shadow-sm dark:shadow-none text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
                 <td className="py-3 px-4 text-cyan-700 dark:text-white text-sm">Number</td>
                 <td className="py-3 px-4 text-cyan-800 dark:text-white text-sm">15</td>
               </tr>
               <tr className="border-b border-white/5">
                 <td className="py-3 px-4 text-slate-900 dark:text-white font-mono text-sm">tags</td>
-                <td className="py-3 px-4"><span className="px-2 py-1 bg-cyan-800/30/50 text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
+                <td className="py-3 px-4"><span className="px-2 py-1 bg-white/80 dark:bg-cyan-800/30/50 shadow-sm dark:shadow-none text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
                 <td className="py-3 px-4 text-cyan-700 dark:text-white text-sm">Semicolon separated</td>
                 <td className="py-3 px-4 text-cyan-800 dark:text-white text-sm">throwing;arm-strength;velocity</td>
               </tr>
               <tr className="border-b border-white/5">
                 <td className="py-3 px-4 text-slate-900 dark:text-white font-mono text-sm">equipment</td>
-                <td className="py-3 px-4"><span className="px-2 py-1 bg-cyan-800/30/50 text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
+                <td className="py-3 px-4"><span className="px-2 py-1 bg-white/80 dark:bg-cyan-800/30/50 shadow-sm dark:shadow-none text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
                 <td className="py-3 px-4 text-cyan-700 dark:text-white text-sm">Semicolon separated</td>
                 <td className="py-3 px-4 text-cyan-800 dark:text-white text-sm">softball;partner</td>
               </tr>
               <tr>
                 <td className="py-3 px-4 text-slate-900 dark:text-white font-mono text-sm">focus_areas</td>
-                <td className="py-3 px-4"><span className="px-2 py-1 bg-cyan-800/30/50 text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
+                <td className="py-3 px-4"><span className="px-2 py-1 bg-white/80 dark:bg-cyan-800/30/50 shadow-sm dark:shadow-none text-cyan-800 dark:text-white rounded text-xs">Optional</span></td>
                 <td className="py-3 px-4 text-cyan-700 dark:text-white text-sm">Semicolon separated</td>
                 <td className="py-3 px-4 text-cyan-800 dark:text-white text-sm">arm;shoulder;mechanics</td>
               </tr>

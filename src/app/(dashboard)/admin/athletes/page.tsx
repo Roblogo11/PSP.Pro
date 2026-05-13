@@ -609,7 +609,7 @@ export default function AthletesManagementPage() {
           className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all ${
             !showArchived
               ? 'bg-orange text-white'
-              : 'bg-cyan-900/20 text-cyan-800 dark:text-white/60 hover:text-white hover:bg-cyan-900/40'
+              : 'bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none text-cyan-800 dark:text-white/60 hover:text-white hover:bg-cyan-900/40'
           }`}
         >
           <Users className="w-4 h-4 inline mr-2" />
@@ -620,7 +620,7 @@ export default function AthletesManagementPage() {
           className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all ${
             showArchived
               ? 'bg-orange text-white'
-              : 'bg-cyan-900/20 text-cyan-800 dark:text-white/60 hover:text-white hover:bg-cyan-900/40'
+              : 'bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none text-cyan-800 dark:text-white/60 hover:text-white hover:bg-cyan-900/40'
           }`}
         >
           <Archive className="w-4 h-4 inline mr-2" />
@@ -714,21 +714,21 @@ export default function AthletesManagementPage() {
               {/* Stats Grid */}
               {stats && (
                 <div className="grid grid-cols-2 gap-3 mb-4">
-                  <div className="bg-cyan-900/20 rounded-lg p-3">
+                  <div className="bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none rounded-lg p-3">
                     <p className="text-xs text-cyan-800 dark:text-white mb-1">Sessions</p>
                     <p className="text-xl font-bold text-slate-900 dark:text-white">{stats.total_sessions}</p>
                   </div>
-                  <div className="bg-cyan-900/20 rounded-lg p-3">
+                  <div className="bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none rounded-lg p-3">
                     <p className="text-xs text-cyan-800 dark:text-white mb-1">Drills</p>
                     <p className="text-xl font-bold text-slate-900 dark:text-white">{stats.drills_completed}</p>
                   </div>
-                  <div className="bg-cyan-900/20 rounded-lg p-3">
+                  <div className="bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none rounded-lg p-3">
                     <p className="text-xs text-cyan-800 dark:text-white mb-1">Avg MPH</p>
                     <p className="text-xl font-bold text-gradient-orange">
                       {stats.avg_velocity || '-'}
                     </p>
                   </div>
-                  <div className="bg-cyan-900/20 rounded-lg p-3">
+                  <div className="bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none rounded-lg p-3">
                     <p className="text-xs text-cyan-800 dark:text-white mb-1">Max MPH</p>
                     <p className="text-xl font-bold text-gradient-orange">
                       {stats.max_velocity || '-'}
@@ -1104,21 +1104,21 @@ export default function AthletesManagementPage() {
               {/* Stats */}
               {athleteStats[selectedAthlete.id] && (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="bg-cyan-900/20 rounded-xl p-4">
+                  <div className="bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <Calendar className="w-5 h-5 text-cyan" />
                       <span className="text-sm text-cyan-800 dark:text-white">Sessions</span>
                     </div>
                     <p className="text-2xl font-bold text-slate-900 dark:text-white">{athleteStats[selectedAthlete.id].total_sessions}</p>
                   </div>
-                  <div className="bg-cyan-900/20 rounded-xl p-4">
+                  <div className="bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <Dumbbell className="w-5 h-5 text-purple-400" />
                       <span className="text-sm text-cyan-800 dark:text-white">Drills</span>
                     </div>
                     <p className="text-2xl font-bold text-slate-900 dark:text-white">{athleteStats[selectedAthlete.id].drills_completed}</p>
                   </div>
-                  <div className="bg-cyan-900/20 rounded-xl p-4">
+                  <div className="bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <TrendingUp className="w-5 h-5 text-orange" />
                       <span className="text-sm text-cyan-800 dark:text-white">Avg MPH</span>
@@ -1127,7 +1127,7 @@ export default function AthletesManagementPage() {
                       {athleteStats[selectedAthlete.id].avg_velocity || '-'}
                     </p>
                   </div>
-                  <div className="bg-cyan-900/20 rounded-xl p-4">
+                  <div className="bg-white/80 dark:bg-cyan-900/20 shadow-sm dark:shadow-none rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <Award className="w-5 h-5 text-green-400" />
                       <span className="text-sm text-cyan-800 dark:text-white">Max MPH</span>
