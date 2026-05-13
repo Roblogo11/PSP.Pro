@@ -1,7 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server'
+import fs from 'fs'
+import path from 'path'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getAllMedia, type GalleryItem } from '@/lib/gallery'
+
+const PUBLIC_IMAGES_DIR = path.join(process.cwd(), 'public', 'images')
+const IMAGE_EXT_RE = /\.(jpe?g|png|gif|webp|avif|svg)$/i
+
+function listPublicImages(): GalleryItem[] {
+  try {
+    if (!fs.existsSync(PUBLIC_IMAGES_DIR)) return []
+    const entries = fs.readdirSync(PUBLIC_IMAGES_DIR, { withFileTypes: true })
+    const items: GalleryItem[] = []
+    for (const entry of entries) {
+      if (!entry.isFile()) continue
+      if (!IMAGE_EXT_RE.test(entry.name)) continue
+      const full = path.join(PUBLIC_IMAGES_DIR, entry.name)
+      let mtime = new Date()
+      try { mtime = fs.statSync(full).mtime } catch {}
+      const publicUrl = `/images/${entry.name}`
+      items.push({
+        id: `public:${entry.name}`,
+        filename: entry.name,
+        url: publicUrl,
+        thumbnail: publicUrl,
+        category: 'site-assets',
+        type: 'image',
+        uploadDate: mtime.toISOString(),
+        title: entry.name.replace(IMAGE_EXT_RE, ''),
+      })
+    }
+    return items
+  } catch (e) {
+    console.error('Failed to list /public/images:', e)
+    return []
+  }
+}
 
 async function isStaff(): Promise<boolean> {
   try {
@@ -30,6 +65,7 @@ export async function GET(_request: NextRequest) {
     }
 
     const { items: localItems, stats } = getAllMedia()
+    const publicImages = listPublicImages()
 
     let storageItems: GalleryItem[] = []
     try {
@@ -68,7 +104,7 @@ export async function GET(_request: NextRequest) {
       console.error('Storage list error (non-fatal):', e)
     }
 
-    const merged = [...storageItems, ...localItems].sort(
+    const merged = [...storageItems, ...publicImages, ...localItems].sort(
       (a, b) => new Date(b.uploadDate).getTime() - new Date(a.uploadDate).getTime()
     )
 
