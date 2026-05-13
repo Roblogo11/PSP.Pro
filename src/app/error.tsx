@@ -16,14 +16,6 @@ export default function Error({
     console.error('Page error:', error)
   }, [error])
 
-  // Check if it's a Web3-related error
-  const isWeb3Error =
-    error.message?.toLowerCase().includes('wagmi') ||
-    error.message?.toLowerCase().includes('wallet') ||
-    error.message?.toLowerCase().includes('connector') ||
-    error.message?.toLowerCase().includes('web3') ||
-    error.message?.toLowerCase().includes('ethereum')
-
   return (
     <div className="min-h-screen bg-primary flex items-center justify-center px-6">
       <div className="text-center max-w-lg mx-auto">
@@ -35,14 +27,10 @@ export default function Error({
         </div>
 
         {/* Error Message */}
-        <h1 className="text-3xl font-bold text-white mb-4">
-          {isWeb3Error ? 'Wallet Connection Issue' : 'Something went wrong'}
-        </h1>
+        <h1 className="text-3xl font-bold text-white mb-4">Something went wrong</h1>
 
         <p className="text-gray-700 dark:text-gray-400 mb-8 text-lg">
-          {isWeb3Error
-            ? "There was an issue connecting to your wallet. Don't worry — you can continue browsing our services without a wallet connection."
-            : "We encountered an unexpected error. Please try again, or feel free to contact us if the issue persists."}
+          We encountered an unexpected error. Please try again, or feel free to contact us if the issue persists.
         </p>
 
         {/* Error Details (collapsible in production) */}

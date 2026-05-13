@@ -163,12 +163,6 @@ const PAGE_SUGGESTIONS: Record<string, { label: string; query: string }[]> = {
     { label: 'How do I connect Stripe payouts?', query: 'stripe connect payouts' },
     { label: 'How does the org landing page work?', query: 'org landing page' },
   ],
-  '/admin/media': [
-    { label: 'How do I create a blog post?', query: 'create blog post' },
-    { label: 'How do I add images or GIFs?', query: 'add image to blog' },
-    { label: 'How do I embed a YouTube video?', query: 'embed video blog' },
-    { label: 'What is the Content Hub?', query: 'content hub' },
-  ],
   '/blog': [
     { label: 'What topics do you cover?', query: 'blog topics' },
     { label: 'Training tips?', query: 'training tips' },
@@ -818,35 +812,6 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   },
 
   // ════════════════════════════════════════════════════════════
-  // ── GALLERY / MEDIA (ATHLETE-FACING) ──
-  // ════════════════════════════════════════════════════════════
-  {
-    keywords: ['gallery', 'photos', 'media', 'images', 'pictures', 'training photos', 'highlight', 'highlights', 'content hub'],
-    title: 'Content Hub',
-    response: 'The Content Hub is your one-stop dashboard for managing all content on PSP.Pro:\n\n**Blog Posts tab:**\n• Create, edit, and publish blog articles\n• Upload images and GIFs directly into posts (max 5MB each)\n• Embed YouTube or Vimeo videos inline with one click\n• Upload or paste a thumbnail image for each post\n• Toggle posts between Draft and Published\n• Set categories, thumbnails, and featured status\n• Content supports Markdown formatting\n\n**Media Gallery tab:**\n• Training Drills — instructional photos and clips\n• Athlete Progress — before/after and milestone shots\n• Facility — our training space and equipment\n• Session Highlights — action shots from sessions\n• Testimonials — athlete stories and results\n• Events — camps, clinics, and special events\n\nFind it in your sidebar under "Content" or go to Admin → Content Hub.',
-    actions: [{ label: 'Content Hub', href: '/admin/media' }],
-    role: 'coach',
-  },
-
-  // ── BLOG MEDIA (COACH) — How to add images/videos to blog posts ──
-  {
-    keywords: ['blog image', 'blog photo', 'blog video', 'add image to blog', 'add photo to blog', 'add video to blog', 'embed video blog', 'upload image blog', 'blog gif', 'blog thumbnail', 'blog media', 'add picture to post', 'insert image', 'insert video'],
-    title: 'Adding Images & Videos to Blog Posts',
-    response: 'You can add rich media directly to your blog posts!\n\n📸 Adding Images/GIFs:\n1. Open the blog editor (Content Hub → Blog tab → New Post or Edit)\n2. Click the "Add Image" button in the toolbar above the content area\n3. Pick a JPG, PNG, GIF, or WebP file (max 5MB)\n4. The image uploads and auto-inserts into your content at the cursor position\n5. GIFs keep their animation!\n\n🎥 Embedding Videos:\n1. Click the "Embed Video" button in the toolbar\n2. Paste a YouTube or Vimeo URL\n3. The video embeds inline — readers see a full video player on the published post\n\n🖼️ Thumbnail Image:\n• Click "Upload Thumbnail" to upload a cover image for the post\n• Or paste a URL in the text field\n• The thumbnail shows on the blog listing page and at the top of the article\n\nTips:\n• Images are auto-optimized (resized to 1200px wide, compressed)\n• You can also type Markdown manually: ![alt text](/media/blog/image.jpg)\n• For videos, type: [video](https://youtube.com/watch?v=...)',
-    actions: [{ label: 'Content Hub', href: '/admin/media' }],
-    followUp: ['How do I create a blog post?', 'What is the Content Hub?'],
-    role: 'coach',
-  },
-
-  // ── CREATING A BLOG POST (COACH) ──
-  {
-    keywords: ['create blog', 'write blog', 'new blog post', 'publish blog', 'blog post', 'write article', 'create article', 'how to blog'],
-    title: 'Creating a Blog Post',
-    response: 'To create a blog post:\n\n1. Go to Admin → Content Hub (or sidebar → Content)\n2. Make sure you\'re on the "Blog Posts" tab\n3. Click the orange "New Post" button\n4. Fill in the form:\n   • Title — auto-generates the URL slug\n   • Category — Pitching, Hitting, Recovery, Speed & Agility, Nutrition, Mental Game, Strength, Coaching Tips, or General\n   • Read Time — e.g., "5 min read"\n   • Thumbnail — upload an image or paste a URL\n   • Excerpt — short summary shown on the blog listing page\n   • Content — write using Markdown with the media toolbar\n5. Use the toolbar to add images (Add Image button) or embed YouTube/Vimeo videos (Embed Video button)\n6. Toggle "Published" when you\'re ready to go live (or keep as Draft)\n7. Toggle "Featured" to highlight the post at the top of the blog page\n8. Click "Create Post"\n\nYour post is live at /blog/your-slug-here!\n\nMarkdown tips:\n• ## for headings\n• **bold** for emphasis\n• - for bullet points\n• 1. for numbered lists',
-    actions: [{ label: 'Content Hub', href: '/admin/media' }, { label: 'View Blog', href: '/blog' }],
-    followUp: ['How do I add images to a blog post?', 'How do I embed a video?'],
-    role: 'coach',
-  },
 
   // ════════════════════════════════════════════════════════════
   // ── ANALYTICS (COACH) ──

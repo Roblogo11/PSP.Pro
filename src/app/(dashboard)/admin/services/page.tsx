@@ -7,6 +7,7 @@ import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
 import { toastError } from '@/lib/toast'
 import { getCategoryColor as getCatColor, isGroupCategory, DEFAULT_CATEGORIES } from '@/lib/category-colors'
+import { MediaPicker } from '@/components/media-picker'
 
 interface Service {
   id: string
@@ -476,21 +477,13 @@ export default function ServicesManagerPage() {
               />
             </div>
 
-            {/* Homepage Image URL */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-cyan-800 dark:text-white mb-2">
-                Homepage Image URL (optional)
-              </label>
-              <input
-                type="text"
-                value={formData.homepage_image_url || ''}
-                onChange={(e) => setFormData({ ...formData, homepage_image_url: e.target.value })}
-                className="w-full px-4 py-3 bg-cyan-50 dark:bg-slate-800 border border-cyan-200/40 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-cyan-600 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan/50"
-                placeholder="/images/my-photo.jpg"
+              <MediaPicker
+                label="Homepage Image (optional)"
+                value={formData.homepage_image_url || null}
+                onChange={(url) => setFormData({ ...formData, homepage_image_url: url || '' })}
+                hint="Shown on the homepage when this service is featured"
               />
-              <p className="text-xs text-cyan-700 dark:text-white mt-1">
-                Image shown on homepage when featured. Upload to /public/images/
-              </p>
             </div>
 
             {/* Video URL */}

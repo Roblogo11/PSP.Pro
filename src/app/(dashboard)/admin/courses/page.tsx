@@ -9,6 +9,7 @@ import {
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
 import { toastError } from '@/lib/toast'
+import { MediaPicker } from '@/components/media-picker'
 
 interface CourseLesson {
   id?: string
@@ -427,16 +428,12 @@ export default function AdminCoursesPage() {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Thumbnail URL</label>
-                <input
-                  type="url"
-                  value={formData.thumbnail_url}
-                  onChange={e => setFormData({ ...formData, thumbnail_url: e.target.value })}
-                  placeholder="https://..."
-                  className={inputClasses}
-                />
-              </div>
+              <MediaPicker
+                label="Thumbnail"
+                value={formData.thumbnail_url || null}
+                onChange={(url) => setFormData({ ...formData, thumbnail_url: url || '' })}
+                hint="Pick from the library or paste a URL (YouTube thumbs work)"
+              />
 
               <div>
                 <label className="block text-sm font-medium text-cyan-700 dark:text-white mb-2">Category</label>

@@ -7,7 +7,6 @@ import {
   Users,
   Dumbbell,
   Calendar,
-  Video,
   TrendingUp,
   Plus,
   FileText,
@@ -284,13 +283,6 @@ export default function AdminDashboard() {
       href: '/admin/athletes',
       color: '#10B981',
     },
-    {
-      title: 'Upload Video',
-      description: 'Add training content',
-      icon: Video,
-      href: '/admin/media',
-      color: '#F59E0B',
-    },
   ]
 
   const adminSections = [
@@ -317,14 +309,6 @@ export default function AdminDashboard() {
       href: '/admin/bookings',
       color: '#10B981',
       stat: `${stats.activeSessions} Upcoming`,
-    },
-    {
-      title: 'Content Hub',
-      description: 'Blog posts, videos, and media',
-      icon: Video,
-      href: '/admin/media',
-      color: '#8B5CF6',
-      stat: 'Manage Content',
     },
     {
       title: 'Analytics',

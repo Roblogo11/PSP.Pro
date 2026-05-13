@@ -24,6 +24,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Tooltip } from '@/components/ui/tooltip'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter } from 'next/navigation'
+import { MediaPicker } from '@/components/media-picker'
 
 interface Drill {
   id: string
@@ -865,17 +866,12 @@ export default function DrillsManagementPage() {
                 />
               </div>
 
-              {/* Thumbnail URL */}
-              <div>
-                <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Thumbnail URL</label>
-                <input
-                  type="url"
-                  value={formData.thumbnail_url}
-                  onChange={(e) => setFormData({ ...formData, thumbnail_url: e.target.value })}
-                  placeholder="https://example.com/thumbnail.jpg"
-                  className="w-full px-4 py-3 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 focus:outline-none focus:border-orange/50"
-                />
-              </div>
+              <MediaPicker
+                label="Thumbnail"
+                value={formData.thumbnail_url || null}
+                onChange={(url) => setFormData({ ...formData, thumbnail_url: url || '' })}
+                hint="Pick from the library or paste a URL"
+              />
 
               {/* Duration */}
               <div>

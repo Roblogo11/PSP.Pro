@@ -646,10 +646,10 @@ export default function OrgPage() {
                   {/* Logo + Auto Color Extractor */}
                   <div className="glass-card p-6">
                     <h3 className="font-semibold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
-                      <Zap className="w-4 h-4 text-cyan-500" /> Logo → Auto Color Scan
+                      <Zap className="w-4 h-4 text-cyan-500" /> Website → Auto Brand Scan
                     </h3>
                     <p className="text-xs text-cyan-700 dark:text-white/50 mb-4">
-                      Drop your logo URL or upload it — we'll scan the colors and let you pick your brand palette in one click.
+                      Paste your org&apos;s website URL — we&apos;ll grab the favicon and pull a brand palette from it. No upload needed.
                     </p>
                     <LogoColorExtractor
                       currentLogoUrl={selectedOrg.logo_url}

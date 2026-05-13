@@ -28,6 +28,16 @@ export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'enrolled' | 'available'>('all')
+  const [expanded, setExpanded] = useState<Set<string>>(new Set())
+
+  const toggleExpanded = (id: string) => {
+    setExpanded(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
 
   const effectiveUserId = impersonatedUserId || profile?.id
 
@@ -206,9 +216,26 @@ export default function CoursesPage() {
                 </div>
 
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">{course.title}</h3>
-                {course.description && (
-                  <p className="text-sm text-cyan-700 dark:text-white/70 mb-3 line-clamp-2">{course.description}</p>
-                )}
+                {course.description && (() => {
+                  const isExpanded = expanded.has(course.id)
+                  const isLong = course.description.length > 90
+                  return (
+                    <div className="mb-3">
+                      <p className={`text-sm text-cyan-700 dark:text-white/70 ${isExpanded ? '' : 'line-clamp-2'}`}>
+                        {course.description}
+                      </p>
+                      {isLong && (
+                        <button
+                          type="button"
+                          onClick={() => toggleExpanded(course.id)}
+                          className="mt-1 text-xs font-semibold text-orange hover:text-orange/80 transition-colors"
+                        >
+                          {isExpanded ? 'Show less' : 'Show more'}
+                        </button>
+                      )}
+                    </div>
+                  )
+                })()}
 
                 <div className="flex items-center gap-3 text-sm text-cyan-700 dark:text-white/60 mb-4">
                   <div className="flex items-center gap-1">

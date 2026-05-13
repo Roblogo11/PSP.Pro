@@ -19,7 +19,6 @@ import {
   DollarSign,
   BookOpen,
   ClipboardCheck,
-  Newspaper,
   Medal,
   Building2,
   MessageCircle,
@@ -29,7 +28,6 @@ import {
   ArrowRight,
   ChevronLeft,
   Compass,
-  Image as ImageIcon,
 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { TourTriggerButton } from '@/components/tour-hud'
@@ -149,8 +147,6 @@ const coachCategories: GuideCategory[] = [
       { label: 'Analytics', href: '/admin/analytics', icon: BarChart3, color: 'text-green-400', description: 'Revenue, booking trends, athlete growth, and session metrics — see what\'s driving your business.' },
       { label: 'Promo Codes', href: '/admin/promos', icon: Tag, color: 'text-orange-400', description: 'Discount codes with percentage or flat amounts, usage limits, and expiration dates.' },
       { label: 'Organizations', href: '/admin/org', icon: Building2, color: 'text-indigo-400', description: 'Organization branding, team members, and Stripe Connect payouts.' },
-      { label: 'Content', href: '/admin/media', icon: Newspaper, color: 'text-pink-400', description: 'Blog posts and gallery media to keep your public site fresh and engaging.' },
-      { label: 'Images', href: '/admin/images', icon: ImageIcon, color: 'text-rose-400', description: 'Replace placeholder images with real photography — hero banners, coach headshots, and facility photos.' },
     ],
   },
   {

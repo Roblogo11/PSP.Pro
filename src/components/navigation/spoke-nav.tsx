@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight, Calendar, Zap, Users, BookOpen, Home } from 'luc
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { useNavigation } from './nav-context'
 
-type SpokePage = 'coaches' | 'coach-profile' | 'memberships' | 'vault' | 'faq' | 'blog'
+type SpokePage = 'coaches' | 'coach-profile' | 'memberships' | 'faq' | 'blog'
 
 interface SpokeNavConfig {
   back: { label: string; path: string; icon?: React.ComponentType<{ className?: string }> }
@@ -30,11 +30,6 @@ const SPOKE_CONFIGS: Record<SpokePage, SpokeNavConfig> = {
     back: { label: 'Pricing', path: '/pricing', icon: ArrowLeft },
     forward: { label: 'Join the Team', path: '/get-started', icon: Zap },
     context: 'Membership Plans',
-  },
-  vault: {
-    back: { label: 'Home', path: '/', icon: Home },
-    forward: { label: 'Join the Team', path: '/get-started', icon: Zap },
-    context: 'Velocity Vault',
   },
   faq: {
     back: { label: 'Home', path: '/', icon: Home },

@@ -7,7 +7,7 @@ import {
   ChevronRight, ChevronLeft, Zap, SkipForward,
   LayoutDashboard, Calendar, TrendingUp, Dumbbell, Settings, Clock,
   Shield, Users, DollarSign, BarChart3, BookOpen, ClipboardCheck, Tag,
-  Building2, Newspaper, Upload, Compass, Image, FileText,
+  Building2, Upload, Compass, FileText,
 } from 'lucide-react'
 import { isTourActive, markPageVisited } from '@/lib/tour/track'
 import { SpotlightOverlay } from '@/components/spotlight-overlay'
@@ -717,30 +717,7 @@ const PAGE_TOURS: Record<string, PageTour> = {
       },
       {
         title: 'Org Tour Done! 🏗️',
-        message: "Your brand, your team, your rules! Next — Content Hub. Manage blog posts and media for your public site!",
-        navigateTo: '/admin/media',
-        action: 'Content Hub',
-      },
-    ],
-  },
-
-  '/admin/media': {
-    pageTitle: 'Content Hub',
-    icon: Newspaper,
-    color: 'text-pink-400',
-    steps: [
-      {
-        title: 'Your Content Hub 📰',
-        message: "Two sections in one — Blog Posts and Media Gallery. Keep your public site fresh with training tips, athlete spotlights, and facility photos!",
-      },
-      {
-        title: 'Blog & Media Tabs 📑',
-        message: "Switch between Blog Posts and Media Gallery with these tabs. Blog posts drive SEO and engagement. Media Gallery stores images and videos for your site!",
-        highlight: 'admin-media-tabs',
-      },
-      {
-        title: 'Content Tour Done! 📝',
-        message: "Content marketing is how you get found! Last stop — Data Import. Bring in performance data from your training devices!",
+        message: "Your brand, your team, your rules! Next up — Data Import. Bring in performance data from your training devices!",
         navigateTo: '/admin/imports',
         action: 'Data Import',
       },
@@ -823,33 +800,6 @@ const PAGE_TOURS: Record<string, PageTour> = {
       {
         title: 'Requests Complete! 🛡️',
         message: "This keeps your platform safe by requiring approval for sensitive actions. Coaches request, you approve — no accidental deletions!",
-        action: 'Got It!',
-      },
-    ],
-  },
-
-  '/admin/images': {
-    pageTitle: 'Image Management',
-    icon: Image,
-    color: 'text-pink-400',
-    steps: [
-      {
-        title: 'Image Management 🖼️',
-        message: "Replace all the placeholder images on your marketing site with YOUR real photography! Hero banners, coach headshots, feature cards, facility photos — everything.",
-      },
-      {
-        title: 'Upload Sections 📸',
-        message: "Scroll down to see sections: Hero, Feature Cards, Coach Headshots, and Facility Photos. Each slot shows the current image, recommended dimensions, and an upload button.",
-        highlight: 'admin-images-sections',
-      },
-      {
-        title: 'Image Guidelines 📐',
-        message: "Match the aspect ratio shown (16:9, 3:2, or 1:1). Use high-res images at 2x display size. WebP format is best for performance. Keep files under 5MB!",
-        highlight: 'admin-images-guidelines',
-      },
-      {
-        title: 'Images Done! 🎨',
-        message: "Upload your real photos and watch your public site transform from template to professional! First impressions matter — make yours count.",
         action: 'Got It!',
       },
     ],

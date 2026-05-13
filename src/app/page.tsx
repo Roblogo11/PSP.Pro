@@ -106,17 +106,6 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen home-page">
-      {/* Web3 Wallet Icon - Hidden until NFT feature is ready
-      <Link href="/vault" className="fixed top-6 right-6 z-50 group">
-        <div className="relative">
-          <div className="absolute inset-0 bg-orange/20 rounded-full blur-xl animate-pulse" />
-          <div className="relative w-14 h-14 bg-gradient-to-br from-orange to-cyan rounded-full flex items-center justify-center shadow-lg shadow-orange/30 hover:shadow-orange/50 transition-all duration-300 hover:scale-110 border-2 border-cyan-200/40">
-            <Wallet className="w-6 h-6 text-white" />
-          </div>
-        </div>
-      </Link>
-      */}
-
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Hero Background Image */}
