@@ -17,6 +17,19 @@ interface ChunkedContentProps {
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
 const HINT_STORAGE_KEY = 'psp-chunked-hint-seen'
 
+/** Pick the column count that leaves the fewest orphan tiles for n chunks. */
+function pickColumnCount(n: number): 2 | 3 | 4 {
+  if (n <= 2) return 2
+  if (n === 4 || n === 7 || n === 8) return 4
+  return 3 // 3, 5, 6, 9 all balance well in 3 cols
+}
+
+const COL_CLASS: Record<2 | 3 | 4, string> = {
+  2: 'grid-cols-2',
+  3: 'grid-cols-3',
+  4: 'grid-cols-4',
+}
+
 /**
  * Breaks long descriptive text into a 3×3 grid of lettered tiles.
  * Each tile reveals its chunk's content in a panel below when tapped.
@@ -80,8 +93,8 @@ export function ChunkedContent({
         </div>
       )}
 
-      {/* Tile grid — 3 cols, wraps to as many rows as needed (max 3) */}
-      <div className="grid grid-cols-3 gap-2 mb-4">
+      {/* Tile grid — column count picked to minimize orphan tiles */}
+      <div className={`grid ${COL_CLASS[pickColumnCount(chunks.length)]} gap-2 mb-4`}>
         {chunks.map((chunk, i) => {
           const isActive = i === activeIdx
           return (
@@ -89,7 +102,7 @@ export function ChunkedContent({
               key={i}
               type="button"
               onClick={() => setActiveIdx(i)}
-              className={`relative aspect-[5/3] rounded-xl border text-left p-2 transition-all overflow-hidden group ${
+              className={`relative min-h-[72px] rounded-xl border text-left p-2.5 transition-all overflow-hidden group ${
                 isActive
                   ? 'bg-orange/15 border-orange/60 ring-1 ring-orange/40 shadow-md shadow-orange/10'
                   : 'bg-cyan-50 dark:bg-white/5 border-cyan-200/40 dark:border-white/10 hover:border-orange/40 hover:bg-orange/5'
@@ -97,11 +110,11 @@ export function ChunkedContent({
               aria-pressed={isActive}
               aria-label={`Section ${LETTERS[i]}: ${chunk.heading}`}
             >
-              <div className="flex flex-col h-full">
-                <span className={`text-lg font-black leading-none ${isActive ? 'text-orange' : 'text-cyan-700 dark:text-cyan-300'}`}>
+              <div className="flex flex-col h-full gap-1">
+                <span className={`text-base font-black leading-none ${isActive ? 'text-orange' : 'text-cyan-700 dark:text-cyan-300'}`}>
                   {LETTERS[i]}
                 </span>
-                <span className={`mt-auto text-[10px] font-semibold leading-tight line-clamp-2 ${isActive ? 'text-slate-900 dark:text-white' : 'text-slate-600 dark:text-white/60'}`}>
+                <span className={`text-[11px] font-semibold leading-tight line-clamp-2 ${isActive ? 'text-slate-900 dark:text-white' : 'text-slate-600 dark:text-white/60'}`}>
                   {chunk.heading}
                 </span>
               </div>

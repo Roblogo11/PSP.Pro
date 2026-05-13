@@ -226,29 +226,30 @@ export default function CourseDetailPage() {
               <div className="rounded-2xl overflow-hidden bg-black mb-4">
                 <VideoPlayer url={activeLesson.video_url} title={activeLesson.title} />
               </div>
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{activeLesson.title}</h2>
-                  {activeLesson.description && (
-                    <ChunkedContent
-                      text={activeLesson.description}
-                      paragraphClassName="text-sm text-cyan-700 dark:text-white/70 leading-relaxed"
-                    />
+              <div>
+                {/* Title row — Mark Complete on right on desktop, full-width below on mobile */}
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-white flex-1 min-w-0">{activeLesson.title}</h2>
+                  {enrolled && (
+                    <button
+                      onClick={() => toggleComplete(activeLesson)}
+                      disabled={markingComplete}
+                      className={`flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all flex-shrink-0 ${
+                        activeLesson.completed
+                          ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                          : 'bg-cyan-50/50 text-cyan-700 dark:text-white border border-cyan-200/40 hover:bg-green-500/10 hover:text-green-400 hover:border-green-500/30'
+                      }`}
+                    >
+                      <CheckCircle className="w-4 h-4" />
+                      {activeLesson.completed ? 'Completed' : 'Mark Complete'}
+                    </button>
                   )}
                 </div>
-                {enrolled && (
-                  <button
-                    onClick={() => toggleComplete(activeLesson)}
-                    disabled={markingComplete}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-                      activeLesson.completed
-                        ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                        : 'bg-cyan-50/50 text-cyan-700 dark:text-white border border-cyan-200/40 hover:bg-green-500/10 hover:text-green-400 hover:border-green-500/30'
-                    }`}
-                  >
-                    <CheckCircle className="w-4 h-4" />
-                    {activeLesson.completed ? 'Completed' : 'Mark Complete'}
-                  </button>
+                {activeLesson.description && (
+                  <ChunkedContent
+                    text={activeLesson.description}
+                    paragraphClassName="text-sm text-cyan-700 dark:text-white/70 leading-relaxed"
+                  />
                 )}
               </div>
             </div>
