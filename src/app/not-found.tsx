@@ -26,7 +26,6 @@ export default function NotFound() {
               width={200}
               height={66}
               className="brightness-0 invert opacity-90 hover:opacity-100 transition-opacity"
-              priority
             />
           </Link>
         </div>

@@ -40,7 +40,6 @@ export default function Loading() {
             alt="PSP.Pro Logo"
             width={300}
             height={99}
-            priority
             className="h-20 md:h-24 w-auto brightness-0 invert"
             style={{
               filter: 'drop-shadow(0 0 25px rgba(0, 180, 216, 0.6)) brightness(0) invert(1)',
