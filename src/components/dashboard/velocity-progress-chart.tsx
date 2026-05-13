@@ -3,7 +3,6 @@
 import { useMemo } from 'react'
 import { TrendingUp, Calendar } from 'lucide-react'
 import {
-  ResponsiveContainer,
   LineChart,
   Line,
   XAxis,
@@ -13,6 +12,7 @@ import {
   ReferenceLine,
   Legend,
 } from 'recharts'
+import { SizedChart } from '@/components/charts/sized-chart'
 
 interface ChartDataPoint {
   date: string
@@ -104,36 +104,38 @@ export function MultiMetricChart({
       </div>
 
       <div className="h-72">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-            <XAxis dataKey="date" tick={{ fill: '#94a3b8', fontSize: 11 }} />
-            <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend />
-            {goalValue && (
-              <ReferenceLine
-                y={goalValue}
-                stroke="#FF4B2B"
-                strokeDasharray="6 4"
-                label={{ value: goalLabel || `Goal: ${goalValue}`, fill: '#FF4B2B', fontSize: 11, position: 'right' }}
-              />
-            )}
-            {metrics.map((metric, i) => (
-              <Line
-                key={metric.key}
-                type="monotone"
-                dataKey={metric.key}
-                name={metric.label}
-                stroke={metric.color || CHART_COLORS[i % CHART_COLORS.length]}
-                strokeWidth={2.5}
-                dot={{ fill: metric.color || CHART_COLORS[i % CHART_COLORS.length], r: 3 }}
-                activeDot={{ r: 5 }}
-                connectNulls
-              />
-            ))}
-          </LineChart>
-        </ResponsiveContainer>
+        <SizedChart>
+          {(w, h) => (
+            <LineChart width={w} height={h} data={data}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+              <XAxis dataKey="date" tick={{ fill: '#94a3b8', fontSize: 11 }} />
+              <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} />
+              <Tooltip content={<CustomTooltip />} />
+              <Legend />
+              {goalValue && (
+                <ReferenceLine
+                  y={goalValue}
+                  stroke="#FF4B2B"
+                  strokeDasharray="6 4"
+                  label={{ value: goalLabel || `Goal: ${goalValue}`, fill: '#FF4B2B', fontSize: 11, position: 'right' }}
+                />
+              )}
+              {metrics.map((metric, i) => (
+                <Line
+                  key={metric.key}
+                  type="monotone"
+                  dataKey={metric.key}
+                  name={metric.label}
+                  stroke={metric.color || CHART_COLORS[i % CHART_COLORS.length]}
+                  strokeWidth={2.5}
+                  dot={{ fill: metric.color || CHART_COLORS[i % CHART_COLORS.length], r: 3 }}
+                  activeDot={{ r: 5 }}
+                  connectNulls
+                />
+              ))}
+            </LineChart>
+          )}
+        </SizedChart>
       </div>
 
       <div className="mt-4 pt-4 border-t border-cyan-200/40 flex items-center justify-between text-xs text-cyan-800 dark:text-white">
@@ -210,35 +212,37 @@ export function VelocityProgressChart({
 
       {/* Chart */}
       <div className="h-64">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-            <XAxis dataKey="date" tick={{ fill: '#94a3b8', fontSize: 11 }} />
-            <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} domain={['auto', 'auto']} />
-            <Tooltip content={<CustomTooltip />} />
-            <ReferenceLine
-              y={goalVelocity}
-              stroke="#FF4B2B"
-              strokeDasharray="6 4"
-              label={{ value: `Goal: ${goalVelocity} MPH`, fill: '#FF4B2B', fontSize: 11, position: 'right' }}
-            />
-            <Line
-              type="monotone"
-              dataKey="velocity"
-              name="Velocity (MPH)"
-              stroke="url(#velocityGrad)"
-              strokeWidth={3}
-              dot={{ fill: '#00B4D8', r: 4 }}
-              activeDot={{ r: 6 }}
-            />
-            <defs>
-              <linearGradient id="velocityGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#00B4D8" />
-                <stop offset="100%" stopColor="#FF4B2B" />
-              </linearGradient>
-            </defs>
-          </LineChart>
-        </ResponsiveContainer>
+        <SizedChart>
+          {(w, h) => (
+            <LineChart width={w} height={h} data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+              <XAxis dataKey="date" tick={{ fill: '#94a3b8', fontSize: 11 }} />
+              <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} domain={['auto', 'auto']} />
+              <Tooltip content={<CustomTooltip />} />
+              <ReferenceLine
+                y={goalVelocity}
+                stroke="#FF4B2B"
+                strokeDasharray="6 4"
+                label={{ value: `Goal: ${goalVelocity} MPH`, fill: '#FF4B2B', fontSize: 11, position: 'right' }}
+              />
+              <Line
+                type="monotone"
+                dataKey="velocity"
+                name="Velocity (MPH)"
+                stroke="url(#velocityGrad)"
+                strokeWidth={3}
+                dot={{ fill: '#00B4D8', r: 4 }}
+                activeDot={{ r: 6 }}
+              />
+              <defs>
+                <linearGradient id="velocityGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#00B4D8" />
+                  <stop offset="100%" stopColor="#FF4B2B" />
+                </linearGradient>
+              </defs>
+            </LineChart>
+          )}
+        </SizedChart>
       </div>
 
       {/* Legend */}

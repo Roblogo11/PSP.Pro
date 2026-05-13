@@ -2,17 +2,15 @@
 
 import { motion } from 'framer-motion'
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
   Area,
   AreaChart,
 } from 'recharts'
 import { TrendingUp } from 'lucide-react'
+import { SizedChart } from '@/components/charts/sized-chart'
 
 interface VelocityDataPoint {
   date: string
@@ -107,42 +105,44 @@ export function VelocityChart({
 
       {/* Chart */}
       <div className="h-[300px] -mx-2">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data}>
-            <defs>
-              <linearGradient id="velocityGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#FF4B2B" stopOpacity={0.3} />
-                <stop offset="100%" stopColor="#FF4B2B" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke="rgba(255, 255, 255, 0.05)"
-              vertical={false}
-            />
-            <XAxis
-              dataKey="date"
-              stroke="#4A5568"
-              style={{ fontSize: '12px' }}
-              tickLine={false}
-            />
-            <YAxis
-              stroke="#4A5568"
-              style={{ fontSize: '12px' }}
-              tickLine={false}
-              domain={['dataMin - 2', 'dataMax + 2']}
-            />
-            <Tooltip content={<CustomTooltip />} cursor={false} />
-            <Area
-              type="monotone"
-              dataKey="velocity"
-              stroke="#FF4B2B"
-              strokeWidth={3}
-              fill="url(#velocityGradient)"
-              animationDuration={1000}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+        <SizedChart>
+          {(w, h) => (
+            <AreaChart width={w} height={h} data={data}>
+              <defs>
+                <linearGradient id="velocityGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#FF4B2B" stopOpacity={0.3} />
+                  <stop offset="100%" stopColor="#FF4B2B" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="rgba(255, 255, 255, 0.05)"
+                vertical={false}
+              />
+              <XAxis
+                dataKey="date"
+                stroke="#4A5568"
+                style={{ fontSize: '12px' }}
+                tickLine={false}
+              />
+              <YAxis
+                stroke="#4A5568"
+                style={{ fontSize: '12px' }}
+                tickLine={false}
+                domain={['dataMin - 2', 'dataMax + 2']}
+              />
+              <Tooltip content={<CustomTooltip />} cursor={false} />
+              <Area
+                type="monotone"
+                dataKey="velocity"
+                stroke="#FF4B2B"
+                strokeWidth={3}
+                fill="url(#velocityGradient)"
+                animationDuration={1000}
+              />
+            </AreaChart>
+          )}
+        </SizedChart>
       </div>
     </motion.div>
   )

@@ -17,7 +17,6 @@ import {
   PieChart as PieChartIcon,
 } from 'lucide-react'
 import {
-  ResponsiveContainer,
   LineChart,
   Line,
   XAxis,
@@ -31,6 +30,7 @@ import {
   Cell,
   Legend,
 } from 'recharts'
+import { SizedChart } from '@/components/charts/sized-chart'
 
 interface AnalyticsData {
   totalRevenue: number
@@ -56,12 +56,6 @@ export default function AnalyticsPage() {
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
   const [loadingData, setLoadingData] = useState(true)
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d')
-  const [chartsReady, setChartsReady] = useState(false)
-
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setChartsReady(true))
-    return () => cancelAnimationFrame(id)
-  }, [])
 
   const isCoachOnly = (isCoach && !isAdmin) || isImpersonatingCoach
   const effectiveCoachId = isImpersonatingCoach ? impersonatedCoachId : profile?.id
@@ -442,17 +436,17 @@ export default function AnalyticsPage() {
             <h3 className="text-base md:text-lg font-semibold text-slate-900 dark:text-white">Monthly Revenue</h3>
           </div>
           <div className="h-48 md:h-64">
-            {chartsReady && (
-              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-                <BarChart data={analytics.monthlyRevenue} margin={{ left: -10, right: 5 }}>
+            <SizedChart>
+              {(w, h) => (
+                <BarChart width={w} height={h} data={analytics.monthlyRevenue} margin={{ left: -10, right: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                   <XAxis dataKey="month" tick={{ fill: '#94a3b8', fontSize: 11 }} />
                   <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} tickFormatter={(v) => `$${v}`} width={50} />
                   <Tooltip content={<CustomTooltip />} />
                   <Bar dataKey="revenue" name="Revenue" fill="#FF4B2B" radius={[4, 4, 0, 0]} />
                 </BarChart>
-              </ResponsiveContainer>
-            )}
+              )}
+            </SizedChart>
           </div>
         </div>
 
@@ -464,9 +458,9 @@ export default function AnalyticsPage() {
           </div>
           <div className="h-48 md:h-64">
             {analytics.statusBreakdown.length > 0 ? (
-              chartsReady && (
-                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-                  <PieChart>
+              <SizedChart>
+                {(w, h) => (
+                  <PieChart width={w} height={h}>
                     <Pie
                       data={analytics.statusBreakdown}
                       cx="50%"
@@ -484,8 +478,8 @@ export default function AnalyticsPage() {
                     <Tooltip />
                     <Legend />
                   </PieChart>
-                </ResponsiveContainer>
-              )
+                )}
+              </SizedChart>
             ) : (
               <div className="flex items-center justify-center h-full">
                 <p className="text-cyan-800 dark:text-white">No booking data</p>
@@ -539,17 +533,17 @@ export default function AnalyticsPage() {
             <h3 className="text-base md:text-lg font-semibold text-slate-900 dark:text-white">Revenue Trend</h3>
           </div>
           <div className="h-48 md:h-64">
-            {chartsReady && (
-              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-                <LineChart data={analytics.monthlyRevenue} margin={{ left: -10, right: 5 }}>
+            <SizedChart>
+              {(w, h) => (
+                <LineChart width={w} height={h} data={analytics.monthlyRevenue} margin={{ left: -10, right: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                   <XAxis dataKey="month" tick={{ fill: '#94a3b8', fontSize: 11 }} />
                   <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} tickFormatter={(v) => `$${v}`} width={50} />
                   <Tooltip content={<CustomTooltip />} />
                   <Line type="monotone" dataKey="revenue" name="Revenue" stroke="#FF4B2B" strokeWidth={3} dot={{ fill: '#FF4B2B', r: 4 }} />
                 </LineChart>
-              </ResponsiveContainer>
-            )}
+              )}
+            </SizedChart>
           </div>
         </div>
       </div>
