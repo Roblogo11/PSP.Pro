@@ -12,6 +12,14 @@ interface ChunkedContentProps {
   className?: string
   /** Tailwind className applied to the paragraph content */
   paragraphClassName?: string
+  /**
+   * Optional short labels (one per chunk) to use as the BIG tile heading
+   * instead of A/B/C... letters. Best for static curated content where the
+   * author knows the section names. Will visually replace the letter glyph.
+   * If fewer labels are provided than chunks, remaining tiles fall back to letters.
+   * Keep labels under 8 chars for clean tile rendering.
+   */
+  labels?: string[]
 }
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
@@ -43,6 +51,7 @@ export function ChunkedContent({
   maxChunks = 9,
   className = '',
   paragraphClassName = '',
+  labels,
 }: ChunkedContentProps) {
   const chunks = useMemo(() => splitToChunks(text, maxChunks), [text, maxChunks])
   const [activeIdx, setActiveIdx] = useState(0)
@@ -97,6 +106,7 @@ export function ChunkedContent({
       <div className={`grid ${COL_CLASS[pickColumnCount(chunks.length)]} gap-2 mb-4`}>
         {chunks.map((chunk, i) => {
           const isActive = i === activeIdx
+          const customLabel = labels?.[i] || null
           return (
             <button
               key={i}
@@ -108,15 +118,23 @@ export function ChunkedContent({
                   : 'bg-cyan-50 dark:bg-white/5 border-cyan-200/40 dark:border-white/10 hover:border-orange/40 hover:bg-orange/5'
               }`}
               aria-pressed={isActive}
-              aria-label={`Section ${LETTERS[i]}: ${chunk.heading}`}
+              aria-label={`Section ${customLabel || LETTERS[i]}: ${chunk.heading}`}
             >
-              <div className="flex flex-col h-full gap-1">
-                <span className={`text-base font-black leading-none ${isActive ? 'text-orange' : 'text-cyan-700 dark:text-cyan-300'}`}>
-                  {LETTERS[i]}
-                </span>
-                <span className={`text-[11px] font-semibold leading-tight line-clamp-2 ${isActive ? 'text-slate-900 dark:text-white' : 'text-slate-600 dark:text-white/60'}`}>
-                  {chunk.heading}
-                </span>
+              <div className="flex flex-col h-full gap-1 items-center justify-center text-center">
+                {customLabel ? (
+                  <span className={`text-sm font-black leading-tight line-clamp-2 ${isActive ? 'text-orange' : 'text-cyan-700 dark:text-cyan-300'}`}>
+                    {customLabel}
+                  </span>
+                ) : (
+                  <>
+                    <span className={`text-base font-black leading-none ${isActive ? 'text-orange' : 'text-cyan-700 dark:text-cyan-300'}`}>
+                      {LETTERS[i]}
+                    </span>
+                    <span className={`text-[11px] font-semibold leading-tight line-clamp-2 ${isActive ? 'text-slate-900 dark:text-white' : 'text-slate-600 dark:text-white/60'}`}>
+                      {chunk.heading}
+                    </span>
+                  </>
+                )}
               </div>
             </button>
           )
@@ -132,7 +150,7 @@ export function ChunkedContent({
         {chunks.length > 1 && (
           <div className="mt-3 flex items-center justify-between text-xs text-slate-500 dark:text-white/40">
             <span>
-              Section <span className="font-bold text-orange">{LETTERS[activeIdx]}</span> of {chunks.length}
+              Section <span className="font-bold text-orange">{labels?.[activeIdx] || LETTERS[activeIdx]}</span> of {chunks.length}
             </span>
             <div className="flex gap-2">
               <button

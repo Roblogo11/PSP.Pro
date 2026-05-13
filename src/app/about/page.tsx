@@ -24,6 +24,9 @@ Coaching Mission: Rachel has been coaching pitchers for over 12 years. Passionat
 
 Beyond the Field: Beyond coaching, Rachel and Loren stay busy raising their two boys, ages 4 and 1.`
 
+const LOREN_LABELS = ['Since 2018', 'Approach', 'Athletics', 'Philosophy']
+const RACHEL_LABELS = ['Career', 'Accolades', 'Mission', 'Family']
+
 export default function AboutPage() {
   const { profile, isCoach, isAdmin } = useUserRole()
   const dashboardHref = (isCoach || isAdmin) ? '/admin' : '/locker'
@@ -148,6 +151,7 @@ export default function AboutPage() {
 
           <ChunkedContent
             text={LOREN_BIO}
+            labels={LOREN_LABELS}
             paragraphClassName="text-slate-600 dark:text-white/80 leading-relaxed"
           />
 
@@ -186,6 +190,7 @@ export default function AboutPage() {
 
           <ChunkedContent
             text={RACHEL_BIO}
+            labels={RACHEL_LABELS}
             paragraphClassName="text-slate-600 dark:text-white/80 leading-relaxed"
           />
 
