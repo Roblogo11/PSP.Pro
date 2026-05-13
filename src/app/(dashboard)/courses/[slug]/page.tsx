@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { ArrowLeft, BookOpen, CheckCircle, Circle, Lock, Play, Video, Loader2 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { VideoPlayer } from '@/components/ui/video-player'
-import { ExpandableText } from '@/components/expandable-text'
+import { ChunkedContent } from '@/components/chunked-content'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
@@ -185,9 +185,8 @@ export default function CourseDetailPage() {
               {course.title}
             </h1>
             {course.description && (
-              <ExpandableText
+              <ChunkedContent
                 text={course.description}
-                previewChars={260}
                 className="max-w-2xl"
                 paragraphClassName="text-cyan-800 dark:text-white/70 text-base md:text-lg leading-relaxed"
               />
@@ -231,9 +230,8 @@ export default function CourseDetailPage() {
                 <div className="flex-1 min-w-0">
                   <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{activeLesson.title}</h2>
                   {activeLesson.description && (
-                    <ExpandableText
+                    <ChunkedContent
                       text={activeLesson.description}
-                      previewChars={200}
                       paragraphClassName="text-sm text-cyan-700 dark:text-white/70 leading-relaxed"
                     />
                   )}

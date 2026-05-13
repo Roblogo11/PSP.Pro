@@ -425,10 +425,15 @@ export default function AdminCoursesPage() {
                 <textarea
                   value={formData.description}
                   onChange={e => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="What athletes will learn..."
-                  rows={3}
+                  placeholder={'What athletes will learn...\n\nTip: long descriptions auto-split into A-F tiles for readability.\nUse inline headings like "The Setup:" or "Step 1:" to control the split,\nor just write naturally — we detect sentence boundaries automatically.'}
+                  rows={4}
                   className={inputClasses + ' resize-none'}
                 />
+                <p className="text-xs text-cyan-700 dark:text-white/50 mt-1.5">
+                  💡 Long descriptions display as a tile grid on the course page. Write inline headings
+                  like <span className="font-mono bg-cyan-100 dark:bg-white/10 px-1 rounded">The Setup:</span> or
+                  <span className="font-mono bg-cyan-100 dark:bg-white/10 px-1 rounded ml-1">How to do it:</span> for the cleanest splits.
+                </p>
               </div>
 
               <MediaPicker
@@ -557,13 +562,18 @@ export default function AdminCoursesPage() {
                         placeholder="Video URL *"
                         className={inputClasses}
                       />
-                      <input
-                        type="text"
-                        value={editLessonForm.description}
-                        onChange={e => setEditLessonForm({ ...editLessonForm, description: e.target.value })}
-                        placeholder="Brief description (optional)"
-                        className={inputClasses}
-                      />
+                      <div>
+                        <textarea
+                          value={editLessonForm.description}
+                          onChange={e => setEditLessonForm({ ...editLessonForm, description: e.target.value })}
+                          placeholder={'Describe the drill… long text auto-splits into A-F tiles on the lesson page.\nUse inline headings like "The Setup:" or "How to do it:" for the cleanest splits.'}
+                          rows={4}
+                          className={inputClasses + ' resize-none'}
+                        />
+                        <p className="text-xs text-cyan-700 dark:text-white/50 mt-1.5">
+                          💡 Use inline headings like <span className="font-mono bg-cyan-100 dark:bg-white/10 px-1 rounded">The Setup:</span> or <span className="font-mono bg-cyan-100 dark:bg-white/10 px-1 rounded">The Lock:</span> — each becomes its own tile.
+                        </p>
+                      </div>
                       <div className="flex items-center gap-4">
                         <label className="flex items-center gap-2 cursor-pointer">
                           <input
@@ -639,13 +649,18 @@ export default function AdminCoursesPage() {
                   placeholder="Video URL (YouTube, Vimeo, or direct) *"
                   className={inputClasses}
                 />
-                <input
-                  type="text"
-                  value={lessonForm.description}
-                  onChange={e => setLessonForm({ ...lessonForm, description: e.target.value })}
-                  placeholder="Brief description (optional)"
-                  className={inputClasses}
-                />
+                <div>
+                  <textarea
+                    value={lessonForm.description}
+                    onChange={e => setLessonForm({ ...lessonForm, description: e.target.value })}
+                    placeholder={'Describe the drill… long text auto-splits into A-F tiles on the lesson page.\nUse inline headings like "The Setup:" or "How to do it:" for the cleanest splits.'}
+                    rows={4}
+                    className={inputClasses + ' resize-none'}
+                  />
+                  <p className="text-xs text-cyan-700 dark:text-white/50 mt-1.5">
+                    💡 Use inline headings like <span className="font-mono bg-cyan-100 dark:bg-white/10 px-1 rounded">The Setup:</span> or <span className="font-mono bg-cyan-100 dark:bg-white/10 px-1 rounded">The Lock:</span> — each becomes its own tile.
+                  </p>
+                </div>
                 <div className="flex items-center gap-4">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input

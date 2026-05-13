@@ -17,6 +17,7 @@ import {
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
 import { useUserRole } from '@/lib/hooks/use-user-role'
+import { ChunkedContent } from '@/components/chunked-content'
 
 type Drill = Database['public']['Tables']['drills']['Row']
 
@@ -194,7 +195,7 @@ export default function DrillDetailPage() {
                 <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white mb-4">
                   {drill.title}
                 </h1>
-                <p className="text-lg text-cyan-700 dark:text-white">{drill.description}</p>
+                <p className="text-lg text-cyan-700 dark:text-white line-clamp-2">{drill.description}</p>
               </div>
 
               {isImpersonating ? (
@@ -244,9 +245,19 @@ export default function DrillDetailPage() {
               <h2 className="text-2xl font-display font-bold text-slate-900 dark:text-white mb-4">
                 Instructions
               </h2>
-              <div className="prose prose-invert prose-orange max-w-none">
-                <ReactMarkdown>{drill.description}</ReactMarkdown>
-              </div>
+              {/* If the description contains markdown formatting (lists, bold, headings),
+                  render via ReactMarkdown so authoring stays flexible. Otherwise use
+                  ChunkedContent for the auto-split tile UX. */}
+              {/^\s*[#\-*]|\*\*/.test(drill.description) ? (
+                <div className="prose prose-invert prose-orange max-w-none">
+                  <ReactMarkdown>{drill.description}</ReactMarkdown>
+                </div>
+              ) : (
+                <ChunkedContent
+                  text={drill.description}
+                  paragraphClassName="text-base text-slate-700 dark:text-white/80 leading-relaxed"
+                />
+              )}
             </div>
           )}
         </div>
