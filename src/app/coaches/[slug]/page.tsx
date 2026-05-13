@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { SpokeNav } from '@/components/navigation/spoke-nav'
+import { ChunkedContent } from '@/components/chunked-content'
 import { Star, Award, Calendar, ChevronLeft } from 'lucide-react'
 
 export const revalidate = 60
@@ -101,7 +102,10 @@ export default async function CoachProfilePage({ params }: { params: { slug: str
               {coach.bio && (
                 <div className="mb-6">
                   <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-2">About</h2>
-                  <p className="text-slate-700 dark:text-white/60 leading-relaxed">{coach.bio}</p>
+                  <ChunkedContent
+                    text={coach.bio}
+                    paragraphClassName="text-slate-700 dark:text-white/60 leading-relaxed"
+                  />
                 </div>
               )}
 

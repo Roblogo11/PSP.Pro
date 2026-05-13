@@ -6,6 +6,23 @@ import { Target, Users, MapPin, Award, TrendingUp, Zap, Package, Rocket, Mail, A
 import { InfoSidebar } from '@/components/layout/info-sidebar'
 import { FunnelNav } from '@/components/navigation/funnel-nav'
 import { useUserRole } from '@/lib/hooks/use-user-role'
+import { ChunkedContent } from '@/components/chunked-content'
+
+const LOREN_BIO = `Since 2018, Loren has been developing athletes through individualized and group performance training with a specialized focus on core strength, speed, power, and game-specific skill execution in basketball and soccer.
+
+His Approach: His approach goes beyond drills — he builds complete athletes. With a deep understanding of performance mechanics and sport IQ, he emphasizes disciplined execution, progressive overload, and skill refinement under game-realistic conditions.
+
+The Athletic Background: A former multi-sport varsity athlete at Hickory High School, Loren competed on nationally ranked soccer teams (Top 12 in the U.S. during 2003-04 and Top 2 in 2004-05). He continued his soccer career at Virginia Wesleyan College before playing for the Hampton Roads Piranhas PDL team. In basketball, he earned three varsity letters and tied the school record for most three-pointers in a single game.
+
+The Coaching Philosophy: Today, Loren channels his competitive experience into developing athletes who move faster, think sharper, and perform stronger under pressure. He thrives on seeing measurable growth, breakthrough moments, and the joy athletes experience when preparation meets opportunity.`
+
+const RACHEL_BIO = `Rachel is a former collegiate softball pitcher with an impressive career at Patrick Henry Community College, where she was inducted into the Hall of Fame and helped lead her team to a Region X Championship. She continued her success at UVA Wise, competing at the Division II level and winning a conference championship.
+
+Accolades: Throughout her career, Rachel earned numerous accolades including Pitcher of the Year and First & Second Team All-Conference honors every year she competed.
+
+Coaching Mission: Rachel has been coaching pitchers for over 12 years. Passionate about using her God-given abilities, she is dedicated to impacting the next generation, building confidence in young athletes, and working with players of all ages.
+
+Beyond the Field: Beyond coaching, Rachel and Loren stay busy raising their two boys, ages 4 and 1.`
 
 export default function AboutPage() {
   const { profile, isCoach, isAdmin } = useUserRole()
@@ -129,24 +146,13 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <p className="text-slate-600 dark:text-white/80 leading-relaxed mb-4">
-            Since 2018, Loren has been developing athletes through individualized and group performance training with a specialized focus on core strength, speed, power, and game-specific skill execution in basketball and soccer.
-          </p>
+          <ChunkedContent
+            text={LOREN_BIO}
+            paragraphClassName="text-slate-600 dark:text-white/80 leading-relaxed"
+          />
 
-          <p className="text-slate-600 dark:text-white/80 leading-relaxed mb-4">
-            His approach goes beyond drills — he builds complete athletes. With a deep understanding of performance mechanics and sport IQ, he emphasizes disciplined execution, progressive overload, and skill refinement under game-realistic conditions.
-          </p>
-
-          <p className="text-lg font-bold text-orange mb-4">
+          <p className="text-lg font-bold text-orange mt-4 mb-1">
             Discipline. Determination. Dedication.
-          </p>
-
-          <p className="text-slate-600 dark:text-white/80 leading-relaxed mb-4">
-            A former multi-sport varsity athlete at Hickory High School, Loren competed on nationally ranked soccer teams (Top 12 in the U.S. during 2003-04 and Top 2 in 2004-05). He continued his soccer career at Virginia Wesleyan College before playing for the Hampton Roads Piranhas PDL team. In basketball, he earned three varsity letters and tied the school record for most three-pointers in a single game.
-          </p>
-
-          <p className="text-slate-600 dark:text-white/80 leading-relaxed">
-            Today, Loren channels his competitive experience into developing athletes who move faster, think sharper, and perform stronger under pressure. He thrives on seeing measurable growth, breakthrough moments, and the joy athletes experience when preparation meets opportunity.
           </p>
 
           <div className="flex flex-wrap gap-2 mt-4">
@@ -178,21 +184,10 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <p className="text-slate-600 dark:text-white/80 leading-relaxed mb-4">
-            Rachel is a former collegiate softball pitcher with an impressive career at Patrick Henry Community College, where she was inducted into the Hall of Fame and helped lead her team to a Region X Championship. She continued her success at UVA Wise, competing at the Division II level and winning a conference championship.
-          </p>
-
-          <p className="text-slate-600 dark:text-white/80 leading-relaxed mb-4">
-            Throughout her career, Rachel earned numerous accolades including Pitcher of the Year and First &amp; Second Team All-Conference honors every year she competed.
-          </p>
-
-          <p className="text-slate-600 dark:text-white/80 leading-relaxed mb-4">
-            Rachel has been coaching pitchers for over 12 years. Passionate about using her God-given abilities, she is dedicated to impacting the next generation, building confidence in young athletes, and working with players of all ages.
-          </p>
-
-          <p className="text-slate-500 dark:text-white/60 text-sm leading-relaxed">
-            Beyond coaching, Rachel and Loren stay busy raising their two boys, ages 4 and 1.
-          </p>
+          <ChunkedContent
+            text={RACHEL_BIO}
+            paragraphClassName="text-slate-600 dark:text-white/80 leading-relaxed"
+          />
 
           <div className="flex flex-wrap gap-2 mt-4">
             <span className="px-3 py-1 bg-cyan/10 border border-cyan/20 text-cyan text-xs font-semibold rounded-full">Softball Pitching</span>
