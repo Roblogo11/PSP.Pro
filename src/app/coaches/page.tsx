@@ -112,21 +112,23 @@ export default async function CoachesPage() {
                 </div>
               ))}
 
-              {/* "More coming" placeholder when roster is small */}
+              {/* Coach recruiting card — always shown when roster is small */}
               {coaches.length < 4 && (
-                <div className="glass-card rounded-2xl border-2 border-dashed border-cyan-300/40 dark:border-white/10 p-6 flex flex-col items-center justify-center text-center min-h-[280px]">
-                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-orange/20 to-cyan/10 flex items-center justify-center mb-4">
-                    <Users className="w-8 h-8 text-cyan-500 dark:text-cyan-400" />
+                <div className="glass-card rounded-2xl border-2 border-dashed border-orange/40 dark:border-orange/30 p-6 flex flex-col items-center justify-center text-center min-h-[280px] hover:border-orange/70 transition-all">
+                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-orange/30 to-cyan/20 flex items-center justify-center mb-4 shadow-lg shadow-orange/20">
+                    <Users className="w-8 h-8 text-orange" />
                   </div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">More coaches joining soon</h3>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
+                    Coach with PSP.Pro <span className="text-orange">🔥</span>
+                  </h3>
                   <p className="text-sm text-cyan-700 dark:text-white/60 mb-4">
-                    We&apos;re growing the PSP.Pro team. Want to coach with us?
+                    Elite trainers — we want YOU. Build your roster, set your rates, get paid through our platform. Let&apos;s gooo.
                   </p>
                   <Link
                     href="/contact"
-                    className="text-sm font-semibold text-orange hover:text-orange/80 transition-colors"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-orange to-amber-500 text-white text-sm font-bold hover:from-orange/90 hover:to-amber-500/90 transition-all shadow-md shadow-orange/30"
                   >
-                    Get in touch →
+                    Apply now →
                   </Link>
                 </div>
               )}
