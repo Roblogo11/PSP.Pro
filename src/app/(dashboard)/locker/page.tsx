@@ -29,6 +29,7 @@ import { ProgressRing } from '@/components/dashboard/progress-ring'
 import { ActivityFeed } from '@/components/dashboard/activity-feed'
 import { AchievementBadges } from '@/components/dashboard/achievement-badges'
 import { ReviewGameStats } from '@/components/dashboard/review-game-stats'
+import { TrialBanner } from '@/components/trial-banner'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useUserStats } from '@/lib/hooks/use-user-stats'
 import { createClient } from '@/lib/supabase/client'
@@ -551,6 +552,7 @@ export default function AthleteLockerPage() {
   // ─── Athlete View (existing) ───
   return (
     <div className="min-h-screen px-4 py-5 sm:px-5 sm:py-6 md:p-8 pb-28 lg:pb-8 relative">
+      <TrialBanner />
       {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">

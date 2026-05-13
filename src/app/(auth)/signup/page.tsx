@@ -188,9 +188,10 @@ export default function SignupPage() {
         }).catch(err => console.error('Restore failed (non-fatal):', err))
       }
 
-      // 7. Success — navigate to FAQ (membership purchase required)
+      // 7. Success — 60-day Elite trial auto-granted via DB trigger.
+      // Drop them straight into the Locker so they can start exploring.
       router.refresh()
-      router.push('/faq?welcome=true')
+      router.push('/locker?trial=welcome')
       return
     } catch (err: any) {
       console.error('Signup error:', err)

@@ -80,9 +80,10 @@ export default async function DashboardLayout({
 
         const { data: activeMembership } = await supabase
           .from('athlete_memberships')
-          .select('id')
+          .select('id, status, current_period_end')
           .eq('athlete_id', user.id)
-          .eq('status', 'active')
+          .in('status', ['active', 'trialing'])
+          .or('current_period_end.is.null,current_period_end.gt.' + new Date().toISOString())
           .limit(1)
           .single()
 
@@ -111,9 +112,10 @@ export default async function DashboardLayout({
 
         const { data: activeMembership } = await supabase
           .from('athlete_memberships')
-          .select('id')
+          .select('id, status, current_period_end')
           .eq('athlete_id', user.id)
-          .eq('status', 'active')
+          .in('status', ['active', 'trialing'])
+          .or('current_period_end.is.null,current_period_end.gt.' + new Date().toISOString())
           .limit(1)
           .single()
 

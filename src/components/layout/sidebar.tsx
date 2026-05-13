@@ -160,7 +160,16 @@ export function Sidebar() {
           }
           setHasMembership(true)
         } else {
-          setHasMembership(false)
+          // Fall back to athlete_memberships (covers trialing Elite users)
+          const { data: activeMembership } = await supabase
+            .from('athlete_memberships')
+            .select('status, current_period_end')
+            .eq('athlete_id', effectiveUserId)
+            .in('status', ['active', 'trialing'])
+            .or('current_period_end.is.null,current_period_end.gt.' + new Date().toISOString())
+            .limit(1)
+            .single()
+          setHasMembership(!!activeMembership)
         }
       }
 
