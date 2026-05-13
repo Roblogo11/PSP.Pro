@@ -122,7 +122,7 @@ export function ChunkedContent({
             >
               <div className="flex flex-col h-full gap-1 items-center justify-center text-center">
                 {customLabel ? (
-                  <span className={`text-sm font-black leading-tight line-clamp-2 ${isActive ? 'text-orange' : 'text-cyan-700 dark:text-cyan-300'}`}>
+                  <span className={`font-black leading-tight line-clamp-2 break-words ${isActive ? 'text-orange' : 'text-cyan-700 dark:text-cyan-300'} ${customLabel.length > 8 ? 'text-[11px]' : 'text-sm'}`}>
                     {customLabel}
                   </span>
                 ) : (
