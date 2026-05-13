@@ -371,17 +371,17 @@ export default function AdminCoursesPage() {
 
               {/* Actions */}
               <div className="flex gap-2 flex-wrap">
-                <button onClick={() => openLessonManager(course)} className="px-3 py-1.5 bg-pink-500/20 hover:bg-pink-500/30 text-pink-400 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1">
+                <button onClick={() => openLessonManager(course)} className="px-3 py-1.5 bg-pink-500/20 hover:bg-pink-500/30 text-pink-700 dark:text-pink-400 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1">
                   <Play className="w-3 h-3" /> Lessons
                 </button>
-                <button onClick={() => openEnrollModal(course)} className="px-3 py-1.5 bg-cyan/10 hover:bg-cyan/20 text-cyan rounded-lg text-xs font-semibold transition-colors flex items-center gap-1">
+                <button onClick={() => openEnrollModal(course)} className="px-3 py-1.5 bg-cyan/10 hover:bg-cyan/20 text-cyan-700 dark:text-cyan rounded-lg text-xs font-semibold transition-colors flex items-center gap-1">
                   <Users className="w-3 h-3" /> Enroll
                 </button>
-                <button onClick={() => openEditForm(course)} className="px-3 py-1.5 bg-cyan/10 hover:bg-cyan/20 text-cyan rounded-lg text-xs font-semibold transition-colors flex items-center gap-1">
+                <button onClick={() => openEditForm(course)} className="px-3 py-1.5 bg-cyan/10 hover:bg-cyan/20 text-cyan-700 dark:text-cyan rounded-lg text-xs font-semibold transition-colors flex items-center gap-1">
                   <Edit2 className="w-3 h-3" /> Edit
                 </button>
                 {isAdmin && (
-                  <button onClick={() => deleteCourse(course.id)} className="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1">
+                  <button onClick={() => deleteCourse(course.id)} className="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-700 dark:text-red-400 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1">
                     <Trash2 className="w-3 h-3" /> Delete
                   </button>
                 )}
