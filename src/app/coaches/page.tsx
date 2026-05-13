@@ -25,34 +25,34 @@ export default async function CoachesPage() {
   const coaches = await getCoaches()
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div className="flex min-h-screen">
       <InfoSidebar hideMobileNav />
 
-      <main className="lg:ml-80 min-h-screen">
-        <div className="max-w-5xl mx-auto px-4 py-12 pb-32">
+      <main className="flex-1 min-h-screen pb-32">
+        <div className="max-w-5xl mx-auto px-4 py-12">
           {/* Header */}
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange/10 border border-orange/20 text-orange text-sm font-semibold mb-4">
               <Users className="w-4 h-4" />
               Meet the Coaches
             </div>
-            <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
+            <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-4">
               Train with the <span className="text-gradient-orange">Best</span>
             </h1>
-            <p className="text-white/60 text-lg max-w-2xl mx-auto">
+            <p className="text-cyan-800 dark:text-white/60 text-lg max-w-2xl mx-auto">
               PSP.Pro coaches are elite trainers dedicated to your athletic development. Softball, basketball, soccer — we&apos;ve got your sport covered.
             </p>
           </div>
 
           {coaches.length === 0 ? (
             <div className="text-center py-20">
-              <Users className="w-12 h-12 text-white/20 mx-auto mb-4" />
-              <p className="text-white/40">Coach profiles coming soon</p>
+              <Users className="w-12 h-12 text-slate-400 dark:text-white/20 mx-auto mb-4" />
+              <p className="text-slate-500 dark:text-white/40">Coach profiles coming soon</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {coaches.map((coach: any) => (
-                <div key={coach.id} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-orange/30 transition-all group">
+                <div key={coach.id} className="glass-card rounded-2xl border border-cyan-200/40 dark:border-white/10 overflow-hidden hover:border-orange/30 transition-all group">
                   <div className="p-6">
                     <div className="flex items-start gap-4 mb-4">
                       {/* Avatar */}
@@ -65,9 +65,9 @@ export default async function CoachesPage() {
                       </div>
                       {/* Name + experience */}
                       <div className="flex-1 min-w-0">
-                        <h2 className="text-xl font-bold text-white group-hover:text-orange transition-colors">{coach.full_name}</h2>
+                        <h2 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-orange transition-colors">{coach.full_name}</h2>
                         {coach.years_experience && (
-                          <p className="text-sm text-white/50 flex items-center gap-1 mt-0.5">
+                          <p className="text-sm text-cyan-700 dark:text-white/50 flex items-center gap-1 mt-0.5">
                             <Star className="w-3.5 h-3.5 text-orange" />
                             {coach.years_experience} years experience
                           </p>
@@ -77,7 +77,7 @@ export default async function CoachesPage() {
 
                     {/* Bio */}
                     {coach.bio && (
-                      <p className="text-white/60 text-sm leading-relaxed mb-4 line-clamp-3">{coach.bio}</p>
+                      <p className="text-slate-700 dark:text-white/60 text-sm leading-relaxed mb-4 line-clamp-3">{coach.bio}</p>
                     )}
 
                     {/* Specialties */}
@@ -102,7 +102,7 @@ export default async function CoachesPage() {
                       {coach.profile_slug && (
                         <Link
                           href={`/coaches/${coach.profile_slug}`}
-                          className="px-4 py-2.5 bg-white/5 border border-white/10 text-white/70 rounded-xl hover:bg-white/10 hover:text-white transition-all text-sm font-semibold"
+                          className="px-4 py-2.5 bg-cyan-50 dark:bg-white/5 border border-cyan-200/40 dark:border-white/10 text-slate-700 dark:text-white/70 rounded-xl hover:bg-cyan-100 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white transition-all text-sm font-semibold"
                         >
                           View Profile
                         </Link>
@@ -111,6 +111,25 @@ export default async function CoachesPage() {
                   </div>
                 </div>
               ))}
+
+              {/* "More coming" placeholder when roster is small */}
+              {coaches.length < 4 && (
+                <div className="glass-card rounded-2xl border-2 border-dashed border-cyan-300/40 dark:border-white/10 p-6 flex flex-col items-center justify-center text-center min-h-[280px]">
+                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-orange/20 to-cyan/10 flex items-center justify-center mb-4">
+                    <Users className="w-8 h-8 text-cyan-500 dark:text-cyan-400" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">More coaches joining soon</h3>
+                  <p className="text-sm text-cyan-700 dark:text-white/60 mb-4">
+                    We&apos;re growing the PSP.Pro team. Want to coach with us?
+                  </p>
+                  <Link
+                    href="/contact"
+                    className="text-sm font-semibold text-orange hover:text-orange/80 transition-colors"
+                  >
+                    Get in touch →
+                  </Link>
+                </div>
+              )}
             </div>
           )}
         </div>

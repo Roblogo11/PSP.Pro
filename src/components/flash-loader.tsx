@@ -189,7 +189,6 @@ export function FlashLoader() {
                   alt="PSP.Pro"
                   width={80}
                   height={26}
-                  priority
                   className="brightness-0 invert opacity-90"
                 />
               </div>
