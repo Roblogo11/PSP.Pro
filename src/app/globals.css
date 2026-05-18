@@ -473,19 +473,28 @@
     border-color: rgba(0, 180, 216, 0.5);
   }
 
-  /* Gradient Text Effects */
+  /* Gradient Text Effects.
+     Fallback solid color first so iOS Safari shows readable text if background-clip:text fails or stalls.
+     The gradient applies only when the browser confirms support via @supports. */
   .text-gradient-orange {
-    background: linear-gradient(90deg, #D4422A 0%, #B8301A 50%, #9C2815 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #D4422A;
   }
-
   .text-gradient-cyan {
-    background: linear-gradient(90deg, #33D9FF 0%, #00B4D8 50%, #0096BE 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #00B4D8;
+  }
+  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .text-gradient-orange {
+      background: linear-gradient(90deg, #D4422A 0%, #B8301A 50%, #9C2815 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .text-gradient-cyan {
+      background: linear-gradient(90deg, #33D9FF 0%, #00B4D8 50%, #0096BE 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
   }
 
   .text-gradient-blue-orange {

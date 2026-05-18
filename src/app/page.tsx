@@ -126,10 +126,10 @@ export default function HomePage() {
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-grid-pattern opacity-10 z-[1]" />
 
-        {/* Cyan Glow Effect - PSP Blue */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] rounded-full blur-[150px] z-[2]" style={{ background: 'radial-gradient(circle, rgba(0, 180, 216, 0.15) 0%, rgba(0, 180, 216, 0.05) 50%, transparent 100%)' }} />
+        {/* Cyan Glow Effect - PSP Blue. Hidden on mobile: large blur radii break iOS Safari rendering (paints opaque slabs over hero text). */}
+        <div className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] rounded-full blur-[150px] z-[2]" style={{ background: 'radial-gradient(circle, rgba(0, 180, 216, 0.15) 0%, rgba(0, 180, 216, 0.05) 50%, transparent 100%)' }} />
         {/* Orange accent glow */}
-        <div className="absolute bottom-0 right-0 w-[800px] h-[800px] rounded-full blur-[150px] z-[2]" style={{ background: 'radial-gradient(circle, rgba(184, 48, 26, 0.08) 0%, transparent 70%)' }} />
+        <div className="hidden md:block absolute bottom-0 right-0 w-[800px] h-[800px] rounded-full blur-[150px] z-[2]" style={{ background: 'radial-gradient(circle, rgba(184, 48, 26, 0.08) 0%, transparent 70%)' }} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 text-center">
           {/* Logo */}
