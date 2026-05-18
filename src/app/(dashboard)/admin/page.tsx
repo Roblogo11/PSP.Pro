@@ -988,10 +988,10 @@ function SimulationPanel() {
                   </div>
                 )}
 
-                <div className="flex gap-3 mb-4">
+                <div className="flex flex-wrap gap-2 sm:gap-3 mb-4">
                   <button
                     onClick={() => { setShowPlayerSelect(!showPlayerSelect); setShowCoachSelect(false) }}
-                    className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 ${
+                    className={`flex-1 sm:flex-none min-w-[150px] justify-center px-4 py-2 min-h-[44px] rounded-xl font-semibold text-sm transition-all flex items-center gap-2 ${
                       showPlayerSelect
                         ? 'bg-amber-600 hover:bg-amber-700 text-white'
                         : 'bg-purple-600 hover:bg-purple-700 text-white'
@@ -1002,7 +1002,7 @@ function SimulationPanel() {
                   </button>
                   <button
                     onClick={() => { setShowCoachSelect(!showCoachSelect); setShowPlayerSelect(false) }}
-                    className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 border ${
+                    className={`flex-1 sm:flex-none min-w-[150px] justify-center px-4 py-2 min-h-[44px] rounded-xl font-semibold text-sm transition-all flex items-center gap-2 border ${
                       showCoachSelect
                         ? 'bg-amber-600 hover:bg-amber-700 text-white border-amber-600'
                         : 'bg-purple-500/20 hover:bg-purple-500/30 text-purple-600 dark:text-purple-300 border-purple-500/50'
@@ -1042,18 +1042,18 @@ function SimulationPanel() {
                         {filteredAthletes.map(athlete => (
                           <div
                             key={athlete.id}
-                            className="flex items-center justify-between p-3 bg-cyan-50/50 dark:bg-white/5 border border-cyan-200/40 dark:border-white/10 rounded-xl hover:border-amber-500/30 transition-all"
+                            className="flex flex-wrap items-center justify-between gap-2 p-3 bg-cyan-50/50 dark:bg-white/5 border border-cyan-200/40 dark:border-white/10 rounded-xl hover:border-amber-500/30 transition-all"
                           >
-                            <div>
-                              <p className="font-semibold text-sm text-slate-900 dark:text-white">
+                            <div className="min-w-0 flex-1">
+                              <p className="font-semibold text-sm text-slate-900 dark:text-white truncate">
                                 {athlete.full_name || 'Unnamed Player'}
                               </p>
-                              <p className="text-xs text-cyan-700 dark:text-white">{athlete.email}</p>
+                              <p className="text-xs text-cyan-700 dark:text-white truncate">{athlete.email}</p>
                             </div>
                             <button
                               onClick={() => startImpersonation(athlete.id)}
                               disabled={startingImpersonation === athlete.id}
-                              className="px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 rounded-lg text-xs font-semibold transition-all disabled:opacity-50 flex items-center gap-1.5"
+                              className="flex-shrink-0 px-3 py-1.5 min-h-[36px] bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 rounded-lg text-xs font-semibold transition-all disabled:opacity-50 flex items-center gap-1.5"
                             >
                               {startingImpersonation === athlete.id ? (
                                 <div className="w-3 h-3 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
@@ -1098,18 +1098,18 @@ function SimulationPanel() {
                         {filteredCoaches.map(coach => (
                           <div
                             key={coach.id}
-                            className="flex items-center justify-between p-3 bg-cyan-50/50 dark:bg-white/5 border border-cyan-200/40 dark:border-white/10 rounded-xl hover:border-amber-500/30 transition-all"
+                            className="flex flex-wrap items-center justify-between gap-2 p-3 bg-cyan-50/50 dark:bg-white/5 border border-cyan-200/40 dark:border-white/10 rounded-xl hover:border-amber-500/30 transition-all"
                           >
-                            <div>
-                              <p className="font-semibold text-sm text-slate-900 dark:text-white">
+                            <div className="min-w-0 flex-1">
+                              <p className="font-semibold text-sm text-slate-900 dark:text-white truncate">
                                 {coach.full_name || 'Unnamed Coach'}
                               </p>
-                              <p className="text-xs text-cyan-700 dark:text-white">{coach.email}</p>
+                              <p className="text-xs text-cyan-700 dark:text-white truncate">{coach.email}</p>
                             </div>
                             <button
                               onClick={() => startCoachImpersonation(coach.id)}
                               disabled={startingImpersonation === coach.id}
-                              className="px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 rounded-lg text-xs font-semibold transition-all disabled:opacity-50 flex items-center gap-1.5"
+                              className="flex-shrink-0 px-3 py-1.5 min-h-[36px] bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 rounded-lg text-xs font-semibold transition-all disabled:opacity-50 flex items-center gap-1.5"
                             >
                               {startingImpersonation === coach.id ? (
                                 <div className="w-3 h-3 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
