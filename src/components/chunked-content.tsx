@@ -103,7 +103,7 @@ export function ChunkedContent({
       )}
 
       {/* Tile grid — column count picked to minimize orphan tiles */}
-      <div className={`grid ${COL_CLASS[pickColumnCount(chunks.length)]} gap-2 mb-4`}>
+      <div className={`grid ${COL_CLASS[pickColumnCount(chunks.length)]} gap-1.5 sm:gap-2 mb-4`}>
         {chunks.map((chunk, i) => {
           const isActive = i === activeIdx
           const customLabel = labels?.[i] || null
@@ -112,7 +112,7 @@ export function ChunkedContent({
               key={i}
               type="button"
               onClick={() => setActiveIdx(i)}
-              className={`relative min-h-[72px] rounded-xl border text-left p-2.5 transition-all overflow-hidden group ${
+              className={`relative min-h-[56px] sm:min-h-[72px] rounded-xl border text-left p-2 sm:p-2.5 transition-all overflow-hidden group ${
                 isActive
                   ? 'bg-orange/15 border-orange/60 ring-1 ring-orange/40 shadow-md shadow-orange/10'
                   : 'bg-cyan-50 dark:bg-white/5 border-cyan-200/40 dark:border-white/10 hover:border-orange/40 hover:bg-orange/5'

@@ -138,7 +138,9 @@ export default async function DashboardLayout({
     <div className="flex h-[100dvh] overflow-hidden">
       <Sidebar />
       <HomeButton />
-      <main className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto" id="dashboard-main">
+      {/* pb-24 on mobile clears the fixed bottom nav (≈64–72px) + iPhone home indicator.
+          lg:pb-0 because desktop has a side sidebar, not a bottom bar. */}
+      <main className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto pb-24 lg:pb-0" id="dashboard-main">
         {children}
       </main>
     </div>
