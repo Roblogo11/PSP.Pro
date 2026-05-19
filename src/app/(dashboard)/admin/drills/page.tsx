@@ -178,7 +178,6 @@ export default function DrillsManagementPage() {
       // Generate slug from title if not provided
       const slug = formData.slug || formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')
 
-      // Build insert payload — map video_url to youtube_url (DB column name)
       const insertData: Record<string, any> = {
         title: formData.title,
         slug,
@@ -189,8 +188,7 @@ export default function DrillsManagementPage() {
         featured: formData.featured,
         created_by: profile?.id,
       }
-      // Video is optional — map to DB column name
-      if (formData.video_url) insertData.youtube_url = formData.video_url
+      if (formData.video_url) insertData.video_url = formData.video_url
       if (formData.description) insertData.description = formData.description
       if (formData.instructions) insertData.instructions = formData.instructions
       if (formData.thumbnail_url) insertData.thumbnail_url = formData.thumbnail_url
@@ -229,10 +227,9 @@ export default function DrillsManagementPage() {
     try {
       const supabase = createClient()
 
-      // Build update payload — map video_url to youtube_url (DB column name)
       const updateData: Record<string, any> = {
         title: formData.title,
-        youtube_url: formData.video_url || null,
+        video_url: formData.video_url || null,
         category: formData.category,
         difficulty: formData.difficulty,
         duration_seconds: formData.duration_seconds,
@@ -345,7 +342,7 @@ export default function DrillsManagementPage() {
       slug: drill.slug,
       description: drill.description || '',
       instructions: drill.instructions || '',
-      video_url: drill.youtube_url || '',
+      video_url: (drill as any).video_url || drill.youtube_url || '',
       thumbnail_url: drill.thumbnail_url || '',
       tags: drill.tags,
       category: drill.category || 'mechanics',
@@ -512,7 +509,7 @@ export default function DrillsManagementPage() {
             <Video className="w-6 h-6 text-cyan" />
             <span className="text-sm text-cyan-800 dark:text-white">Content</span>
           </div>
-          <p className="text-3xl font-bold text-slate-900 dark:text-white">{drills.filter(d => d.youtube_url).length}</p>
+          <p className="text-3xl font-bold text-slate-900 dark:text-white">{drills.filter(d => (d as any).video_url || d.youtube_url).length}</p>
           <p className="text-sm text-cyan-800 dark:text-white">With Video</p>
         </div>
         <div className="command-panel-active">
