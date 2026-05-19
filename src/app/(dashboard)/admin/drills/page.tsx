@@ -899,12 +899,12 @@ export default function DrillsManagementPage() {
                     value={tagInput}
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
-                    placeholder="Add tag and press Enter"
-                    className="flex-1 px-4 py-2 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 focus:outline-none focus:border-orange/50"
+                    placeholder="Add tag"
+                    className="flex-1 min-w-0 px-4 py-2 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 focus:outline-none focus:border-orange/50"
                   />
                   <button
                     onClick={addTag}
-                    className="btn-ghost px-4 py-2"
+                    className="btn-ghost px-4 py-2 shrink-0"
                   >
                     Add
                   </button>
@@ -936,12 +936,12 @@ export default function DrillsManagementPage() {
                     value={equipmentInput}
                     onChange={(e) => setEquipmentInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addEquipment())}
-                    placeholder="Add equipment and press Enter"
-                    className="flex-1 px-4 py-2 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 focus:outline-none focus:border-orange/50"
+                    placeholder="Add equipment"
+                    className="flex-1 min-w-0 px-4 py-2 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 focus:outline-none focus:border-orange/50"
                   />
                   <button
                     onClick={addEquipment}
-                    className="btn-ghost px-4 py-2"
+                    className="btn-ghost px-4 py-2 shrink-0"
                   >
                     Add
                   </button>
@@ -973,12 +973,12 @@ export default function DrillsManagementPage() {
                     value={focusAreaInput}
                     onChange={(e) => setFocusAreaInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addFocusArea())}
-                    placeholder="Add focus area and press Enter"
-                    className="flex-1 px-4 py-2 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 focus:outline-none focus:border-orange/50"
+                    placeholder="Add focus area"
+                    className="flex-1 min-w-0 px-4 py-2 bg-cyan-900/30 border border-cyan-200/40 rounded-xl text-slate-900 dark:text-white placeholder:text-cyan-800 focus:outline-none focus:border-orange/50"
                   />
                   <button
                     onClick={addFocusArea}
-                    className="btn-ghost px-4 py-2"
+                    className="btn-ghost px-4 py-2 shrink-0"
                   >
                     Add
                   </button>
