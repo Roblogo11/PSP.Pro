@@ -23,7 +23,7 @@ export async function middleware(request: NextRequest) {
     "img-src 'self' data: blob: https: http:",
     "media-src 'self' https: blob:",
     "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://www.google-analytics.com https://va.vercel-scripts.com https://vitals.vercel-insights.com",
-    "frame-src https://js.stripe.com https://www.youtube.com https://player.vimeo.com",
+    "frame-src https://js.stripe.com https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com",
     "object-src 'none'",
     "base-uri 'self'",
   ].join('; ')
