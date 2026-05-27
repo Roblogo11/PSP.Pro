@@ -25,7 +25,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { athlete_id, full_name, athlete_type, age, email, phone, child_name } = body
+    const { athlete_id, full_name, athlete_type, age, email, phone, child_name, parent_guardian_phone, parent_guardian_email, parent_guardian_name } = body
 
     if (!athlete_id) {
       return NextResponse.json({ error: 'athlete_id is required' }, { status: 400 })
@@ -58,6 +58,10 @@ export async function PATCH(request: NextRequest) {
     if (age !== undefined) updateData.age = age ? parseInt(age) : null
     if (phone !== undefined) updateData.phone = phone
     if (child_name !== undefined) updateData.child_name = child_name
+    // Parent/guardian contact — the columns most rows actually populate
+    if (parent_guardian_phone !== undefined) updateData.parent_guardian_phone = parent_guardian_phone
+    if (parent_guardian_email !== undefined) updateData.parent_guardian_email = parent_guardian_email
+    if (parent_guardian_name !== undefined) updateData.parent_guardian_name = parent_guardian_name
 
     if (Object.keys(updateData).length > 0) {
       const { error: updateError } = await adminClient

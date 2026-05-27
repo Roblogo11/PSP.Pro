@@ -34,6 +34,7 @@ export default function MessagesPage() {
   const [sending, setSending] = useState(false)
   const [showNewChat, setShowNewChat] = useState(false)
   const [contacts, setContacts] = useState<any[]>([])
+  const [contactSearch, setContactSearch] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const fetchConversations = useCallback(async () => {
@@ -108,13 +109,13 @@ export default function MessagesPage() {
     }
   }
 
-  const startNewChat = async (recipientId: string) => {
+  const startNewChat = async (recipientId: string, greeting = 'Hi! 👋') => {
     setSending(true)
     try {
       const res = await fetch('/api/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ recipientId, content: 'Hi! 👋' }),
+        body: JSON.stringify({ recipientId, content: greeting }),
       })
       const data = await res.json()
       if (data.conversationId) {
@@ -129,17 +130,50 @@ export default function MessagesPage() {
     }
   }
 
+  // Deep-link: /messages?to=<userId> opens (or starts) a chat with that person.
+  // This is what the "Message" button on the athlete profile links to, so a coach
+  // never has to hunt for the athlete in a list.
+  const deepLinkHandled = useRef(false)
+  useEffect(() => {
+    if (deepLinkHandled.current || loading || !profile) return
+    const to = new URLSearchParams(window.location.search).get('to')
+    if (!to || to === profile.id) return
+    deepLinkHandled.current = true
+    // If a conversation with this person already exists, open it; otherwise start one.
+    const existing = conversations.find(c => c.participants.some(p => p.id === to))
+    if (existing) {
+      openConversation(existing.id)
+    } else {
+      startNewChat(to)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, profile, conversations])
+
+  // Contact name for display/search — parent accounts show the athlete (child) name
+  const contactLabel = (c: any) =>
+    c.account_type === 'parent_guardian' && c.child_name ? c.child_name : (c.full_name || 'Unknown')
+
+  const filteredContacts = contactSearch.trim()
+    ? contacts.filter(c => {
+        const q = contactSearch.trim().toLowerCase()
+        return contactLabel(c).toLowerCase().includes(q) || (c.full_name || '').toLowerCase().includes(q)
+      })
+    : contacts
+
   const loadContacts = async () => {
     setShowNewChat(true)
+    setContactSearch('')
     if (isCoach || isAdmin) {
-      // Coaches can message their athletes
+      // Coaches can message any athlete/staff. Pull child_name + account_type so
+      // parent_guardian accounts surface the athlete's name (what the coach searches by).
+      // No row cap — every athlete must be reachable (search filters client-side).
       const { data } = await supabase
         .from('profiles')
-        .select('id, full_name, avatar_url, role')
+        .select('id, full_name, avatar_url, role, account_type, child_name')
         .neq('id', profile?.id || '')
         .in('role', ['athlete', 'coach', 'admin'])
+        .is('archived_at', null)
         .order('full_name')
-        .limit(50)
       setContacts(data || [])
     } else {
       // Athletes can message coaches they've booked with
@@ -195,19 +229,35 @@ export default function MessagesPage() {
             {showNewChat && (
               <div className="p-3 border-b border-slate-200 dark:border-white/10 bg-cyan-50/50 dark:bg-cyan/5">
                 <p className="text-xs font-semibold text-slate-600 dark:text-white/60 mb-2">Start a conversation:</p>
-                <div className="max-h-40 overflow-y-auto space-y-1">
-                  {contacts.map((c) => (
+                {(isCoach || isAdmin) && (
+                  <input
+                    type="text"
+                    value={contactSearch}
+                    onChange={(e) => setContactSearch(e.target.value)}
+                    placeholder="Search by name…"
+                    autoFocus
+                    className="w-full mb-2 px-3 py-2 rounded-lg bg-white dark:bg-white/10 border border-slate-200 dark:border-white/20 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                  />
+                )}
+                <div className="max-h-52 overflow-y-auto space-y-1">
+                  {filteredContacts.length === 0 ? (
+                    <p className="text-xs text-slate-400 dark:text-white/40 px-2 py-3 text-center">
+                      {contactSearch.trim() ? `No one matching “${contactSearch.trim()}”` : 'No contacts available'}
+                    </p>
+                  ) : filteredContacts.map((c) => (
                     <button
                       key={c.id}
                       onClick={() => startNewChat(c.id)}
                       className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-white dark:hover:bg-white/10 text-left"
                     >
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan to-blue-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                        {c.full_name?.charAt(0) || '?'}
+                        {contactLabel(c).charAt(0) || '?'}
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{c.full_name}</p>
-                        <p className="text-[10px] text-slate-500 capitalize">{c.role}</p>
+                        <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{contactLabel(c)}</p>
+                        <p className="text-[10px] text-slate-500 capitalize">
+                          {c.account_type === 'parent_guardian' ? 'athlete (parent acct)' : c.role}
+                        </p>
                       </div>
                     </button>
                   ))}

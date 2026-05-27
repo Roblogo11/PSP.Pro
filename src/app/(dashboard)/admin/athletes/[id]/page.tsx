@@ -29,6 +29,7 @@ import {
   Phone,
   Clock,
   CalendarDays,
+  MessageCircle,
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -155,6 +156,21 @@ interface AthleteProfile {
   account_type: string | null
   child_name: string | null
   child_age: number | null
+  // Parent/guardian contact — where the real data lives for most accounts
+  parent_guardian_name: string | null
+  parent_guardian_email: string | null
+  parent_guardian_phone: string | null
+}
+
+// Resolve the best contact email/phone/name for an athlete.
+// Most rows store contact under parent_guardian_*; account email/phone are
+// usually empty. Fall back through every column that might hold real data.
+function resolveContact(a: AthleteProfile): { name: string | null; email: string | null; phone: string | null } {
+  return {
+    name: a.parent_guardian_name || (a.account_type === 'parent_guardian' ? a.full_name : null),
+    email: a.parent_guardian_email || a.email || null,
+    phone: a.parent_guardian_phone || a.phone || null,
+  }
 }
 
 interface AthleteBooking {
@@ -246,10 +262,12 @@ export default function AthleteDetailPage() {
 
   const openEditModal = () => {
     if (!athlete) return
+    const contact = resolveContact(athlete)
     setEditName(athlete.full_name || '')
     setEditChildName(athlete.child_name || '')
-    setEditPhone(athlete.phone || '')
-    setEditEmail(athlete.email || '')
+    // Prefill from the resolved contact so coaches edit the values they actually see
+    setEditPhone(contact.phone || '')
+    setEditEmail(contact.email || '')
     setShowEditModal(true)
   }
 
@@ -257,17 +275,26 @@ export default function AthleteDetailPage() {
     if (!athlete || editSaving) return
     setEditSaving(true)
     try {
-      const trimmedEmail = editEmail.trim().toLowerCase()
-      const emailChanged = isAdmin && trimmedEmail !== (athlete.email || '').toLowerCase()
+      const isParent = athlete.account_type === 'parent_guardian'
+      const trimmedPhone = editPhone.trim() || null
+      const trimmedEmailRaw = editEmail.trim()
+      const trimmedEmail = trimmedEmailRaw.toLowerCase()
+      // Parent accounts keep contact in parent_guardian_* (where the data lives);
+      // the account email/phone columns are almost always empty.
+      // Changing a parent_guardian email is a contact change, not a login change,
+      // so it doesn't require admin (unlike rewriting the auth login email).
+      const currentContact = resolveContact(athlete)
+      const emailChanged = trimmedEmail !== (currentContact.email || '').toLowerCase()
       const res = await fetch('/api/admin/update-athlete', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           athlete_id: athlete.id,
           full_name: editName.trim() || undefined,
-          child_name: athlete.account_type === 'parent_guardian' ? (editChildName.trim() || null) : undefined,
-          phone: editPhone.trim() || null,
-          ...(emailChanged ? { email: trimmedEmail } : {}),
+          child_name: isParent ? (editChildName.trim() || null) : undefined,
+          // Write contact to the parent_guardian columns the page reads from
+          parent_guardian_phone: trimmedPhone,
+          ...(emailChanged ? { parent_guardian_email: trimmedEmail || null } : {}),
         }),
       })
       const data = await res.json()
@@ -275,9 +302,9 @@ export default function AthleteDetailPage() {
       setAthlete(prev => prev ? {
         ...prev,
         full_name: editName.trim() || prev.full_name,
-        child_name: athlete.account_type === 'parent_guardian' ? (editChildName.trim() || null) : prev.child_name,
-        phone: editPhone.trim() || null,
-        email: emailChanged ? trimmedEmail : prev.email,
+        child_name: isParent ? (editChildName.trim() || null) : prev.child_name,
+        parent_guardian_phone: trimmedPhone,
+        parent_guardian_email: emailChanged ? (trimmedEmail || null) : prev.parent_guardian_email,
       } : prev)
       setShowEditModal(false)
       toastSuccess('Profile updated')
@@ -670,24 +697,55 @@ export default function AthleteDetailPage() {
                 </span>
               )}
             </div>
-            {/* Contact info — always visible to coach/admin */}
-            <div className="flex flex-col gap-1 mt-3">
-              {athlete.email && (
-                <a href={`mailto:${athlete.email}`} className="flex items-center gap-2 text-sm text-cyan-700 dark:text-cyan-300 hover:underline">
-                  <Mail className="w-3.5 h-3.5" />
-                  {athlete.email}
-                </a>
-              )}
-              {athlete.phone && (
-                <a href={`tel:${athlete.phone}`} className="flex items-center gap-2 text-sm text-cyan-700 dark:text-cyan-300 hover:underline">
-                  <Phone className="w-3.5 h-3.5" />
-                  {athlete.phone}
-                </a>
-              )}
-            </div>
+            {/* Contact info — always visible to coach/admin.
+                Reads parent_guardian_* first (where data actually lives),
+                falls back to account email/phone. */}
+            {(() => {
+              const contact = resolveContact(athlete)
+              const hasContact = contact.email || contact.phone
+              const isParent = athlete.account_type === 'parent_guardian'
+              return (
+                <div className="flex flex-col gap-1 mt-3">
+                  {(isParent || contact.name) && (
+                    <p className="text-xs font-semibold text-slate-500 dark:text-white/50 uppercase tracking-wide">
+                      {isParent ? 'Parent / Guardian Contact' : 'Contact'}
+                      {contact.name ? ` — ${contact.name}` : ''}
+                    </p>
+                  )}
+                  {contact.email && (
+                    <a href={`mailto:${contact.email}`} className="flex items-center gap-2 text-sm text-cyan-700 dark:text-cyan-300 hover:underline">
+                      <Mail className="w-3.5 h-3.5" />
+                      {contact.email}
+                    </a>
+                  )}
+                  {contact.phone && (
+                    <a href={`tel:${contact.phone}`} className="flex items-center gap-2 text-sm text-cyan-700 dark:text-cyan-300 hover:underline">
+                      <Phone className="w-3.5 h-3.5" />
+                      {contact.phone}
+                    </a>
+                  )}
+                  {!hasContact && (
+                    <button
+                      onClick={openEditModal}
+                      className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400 hover:underline w-fit"
+                    >
+                      <AlertCircle className="w-3.5 h-3.5" />
+                      No contact on file — add phone/email
+                    </button>
+                  )}
+                </div>
+              )
+            })()}
           </div>
 
           <div className="flex items-center gap-3 flex-wrap">
+            <Link
+              href={`/messages?to=${athlete.id}`}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-cyan-300/40 dark:border-white/10 bg-white/60 dark:bg-white/5 text-cyan-800 dark:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-white/10 transition-all text-sm font-semibold"
+            >
+              <MessageCircle className="w-4 h-4" />
+              Message
+            </Link>
             <button
               onClick={openEditModal}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-cyan-300/40 dark:border-white/10 bg-white/60 dark:bg-white/5 text-cyan-800 dark:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-white/10 transition-all text-sm font-semibold"
@@ -1318,24 +1376,21 @@ export default function AthleteDetailPage() {
                 />
               </div>
 
-              {isAdmin ? (
-                <div>
-                  <label className="block text-xs font-semibold text-slate-500 dark:text-white/50 uppercase mb-1">Email (login)</label>
-                  <input
-                    type="email"
-                    value={editEmail}
-                    onChange={e => setEditEmail(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-slate-900 dark:text-white text-sm"
-                    placeholder="athlete@example.com"
-                  />
-                  <p className="mt-1 text-xs text-slate-500 dark:text-white/40">Changing email updates the account login.</p>
-                </div>
-              ) : (
-                <div>
-                  <label className="block text-xs font-semibold text-slate-500 dark:text-white/50 uppercase mb-1">Email (admin only)</label>
-                  <p className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-400 dark:text-white/40 text-sm">{athlete.email || '—'}</p>
-                </div>
-              )}
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 dark:text-white/50 uppercase mb-1">
+                  {athlete.account_type === 'parent_guardian' ? 'Parent / Guardian Email' : 'Contact Email'}
+                </label>
+                <input
+                  type="email"
+                  value={editEmail}
+                  onChange={e => setEditEmail(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-slate-900 dark:text-white text-sm"
+                  placeholder="parent@example.com"
+                />
+                <p className="mt-1 text-xs text-slate-500 dark:text-white/40">
+                  Used to reach the athlete{athlete.account_type === 'parent_guardian' ? "'s parent/guardian" : ''}. This is the contact email, not the account login.
+                </p>
+              </div>
             </div>
 
             <div className="flex gap-3 mt-6">
