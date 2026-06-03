@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# PSP.Pro pre-commit hook — keeps COMPONENT-INDEX.md fresh on every commit
+# ========================================================================
+# Tracked in scripts/git-hooks/ and symlinked into .git/hooks/
+# by `bash scripts/install-hooks.sh` (once per clone).
+#
+# What it does:
+#   1. Regenerates COMPONENT-INDEX.md by walking src/ for components,
+#      lib helpers, hooks, and API routes.
+#   2. Stages the regenerated index (git add COMPONENT-INDEX.md).
+#   3. Lets the commit proceed normally — the index is always part
+#      of whatever you're committing, no thought required.
+#
+# Skip when needed:
+#   git commit --no-verify     (one-off; not for daily use — defeats the purpose)
+#
+# Why this exists: every PSP commit ships SOMETHING that future-us needs to
+# find. The auto-regenerated index means "did we already build X?" is a
+# 5-second grep in COMPONENT-INDEX.md instead of a 5-minute manual sweep.
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+# Skip if we're in the middle of a merge or rebase — too easy to confuse state.
+if [[ -f .git/MERGE_HEAD || -d .git/rebase-merge || -d .git/rebase-apply ]]; then
+  exit 0
+fi
+
+# Only regenerate if we have the script (defensive — don't crash on a fresh clone)
+if [[ ! -f scripts/generate-component-index.mjs ]]; then
+  echo "  pre-commit: scripts/generate-component-index.mjs missing, skipping index regen."
+  exit 0
+fi
+
+# Regenerate the index
+node scripts/generate-component-index.mjs
+
+# Stage the regenerated index (always — git no-op if unchanged)
+git add COMPONENT-INDEX.md
+
+exit 0

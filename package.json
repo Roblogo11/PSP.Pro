@@ -8,7 +8,10 @@
     "build": "npm run clean && next build",
     "start": "next start -p ${PORT:-3000}",
     "lint": "next lint",
-    "clean": "rm -rf .next"
+    "clean": "rm -rf .next",
+    "index": "node scripts/generate-component-index.mjs",
+    "hooks": "bash scripts/install-hooks.sh",
+    "hooks:check": "bash scripts/install-hooks.sh --check"
   },
   "dependencies": {
     "@hcaptcha/react-hcaptcha": "^2.0.2",
