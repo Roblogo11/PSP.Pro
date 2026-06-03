@@ -7,6 +7,7 @@ import { getLocalDateString } from '@/lib/utils/local-date'
 import { Calendar } from '@/components/booking/calendar'
 import { ServiceSelector } from '@/components/booking/service-selector'
 import { TimeSlotPicker } from '@/components/booking/time-slot-picker'
+import { TonightAvailable } from '@/components/booking/tonight-available'
 import { CheckCircle2, ArrowRight, ArrowLeft, Loader2, CalendarDays, CreditCard, Wallet, Tag, Sparkles, RefreshCw, X } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { toastError } from '@/lib/toast'
@@ -568,6 +569,20 @@ export default function BookingPage() {
         <div className="lg:col-span-2">
           {currentStep === 'service' && (
             <div data-tour="booking-service">
+              {/* Surface today's available sessions across all services so
+                  group sessions are findable without picking the right service first. */}
+              <TonightAvailable
+                orgId={orgId}
+                preselectedCoachId={preselectedCoachId}
+                onPick={(serviceId, dateStr, slotId) => {
+                  setSelectedServiceId(serviceId)
+                  const d = new Date(dateStr + 'T00:00:00')
+                  setSelectedDate(d)
+                  setSelectedSlotId(slotId)
+                  fetchAvailableDatesForMonth(d, serviceId)
+                  setCurrentStep('confirm')
+                }}
+              />
               <ServiceSelector
                 services={services}
                 selectedServiceId={selectedServiceId}
