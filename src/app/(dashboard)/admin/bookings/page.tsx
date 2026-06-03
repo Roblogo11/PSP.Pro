@@ -28,6 +28,7 @@ import {
   CheckCircle2,
   AlertCircle as AlertCircleOutline,
   Save,
+  Sparkles,
 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -88,6 +89,10 @@ export default function AdminBookingsPage() {
   const effectiveCoachId = isImpersonatingCoach ? impersonatedCoachId : profile?.id
   const router = useRouter()
   const [bookings, setBookings] = useState<any[]>([])
+  // Upcoming slots (incl. empty ones) — used to surface group sessions on the
+  // calendar even when no one has booked yet. Without this, Rachel sees a blank
+  // calendar tonight because the calendar view only renders bookings.
+  const [upcomingSlots, setUpcomingSlots] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'cancelled'>('all')
   const [viewMode, setViewMode] = useState<'table' | 'calendar'>('calendar')
@@ -189,6 +194,25 @@ export default function AdminBookingsPage() {
 
     setLoading(false)
   }, [supabase, filter, isImpersonatingCoach, impersonatedCoachId, isAdmin, profile?.id])
+
+  // Fetch upcoming slots (today onward) so the calendar shows empty/available
+  // group sessions, not just slots with bookings. Same coach scoping as bookings.
+  const fetchUpcomingSlots = useCallback(async () => {
+    const today = new Date()
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+    const scopedCoachId = isImpersonatingCoach && impersonatedCoachId
+      ? impersonatedCoachId
+      : (!isAdmin && profile?.id ? profile.id : null)
+    let q = supabase
+      .from('available_slots')
+      .select('id, slot_date, start_time, end_time, location, max_bookings, current_bookings, is_available, service:service_id(name, category, max_participants), coach:coach_id(full_name)')
+      .gte('slot_date', todayStr)
+      .order('slot_date', { ascending: true })
+      .order('start_time', { ascending: true })
+    if (scopedCoachId) q = q.eq('coach_id', scopedCoachId)
+    const { data } = await q
+    if (data) setUpcomingSlots(data)
+  }, [supabase, isImpersonatingCoach, impersonatedCoachId, isAdmin, profile?.id])
 
   // Open edit modal
   const openEditBooking = (booking: any) => {
@@ -303,8 +327,9 @@ export default function AdminBookingsPage() {
   useEffect(() => {
     if (!roleLoading && (isCoach || isAdmin)) {
       fetchBookings()
+      fetchUpcomingSlots()
     }
-  }, [filter, roleLoading, isCoach, isAdmin, fetchBookings])
+  }, [filter, roleLoading, isCoach, isAdmin, fetchBookings, fetchUpcomingSlots])
 
   // Submit book-for-athlete
   const handleBookForAthlete = async (e: React.FormEvent) => {
@@ -569,6 +594,25 @@ export default function AdminBookingsPage() {
     return map
   }, [bookings])
 
+  // Group upcoming slots by date — used so the calendar shows a marker on dates
+  // with scheduled (but possibly unbooked) sessions, especially group slots.
+  const slotsByDate = useMemo(() => {
+    const map: Record<string, any[]> = {}
+    for (const s of upcomingSlots) {
+      if (!map[s.slot_date]) map[s.slot_date] = []
+      map[s.slot_date].push(s)
+    }
+    return map
+  }, [upcomingSlots])
+
+  // Dates that have any session scheduled (booking OR slot) — for calendar dots
+  const datesWithAnything = useMemo(() => {
+    const all = new Set<string>()
+    for (const d of Object.keys(bookingsByDate)) all.add(d)
+    for (const d of Object.keys(slotsByDate)) all.add(d)
+    return all
+  }, [bookingsByDate, slotsByDate])
+
   const prevMonth = () => {
     setCalendarDate(new Date(calendarYear, calendarMonth - 1, 1))
     setSelectedDay(null)
@@ -596,6 +640,44 @@ export default function AdminBookingsPage() {
   })()
 
   const selectedDayBookings = selectedDay ? (bookingsByDate[selectedDay] || []) : []
+
+  // Today's agenda: every scheduled slot for today (booked OR empty), sorted by
+  // start time. Empty group slots get flagged so Rachel can see at a glance that
+  // her clinic is on the schedule but has no athletes yet — the thing that was
+  // previously invisible on the calendar view.
+  const todaysAgenda = useMemo(() => {
+    const slots = (slotsByDate[todayKey] || []).map((s: any) => ({
+      kind: 'slot' as const,
+      time: s.start_time,
+      end_time: s.end_time,
+      serviceName: s.service?.name || 'Session',
+      coachName: s.coach?.full_name || null,
+      max: s.max_bookings,
+      booked: s.current_bookings,
+      isGroup: (s.service?.max_participants ?? s.max_bookings ?? 1) > 1,
+      slotId: s.id,
+      location: s.location,
+    }))
+    const bks = (bookingsByDate[todayKey] || [])
+      .filter((b: any) => b.status !== 'cancelled')
+      .map((b: any) => ({
+        kind: 'booking' as const,
+        time: b.start_time,
+        end_time: b.end_time,
+        serviceName: b.service?.name || 'Session',
+        athleteName: (b.child?.child_name) ||
+          (b.athlete?.account_type === 'parent_guardian' ? b.athlete?.child_name : b.athlete?.full_name) ||
+          'Athlete',
+        status: b.status,
+        bookingId: b.id,
+      }))
+    // De-dupe: a slot may have bookings against it; we show ONE row per slot
+    // (it'll list the booked athletes), so drop slot rows that already appear
+    // as bookings at the same time.
+    const bookedTimes = new Set(bks.map(b => b.time))
+    const filteredSlots = slots.filter(s => !bookedTimes.has(s.time) || s.booked < s.max)
+    return [...bks, ...filteredSlots].sort((a, b) => (a.time || '').localeCompare(b.time || ''))
+  }, [slotsByDate, bookingsByDate, todayKey])
 
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
@@ -719,6 +801,87 @@ export default function AdminBookingsPage() {
           </p>
         </div>
       </div>
+
+      {/* Today's Schedule — surfaces ALL of today's slots (booked + empty
+          group sessions) so Rachel never wonders if her clinics are scheduled.
+          Hidden when nothing is on the schedule today. */}
+      {viewMode === 'calendar' && todaysAgenda.length > 0 && (
+        <div className="command-panel p-4 md:p-6 mb-6 border-2 border-orange/30 bg-gradient-to-br from-orange/5 to-cyan/5">
+          <div className="flex items-center gap-2 mb-3">
+            <Sparkles className="w-5 h-5 text-orange" />
+            <h3 className="text-base font-bold text-slate-900 dark:text-white">Today&apos;s Schedule</h3>
+            <span className="text-xs text-cyan-700 dark:text-cyan-300">
+              {todaysAgenda.length} {todaysAgenda.length === 1 ? 'session' : 'sessions'}
+            </span>
+          </div>
+          <div className="space-y-2">
+            {todaysAgenda.map((item, idx) => {
+              const fmtTime = (t: string | null) => {
+                if (!t) return ''
+                const [h, m] = t.split(':').map(Number)
+                const period = h >= 12 ? 'PM' : 'AM'
+                return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${period}`
+              }
+              if (item.kind === 'booking') {
+                return (
+                  <div key={`b-${item.bookingId}`} className="flex items-center gap-3 p-2 rounded-lg bg-white/40 dark:bg-white/5 border border-cyan-200/30">
+                    <div className="flex-shrink-0 w-16 text-xs font-bold text-cyan-700 dark:text-cyan-300">
+                      {fmtTime(item.time)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                        {item.athleteName} <span className="font-normal text-cyan-700 dark:text-cyan-400">·</span> {item.serviceName}
+                      </p>
+                    </div>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${
+                      item.status === 'confirmed' ? 'bg-green-500/15 text-green-600 dark:text-green-400'
+                      : item.status === 'pending' ? 'bg-orange/15 text-orange'
+                      : item.status === 'completed' ? 'bg-cyan/15 text-cyan-700 dark:text-cyan-400'
+                      : 'bg-slate-500/15 text-slate-500'
+                    }`}>
+                      {item.status}
+                    </span>
+                  </div>
+                )
+              }
+              // empty/available slot
+              const spotsLeft = item.max - item.booked
+              return (
+                <div
+                  key={`s-${item.slotId}`}
+                  className={`flex items-center gap-3 p-2 rounded-lg border-2 ${
+                    item.isGroup
+                      ? 'bg-orange/5 border-orange/40'
+                      : 'bg-cyan/5 border-cyan/30'
+                  }`}
+                >
+                  <div className={`flex-shrink-0 w-16 text-xs font-bold ${
+                    item.isGroup ? 'text-orange' : 'text-cyan-700 dark:text-cyan-300'
+                  }`}>
+                    {fmtTime(item.time)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                      {item.serviceName}
+                      {item.isGroup && (
+                        <span className="ml-2 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase bg-orange/20 text-orange">
+                          Group
+                        </span>
+                      )}
+                    </p>
+                    <p className="text-[11px] text-cyan-700 dark:text-cyan-400">
+                      {item.booked} of {item.max} booked · {spotsLeft} {spotsLeft === 1 ? 'spot' : 'spots'} open
+                    </p>
+                  </div>
+                  <span className="text-[10px] font-semibold text-cyan-700 dark:text-cyan-300 uppercase tracking-wide">
+                    Open
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Calendar View */}
       {viewMode === 'calendar' && (
@@ -984,9 +1147,15 @@ export default function AdminBookingsPage() {
                   const day = i + 1
                   const dateKey = makeDateKey(day)
                   const dayBookings = bookingsByDate[dateKey] || []
+                  const daySlots = slotsByDate[dateKey] || []
                   const isToday = dateKey === todayKey
                   const isSelected = dateKey === selectedDay
                   const hasBookings = dayBookings.length > 0
+                  // "Has scheduled slot, but nobody has booked yet" — most often
+                  // this is Rachel's group session. Make sure the date doesn't
+                  // look blank just because there are no bookings.
+                  const hasOnlySlots = !hasBookings && daySlots.length > 0
+                  const hasGroupSlot = daySlots.some(s => (s.service?.max_participants ?? s.max_bookings ?? 1) > 1)
 
                   return (
                     <button
@@ -998,7 +1167,7 @@ export default function AdminBookingsPage() {
                           ? 'bg-orange/20 border-2 border-orange ring-2 ring-orange/30'
                           : isToday
                             ? 'bg-cyan/10 border border-cyan/30'
-                            : hasBookings
+                            : hasBookings || hasOnlySlots
                               ? 'hover:bg-cyan-50/50 border border-transparent hover:border-cyan-200/40'
                               : 'hover:bg-cyan-50/30 border border-transparent'
                         }
@@ -1031,12 +1200,13 @@ export default function AdminBookingsPage() {
                         {day}
                       </span>
 
-                      {/* Booking dots */}
-                      {hasBookings && (
+                      {/* Booking dots — and an "available slot" dot for dates
+                          with scheduled-but-unbooked sessions (especially groups) */}
+                      {(hasBookings || hasOnlySlots) && (
                         <div className="flex flex-wrap justify-center gap-0.5 mt-auto mb-1 max-w-full px-0.5 relative z-10">
                           {dayBookings.slice(0, 4).map((b: any, idx: number) => (
                             <div
-                              key={idx}
+                              key={`b-${idx}`}
                               className={`w-1.5 h-1.5 rounded-full ${getStatusDot(b.status)}`}
                             />
                           ))}
@@ -1044,6 +1214,16 @@ export default function AdminBookingsPage() {
                             <span className="text-[8px] text-slate-500 dark:text-slate-400 font-bold leading-none">
                               +{dayBookings.length - 4}
                             </span>
+                          )}
+                          {hasOnlySlots && (
+                            <div
+                              title={hasGroupSlot ? 'Group session scheduled — open spots' : 'Open slot'}
+                              className={`w-1.5 h-1.5 rounded-full ring-1 ring-offset-1 ${
+                                hasGroupSlot
+                                  ? 'bg-orange/40 ring-orange'
+                                  : 'bg-cyan/40 ring-cyan'
+                              }`}
+                            />
                           )}
                         </div>
                       )}
@@ -1060,6 +1240,8 @@ export default function AdminBookingsPage() {
                   { label: 'Pending', color: 'bg-orange' },
                   { label: 'Cancelled', color: 'bg-red-400' },
                   { label: 'Completed', color: 'bg-cyan' },
+                  { label: 'Open Group Slot', color: 'bg-orange/40 ring-1 ring-orange' },
+                  { label: 'Open Slot', color: 'bg-cyan/40 ring-1 ring-cyan' },
                 ].map(item => (
                   <div key={item.label} className="flex items-center gap-1.5">
                     <div className={`w-2 h-2 rounded-full ${item.color}`} />
