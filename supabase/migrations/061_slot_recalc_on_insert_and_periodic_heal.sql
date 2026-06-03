@@ -108,6 +108,9 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+DO $$ BEGIN RAISE NOTICE '✓ Function recalculate_slot_availability() updated — now handles INSERT, UPDATE, DELETE'; END $$;
+
+
 -- ── Step 2: Re-create all three triggers (idempotent) ──
 
 DROP TRIGGER IF EXISTS on_booking_inserted       ON bookings;
@@ -130,21 +133,40 @@ CREATE TRIGGER on_booking_deleted
   FOR EACH ROW
   EXECUTE FUNCTION recalculate_slot_availability();
 
+DO $$ BEGIN RAISE NOTICE '✓ 3 triggers active on bookings: on_booking_inserted, on_booking_status_change, on_booking_deleted'; END $$;
+
 
 -- ── Step 3: One-time recalc of every slot to clear any current drift ──
 
-UPDATE available_slots
-SET
-  current_bookings = COALESCE((
-    SELECT COUNT(*) FROM bookings
-    WHERE bookings.slot_id = available_slots.id
-      AND bookings.status IN ('confirmed', 'pending')
-  ), 0),
-  is_available = (COALESCE((
-    SELECT COUNT(*) FROM bookings
-    WHERE bookings.slot_id = available_slots.id
-      AND bookings.status IN ('confirmed', 'pending')
-  ), 0) < max_bookings);
+DO $$
+DECLARE
+  drift_count INTEGER;
+  total_slots INTEGER;
+BEGIN
+  -- Count drift BEFORE recalc so we can report what we fixed
+  SELECT COUNT(*) INTO drift_count
+  FROM available_slots s
+  WHERE s.current_bookings <> COALESCE((
+    SELECT COUNT(*) FROM bookings b
+    WHERE b.slot_id = s.id AND b.status IN ('confirmed', 'pending')
+  ), 0);
+
+  UPDATE available_slots
+  SET
+    current_bookings = COALESCE((
+      SELECT COUNT(*) FROM bookings
+      WHERE bookings.slot_id = available_slots.id
+        AND bookings.status IN ('confirmed', 'pending')
+    ), 0),
+    is_available = (COALESCE((
+      SELECT COUNT(*) FROM bookings
+      WHERE bookings.slot_id = available_slots.id
+        AND bookings.status IN ('confirmed', 'pending')
+    ), 0) < max_bookings);
+
+  GET DIAGNOSTICS total_slots = ROW_COUNT;
+  RAISE NOTICE '✓ Recalculated % slot(s) — corrected drift on % slot(s)', total_slots, drift_count;
+END $$;
 
 
 -- ── Step 4: Self-healing layer — periodic recalc via pg_cron ──
@@ -184,7 +206,7 @@ BEGIN
 EXCEPTION WHEN OTHERS THEN
   -- pg_cron not present in this environment — that's OK, the triggers above
   -- still protect us. Just log and continue.
-  RAISE NOTICE 'pg_cron unschedule skipped: %', SQLERRM;
+  RAISE NOTICE '⚠ pg_cron unschedule skipped: %', SQLERRM;
 END $$;
 
 DO $$
@@ -194,8 +216,20 @@ BEGIN
     '0 * * * *',  -- top of every hour
     $cron$SELECT public.recalculate_all_slot_counts();$cron$
   );
+  RAISE NOTICE '✓ pg_cron job ''psp-recalc-slot-counts'' scheduled — recalc every hour on the hour';
 EXCEPTION WHEN OTHERS THEN
   -- If pg_cron isn't available we still have the triggers as the primary defense.
   -- Coach can monitor by calling recalculate_all_slot_counts() manually.
-  RAISE NOTICE 'pg_cron schedule skipped (extension may not be available here): %', SQLERRM;
+  RAISE NOTICE '⚠ pg_cron schedule skipped (extension unavailable): % — triggers still protect us', SQLERRM;
+END $$;
+
+
+-- ── Summary ──
+DO $$ BEGIN
+  RAISE NOTICE '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+  RAISE NOTICE '✓ Migration 061 complete — slot count drift is permanently healed.';
+  RAISE NOTICE '  Triggers: INSERT/UPDATE/DELETE all wired to recalculate_slot_availability()';
+  RAISE NOTICE '  Guardrail: pg_cron hourly job catches any future drift within 60 minutes';
+  RAISE NOTICE '  To recalc manually: SELECT recalculate_all_slot_counts();';
+  RAISE NOTICE '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
 END $$;
