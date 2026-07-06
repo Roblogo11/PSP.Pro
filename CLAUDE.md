@@ -316,20 +316,26 @@ Next.js 14.2.35 sports training platform (softball, basketball, soccer). Supabas
 
 ---
 
-## Supabase Migrations (52 total)
-Latest: `052_fix_slot_counts_and_cancellation_trigger.sql` — recalculates exact slot counts + replaces increment trigger
+## Supabase Schema — GROUND ZERO (read this first)
+**`supabase/ground-zero.sql` is the canonical schema source of truth.** One idempotent file
+that rebuilds the ENTIRE `public` schema on an empty DB in one pass — 46 tables, 167 indexes,
+141 RLS policies, 20 functions, 4 views, 23 triggers, RLS + grants. Generated verbatim from
+the live DB via Postgres `pg_get_*def()`; verified 2026-07-06 by rebuilding on empty Postgres 17
+(clean + idempotent) with every object hash byte-identical to live.
 
-Key migrations:
-- 010: profile creation trigger
-- 027: simulation mode tables
-- 028-029: master admin RLS + recursion fix
-- 030: leaderboard opt-in (NOTE: duplicate 030 prefix with RLS fix)
-- 034-036: courses + questionnaires
-- 039: blog posts
-- 040-041: organizations + Stripe Connect
-- 044: video analysis
-- 045: membership tiers
-- 048-052: slot count fixes
+- **To stand up any DB** (local, Supabase branch, new env): run `ground-zero.sql`. No chain replay.
+- **After any schema change:** add a new numbered migration (start at `062`) in
+  `supabase/migrations/`, apply to live, then **regenerate `ground-zero.sql` from live**.
+- **The old `002`→`061` chain is archived** at `supabase/migrations/_archive_pre_groundzero/`
+  (with `STANDARDS.md`) — provenance only, NOT runnable from scratch.
+- **Gotchas baked into ground-zero:** extensions live in the `extensions` schema (search_path
+  set to `"$user", public, extensions`); `athlete_packages.sessions_remaining` is a GENERATED
+  column, not a default; brand defaults (`sessions.location`='PSP Training Facility') kept.
+
+Historically-notable migrations (now archived): 010 profile trigger · 027 simulation ·
+028-029 master_admin RLS + recursion fix · 030 leaderboard (was dup-030) · 034-036 courses +
+questionnaires · 039 blog · 040-041 orgs + Stripe Connect · 044 video · 045 membership tiers ·
+048-052 + 061 slot-count heals.
 
 ---
 

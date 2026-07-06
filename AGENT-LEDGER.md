@@ -42,12 +42,14 @@ These exist because we hit the pain first. Each rule leads with the fact, then `
 - **ALWAYS scope homepage overrides to `.home-page`** — global overrides WILL break the dashboard. Homepage cards (`.glass-card`) get dark bg on light mode (text=white). Dashboard `command-panel` gets LIGHT bg on light mode (text=dark).
 - **Never add global `command-panel` text overrides.** Always scope to specific routes or use the local card class.
 
-### Migrations (see `supabase/migrations/STANDARDS.md` for full)
+### Migrations & schema (ground-zero is now the baseline)
 
-- **Every migration must `RAISE NOTICE` what it did.** Supabase's silent "Success. No rows returned" hides whether anything happened. Use `DO $$ ... GET DIAGNOSTICS n = ROW_COUNT; RAISE NOTICE '✓ touched % rows', n; END $$`. Migration 061 is the reference implementation.
-- **Every migration must be idempotent.** `CREATE OR REPLACE FUNCTION`, `IF NOT EXISTS`, `DROP TRIGGER IF EXISTS … ; CREATE TRIGGER …`. Safe to re-run during recovery or branch comparison.
-- **Every migration starts with a `⚠ if you touch X, you must Y` block** at the top. Past bugs (slot drift, RLS recursion) came back because the lesson lived in chat, not in the file. Standards doc enforces this.
-- **Two files share migration prefix `030` — known issue (`030_leaderboard_opt_in.sql` and `030_fix_profiles_rls.sql`).** Migration order is alphabetical, so RLS fix runs second. Don't rename without testing.
+- **`supabase/ground-zero.sql` is the canonical schema source of truth.** One idempotent file that rebuilds the ENTIRE `public` schema (46 tables, 167 indexes, 141 policies, 20 functions, 4 views, 23 triggers, RLS + grants) on an empty DB. Generated verbatim from the live DB via Postgres `pg_get_*def()`; verified 2026-07-06 by rebuilding on empty Postgres 17 (clean + idempotent) with every object hash byte-identical to live. To stand up any DB (local/branch/new env), run this — no chain replay. *Why:* the old `002`→`061` chain couldn't rebuild from zero (missing `001` base, dup `030`, bare DDL, no grants); the live DB had no migration ledger (hand-applied via SQL Editor). This was PSP's "patch-on-patch, not truly healed" state.
+- **After any new schema change: regenerate `ground-zero.sql` from live** so the baseline stays current. New changes go as a numbered migration (start at `062`) on top of ground-zero, then regenerate.
+- **The historical `002`→`061` chain is archived** at `supabase/migrations/_archive_pre_groundzero/` (with `STANDARDS.md`). Retained for provenance only — NOT runnable from scratch. Don't resurrect it.
+- **Every migration must `RAISE NOTICE`, be idempotent, and start with a `⚠ if you touch X, you must Y` block.** Full rules in `_archive_pre_groundzero/STANDARDS.md`. Idempotent = `CREATE OR REPLACE`, `IF NOT EXISTS`, `DROP … IF EXISTS; CREATE …`, `DO $$ IF NOT EXISTS (pg_constraint) $$` for constraints. Safe to re-run. Migration 061 (in archive) is the reference implementation.
+- **Generated column gotcha:** `athlete_packages.sessions_remaining` is `GENERATED ALWAYS AS (sessions_total - sessions_used) STORED` — NOT a default. `information_schema.column_default` misreports generated columns; always check `is_generated`/`generation_expression`. It's the only generated column in the schema.
+- **Extensions live in the `extensions` schema** (`uuid_generate_v4`, etc.); the DB `search_path` is `"$user", public, extensions`. ground-zero.sql sets this so unqualified extension calls resolve on any DB.
 
 ### Working style (deeply held)
 
@@ -62,6 +64,18 @@ These exist because we hit the pain first. Each rule leads with the fact, then `
 ---
 
 ## 2. Recent Ships
+
+### `0f94f9d` — 2026-07-06 — Schema "ground zero": one consolidated, verified baseline
+
+**Files:** `supabase/ground-zero.sql` (new, ~2460 lines), `supabase/migrations/_archive_pre_groundzero/` (60 migrations + STANDARDS.md moved here), `supabase/migrations/README.md` (new), archive `README.md` (new)
+
+PSP's migration chain couldn't rebuild itself from zero — it started at `002` assuming six base tables no migration ever created, plus a duplicate `030`, ~16 bare non-idempotent `CREATE INDEX`, and zero role grants. The live DB worked only because it held an accreted, hand-applied state (no migration ledger — `supabase_migrations.schema_migrations` doesn't exist). That was the "patch-on-patch, not truly healed" problem.
+
+Built `supabase/ground-zero.sql`: a single, fully idempotent file that reproduces the ENTIRE live `public` schema in one pass. Generated verbatim from the live DB via Postgres `pg_get_*def()` (no hand-authoring, no guessing): 46 tables, 204 constraints, 167 indexes, 141 RLS policies, 20 functions, 4 views, 22 public triggers + 1 auth.users trigger, 1 event trigger, RLS on all tables, grants. Section order is FK-safe; every statement `IF NOT EXISTS` / `CREATE OR REPLACE` / `DROP…IF EXISTS; CREATE`.
+
+Verified without touching prod: rebuilt on an empty local Postgres 17 twice (clean run + idempotent re-run, 0 errors), then hashed every object class and diffed against live — **all seven hashes byte-identical** (tables/constraints/indexes/policies/functions/triggers/views). Caught two real portability bugs along the way: extension calls needed `extensions` on search_path, and `sessions_remaining` is a GENERATED column that `information_schema` misreported as a DEFAULT.
+
+Old `002`→`061` chain archived under `_archive_pre_groundzero/` for provenance. Going forward: new numbered migrations start at `062` on top of ground-zero, then regenerate the baseline from live.
 
 ### `204b97e` — 2026-06-03 — Coach calendar surfaces empty/group slots
 
@@ -105,18 +119,13 @@ Messaging fix: coach new-chat list was capped at 50 names alphabetically with no
 
 Update-athlete API extended to persist `parent_guardian_phone/email/name` so the Edit modal writes to the columns the page reads.
 
-### `7774a5e` — 2026-05-22 — Coach image library reference doc
-
-**Files:** `docs/coach-image-library.md` (new)
-
-Documented all 70 images Rachel uses for marketing across Supabase CDN. Categories: Featured (1), Soccer Training (23), Softball Pitching (37), and site hero/feature shots. Each entry has a clickable public URL ready to drop into an email blast.
-
 ---
 
 ## 3. Historical Index
 
 Compressed older ships (one-line each, oldest at bottom):
 
+- `7774a5e` (2026-05-22) — Coach image library reference doc (`docs/coach-image-library.md`, 70 CDN images)
 - `9d43a86` (2026-05-18) — Stop drill edit modal from horizontal-scrolling on mobile
 - `ee36854` (2026-05-18) — Fix individually-created drill videos: write `video_url`, not `youtube_url`
 - `b8237cd` (2026-05-18) — Revert middleware consolidation (e439c15)
