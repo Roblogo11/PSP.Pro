@@ -481,6 +481,28 @@ function MobileBottomNav({
   const [moreSheetOpen, setMoreSheetOpen] = useState(false)
   const dragControls = useDragControls()
 
+  // Close the More sheet whenever the route changes.
+  //
+  // ⚠ Do NOT rely on the per-link onClick to close this sheet. Those fire before
+  // the client-side navigation completes, so on a slow route the sheet was still
+  // mounted mid-transition; its drag layer (touchAction:'none' + an open
+  // dragControls pointer capture) kept swallowing taps after the sheet had
+  // visually gone. Symptom: menu works once, then goes dead until a hard reload.
+  // Keying the close off `pathname` guarantees it unmounts on every navigation.
+  useEffect(() => {
+    setMoreSheetOpen(false)
+  }, [pathname])
+
+  // Belt-and-braces: if the sheet unmounts while a drag is in flight, the
+  // document can be left with an unreleased pointer capture / locked scroll.
+  useEffect(() => {
+    if (!moreSheetOpen) return
+    return () => {
+      document.body.style.removeProperty('overflow')
+      document.body.style.removeProperty('touch-action')
+    }
+  }, [moreSheetOpen])
+
   // Check if active route is in the "More" sheet (not a primary tab)
   const primaryHrefs = primaryMobileTabs.map((t) => t.href)
   const isMoreActive = !primaryHrefs.includes(pathname) && pathname !== '/'
@@ -610,7 +632,16 @@ function MobileBottomNav({
               <div
                 className="flex justify-center py-3 cursor-grab active:cursor-grabbing shrink-0"
                 style={{ touchAction: 'none' }}
-                onPointerDown={(e) => dragControls.start(e)}
+                onPointerDown={(e) => {
+                  // Release implicit pointer capture before handing the gesture
+                  // to Framer. Without this, a drag interrupted by a route change
+                  // leaves the capture bound to a now-unmounted node, and the
+                  // element keeps receiving events it can never act on.
+                  if (e.currentTarget.hasPointerCapture?.(e.pointerId)) {
+                    e.currentTarget.releasePointerCapture(e.pointerId)
+                  }
+                  dragControls.start(e)
+                }}
               >
                 <div className="w-10 h-1 rounded-full bg-slate-300 dark:bg-white/20" />
               </div>

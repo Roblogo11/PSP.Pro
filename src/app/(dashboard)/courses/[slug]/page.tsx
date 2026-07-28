@@ -7,7 +7,7 @@ import { useUserRole } from '@/lib/hooks/use-user-role'
 import { VideoPlayer } from '@/components/ui/video-player'
 import { ChunkedContent } from '@/components/chunked-content'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
 interface Lesson {
   id: string
@@ -35,6 +35,7 @@ interface Course {
 export default function CourseDetailPage() {
   const supabase = createClient()
   const params = useParams()
+  const router = useRouter()
   const slug = params.slug as string
   const { profile, loading: roleLoading, impersonatedUserId } = useUserRole()
 
@@ -44,6 +45,8 @@ export default function CourseDetailPage() {
   const [loading, setLoading] = useState(true)
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null)
   const [markingComplete, setMarkingComplete] = useState(false)
+  const [enrolling, setEnrolling] = useState(false)
+  const [enrollError, setEnrollError] = useState<string | null>(null)
 
   const effectiveUserId = impersonatedUserId || profile?.id
 
@@ -107,14 +110,31 @@ export default function CourseDetailPage() {
 
   const handleEnroll = async () => {
     if (!effectiveUserId || !course) return
-    const { error } = await supabase.from('course_enrollments').insert({
-      athlete_id: effectiveUserId,
-      course_id: course.id,
-      payment_status: 'free',
+
+    setEnrollError(null)
+    setEnrolling(true)
+
+    // Server enforces tier/payment — never insert into course_enrollments here.
+    const res = await fetch('/api/courses/enroll', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ courseId: course.id }),
     })
-    if (!error) {
-      setEnrolled(true)
+
+    const result = await res.json().catch(() => ({}))
+    setEnrolling(false)
+
+    if (!res.ok) {
+      if (result.reason === 'needs_tier') {
+        router.push('/membership-required')
+        return
+      }
+      setEnrollError(result.error || 'Could not enroll in this course')
+      return
     }
+
+    setEnrolled(true)
+    fetchCourse()
   }
 
   const toggleComplete = async (lesson: Lesson) => {
@@ -194,10 +214,29 @@ export default function CourseDetailPage() {
           </div>
 
           {!enrolled && (
-            <button onClick={handleEnroll} className="btn-primary flex items-center gap-2">
-              <BookOpen className="w-4 h-4" />
-              {course.pricing_type === 'free' || course.included_in_membership ? 'Enroll Free' : 'Enroll Now'}
-            </button>
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={handleEnroll}
+                disabled={enrolling}
+                className="btn-primary flex items-center gap-2 disabled:opacity-60"
+              >
+                {enrolling ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <BookOpen className="w-4 h-4" />
+                )}
+                {enrolling
+                  ? 'Enrolling…'
+                  : course.included_in_membership
+                    ? 'Enroll with Membership'
+                    : course.pricing_type === 'free'
+                      ? 'Enroll Free'
+                      : 'Enroll Now'}
+              </button>
+              {enrollError && (
+                <p className="text-sm font-semibold text-orange max-w-xs">{enrollError}</p>
+              )}
+            </div>
           )}
         </div>
 

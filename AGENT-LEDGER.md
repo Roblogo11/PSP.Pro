@@ -29,6 +29,13 @@ These exist because we hit the pain first. Each rule leads with the fact, then `
 - **Contact info lives in `parent_guardian_email` / `parent_guardian_phone` / `parent_guardian_name`** — NOT in `email`/`phone`/`parent_email`/`parent_phone`. Coverage: parent_guardian_email 73/112 filled, phone 30/112, name 73/112. The `email`/`phone` columns are nearly empty (`4/112` and `0/112` respectively). When showing contact in any UI, read parent_guardian_* with fallback to account email/phone. Update via `/api/admin/update-athlete`. *Why:* historical schema drift — old types file shows `parent_email` but real data lives in `parent_guardian_*`. The athlete detail page used to read empty columns and show nothing.
 - **`database.types.ts` is stale and incomplete.** It lists 7 profile columns; reality has 45+. Never trust it for schema questions — `grep -r 'ADD COLUMN' supabase/migrations/` or query Supabase directly with the service_role key in `.env.local`.
 
+### Course access & tiers (revenue-critical)
+
+- **NEVER insert into `course_enrollments` from client code.** The only write path is `POST /api/courses/enroll`, which calls `checkCourseAccess()` (`src/lib/courses/access.ts`) with the service-role client. RLS (migration 062) now rejects athlete self-inserts; only staff roles may insert directly. *Why:* both `courses/page.tsx` and `courses/[slug]/page.tsx` inserted with `payment_status:'free'` straight from the browser, and the old RLS only checked `athlete_id = auth.uid()` — never price or tier. Any logged-in user could enroll in any paid course for free.
+- **`courses.required_tier_id` (FK → `membership_tiers`) is what gates a course.** NULL + `price_cents = 0` = genuinely free. Set it on every new paid course or it will be treated as free. The old `included_in_membership` boolean is retained for display but is NOT the access check.
+- **`course_lessons` SELECT is gated on enrollment.** It used to be `USING (true)`, which exposed every paid lesson's `video_url` (a NOT NULL column) to any authenticated user regardless of enrollment. `is_preview = true` lessons stay public by design.
+- **Migrations must never silently revoke access from real users.** 062 grandfathers existing enrollments on newly tier-gated courses to `payment_status='membership'` rather than deleting them, and only *reports* suspect rows for human review.
+
 ### Auth & roles (don't break these)
 
 - **Membership gating** lives in `src/app/(dashboard)/layout.tsx`. Open routes (any auth user): `/booking`, `/sessions`, `/locker`, `/settings`, `/guide`, `/leaderboards`. Member-only (active package): `/progress`, `/drills`, `/achievements`, `/video-analysis`, `/courses`, `/questionnaires`, `/progress-report`. Staff (`coach`/`admin`/`master_admin`) bypass all checks.
@@ -64,6 +71,18 @@ These exist because we hit the pain first. Each rule leads with the fact, then `
 ---
 
 ## 2. Recent Ships
+
+### (pending) — 2026-07-28 — Course tier access control + mobile menu fix
+
+**Files:** `supabase/migrations/062_course_tier_access_control.sql` (new), `src/lib/courses/access.ts` (new), `src/app/api/courses/enroll/route.ts` (new), `src/app/(dashboard)/courses/page.tsx`, `src/app/(dashboard)/courses/[slug]/page.tsx`, `src/components/layout/sidebar.tsx`
+
+Client's fix list, bugs first. Audited before writing code — the classification changed two of the three reported bugs.
+
+**Course access leak (real, critical).** Both course pages inserted `course_enrollments` client-side with `payment_status:'free'`; RLS only checked `athlete_id = auth.uid()`, never price or tier. Any logged-in user could enroll in any paid course for free. Second exposure found in the same audit: `course_lessons_select` was `USING (true)`, so every paid lesson's `video_url` was readable by any authenticated user even without enrollment. Fix: `courses.required_tier_id` FK, server-only enrollment route, `checkCourseAccess()` as the single source of truth, and both RLS policies tightened. Blast radius checked first — all 23 live enrollments are on $0 courses, so nobody was actively exploiting it; the door was open but unused. Existing enrollments on newly-gated courses are grandfathered, never revoked.
+
+**Stripe "price mismatch" (NOT a bug).** Audited all live Stripe prices against the DB: they match ($60 Elite, $150 clinic/camp). The "low" charges Rachel saw — $63, $76.50, $27 — are exactly 90% of $70/$85/$30: the Elite 10% discount working correctly. Discounts are computed in app code (`checkout/route.ts`) and passed as a raw amount, so Stripe's dashboard shows list price while receipts show discounted price. That gap is what read as a mismatch. **Doing the requested "sync" would have silently disabled the Elite discount for every paying member.** No code change made.
+
+**Mobile menu (real).** The More sheet closed only via per-link `onClick`, which fires before client-side navigation completes. On a slow route the sheet stayed mounted mid-transition and its drag layer (`touchAction:'none'` + open `dragControls` pointer capture) kept swallowing taps after it visually disappeared — menu worked once, then dead until reload. Fix: close on `pathname` change, plus release implicit pointer capture in `onPointerDown`.
 
 ### `0f94f9d` — 2026-07-06 — Schema "ground zero": one consolidated, verified baseline
 
@@ -107,24 +126,13 @@ Bug 2: coach schedule said "slot full" but calendar showed no athlete. Root caus
 
 Fix (migration 061, applied via Supabase SQL editor): extend recalc function to handle INSERT, add AFTER INSERT trigger, one-time recalc of every upcoming slot, AND pg_cron schedules `recalculate_all_slot_counts()` every hour as a self-healing guardrail. Even if a future migration breaks a trigger again, drift can't persist > 60 min.
 
-### `f77c524` — 2026-05-27 — Athlete contact info surfaced + in-app messaging fixes
-
-**Files:** `src/app/(dashboard)/admin/athletes/[id]/page.tsx`, `src/app/(dashboard)/messages/page.tsx`, `src/app/api/admin/update-athlete/route.ts`
-
-Rachel reported: blank contact info on athlete profiles AND couldn't message Lauren Long.
-
-Root cause: page read `profiles.email/phone` (almost entirely empty across 112 athletes — 4/112 and 0/112 respectively). Real contact lives in `parent_guardian_email`/`phone` (73/112 and 30/112). Page now reads parent_guardian_* with fallback, labels it "Parent/Guardian Contact," shows "No contact on file — add" prompt when empty.
-
-Messaging fix: coach new-chat list was capped at 50 names alphabetically with no search — Lauren (L) fell outside the cap. Added a search box, dropped the cap, made child_name show for parent accounts, and added `/messages?to=<id>` deep-link. Athlete profile page now has a "Message" button that uses the deep-link.
-
-Update-athlete API extended to persist `parent_guardian_phone/email/name` so the Edit modal writes to the columns the page reads.
-
 ---
 
 ## 3. Historical Index
 
 Compressed older ships (one-line each, oldest at bottom):
 
+- `f77c524` (2026-05-27) — Athlete contact info surfaced (read `parent_guardian_*`, not empty `email`/`phone`) + messaging search/deep-link fixes
 - `7774a5e` (2026-05-22) — Coach image library reference doc (`docs/coach-image-library.md`, 70 CDN images)
 - `9d43a86` (2026-05-18) — Stop drill edit modal from horizontal-scrolling on mobile
 - `ee36854` (2026-05-18) — Fix individually-created drill videos: write `video_url`, not `youtube_url`

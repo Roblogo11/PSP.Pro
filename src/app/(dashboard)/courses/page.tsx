@@ -6,6 +6,7 @@ import { BookOpen, Video, Play, CheckCircle, Loader2 } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 interface Course {
   id: string
@@ -25,10 +26,13 @@ interface Course {
 
 export default function CoursesPage() {
   const supabase = createClient()
+  const router = useRouter()
   const { profile, isCoach, isAdmin, loading: roleLoading, impersonatedUserId } = useUserRole()
   const [courses, setCourses] = useState<Course[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'enrolled' | 'available'>('all')
+  const [enrolling, setEnrolling] = useState<string | null>(null)
+  const [enrollError, setEnrollError] = useState<string | null>(null)
 
   /** Strip extra whitespace + trim to ~140 chars so cards stay tight on mobile */
   const previewDescription = (desc: string | null): string => {
@@ -105,14 +109,26 @@ export default function CoursesPage() {
   const handleEnroll = async (courseId: string) => {
     if (!effectiveUserId) return
 
-    const { error } = await supabase.from('course_enrollments').insert({
-      athlete_id: effectiveUserId,
-      course_id: courseId,
-      payment_status: 'free',
+    setEnrollError(null)
+    setEnrolling(courseId)
+
+    // Server enforces tier/payment — never insert into course_enrollments here.
+    const res = await fetch('/api/courses/enroll', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ courseId }),
     })
 
-    if (error) {
-      console.error('Enrollment error:', error)
+    const result = await res.json().catch(() => ({}))
+    setEnrolling(null)
+
+    if (!res.ok) {
+      // 402 = needs a paid membership or purchase.
+      if (result.reason === 'needs_tier') {
+        router.push('/membership-required')
+        return
+      }
+      setEnrollError(result.error || 'Could not enroll in this course')
       return
     }
 
@@ -165,6 +181,12 @@ export default function CoursesPage() {
           </button>
         ))}
       </div>
+
+      {enrollError && (
+        <div className="mb-6 rounded-xl border border-orange/40 bg-orange/10 px-4 py-3">
+          <p className="text-sm font-semibold text-orange">{enrollError}</p>
+        </div>
+      )}
 
       {/* Course Grid */}
       <div data-tour="courses-grid">
@@ -247,9 +269,23 @@ export default function CoursesPage() {
                     </button>
                   </Link>
                 ) : (
-                  <button onClick={() => handleEnroll(course.id)} className="btn-primary w-full flex items-center justify-center gap-2">
-                    <BookOpen className="w-4 h-4" />
-                    {course.pricing_type === 'free' || course.included_in_membership ? 'Enroll Free' : 'Enroll Now'}
+                  <button
+                    onClick={() => handleEnroll(course.id)}
+                    disabled={enrolling === course.id}
+                    className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-60"
+                  >
+                    {enrolling === course.id ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <BookOpen className="w-4 h-4" />
+                    )}
+                    {enrolling === course.id
+                      ? 'Enrolling…'
+                      : course.included_in_membership
+                        ? 'Enroll with Membership'
+                        : course.pricing_type === 'free'
+                          ? 'Enroll Free'
+                          : 'Enroll Now'}
                   </button>
                 )}
               </div>
