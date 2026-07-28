@@ -106,6 +106,13 @@ export default function LeaderboardsPage() {
           const val = getMetricValue(entry, metricDef)
           if (val === null) continue
 
+          // Parent-entered data NEVER reaches a public leaderboard, regardless
+          // of the verified toggle. Migration 063 forces verified=false on these
+          // rows, but we also exclude them structurally here: `verified ?? true`
+          // treats older rows with no flag as verified, so a flag check alone
+          // would let self-reported PRs onto the default (verifiedOnly=off) view.
+          if (entry.entered_by_role === 'parent') continue
+
           const isVerified = entry.custom_metrics?.verified ?? true
           if (verifiedOnly && !isVerified) continue
 

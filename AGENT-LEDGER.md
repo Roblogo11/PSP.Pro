@@ -36,6 +36,23 @@ These exist because we hit the pain first. Each rule leads with the fact, then `
 - **`course_lessons` SELECT is gated on enrollment.** It used to be `USING (true)`, which exposed every paid lesson's `video_url` (a NOT NULL column) to any authenticated user regardless of enrollment. `is_preview = true` lessons stay public by design.
 - **Migrations must never silently revoke access from real users.** 062 grandfathers existing enrollments on newly tier-gated courses to `payment_status='membership'` rather than deleting them, and only *reports* suspect rows for human review.
 
+### Multi-child parent accounts (data isolation)
+
+- **A parent account holds ONE `athlete_id` shared by every child.** Filtering athlete data on `athlete_id` alone MERGES all of a family's children into one dataset. Any query returning athlete-specific data must also scope by `child_id`. Use `useActiveChild()` (`src/lib/hooks/use-active-child.ts`) to resolve the active child, and pass it through — `useAthleteMetrics(userId, childId)`. *Why:* audited 2026-07-28 — `parent_children`, `active_child_id`, and 3 API routes all existed, but ZERO metric queries referenced `child_id`. Switching the active child changed bookings and nothing else.
+- **When a child is active, include `child_id IS NULL` rows too.** Metrics recorded before migration 057 have no `child_id`; filtering strictly would make a family's older history vanish.
+- **`children` is a reserved React prop name.** The athlete switcher takes `athletes`, not `children` — `react/no-children-prop` fails the production build (but NOT `tsc --noEmit`).
+
+### Performance metrics (who may write what)
+
+- **Parent-entered metrics are ALWAYS Self-Reported.** Migration 063 adds `entered_by_role` ('coach'|'parent'|'athlete') and a BEFORE trigger that forces `verified=false` for any non-staff writer. Never add a client-side "verified" control for parents.
+- **Leaderboards exclude `entered_by_role = 'parent'` outright**, not just via the verified flag. *Why:* the leaderboard reads `custom_metrics?.verified ?? true` — absent means verified — and `verifiedOnly` is OFF by default, so a flag check alone would let self-reported PRs onto the public board.
+- **Adding a new metric type needs NO migration.** Add one line to `SPORT_METRICS` in `src/lib/hooks/use-athlete-metrics.ts` with `jsonKey: true`; values live in the `custom_metrics` JSONB. Only add a DB column if you need to sort/filter on it at scale.
+
+### Multi-day events (camps)
+
+- **An event GROUPS per-day `available_slots` rows; it never replaces them.** `available_slots` stays one-row-per-date because the slot-count triggers + hourly pg_cron heal assume that shape. `POST /api/events` creates the event, then one slot per day, and rolls the event back if slot creation fails.
+- **Parse date-only strings with an explicit midday time.** `new Date('2026-08-03')` is UTC midnight → renders as Aug 2 in US timezones, so a camp displays starting a day early. `src/lib/events/format.ts` does this correctly — reuse it rather than hand-rolling.
+
 ### Auth & roles (don't break these)
 
 - **Membership gating** lives in `src/app/(dashboard)/layout.tsx`. Open routes (any auth user): `/booking`, `/sessions`, `/locker`, `/settings`, `/guide`, `/leaderboards`. Member-only (active package): `/progress`, `/drills`, `/achievements`, `/video-analysis`, `/courses`, `/questionnaires`, `/progress-report`. Staff (`coach`/`admin`/`master_admin`) bypass all checks.
@@ -71,6 +88,20 @@ These exist because we hit the pain first. Each rule leads with the fact, then `
 ---
 
 ## 2. Recent Ships
+
+### (pending) — 2026-07-28 — Client fix list: features #4–#8
+
+**Files:** migrations `063_parent_metric_entry.sql`, `064_multi_day_events.sql`, `065_group_chat.sql` (all applied + verified live); `src/lib/hooks/use-active-child.ts`, `src/lib/events/format.ts`, `src/components/parent/athlete-switcher.tsx`, `src/components/parent/log-data-point.tsx`, `src/components/events/event-form.tsx`, `src/components/events/upcoming-events.tsx`, `src/app/api/events/route.ts`, `src/app/api/messages/group/route.ts` (all new); plus progress/messages/booking/availability/leaderboards pages and `use-athlete-metrics.ts`.
+
+Recon changed the scope of two items before any code was written:
+
+**#6 was already built.** All four metric types Rachel requested (pitch velocity + 6 pitch types, overhand throw velocity, baserunning times, catcher pop time) already existed among 71 definitions in `SPORT_METRICS`. The `custom_metrics` JSONB means new types need no migration — her "more types are coming" was already satisfied. Added `home_to_second` and `first_to_third` splits for completeness.
+
+**#5 was half-built.** Coaches already had a full entry form + Quick Log modal, with `recorded_by`/`test_date` tracking. The missing half was PARENTS, blocked by RLS (metrics INSERT was staff-only). Migration 063 adds parent INSERT/UPDATE scoped to their own `athlete_id`, plus a trigger forcing `verified=false`, plus a structural leaderboard exclusion.
+
+**#7 audit found the real bug.** `parent_children`, `active_child_id` and 3 parent API routes all existed — but no metric query filtered on `child_id`, so switching the active child changed bookings and nothing else; both children's numbers merged into one chart. Fixed via `useActiveChild()` + a `childId` parameter on `useAthleteMetrics`, and surfaced a switcher on the progress page (previously buried in Settings).
+
+**#4 multi-day events** are a new `events` table grouping per-day slots (verified live: 3-day camp → 3 linked slots, reversed range rejected 400, cascade delete clean). **#8 group chat** extends the existing N-participant `conversations` model with `is_group`/`title`/`created_by` and the participant DELETE policy that was missing entirely.
 
 ### (pending) — 2026-07-28 — Course tier access control + mobile menu fix
 

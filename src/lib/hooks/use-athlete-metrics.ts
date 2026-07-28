@@ -28,6 +28,9 @@ export const SPORT_METRICS: Record<string, MetricDef[]> = {
     { key: 'glove_to_throw', label: 'Glove-to-Throw Exchange', unit: 'sec', jsonKey: true, lowerIsBetter: true },
     { key: 'catch_radius', label: 'Catch Radius', unit: 'ft', jsonKey: true },
     { key: 'base_acceleration', label: 'Baserunning Acceleration', unit: 'sec', jsonKey: true, lowerIsBetter: true },
+    // Baserunning splits — add new timing metrics here; jsonKey means no migration needed.
+    { key: 'home_to_second', label: 'Home-to-2B Time', unit: 'sec', jsonKey: true, lowerIsBetter: true },
+    { key: 'first_to_third', label: '1B-to-3B Time', unit: 'sec', jsonKey: true, lowerIsBetter: true },
     { key: 'offspeed_command', label: 'Off-Speed Command', unit: '%', jsonKey: true },
     { key: 'infield_velocity', label: 'Infield Velocity', unit: 'mph', jsonKey: true },
     // Pitcher Velocity by pitch type
@@ -137,7 +140,18 @@ function getMetricValue(entry: any, metricDef: MetricDef): number | null {
   return null
 }
 
-export function useAthleteMetrics(userId: string | undefined) {
+/**
+ * @param userId    the account holder (parent OR athlete)
+ * @param childId   optional. For multi-child parent accounts, scopes results to
+ *                  ONE child. Pass `undefined` for single-athlete accounts.
+ *
+ * ⚠ Multi-child isolation: a parent account can hold several children, all
+ * sharing one `athlete_id`. Filtering on athlete_id ALONE merges every child's
+ * numbers into one chart. When a child is active, we return that child's rows
+ * plus legacy rows recorded before child_id existed (child_id IS NULL), which
+ * would otherwise silently vanish from the parent's history.
+ */
+export function useAthleteMetrics(userId: string | undefined, childId?: string | null) {
   const [entries, setEntries] = useState<MetricEntry[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -150,11 +164,16 @@ export function useAthleteMetrics(userId: string | undefined) {
     async function loadMetrics() {
       try {
         const supabase = createClient()
-        const { data, error } = await supabase
+        let query = supabase
           .from('athlete_performance_metrics')
           .select('*')
           .eq('athlete_id', userId)
-          .order('test_date', { ascending: true })
+
+        if (childId) {
+          query = query.or(`child_id.eq.${childId},child_id.is.null`)
+        }
+
+        const { data, error } = await query.order('test_date', { ascending: true })
 
         if (error) throw error
 
@@ -203,7 +222,7 @@ export function useAthleteMetrics(userId: string | undefined) {
     }
 
     loadMetrics()
-  }, [userId])
+  }, [userId, childId])
 
   // Filter entries by sport
   const getEntriesBySport = (sport: string): MetricEntry[] => {

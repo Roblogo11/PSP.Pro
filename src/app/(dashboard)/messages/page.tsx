@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useUserRole } from '@/lib/hooks/use-user-role'
-import { MessageCircle, Send, ArrowLeft, Users, Loader2, Plus } from 'lucide-react'
+import { MessageCircle, Send, ArrowLeft, Users, Loader2, Plus, Check } from 'lucide-react'
 import Image from 'next/image'
 
 interface Conversation {
@@ -11,6 +11,15 @@ interface Conversation {
   participants: { id: string; name: string; avatar_url: string | null; role: string }[]
   lastMessage: { content: string; sender_id: string; created_at: string } | null
   unreadCount: number
+  isGroup?: boolean
+  title?: string | null
+  createdBy?: string | null
+}
+
+/** Group chats show their name; 1-on-1s show the other person. */
+function conversationLabel(conv: Conversation): string {
+  if (conv.isGroup) return conv.title || 'Group chat'
+  return conv.participants[0]?.name || 'Unknown'
 }
 
 interface Message {
@@ -36,6 +45,42 @@ export default function MessagesPage() {
   const [contacts, setContacts] = useState<any[]>([])
   const [contactSearch, setContactSearch] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  // Group chat creation
+  const [groupMode, setGroupMode] = useState(false)
+  const [groupName, setGroupName] = useState('')
+  const [groupPicks, setGroupPicks] = useState<string[]>([])
+  const [creatingGroup, setCreatingGroup] = useState(false)
+  const [groupError, setGroupError] = useState<string | null>(null)
+
+  const toggleGroupPick = (id: string) =>
+    setGroupPicks(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id])
+
+  const createGroup = async () => {
+    if (!groupName.trim() || groupPicks.length === 0) return
+    setCreatingGroup(true)
+    setGroupError(null)
+
+    const res = await fetch('/api/messages/group', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: groupName.trim(), participantIds: groupPicks }),
+    })
+    const data = await res.json().catch(() => ({}))
+    setCreatingGroup(false)
+
+    if (!res.ok) {
+      setGroupError(data.error || 'Could not create the group')
+      return
+    }
+
+    setShowNewChat(false)
+    setGroupMode(false)
+    setGroupPicks([])
+    setGroupName('')
+    await fetchConversations()
+    setSelectedConv(data.conversationId)
+  }
 
   const fetchConversations = useCallback(async () => {
     const res = await fetch('/api/messages')
@@ -228,7 +273,39 @@ export default function MessagesPage() {
             {/* New Chat Contact List */}
             {showNewChat && (
               <div className="p-3 border-b border-slate-200 dark:border-white/10 bg-cyan-50/50 dark:bg-cyan/5">
-                <p className="text-xs font-semibold text-slate-600 dark:text-white/60 mb-2">Start a conversation:</p>
+                {/* Toggle: 1-on-1 vs named group with multi-select */}
+                <div className="flex gap-1 mb-3 p-1 rounded-lg bg-white/70 dark:bg-white/5">
+                  {[
+                    { key: false, label: 'One-on-one' },
+                    { key: true, label: 'Group' },
+                  ].map(mode => (
+                    <button
+                      key={String(mode.key)}
+                      onClick={() => { setGroupMode(mode.key); setGroupPicks([]); setGroupName('') }}
+                      className={`flex-1 min-h-[36px] rounded-md text-xs font-semibold transition-colors ${
+                        groupMode === mode.key
+                          ? 'bg-orange text-white'
+                          : 'text-slate-600 dark:text-white/60'
+                      }`}
+                    >
+                      {mode.label}
+                    </button>
+                  ))}
+                </div>
+
+                {groupMode && (
+                  <input
+                    type="text"
+                    value={groupName}
+                    onChange={(e) => setGroupName(e.target.value)}
+                    placeholder="Group name (e.g. 12U Travel Team)"
+                    className="w-full mb-2 px-3 py-2 min-h-[40px] rounded-lg bg-white dark:bg-white/10 border border-slate-200 dark:border-white/20 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange/50"
+                  />
+                )}
+
+                <p className="text-xs font-semibold text-slate-600 dark:text-white/60 mb-2">
+                  {groupMode ? 'Select people to add:' : 'Start a conversation:'}
+                </p>
                 {(isCoach || isAdmin) && (
                   <input
                     type="text"
@@ -244,25 +321,43 @@ export default function MessagesPage() {
                     <p className="text-xs text-slate-400 dark:text-white/40 px-2 py-3 text-center">
                       {contactSearch.trim() ? `No one matching “${contactSearch.trim()}”` : 'No contacts available'}
                     </p>
-                  ) : filteredContacts.map((c) => (
-                    <button
-                      key={c.id}
-                      onClick={() => startNewChat(c.id)}
-                      className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-white dark:hover:bg-white/10 text-left"
-                    >
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan to-blue-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                        {contactLabel(c).charAt(0) || '?'}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{contactLabel(c)}</p>
-                        <p className="text-[10px] text-slate-500 capitalize">
-                          {c.account_type === 'parent_guardian' ? 'athlete (parent acct)' : c.role}
-                        </p>
-                      </div>
-                    </button>
-                  ))}
+                  ) : filteredContacts.map((c) => {
+                    const picked = groupPicks.includes(c.id)
+                    return (
+                      <button
+                        key={c.id}
+                        onClick={() => groupMode ? toggleGroupPick(c.id) : startNewChat(c.id)}
+                        className={`w-full flex items-center gap-2 p-2 rounded-lg text-left transition-colors ${
+                          picked ? 'bg-orange/15' : 'hover:bg-white dark:hover:bg-white/10'
+                        }`}
+                      >
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan to-blue-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                          {contactLabel(c).charAt(0) || '?'}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{contactLabel(c)}</p>
+                          <p className="text-[10px] text-slate-500 capitalize">
+                            {c.account_type === 'parent_guardian' ? 'athlete (parent acct)' : c.role}
+                          </p>
+                        </div>
+                        {groupMode && picked && <Check className="w-4 h-4 text-orange flex-shrink-0" />}
+                      </button>
+                    )
+                  })}
                 </div>
-                <button onClick={() => setShowNewChat(false)} className="text-xs text-slate-400 mt-2 hover:text-slate-600">Cancel</button>
+
+                {groupMode && (
+                  <button
+                    onClick={createGroup}
+                    disabled={creatingGroup || groupPicks.length === 0 || !groupName.trim()}
+                    className="btn-primary w-full mt-2 min-h-[44px] flex items-center justify-center gap-2 text-sm disabled:opacity-50"
+                  >
+                    {creatingGroup ? <Loader2 className="w-4 h-4 animate-spin" /> : <Users className="w-4 h-4" />}
+                    {creatingGroup ? 'Creating…' : `Create group (${groupPicks.length})`}
+                  </button>
+                )}
+                {groupError && <p className="text-xs text-orange font-semibold mt-2">{groupError}</p>}
+                <button onClick={() => { setShowNewChat(false); setGroupMode(false); setGroupPicks([]) }} className="text-xs text-slate-400 mt-2 hover:text-slate-600">Cancel</button>
               </div>
             )}
 
@@ -302,7 +397,14 @@ export default function MessagesPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <p className="font-semibold text-sm text-slate-900 dark:text-white truncate">{other?.name || 'Unknown'}</p>
+                          <p className="font-semibold text-sm text-slate-900 dark:text-white truncate">
+                            {conversationLabel(conv)}
+                            {conv.isGroup && (
+                              <span className="ml-2 text-[10px] font-bold uppercase tracking-wider text-orange">
+                                Group · {conv.participants.length + 1}
+                              </span>
+                            )}
+                          </p>
                           {conv.lastMessage && (
                             <span className="text-[10px] text-slate-400 flex-shrink-0 ml-2">{formatTime(conv.lastMessage.created_at)}</span>
                           )}
@@ -322,7 +424,9 @@ export default function MessagesPage() {
 
           {/* Message Thread */}
           <div className={`flex-1 flex flex-col ${!selectedConv ? 'hidden md:flex' : 'flex'}`}>
-            {selectedConv && otherParticipant ? (
+            {/* A group chat can legitimately have no "other participant" (everyone
+                else left), so don't gate the whole pane on otherParticipant. */}
+            {selectedConv && selectedConversation ? (
               <>
                 {/* Header */}
                 <div className="p-3 sm:p-4 border-b border-slate-200 dark:border-white/10 flex items-center gap-3 sticky top-0 z-10 backdrop-blur-xl bg-white/80 dark:bg-slate-900/80">
@@ -330,11 +434,19 @@ export default function MessagesPage() {
                     <ArrowLeft className="w-5 h-5 text-slate-600 dark:text-white" />
                   </button>
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange to-cyan flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                    {otherParticipant.name?.charAt(0) || '?'}
+                    {selectedConversation.isGroup
+                      ? <Users className="w-4 h-4" />
+                      : (otherParticipant?.name?.charAt(0) || '?')}
                   </div>
-                  <div>
-                    <p className="font-semibold text-sm text-slate-900 dark:text-white">{otherParticipant.name}</p>
-                    <p className="text-[10px] text-slate-500 capitalize">{otherParticipant.role}</p>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-sm text-slate-900 dark:text-white truncate">
+                      {conversationLabel(selectedConversation)}
+                    </p>
+                    <p className="text-[10px] text-slate-500 capitalize">
+                      {selectedConversation.isGroup
+                        ? `${selectedConversation.participants.length + 1} members`
+                        : otherParticipant?.role}
+                    </p>
                   </div>
                 </div>
 

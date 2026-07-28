@@ -7,6 +7,9 @@ import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useUserStats } from '@/lib/hooks/use-user-stats'
 import { useUserSessions } from '@/lib/hooks/use-user-sessions'
 import { useAthleteMetrics, SPORT_METRICS, DEFAULT_CHART_METRICS } from '@/lib/hooks/use-athlete-metrics'
+import { useActiveChild } from '@/lib/hooks/use-active-child'
+import { AthleteSwitcher } from '@/components/parent/athlete-switcher'
+import { LogDataPoint } from '@/components/parent/log-data-point'
 import { PrintableReport } from '@/components/printable-report'
 
 const SPORT_TABS = [
@@ -23,7 +26,10 @@ export default function ProgressPage() {
   const effectiveUserId = impersonatedUserId || profile?.id
   const { stats, loading: statsLoading } = useUserStats(effectiveUserId)
   const { sessions, loading: sessionsLoading } = useUserSessions(effectiveUserId)
-  const { entries, loading: metricsLoading, getMetricTimeSeries, getPersonalRecords } = useAthleteMetrics(effectiveUserId)
+  // Multi-child parent accounts: scope metrics to ONE child, else every child's
+  // numbers merge into a single chart (they share one athlete_id).
+  const { activeChildId, activeChild, children, hasMultiple, isParent, switchChild } = useActiveChild(effectiveUserId)
+  const { entries, loading: metricsLoading, getMetricTimeSeries, getPersonalRecords } = useAthleteMetrics(effectiveUserId, activeChildId)
 
   const [sportTab, setSportTab] = useState('softball')
 
@@ -189,9 +195,32 @@ export default function ProgressPage() {
           Your <span className="text-gradient-orange">Progress</span>
         </h1>
         <p className="text-cyan-700 dark:text-white text-lg">
-          Track your athletic development and achievements
+          {activeChild
+            ? `Tracking ${activeChild.child_name}'s development and achievements`
+            : 'Track your athletic development and achievements'}
         </p>
       </div>
+
+      {/* Parent accounts with 2+ children: pick whose data this page shows. */}
+      <AthleteSwitcher
+        athletes={children}
+        activeChild={activeChild}
+        onSwitch={switchChild}
+        show={isParent && hasMultiple}
+      />
+
+      {/* Parents/athletes can log their own data points between sessions.
+          Always saved as Self-Reported — see LogDataPoint + migration 063. */}
+      {effectiveUserId && !isImpersonating && (
+        <div className="mb-6">
+          <LogDataPoint
+            athleteId={effectiveUserId}
+            childId={activeChildId}
+            childName={activeChild?.child_name}
+            onSaved={() => window.location.reload()}
+          />
+        </div>
+      )}
 
       {/* Stats Grid */}
       <div data-tour="progress-stats" className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">

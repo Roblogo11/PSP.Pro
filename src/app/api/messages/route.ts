@@ -25,6 +25,14 @@ export async function GET() {
 
     const conversationIds = participantRows.map((p: any) => p.conversation_id)
 
+    // Group metadata (title / is_group) so the list can label group chats by
+    // name instead of by "everyone else in the room".
+    const { data: conversationRows } = await supabase
+      .from('conversations')
+      .select('id, is_group, title, created_by')
+      .in('id', conversationIds)
+    const metaById = new Map((conversationRows || []).map((c: any) => [c.id, c]))
+
     // Get all participants for these conversations (to show who you're talking to)
     const { data: allParticipants } = await supabase
       .from('conversation_participants')
@@ -61,9 +69,14 @@ export async function GET() {
       const lastMessage = messages[0] || null
       const unreadCount = (unreadMessages || []).filter((m: any) => m.conversation_id === convId).length
 
+      const meta: any = metaById.get(convId)
+
       return {
         id: convId,
         participants,
+        isGroup: !!meta?.is_group,
+        title: meta?.title || null,
+        createdBy: meta?.created_by || null,
         lastMessage: lastMessage ? {
           content: lastMessage.content,
           sender_id: lastMessage.sender_id,

@@ -7,6 +7,7 @@ import { Plus, Calendar, MapPin, Trash2, Loader2, Repeat, Edit2, X, AlertTriangl
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useUserRole } from '@/lib/hooks/use-user-role'
+import { EventForm } from '@/components/events/event-form'
 
 export default function AvailabilityManagementPage() {
   const supabase = createClient()
@@ -473,6 +474,12 @@ export default function AvailabilityManagementPage() {
             <span>Add Time Slot</span>
           </button>
         </div>
+      </div>
+
+      {/* Multi-day events (camps). Creates one slot per day under one event,
+          so a 3-day camp is booked once rather than three times. */}
+      <div className="mb-6">
+        <EventForm services={services} onCreated={() => fetchSlots()} />
       </div>
 
       {/* Week Filter */}

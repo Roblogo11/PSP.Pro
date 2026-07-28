@@ -8,6 +8,7 @@ import { Calendar } from '@/components/booking/calendar'
 import { ServiceSelector } from '@/components/booking/service-selector'
 import { TimeSlotPicker } from '@/components/booking/time-slot-picker'
 import { TonightAvailable } from '@/components/booking/tonight-available'
+import { UpcomingEvents } from '@/components/events/upcoming-events'
 import { CheckCircle2, ArrowRight, ArrowLeft, Loader2, CalendarDays, CreditCard, Wallet, Tag, Sparkles, RefreshCw, X } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { toastError } from '@/lib/toast'
@@ -583,6 +584,9 @@ export default function BookingPage() {
                   setCurrentStep('confirm')
                 }}
               />
+              {/* Multi-day camps shown as ONE card with the full date range,
+                  rather than as separate daily slots. */}
+              <UpcomingEvents />
               <ServiceSelector
                 services={services}
                 selectedServiceId={selectedServiceId}
