@@ -86,8 +86,11 @@ BEGIN
   --     already enrolled from losing access they legitimately have today.
   --     Access is never silently revoked from a real user by a migration.
   -- ---------------------------------------------------------------------
+  -- NOTE: payment_status is CHECK-constrained to ('free','paid','comp').
+  -- 'comp' = complimentary/granted access. Do NOT invent new values here
+  -- without widening the constraint first — the DB will reject them.
   UPDATE public.course_enrollments ce
-  SET payment_status = 'membership'
+  SET payment_status = 'comp'
   FROM public.courses c
   WHERE c.id = ce.course_id
     AND ce.payment_status = 'free'

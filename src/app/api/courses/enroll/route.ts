@@ -62,10 +62,10 @@ export async function POST(request: NextRequest) {
 
     // payment_status records HOW access was granted, so a later audit can tell
     // a membership-included enrollment from a purchased one.
+    // ⚠ CHECK-constrained to ('free','paid','comp') — see migration 062.
+    // Adding a new value requires widening the constraint first.
     const paymentStatus =
-      access.reason === 'tier_included' ? 'membership'
-      : access.reason === 'staff' ? 'comped'
-      : 'free'
+      access.reason === 'tier_included' || access.reason === 'staff' ? 'comp' : 'free'
 
     const { data: created, error: insertError } = await admin
       .from('course_enrollments')
