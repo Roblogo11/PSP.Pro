@@ -89,6 +89,19 @@ These exist because we hit the pain first. Each rule leads with the fact, then `
 
 ## 2. Recent Ships
 
+### `f8681cf` — 2026-07-28 — DEPLOYED: client fix list #1–#8 live on propersports.pro
+
+Shipped and verified against **production**, not just locally:
+
+- **Elite membership $60 → $50** (client's latest instruction). Both sides moved: DB `price_cents`, a NEW Stripe price (`price_1TyKlR…`, objects are immutable), made product default, old $60 archived, `stripe_price_id` repointed. `propersports.pro/memberships` renders $50, no $60 anywhere. Safe — 0 subscriptions existed in either system, so no bill changed.
+- **Course leak closed in prod**: browser-key enroll into a paid course → `401`; browser-key read of non-preview lesson `video_url` → `[]`.
+- **Mobile menu fixed in prod**: 3 nav cycles on a 390×844 viewport, sheet reopens each time, no refresh. Rachel's repro no longer reproduces.
+- `/api/events` responding 200.
+
+**Known pre-existing noise (NOT from this work):** the dashboard logs `406` from Supabase on `bookings`/`athlete_packages` for accounts with no rows — `.single()` on an empty result. Cosmetic; worth converting to `.maybeSingle()` in a future pass.
+
+**Known real issue, deliberately not fixed here:** every dashboard page renders empty then fetches client-side (`useEffect` → `fetch` → `setState`), so users see skeleton-then-content on every navigation ("double loading"). Fixing it means converting pages to server components — touches every dashboard page, deserves its own focused pass rather than a late-session change to a live app.
+
 ### (pending) — 2026-07-28 — Client fix list: features #4–#8
 
 **Files:** migrations `063_parent_metric_entry.sql`, `064_multi_day_events.sql`, `065_group_chat.sql` (all applied + verified live); `src/lib/hooks/use-active-child.ts`, `src/lib/events/format.ts`, `src/components/parent/athlete-switcher.tsx`, `src/components/parent/log-data-point.tsx`, `src/components/events/event-form.tsx`, `src/components/events/upcoming-events.tsx`, `src/app/api/events/route.ts`, `src/app/api/messages/group/route.ts` (all new); plus progress/messages/booking/availability/leaderboards pages and `use-athlete-metrics.ts`.
