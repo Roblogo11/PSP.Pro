@@ -50,28 +50,27 @@ export default function CoursesPage() {
   const fetchCourses = useCallback(async () => {
     setLoading(true)
 
-    // Fetch all active courses with lesson counts
-    const { data: coursesData } = await supabase
-      .from('courses')
-      .select('*, course_lessons(id)')
-      .eq('is_active', true)
-      .order('created_at', { ascending: false })
+    // ⚠ Independent — keep batched. These ran in series and cost 3 stacked
+    // round trips before a single course card could render.
+    const [{ data: coursesData }, { data: enrollments }, { data: progress }] = await Promise.all([
+      supabase
+        .from('courses')
+        .select('*, course_lessons(id)')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('course_enrollments')
+        .select('course_id')
+        .eq('athlete_id', effectiveUserId!),
+      supabase
+        .from('lesson_progress')
+        .select('lesson_id, completed')
+        .eq('athlete_id', effectiveUserId!),
+    ])
 
     if (!coursesData) { setLoading(false); return }
 
-    // Fetch user's enrollments
-    const { data: enrollments } = await supabase
-      .from('course_enrollments')
-      .select('course_id')
-      .eq('athlete_id', effectiveUserId!)
-
     const enrolledIds = new Set((enrollments || []).map((e: any) => e.course_id))
-
-    // Fetch lesson progress for enrolled courses
-    const { data: progress } = await supabase
-      .from('lesson_progress')
-      .select('lesson_id, completed')
-      .eq('athlete_id', effectiveUserId!)
 
     const completedLessons = new Set((progress || []).filter((p: any) => p.completed).map((p: any) => p.lesson_id))
 

@@ -129,28 +129,28 @@ export default function AthleteLockerPage() {
 
       const courseIds = enrollments.map((e: any) => e.course_id)
 
-      // Get course details
-      const { data: courses } = await supabase
-        .from('courses')
-        .select('id, title, slug, thumbnail_url')
-        .in('id', courseIds)
-        .eq('is_active', true)
-        .limit(3)
+      // ⚠ These three only need `courseIds`, not each other — keep them batched.
+      // They used to run in series, costing 3 stacked round trips on the first
+      // screen an athlete sees after login.
+      const [{ data: courses }, { data: lessons }, { data: progress }] = await Promise.all([
+        supabase
+          .from('courses')
+          .select('id, title, slug, thumbnail_url')
+          .in('id', courseIds)
+          .eq('is_active', true)
+          .limit(3),
+        supabase
+          .from('course_lessons')
+          .select('id, course_id')
+          .in('course_id', courseIds),
+        supabase
+          .from('lesson_progress')
+          .select('lesson_id')
+          .eq('athlete_id', effectiveUserId!)
+          .eq('completed', true),
+      ])
 
       if (!courses) return
-
-      // Get lesson counts per course
-      const { data: lessons } = await supabase
-        .from('course_lessons')
-        .select('id, course_id')
-        .in('course_id', courseIds)
-
-      // Get completed lessons
-      const { data: progress } = await supabase
-        .from('lesson_progress')
-        .select('lesson_id')
-        .eq('athlete_id', effectiveUserId!)
-        .eq('completed', true)
 
       const lessonCountMap: Record<string, number> = {}
       for (const l of (lessons || [])) {
@@ -224,22 +224,23 @@ export default function AthleteLockerPage() {
     async function fetchRecentActivity() {
       const supabase = createClient()
 
-      // Recent bookings (joins service for the name; service_name column doesn't exist)
-      const { data: bookings } = await supabase
-        .from('bookings')
-        .select('id, booking_date, start_time, status, created_at, service:service_id (name)')
-        .eq('athlete_id', effectiveUserId!)
-        .in('status', ['confirmed', 'pending', 'completed'])
-        .order('created_at', { ascending: false })
-        .limit(5)
-
-      // Recent drill completions
-      const { data: drills } = await supabase
-        .from('drill_completions')
-        .select('id, completed_at, drill:drill_id(title)')
-        .eq('user_id', effectiveUserId!)
-        .order('completed_at', { ascending: false })
-        .limit(5)
+      // ⚠ Independent — keep batched. Recent bookings joins service for the
+      // name (a service_name column doesn't exist).
+      const [{ data: bookings }, { data: drills }] = await Promise.all([
+        supabase
+          .from('bookings')
+          .select('id, booking_date, start_time, status, created_at, service:service_id (name)')
+          .eq('athlete_id', effectiveUserId!)
+          .in('status', ['confirmed', 'pending', 'completed'])
+          .order('created_at', { ascending: false })
+          .limit(5),
+        supabase
+          .from('drill_completions')
+          .select('id, completed_at, drill:drill_id(title)')
+          .eq('user_id', effectiveUserId!)
+          .order('completed_at', { ascending: false })
+          .limit(5),
+      ])
 
       const activities: any[] = []
 

@@ -37,38 +37,11 @@ export function useUserStats(userId: string | undefined, childId?: string | null
 
     async function loadStats() {
       try {
-        // Total completed sessions = completed bookings (the 'sessions' table doesn't exist;
-        // bookings IS the source of truth).
-        const { count: sessionsCount } = await supabase
-          .from('bookings')
-          .select('*', { count: 'exact', head: true })
-          .eq('athlete_id', userId)
-          .eq('status', 'completed')
-
-        // Fetch next upcoming session
-        const { data: upcomingSession } = await supabase
-          .from('bookings')
-          .select('id, booking_date, start_time, location, service:service_id(name)')
-          .eq('athlete_id', userId)
-          .in('status', ['confirmed', 'pending'])
-          .gte('booking_date', getLocalDateString())
-          .order('booking_date', { ascending: true })
-          .order('start_time', { ascending: true })
-          .limit(1)
-          .maybeSingle()
-
-        // Fetch drill completions
-        const { count: drillsCount } = await supabase
-          .from('drill_completions')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_id', userId)
-
-        // Fetch completed quiz count
-        const { count: quizzesCount } = await supabase
-          .from('assigned_questionnaires')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_id', userId)
-          .eq('completed', true)
+        // ⚠ These five queries are INDEPENDENT — keep them in one Promise.all.
+        // They used to run sequentially, so this hook alone cost 5 round trips
+        // stacked end-to-end before the page could render a single stat card.
+        // If you add a query here, add it to the batch; only chain it if it
+        // genuinely needs a previous result.
 
         // Recent velocity history — pulled from athlete_performance_metrics
         // (legacy code queried `sessions.peak_velocity`, but that table/column never existed).
@@ -86,9 +59,59 @@ export function useUserStats(userId: string | undefined, childId?: string | null
           velocityQuery = velocityQuery.or(`child_id.eq.${childId},child_id.is.null`)
         }
 
-        const { data: velocityData } = await velocityQuery
-          .order('test_date', { ascending: false })
-          .limit(10)
+        const [
+          { count: sessionsCount },
+          { data: upcomingSession },
+          { count: drillsCount },
+          { count: quizzesCount },
+          { data: velocityData },
+          { data: recentCompletions },
+        ] = await Promise.all([
+          // Total completed sessions = completed bookings (the 'sessions' table
+          // doesn't exist; bookings IS the source of truth).
+          supabase
+            .from('bookings')
+            .select('*', { count: 'exact', head: true })
+            .eq('athlete_id', userId)
+            .eq('status', 'completed'),
+
+          // Next upcoming session
+          supabase
+            .from('bookings')
+            .select('id, booking_date, start_time, location, service:service_id(name)')
+            .eq('athlete_id', userId)
+            .in('status', ['confirmed', 'pending'])
+            .gte('booking_date', getLocalDateString())
+            .order('booking_date', { ascending: true })
+            .order('start_time', { ascending: true })
+            .limit(1)
+            .maybeSingle(),
+
+          // Drill completions
+          supabase
+            .from('drill_completions')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', userId),
+
+          // Completed quizzes
+          supabase
+            .from('assigned_questionnaires')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', userId)
+            .eq('completed', true),
+
+          velocityQuery
+            .order('test_date', { ascending: false })
+            .limit(10),
+
+          // Recent completions, for the streak calculation below
+          supabase
+            .from('drill_completions')
+            .select('completed_at')
+            .eq('user_id', userId)
+            .order('completed_at', { ascending: false })
+            .limit(30),
+        ])
 
         // Pick the most-populated velocity field for this athlete (throwing or exit).
         const velocities = (velocityData || [])
@@ -98,13 +121,8 @@ export function useUserStats(userId: string | undefined, childId?: string | null
           ? Math.round(velocities.reduce((a, b) => a + b, 0) / velocities.length)
           : null
 
-        // Calculate current streak (simplified - consecutive days with drill completions)
-        const { data: recentCompletions } = await supabase
-          .from('drill_completions')
-          .select('completed_at')
-          .eq('user_id', userId)
-          .order('completed_at', { ascending: false })
-          .limit(30)
+        // Calculate current streak (simplified - consecutive days with drill
+        // completions). recentCompletions comes from the batch above.
 
         let currentStreak = 0
         if (recentCompletions && recentCompletions.length > 0) {
