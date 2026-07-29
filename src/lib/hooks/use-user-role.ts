@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { useServerProfile } from '@/lib/contexts/user-profile-context'
 
 export type UserRole = 'athlete' | 'coach' | 'admin' | 'master_admin'
 
@@ -17,8 +18,16 @@ export interface UserProfile {
 }
 
 export function useUserRole() {
-  const [profile, setProfile] = useState<UserProfile | null>(null)
-  const [loading, setLoading] = useState(true)
+  // When a server component above us already fetched the profile (the dashboard
+  // layout does), start from it instead of re-fetching. `undefined` means no
+  // provider is mounted — public pages — so we keep the original fetch path.
+  const serverProfile = useServerProfile()
+  const isSeeded = serverProfile !== undefined
+
+  const [profile, setProfile] = useState<UserProfile | null>(serverProfile ?? null)
+  // Seeded renders are not loading: pages gate their data effects on this, so
+  // leaving it true would re-serialize the very waterfall the seed removes.
+  const [loading, setLoading] = useState(!isSeeded)
   const [simulatedRole, setSimulatedRole] = useState<UserRole | null>(null)
   const [impersonatedUserId, setImpersonatedUserId] = useState<string | null>(null)
   const [impersonatedUserName, setImpersonatedUserName] = useState<string | null>(null)
@@ -60,7 +69,13 @@ export function useUserRole() {
   }, [supabase])
 
   useEffect(() => {
-    loadUserProfile()
+    // Skip the initial fetch when the server already handed us a profile —
+    // that duplicate getUser()+profiles round trip is what this seeding exists
+    // to remove. Auth changes below still re-fetch, so a sign-out or role
+    // change mid-session is picked up exactly as before.
+    if (!isSeeded) {
+      loadUserProfile()
+    }
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
@@ -70,7 +85,7 @@ export function useUserRole() {
     return () => {
       subscription.unsubscribe()
     }
-  }, [supabase, loadUserProfile])
+  }, [supabase, loadUserProfile, isSeeded])
 
   // When a background tab becomes visible again, re-fetch profile
   // (catches session expiry, role changes, etc.)

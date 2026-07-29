@@ -4,6 +4,11 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Sidebar } from '@/components/layout/sidebar'
 import { HomeButton } from '@/components/layout/home-button'
+import { UserProfileProvider } from '@/lib/contexts/user-profile-context'
+import type { UserProfile } from '@/lib/hooks/use-user-role'
+
+/** The profiles columns this layout selects — everything UserProfile needs except `email`. */
+type ServerProfileRow = Omit<UserProfile, 'email'>
 
 // Routes any authenticated user can access (session buyers / drop-ins)
 const OPEN_ROUTES = [
@@ -25,6 +30,11 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
+  // Populated by the auth check below and handed to the client so useUserRole
+  // doesn't have to re-fetch what we already have. Stays null if anything in
+  // the try block fails, in which case the client falls back to fetching.
+  let seededProfile: UserProfile | null = null
+
   // Protect dashboard routes - require authentication + active membership
   try {
     const supabase = await createClient()
@@ -36,25 +46,33 @@ export default async function DashboardLayout({
       redirect('/login')
     }
 
-    // Check user role — prefer admin client (bypasses RLS timing), fall back to regular client
-    let profile: { role: string } | null = null
+    // Check user role — prefer admin client (bypasses RLS timing), fall back to regular client.
+    // Selects the full UserProfile shape (not just `role`) so the result can be
+    // handed to the client via UserProfileProvider — this is the same single
+    // query we already ran, just returning the columns useUserRole needs, which
+    // saves the client an identical round trip after hydration.
+    const PROFILE_COLUMNS = 'id, full_name, role, avatar_url, account_type, child_name, child_age'
+    let profile: ServerProfileRow | null = null
     const hasServiceKey = !!process.env.SUPABASE_SECRET_KEY
     if (hasServiceKey) {
       const adminClient = createAdminClient()
       const { data } = await adminClient
         .from('profiles')
-        .select('role')
+        .select(PROFILE_COLUMNS)
         .eq('id', user.id)
         .single()
-      profile = data
+      profile = data as ServerProfileRow | null
     } else {
       const { data } = await supabase
         .from('profiles')
-        .select('role')
+        .select(PROFILE_COLUMNS)
         .eq('id', user.id)
         .single()
-      profile = data
+      profile = data as ServerProfileRow | null
     }
+
+    // Carries the account email from auth into the profile shape the hook expects.
+    seededProfile = profile ? { ...profile, email: user.email || '' } : null
 
     const role = profile?.role
     const isStaff = role === 'admin' || role === 'coach' || role === 'master_admin'
@@ -135,14 +153,16 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex h-[100dvh] overflow-hidden">
-      <Sidebar />
-      <HomeButton />
-      {/* pb-24 on mobile clears the fixed bottom nav (≈64–72px) + iPhone home indicator.
-          lg:pb-0 because desktop has a side sidebar, not a bottom bar. */}
-      <main className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto pb-24 lg:pb-0" id="dashboard-main">
-        {children}
-      </main>
-    </div>
+    <UserProfileProvider profile={seededProfile}>
+      <div className="flex h-[100dvh] overflow-hidden">
+        <Sidebar />
+        <HomeButton />
+        {/* pb-24 on mobile clears the fixed bottom nav (≈64–72px) + iPhone home indicator.
+            lg:pb-0 because desktop has a side sidebar, not a bottom bar. */}
+        <main className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto pb-24 lg:pb-0" id="dashboard-main">
+          {children}
+        </main>
+      </div>
+    </UserProfileProvider>
   )
 }
