@@ -17,7 +17,12 @@ export interface UserStats {
   recentVelocities: Array<{ date: Date; value: number }>
 }
 
-export function useUserStats(userId: string | undefined) {
+/**
+ * @param childId optional — for multi-child parent accounts, scopes
+ *   athlete-specific stats (velocity) to ONE child. Omit for single-athlete
+ *   accounts; passing undefined makes the child filter a no-op.
+ */
+export function useUserStats(userId: string | undefined, childId?: string | null) {
   const [stats, setStats] = useState<UserStats | null>(null)
   const [loading, setLoading] = useState(true)
   // createClient() returns a stable instance — do NOT put it in the dep array
@@ -67,10 +72,21 @@ export function useUserStats(userId: string | undefined) {
 
         // Recent velocity history — pulled from athlete_performance_metrics
         // (legacy code queried `sessions.peak_velocity`, but that table/column never existed).
-        const { data: velocityData } = await supabase
+        //
+        // ⚠ Must scope by child_id for parent accounts. A parent holds ONE
+        // athlete_id shared by every child, so filtering on athlete_id alone
+        // shows one child's Peak Velocity while viewing their sibling. Legacy
+        // rows predate child_id, so include NULL to avoid hiding real history.
+        let velocityQuery = supabase
           .from('athlete_performance_metrics')
           .select('test_date, throwing_velocity_mph, exit_velocity_mph')
           .eq('athlete_id', userId)
+
+        if (childId) {
+          velocityQuery = velocityQuery.or(`child_id.eq.${childId},child_id.is.null`)
+        }
+
+        const { data: velocityData } = await velocityQuery
           .order('test_date', { ascending: false })
           .limit(10)
 
@@ -151,7 +167,7 @@ export function useUserStats(userId: string | undefined) {
     const interval = setInterval(loadStats, 30000)
     return () => clearInterval(interval)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId])
+  }, [userId, childId])
 
   return { stats, loading }
 }

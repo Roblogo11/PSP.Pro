@@ -32,6 +32,7 @@ import { ReviewGameStats } from '@/components/dashboard/review-game-stats'
 import { TrialBanner } from '@/components/trial-banner'
 import { useUserRole } from '@/lib/hooks/use-user-role'
 import { useUserStats } from '@/lib/hooks/use-user-stats'
+import { useActiveChild } from '@/lib/hooks/use-active-child'
 import { createClient } from '@/lib/supabase/client'
 import { getLocalDateString } from '@/lib/utils/local-date'
 
@@ -64,7 +65,10 @@ export default function AthleteLockerPage() {
   const router = useRouter()
   const { profile, isCoach, isAdmin, isImpersonating, impersonatedUserId, impersonatedUserName, loading: profileLoading } = useUserRole()
   const effectiveUserId = impersonatedUserId || profile?.id
-  const { stats, loading: statsLoading } = useUserStats(effectiveUserId)
+  // Scope stats to the active child — a parent account shares one athlete_id
+  // across every child, so unscoped stats show the wrong kid's numbers.
+  const { activeChildId } = useActiveChild(effectiveUserId)
+  const { stats, loading: statsLoading } = useUserStats(effectiveUserId, activeChildId)
   const [assignedDrills, setAssignedDrills] = useState<AssignedDrill[]>([])
   const [enrolledCourses, setEnrolledCourses] = useState<EnrolledCourse[]>([])
   const [lastBooking, setLastBooking] = useState<LastBooking | null>(null)

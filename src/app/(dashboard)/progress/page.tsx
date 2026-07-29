@@ -24,11 +24,13 @@ const CHART_COLORS = ['#00B4D8', '#FF4B2B', '#22C55E', '#F59E0B', '#A855F7']
 export default function ProgressPage() {
   const { profile, isImpersonating, impersonatedUserId, loading: profileLoading } = useUserRole()
   const effectiveUserId = impersonatedUserId || profile?.id
-  const { stats, loading: statsLoading } = useUserStats(effectiveUserId)
-  const { sessions, loading: sessionsLoading } = useUserSessions(effectiveUserId)
-  // Multi-child parent accounts: scope metrics to ONE child, else every child's
-  // numbers merge into a single chart (they share one athlete_id).
+  // Multi-child parent accounts: resolve the active child FIRST, then scope every
+  // athlete-specific query to it. A parent holds ONE athlete_id shared by all
+  // their children, so any query filtering on athlete_id alone merges them —
+  // that's how "Peak Velocity" showed one child's number while viewing the other.
   const { activeChildId, activeChild, children, hasMultiple, isParent, switchChild } = useActiveChild(effectiveUserId)
+  const { stats, loading: statsLoading } = useUserStats(effectiveUserId, activeChildId)
+  const { sessions, loading: sessionsLoading } = useUserSessions(effectiveUserId)
   const { entries, loading: metricsLoading, getMetricTimeSeries, getPersonalRecords } = useAthleteMetrics(effectiveUserId, activeChildId)
 
   const [sportTab, setSportTab] = useState('softball')
