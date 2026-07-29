@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { MessageSquare, X, Send } from 'lucide-react'
 import { useUserRole } from '@/lib/hooks/use-user-role'
+import { useLivePricing, resolvePricingTokens } from '@/lib/hooks/use-live-pricing'
 import { TourTriggerButton } from '@/components/tour-hud'
 import { isFirstVisit, markPageVisited, pageHasTour } from '@/lib/tour/track'
 
@@ -226,8 +227,8 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['pricing', 'cost', 'price', 'how much', 'rate', 'session cost', 'expensive', 'affordable', 'money', 'pay'],
     title: 'Training Pricing',
-    shortResponse: 'Private pitching lessons are $70 (outdoor) or $85 (indoor). Group clinics start at $30. Elite members save 10% on everything.',
-    response: 'Our current training options:\n\n1-on-1 Sessions:\n• Private Pitching — Indoor: $85 / 60 min\n• Private Pitching — Outdoor: $70 / 60 min\n• Video Analysis: $50 / 30 min\n\nGroup Sessions:\n• Beginner Pitching Clinic: $30 / 45 min\n• Intermediate Pitching Clinic: $30 / 60 min\n• Tandem Pitching Lesson: $50 / 60 min\n• Softball Skills Camp: $150 / 180 min\n\nElite members get 10% off every session automatically — a $70 outdoor lesson becomes $63.\n\nPrices pull live from our system, so the Pricing page is always the final word.',
+    shortResponse: 'Here are our current session rates — {{ELITE_NAME}} members save {{DISCOUNT_PCT}}% on all of them.',
+    response: 'Our current training options:\n\n1-on-1 Sessions:\n{{INDIVIDUAL_LIST}}\n\nGroup Sessions:\n{{GROUP_LIST}}\n\n{{ELITE_NAME}} members get {{DISCOUNT_PCT}}% off every session automatically:\n{{DISCOUNT_EXAMPLES}}\n\nThese prices come straight from our booking system, so they\'re always current.',
     actions: [{ label: 'View Full Pricing', href: '/pricing' }, { label: 'Book Now', href: '/booking' }],
     followUp: ['Tell me about packages', 'How do I book a session?'],
   },
@@ -236,7 +237,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['package', 'deal', 'discount', 'bundle', 'save', 'pack', '5 pack', '10 pack', '20 pack'],
     title: 'Saving on Training',
-    response: 'A few ways to save:\n\n💎 Elite Membership — $50/mo\n• 10% off every session, automatically\n• Unlocks member-only courses\n• Example: $70 outdoor lesson → $63\n\n🎟️ Promo Codes\n• Apply at checkout, and they stack on top of the Elite discount\n\n📅 Multi-Day Camps\n• Camps are booked once for the whole run — a 3-day camp is a single booking at one price\n\nIf you\'re after a specific session bundle, check the Pricing page or ask Coach Rachel — package offerings change through the season.',
+    response: 'A few ways to save:\n\n💎 {{ELITE_NAME}} Membership — {{ELITE_PRICE}}/mo\n• {{DISCOUNT_PCT}}% off every session, automatically\n• Unlocks member-only courses\n{{DISCOUNT_EXAMPLES}}\n\n🎟️ Promo Codes\n• Apply at checkout, and they stack on top of the {{ELITE_NAME}} discount\n\n📅 Multi-Day Camps\n• Camps are booked once for the whole run — a 3-day camp is a single booking at one price\n\nIf you\'re after a specific session bundle, check the Pricing page or ask Coach Rachel — package offerings change through the season.',
     actions: [{ label: 'View Pricing', href: '/pricing' }, { label: 'Book Now', href: '/booking' }],
   },
 
@@ -244,7 +245,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['membership', 'monthly', 'subscribe', 'unlimited', 'subscription', 'membership required', 'access denied', 'cant access dashboard', 'locked out'],
     title: 'Memberships & Access',
-    response: 'There are two membership tiers:\n\n🆓 Basic — Free\n• You\'re enrolled automatically when you create an account\n• Book sessions, see your lessons, message your coach, use the Locker Room\n\n💎 Elite — $50/mo\n• 10% off every session, applied automatically at checkout\n• Access to member-only video courses\n• Full progress tracking, drills, achievements and reports\n\nSome pages (progress tracking, drills, courses, quizzes) need Elite or an active session package — otherwise you\'ll see the "Membership Required" page. Coaches and admins always have full access.\n\nVisit the Pricing page to compare the tiers.',
+    response: 'There are two membership tiers:\n\n🆓 {{BASIC_NAME}} — Free\n• You\'re enrolled automatically when you create an account\n• Book sessions, see your lessons, message your coach, use the Locker Room\n\n💎 {{ELITE_NAME}} — {{ELITE_PRICE}}/mo\n• {{DISCOUNT_PCT}}% off every session, applied automatically at checkout\n• Access to member-only video courses\n• Full progress tracking, drills, achievements and reports\n\nSome pages (progress tracking, drills, courses, quizzes) need Elite or an active session package — otherwise you\'ll see the "Membership Required" page. Coaches and admins always have full access.\n\nVisit the Pricing page to compare the tiers.',
     actions: [{ label: 'View Pricing', href: '/pricing' }, { label: 'Contact Us', href: '/contact' }],
   },
 
@@ -607,7 +608,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['walk me through the pricing page', 'walk me through pricing', 'pricing walkthrough', 'pricing page'],
     title: 'Pricing Page Walkthrough',
-    response: 'The Pricing page is organized in sections:\n\n🏷️ Membership Tiers — at the top:\n• Basic (Free) — Dashboard access, drills, courses\n• Elite ($50/mo) — 10% off all services, member-only courses, full access\n\n🟠 1-on-1 Training — individual session cards with price, duration, and description.\n\n🔵 Group Training — group session cards showing price, duration, and max participants.\n\n📦 Training Packages — 5, 10, and 20-session bundles with per-session cost and savings. Middle one is "Most Popular."\n\n🟢 Specialty Services — Video analysis, recovery sessions, etc.\n\nSmart CTAs adapt to your role:\n• Not logged in → "Join the Team"\n• Member → "Book Now"\n• Coach/Admin → "Lesson Builder"\n\nAll prices pull live from the database!',
+    response: 'The Pricing page is organized in sections:\n\n🏷️ Membership Tiers — at the top:\n• Basic (Free) — Dashboard access, drills, courses\n• {{ELITE_NAME}} ({{ELITE_PRICE}}/mo) — {{DISCOUNT_PCT}}% off all services, member-only courses, full access\n\n🟠 1-on-1 Training — individual session cards with price, duration, and description.\n\n🔵 Group Training — group session cards showing price, duration, and max participants.\n\n📦 Training Packages — 5, 10, and 20-session bundles with per-session cost and savings. Middle one is "Most Popular."\n\n🟢 Specialty Services — Video analysis, recovery sessions, etc.\n\nSmart CTAs adapt to your role:\n• Not logged in → "Join the Team"\n• Member → "Book Now"\n• Coach/Admin → "Lesson Builder"\n\nAll prices pull live from the database!',
     actions: [{ label: 'View Pricing', href: '/pricing' }],
   },
 
@@ -912,7 +913,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['elite discount', 'elite member', 'elite membership', '10 percent off', '10% off', 'auto discount', 'membership discount', 'elite tier', 'elite benefit', 'elite perks'],
     title: 'Elite Membership Discount',
-    response: 'Elite members get an automatic 10% discount on every booking!\n\nHow it works:\n• When you check out, the system detects your Elite membership tier\n• A 10% discount is automatically applied to your session price\n• You\'ll see the discount displayed on the confirmation step before paying\n• The original price is shown crossed out with the new price highlighted\n\nExamples with our real prices:\n• Outdoor pitching lesson $70 → Elite pays $63\n• Indoor pitching lesson $85 → Elite pays $76.50\n• Pitching clinic $30 → Elite pays $27\n\nThe discount works for both card payments and pay-on-site bookings. It also stacks with promo codes — Elite discount applies first, then the promo code on top!\n\nAsk about our membership tiers on the Pricing page.',
+    response: 'Elite members get an automatic 10% discount on every booking!\n\nHow it works:\n• When you check out, the system detects your Elite membership tier\n• A 10% discount is automatically applied to your session price\n• You\'ll see the discount displayed on the confirmation step before paying\n• The original price is shown crossed out with the new price highlighted\n\nExamples with our current prices:\n{{DISCOUNT_EXAMPLES}}\n\nThe discount works for both card payments and pay-on-site bookings. It also stacks with promo codes — Elite discount applies first, then the promo code on top!\n\nAsk about our membership tiers on the Pricing page.',
     actions: [{ label: 'View Pricing', href: '/pricing' }, { label: 'Book a Session', href: '/booking' }],
     followUp: ['How do I become an Elite member?', 'What are promo codes?', 'How do I book a session?'],
   },
@@ -942,7 +943,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['payment plan', 'installment', 'installments', 'pay in parts', 'split payment', 'monthly payment', 'pay over time', 'financing'],
     title: 'Payment Plans & Installments',
-    response: 'For training packages over $200, you can split the payment into installments!\n\nHow it works:\n• Packages $200-$400: Split into 2 monthly payments\n• Packages $400-$600: Split into 3 monthly payments\n• Packages $600+: Split into 4 monthly payments\n\nExample: 10-Session Pack ($675)\n• 3 payments of $225/month instead of $675 upfront\n\nYour package activates immediately after the first payment — you don\'t have to wait until all payments are complete to start training!\n\nPayments are processed automatically each month through Stripe. You\'ll get an email receipt for each payment.\n\nLook for the "Pay in installments" option on the booking confirmation step when purchasing qualifying packages.',
+    response: 'Larger purchases can be split into monthly installments instead of paying everything upfront.\n\nHow it works:\n• The more the purchase costs, the more payments it can be split across\n• Your training activates right after the FIRST payment — no waiting for the rest to clear\n• Payments run automatically each month through Stripe, with an email receipt each time\n\nWhere to find it:\n• Look for "Pay in installments" on the booking confirmation step\n• If it doesn\'t appear, that purchase isn\'t large enough to qualify\n\nNot sure whether something qualifies? Ask Coach Rachel and she\'ll sort it out with you.',
     actions: [{ label: 'View Packages', href: '/pricing' }, { label: 'Book a Session', href: '/booking' }],
     followUp: ['What packages are available?', 'How do I book a session?'],
   },
@@ -1374,6 +1375,8 @@ export function PSPAssistant() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const { profile, isCoach, isAdmin } = useUserRole()
+  // Live prices from the DB — the KB stores {{tokens}}, never dollar amounts.
+  const { pricing } = useLivePricing()
 
   // Detect ?from=guide — auto-open chat with tour offer + shimmer bubble
   // Wait for profile to be resolved (not undefined) before firing so name is available
@@ -1486,7 +1489,16 @@ export function PSPAssistant() {
       content: query.trim(),
     }
 
-    const match = findBestMatch(query.trim(), userRole)
+    // Swap {{price tokens}} for live DB values BEFORE anything else touches the
+    // copy. Never let a hardcoded figure reach a customer — see use-live-pricing.
+    const rawMatch = findBestMatch(query.trim(), userRole)
+    const match = {
+      ...rawMatch,
+      response: resolvePricingTokens(rawMatch.response, pricing),
+      ...(rawMatch.shortResponse
+        ? { shortResponse: resolvePricingTokens(rawMatch.shortResponse, pricing) }
+        : {}),
+    }
     const hypedResponse = addCoachHype(match.response)
 
     // If the query has tour/walkthrough intent and this page has a tour, attach the trigger
@@ -1590,7 +1602,7 @@ export function PSPAssistant() {
       {/* Floating Chat Button */}
       <motion.button
         onClick={handleOpen}
-        className={`fixed bottom-24 sm:bottom-6 right-4 sm:right-6 z-[100] flex items-center gap-2 px-5 py-3.5 rounded-full bg-gradient-to-r from-orange via-orange-500 to-orange-600 text-white text-sm font-bold shadow-2xl hover:shadow-orange/50 transition-all ring-4 ring-orange/20 hover:ring-orange/40 overflow-hidden${fromGuide ? ' guide-shimmer' : ''}`}
+        className={`fixed bottom-32 sm:bottom-28 right-4 sm:right-8 z-[100] flex items-center gap-2 px-5 py-3.5 rounded-full bg-gradient-to-r from-orange via-orange-500 to-orange-600 text-white text-sm font-bold shadow-2xl hover:shadow-orange/50 transition-all ring-4 ring-orange/20 hover:ring-orange/40 overflow-hidden${fromGuide ? ' guide-shimmer' : ''}`}
         style={{
           animation: fromGuide
             ? 'pulse-glow-intense 1.2s ease-in-out infinite'
