@@ -226,8 +226,8 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['pricing', 'cost', 'price', 'how much', 'rate', 'session cost', 'expensive', 'affordable', 'money', 'pay'],
     title: 'Training Pricing',
-    shortResponse: '1-on-1 sessions start at $75/hr. Group sessions from $40-$65. Save big with packages: 5-Pack $350, 10-Pack $675, 20-Pack $1,300.',
-    response: 'Our training options:\n\n1-on-1 Sessions:\n• Skills Training: $75 / 60 min\n• Performance Training: $75 / 60 min\n\nGroup Sessions:\n• Speed & Agility: $50 / 90 min\n• Small Group: $40 / 75 min\n• Strength & Conditioning: $65 / 60 min\n\nSession Packages (best value):\n• 5-Pack: $350 (save $25)\n• 10-Pack: $675 (save $75)\n• 20-Pack: $1,300 (save $200)\n\nAll prices are pulled live from our system — check the Pricing page for the most current rates.',
+    shortResponse: 'Private pitching lessons are $70 (outdoor) or $85 (indoor). Group clinics start at $30. Elite members save 10% on everything.',
+    response: 'Our current training options:\n\n1-on-1 Sessions:\n• Private Pitching — Indoor: $85 / 60 min\n• Private Pitching — Outdoor: $70 / 60 min\n• Video Analysis: $50 / 30 min\n\nGroup Sessions:\n• Beginner Pitching Clinic: $30 / 45 min\n• Intermediate Pitching Clinic: $30 / 60 min\n• Tandem Pitching Lesson: $50 / 60 min\n• Softball Skills Camp: $150 / 180 min\n\nElite members get 10% off every session automatically — a $70 outdoor lesson becomes $63.\n\nPrices pull live from our system, so the Pricing page is always the final word.',
     actions: [{ label: 'View Full Pricing', href: '/pricing' }, { label: 'Book Now', href: '/booking' }],
     followUp: ['Tell me about packages', 'How do I book a session?'],
   },
@@ -235,16 +235,16 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   // ── PACKAGES ──
   {
     keywords: ['package', 'deal', 'discount', 'bundle', 'save', 'pack', '5 pack', '10 pack', '20 pack'],
-    title: 'Training Packages',
-    response: 'Save big with session packages:\n\n📦 5-Session Pack — $350\n• Save $25 off individual pricing\n• Valid for 90 days\n\n📦 10-Session Pack — $675\n• Save $75 off individual pricing\n• Valid for 180 days\n\n📦 20-Session Pack — $1,300\n• Save $200 off individual pricing\n• Valid for 365 days\n• Our best value!\n\nPackages are non-refundable but can be paused for injury. All sessions must be used within the validity period.',
-    actions: [{ label: 'View Packages', href: '/pricing' }, { label: 'Book Now', href: '/booking' }],
+    title: 'Saving on Training',
+    response: 'A few ways to save:\n\n💎 Elite Membership — $50/mo\n• 10% off every session, automatically\n• Unlocks member-only courses\n• Example: $70 outdoor lesson → $63\n\n🎟️ Promo Codes\n• Apply at checkout, and they stack on top of the Elite discount\n\n📅 Multi-Day Camps\n• Camps are booked once for the whole run — a 3-day camp is a single booking at one price\n\nIf you\'re after a specific session bundle, check the Pricing page or ask Coach Rachel — package offerings change through the season.',
+    actions: [{ label: 'View Pricing', href: '/pricing' }, { label: 'Book Now', href: '/booking' }],
   },
 
   // ── MEMBERSHIP ──
   {
     keywords: ['membership', 'monthly', 'subscribe', 'unlimited', 'subscription', 'membership required', 'access denied', 'cant access dashboard', 'locked out'],
     title: 'Memberships & Access',
-    response: 'To access the full training dashboard, you need an active membership or session package.\n\nMonthly Membership — $30/mo:\n• Unlimited group session access\n• Discounted 1-on-1 sessions\n• Priority scheduling\n• Full PSP.Pro dashboard access\n• Progress tracking & analytics\n\nSession Packages also unlock dashboard access:\n• 5-Pack: $350 (valid 90 days)\n• 10-Pack: $675 (valid 180 days)\n• 20-Pack: $1,300 (valid 365 days)\n\nWithout an active plan, you\'ll see the "Membership Required" page instead of the dashboard. Coaches and admins always have full access.\n\nVisit the Pricing page to choose a plan!',
+    response: 'There are two membership tiers:\n\n🆓 Basic — Free\n• You\'re enrolled automatically when you create an account\n• Book sessions, see your lessons, message your coach, use the Locker Room\n\n💎 Elite — $50/mo\n• 10% off every session, applied automatically at checkout\n• Access to member-only video courses\n• Full progress tracking, drills, achievements and reports\n\nSome pages (progress tracking, drills, courses, quizzes) need Elite or an active session package — otherwise you\'ll see the "Membership Required" page. Coaches and admins always have full access.\n\nVisit the Pricing page to compare the tiers.',
     actions: [{ label: 'View Pricing', href: '/pricing' }, { label: 'Contact Us', href: '/contact' }],
   },
 
@@ -607,7 +607,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['walk me through the pricing page', 'walk me through pricing', 'pricing walkthrough', 'pricing page'],
     title: 'Pricing Page Walkthrough',
-    response: 'The Pricing page is organized in sections:\n\n🏷️ Membership Tiers — at the top:\n• Basic (Free) — Dashboard access, drills, courses\n• Elite ($30/mo) — 10% off all services, FREE Proper Pitching course, full access\n\n🟠 1-on-1 Training — individual session cards with price, duration, and description.\n\n🔵 Group Training — group session cards showing price, duration, and max participants.\n\n📦 Training Packages — 5, 10, and 20-session bundles with per-session cost and savings. Middle one is "Most Popular."\n\n🟢 Specialty Services — Video analysis, recovery sessions, etc.\n\nSmart CTAs adapt to your role:\n• Not logged in → "Join the Team"\n• Member → "Book Now"\n• Coach/Admin → "Lesson Builder"\n\nAll prices pull live from the database!',
+    response: 'The Pricing page is organized in sections:\n\n🏷️ Membership Tiers — at the top:\n• Basic (Free) — Dashboard access, drills, courses\n• Elite ($50/mo) — 10% off all services, member-only courses, full access\n\n🟠 1-on-1 Training — individual session cards with price, duration, and description.\n\n🔵 Group Training — group session cards showing price, duration, and max participants.\n\n📦 Training Packages — 5, 10, and 20-session bundles with per-session cost and savings. Middle one is "Most Popular."\n\n🟢 Specialty Services — Video analysis, recovery sessions, etc.\n\nSmart CTAs adapt to your role:\n• Not logged in → "Join the Team"\n• Member → "Book Now"\n• Coach/Admin → "Lesson Builder"\n\nAll prices pull live from the database!',
     actions: [{ label: 'View Pricing', href: '/pricing' }],
   },
 
@@ -912,7 +912,7 @@ const KNOWLEDGE_BASE: KBEntry[] = [
   {
     keywords: ['elite discount', 'elite member', 'elite membership', '10 percent off', '10% off', 'auto discount', 'membership discount', 'elite tier', 'elite benefit', 'elite perks'],
     title: 'Elite Membership Discount',
-    response: 'Elite members get an automatic 10% discount on every booking!\n\nHow it works:\n• When you check out, the system detects your Elite membership tier\n• A 10% discount is automatically applied to your session price\n• You\'ll see the discount displayed on the confirmation step before paying\n• The original price is shown crossed out with the new price highlighted\n\nExample:\n• Session costs $75 → Elite price: $67.50 (save $7.50!)\n\nThe discount works for both card payments and pay-on-site bookings. It also stacks with promo codes — Elite discount applies first, then the promo code on top!\n\nAsk about our membership tiers on the Pricing page.',
+    response: 'Elite members get an automatic 10% discount on every booking!\n\nHow it works:\n• When you check out, the system detects your Elite membership tier\n• A 10% discount is automatically applied to your session price\n• You\'ll see the discount displayed on the confirmation step before paying\n• The original price is shown crossed out with the new price highlighted\n\nExamples with our real prices:\n• Outdoor pitching lesson $70 → Elite pays $63\n• Indoor pitching lesson $85 → Elite pays $76.50\n• Pitching clinic $30 → Elite pays $27\n\nThe discount works for both card payments and pay-on-site bookings. It also stacks with promo codes — Elite discount applies first, then the promo code on top!\n\nAsk about our membership tiers on the Pricing page.',
     actions: [{ label: 'View Pricing', href: '/pricing' }, { label: 'Book a Session', href: '/booking' }],
     followUp: ['How do I become an Elite member?', 'What are promo codes?', 'How do I book a session?'],
   },
@@ -1189,6 +1189,70 @@ const KNOWLEDGE_BASE: KBEntry[] = [
     response: 'Dr. Prop can walk you through the entire PSP.Pro platform with an interactive spotlight tour!\n\nWhat the tour does:\n• Dims the page and highlights specific UI elements\n• Dr. Prop appears with tips and explanations for each section\n• Click the highlighted area or tap "Next" to advance\n• Covers all 6 major pages: Locker, Booking, Sessions, Progress, Drills, and Settings\n\nHow to start:\n• Just ask me "show me how to book" or "walk me through the Locker"\n• Or click "Take a Tour" in any page tour suggestion\n• The tour navigates between pages automatically!\n\nEach page has its own tour:\n• Locker — your stats, velocity chart, drills, courses\n• Booking — service picker, calendar, time slots, payment\n• Sessions — filters, RSVP, calendar sync\n• Progress — metrics, charts, personal records, milestones\n• Drills — stats, filters, drill cards\n• Settings — tabs, notifications, leaderboards',
     actions: [{ label: 'Start Locker Tour', href: '/locker' }],
     followUp: ['Show me how to book a session', 'How do I track my progress?', 'Walk me through my drills'],
+  },
+
+  // ── MULTI-DAY EVENTS & CAMPS (shipped 2026-07-28) ──
+  {
+    keywords: ['camp', 'camps', 'multi day', 'multi-day', '3 day camp', 'three day camp', 'clinic series', 'event', 'events', 'summer camp', 'book a camp', 'how do camps work'],
+    title: 'Camps & Multi-Day Events',
+    shortResponse: 'Camps that run over several days are booked ONCE for the whole thing — not one sign-up per day.',
+    response: 'Some of our training runs across several days — like a 3-day summer camp.\n\nHow they show up:\n• On the Booking page, look for "Camps & Multi-Day Events" near the top\n• Each camp is ONE card showing the full date range, e.g. "Aug 3–5, 2026"\n• You\'ll see the daily times, how many spots are left, and one price covering all days\n\nHow booking works:\n• You book the camp once — not once per day\n• Your spot is held for every day in the range\n• The price shown is for the whole camp, not per session\n\nIf a camp is full, the card will say so. Message Coach Rachel to ask about the next one!',
+    actions: [{ label: 'See Camps & Events', href: '/booking' }, { label: 'Message a Coach', href: '/messages' }],
+    followUp: ['How do I book a session?', 'What does it cost?'],
+  },
+  {
+    keywords: ['create camp', 'create event', 'new camp', 'add camp', 'set up camp', 'multi day event coach', 'schedule a camp', 'make an event'],
+    title: 'Creating a Multi-Day Event (Coach Tool)',
+    role: 'coach',
+    response: 'Set up a camp that spans several days in one go:\n\n1. Go to Admin → Availability\n2. Click "New Multi-Day Event"\n3. Fill in:\n   • Event name (e.g. "Summer Pitching Camp")\n   • Start date and end date — the range is shown back to you as you type\n   • Daily start and end time (applies to every day)\n   • Max athletes, price, location\n4. Click "Create Event"\n\nWhat happens behind the scenes:\n• One time slot is created for EACH day in the range, all linked to the event\n• Athletes book the camp once and hold a spot for every day\n• Your calendar shows each day individually, so nothing changes about how you run the day\n\nThe end date must be on or after the start date — single-day events are fine too.',
+    actions: [{ label: 'Go to Availability', href: '/admin/availability' }],
+    followUp: ['How do I set availability?', 'How do I manage bookings?'],
+  },
+
+  // ── GROUP CHAT (shipped 2026-07-28) ──
+  {
+    keywords: ['group chat', 'group message', 'group messaging', 'team chat', 'create group', 'make a group', 'add people to chat', 'remove from chat', 'group conversation', 'chat with team', 'message multiple'],
+    title: 'Group Chats',
+    shortResponse: 'You can create a named group chat, add people, and remove them later. Leaving a group never deletes it for everyone else.',
+    response: 'Messages aren\'t just one-on-one — you can run a group chat too.\n\nTo create one:\n1. Go to Messages\n2. Tap the + button\n3. Switch the toggle from "One-on-one" to "Group"\n4. Give the group a name (e.g. "12U Travel Team")\n5. Tap the people you want to add — tap again to unselect\n6. Hit "Create group"\n\nOnce it exists:\n• The group shows in your list by NAME, with a GROUP badge and member count\n• You can add more people later\n• The person who created the group can remove members\n• Anyone can leave a group themselves\n\nRemoving someone (or leaving) never deletes the conversation or its history for everyone else.',
+    actions: [{ label: 'Open Messages', href: '/messages' }],
+    followUp: ['How do I message my coach?', 'Can I message other athletes?'],
+  },
+
+  // ── PARENT DATA ENTRY (shipped 2026-07-28) ──
+  {
+    keywords: ['log data', 'log a data point', 'add data point', 'enter data', 'log velocity', 'record velocity', 'log a pr', 'personal record entry', 'parent log', 'add my own data', 'manual entry', 'enter velocity', 'log pitch speed'],
+    title: 'Logging Your Own Data Points',
+    shortResponse: 'Parents and athletes can log data between sessions — date, metric, value, and pitch type. It saves as Self-Reported.',
+    response: 'Hit a new PR at a scrimmage? You can log it yourself — no need to wait for the next session.\n\nHow:\n1. Go to Progress\n2. Tap "Log a Data Point"\n3. Pick the sport, then what you measured (e.g. Pitching Velocity)\n4. Enter the value and the date\n5. For pitching velocity you can also pick the pitch type — fastball, change-up, drop, rise, screw, curve\n6. Add a note if you like ("new PR at Saturday scrimmage")\n7. Save\n\nImportant — how it\'s labelled:\n• Anything you enter is marked ⚪ Self-Reported\n• Only a coach can mark a number ✅ PSP Verified\n• Self-reported entries do NOT appear on the public leaderboards\n\nThat keeps the leaderboards trustworthy while still letting you track real progress between sessions. Bring it up with your coach and they can confirm it.',
+    actions: [{ label: 'Go to Progress', href: '/progress' }],
+    followUp: ['What is PSP Verified?', 'How do I see my progress?'],
+  },
+  {
+    keywords: ['what can we track', 'which metrics', 'what data points', 'pop time', 'throwdown', 'baserunning time', 'home to first', 'overhand throw', 'pitch type velocity', 'metrics available', 'what stats'],
+    title: 'What We Can Track',
+    response: 'We track 70+ measurements across softball, basketball, soccer and general athleticism. The pitching and softball ones people ask about most:\n\n⚾ Pitching:\n• Pitching velocity — overall, plus by pitch type (fastball, change-up, drop, rise, screw, curve)\n• Spin rate, strike %, off-speed command\n• Accuracy by zone (middle, inside/outside high and low)\n\n🥎 Fielding & Catching:\n• Overhand throw velocity\n• Catcher pop time (throwdown)\n• Glove-to-throw exchange, catch radius\n\n🏃 Baserunning:\n• Home-to-1B, home-to-2B, 1B-to-3B\n• Baserunning acceleration, 10-yard split, 60-yard dash\n\n💪 Hitting & Athleticism:\n• Exit velocity, bat speed, launch angle\n• Vertical jump, broad jump, strength lifts\n\nNew measurements can be added any time — if you and your coach want to track something that isn\'t here, just ask.',
+    actions: [{ label: 'See Your Progress', href: '/progress' }],
+    followUp: ['How do I log a data point?', 'What is PSP Verified?'],
+  },
+
+  // ── MULTI-ATHLETE PARENT ACCOUNTS (shipped 2026-07-28) ──
+  {
+    keywords: ['multiple kids', 'multiple children', 'two kids', 'both my kids', 'more than one athlete', 'switch athlete', 'athlete switcher', 'change athlete', 'siblings', 'my other child', 'second child', 'add another child'],
+    title: 'Multiple Athletes on One Account',
+    shortResponse: 'One parent login can hold several athletes. Use the switcher at the top of Progress to choose whose data you\'re viewing.',
+    response: 'If you have more than one athlete training with us, you don\'t need separate logins.\n\nAdding your athletes:\n• Go to Settings → the children section\n• Add each athlete with their name and age\n\nSwitching between them:\n• On the Progress page there\'s a "Viewing" switcher at the top\n• Tap it and pick whichever athlete you want to look at\n• The page tells you whose numbers you\'re seeing\n\nTheir data stays separate:\n• Each athlete\'s metrics, records and charts are kept apart\n• Bookings are tied to the athlete they were made for\n• Switching changes what you see everywhere it matters\n\nIf you only have one athlete, you\'ll never see the switcher — it just stays out of your way.',
+    actions: [{ label: 'Manage Athletes', href: '/settings' }, { label: 'View Progress', href: '/progress' }],
+    followUp: ['How do I log a data point?', 'What can parents see?'],
+  },
+
+  // ── COURSE ACCESS & TIERS (updated 2026-07-28) ──
+  {
+    keywords: ['course locked', 'cant access course', 'paid course', 'course access', 'why cant i watch', 'course requires membership', 'unlock course', 'course membership', 'enroll paid course'],
+    title: 'Course Access & Membership Tiers',
+    response: 'Each course says which membership tier includes it.\n\nWhat you can expect:\n• Free courses — enroll and watch straight away on any account\n• Member courses — the button says "Enroll with Membership" and needs an active Elite membership\n• Preview lessons — some lessons are marked as previews and are watchable before you enroll\n\nIf a course needs Elite and you\'re on the free Basic tier, you\'ll be pointed to the membership page rather than being let in — that\'s working as intended, not a bug.\n\nAlready enrolled in something? You keep it. Nobody loses access to a course they already have.',
+    actions: [{ label: 'Browse Courses', href: '/courses' }, { label: 'See Membership Tiers', href: '/memberships' }],
+    followUp: ['What does Elite include?', 'How much is a membership?'],
   },
 ]
 

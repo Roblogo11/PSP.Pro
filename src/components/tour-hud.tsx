@@ -74,6 +74,11 @@ const PAGE_TOURS: Record<string, PageTour> = {
         highlight: 'booking-steps',
       },
       {
+        title: 'Camps & Multi-Day Events 📅',
+        message: "Running a camp? It shows up here as ONE card with the full date range — like 'Aug 3–5, 2026'. You book the whole camp once, not day by day. The card shows daily times, spots left, and one price for all days.",
+        highlight: 'booking-events',
+      },
+      {
         title: 'Step 1: Pick Your Training Type 🥎',
         message: "See those service cards? Choose 1-on-1, group, specialty — whatever fits your goals. Each card shows price, duration, and what you're getting. TAP a card to pick and move to the next step!",
         highlight: 'booking-service',
@@ -81,17 +86,17 @@ const PAGE_TOURS: Record<string, PageTour> = {
       {
         title: 'Step 2: Choose Your Date 📆',
         message: "A calendar loads after you pick a service. Tap any open date — your coach's available slots will appear for that day. Go ahead and pick one!",
-        highlight: 'booking-steps',
+        highlight: 'booking-date',
       },
       {
         title: 'Step 3: Grab Your Time Slot ⏰',
         message: "After choosing a date, time slots appear. You'll see coach name, location, and how many spots are left. Tap your slot to move to the final step!",
-        highlight: 'booking-steps',
+        highlight: 'booking-time',
       },
       {
         title: 'Step 4: Confirm & Pay 💳',
         message: "Review everything — service, date, time, price. Got a promo code? Drop it in! Elite members get 10% off automatically. Choose Pay Online or Pay at Location, then lock it in!",
-        highlight: 'booking-steps',
+        highlight: 'booking-confirm',
       },
       {
         title: 'Booking Tour Complete! 🙌',
@@ -148,6 +153,16 @@ const PAGE_TOURS: Record<string, PageTour> = {
       {
         title: 'Your Trophy Case 🏆',
         message: "This page is PROOF that you put in work! Your performance data, personal records, and improvement charts all live here.",
+      },
+      {
+        title: 'More Than One Athlete? 👨‍👩‍👧',
+        message: "If you're a parent with several athletes on one account, this switcher picks whose numbers you're looking at. Each athlete's data stays completely separate. Only one athlete? You won't see this at all.",
+        highlight: 'progress-athlete-switcher',
+      },
+      {
+        title: 'Log Your Own Data Points ✍️',
+        message: "Hit a PR at a scrimmage? Tap here to log it yourself — date, what you measured, the value, even the pitch type. It saves as Self-Reported (not PSP Verified) and won't hit the leaderboards until a coach confirms it.",
+        highlight: 'progress-log-data',
       },
       {
         title: 'Your Key Stats 📊',
@@ -320,6 +335,11 @@ const PAGE_TOURS: Record<string, PageTour> = {
         title: 'Your Conversations 📋',
         message: "Left panel = all your chats. Tap any conversation to open it. Unread messages show an orange badge. Hit the + button to start a new conversation!",
         highlight: 'messages-conversation-list',
+      },
+      {
+        title: 'One-on-One or Group? 👥',
+        message: "After tapping +, flip this toggle to Group. Name the group (like '12U Travel Team'), tap everyone you want in it, and hit Create. You can add or remove people later — and leaving a group never deletes it for everyone else.",
+        highlight: 'messages-group-toggle',
       },
       {
         title: 'The Chat Window 💭',
@@ -759,6 +779,11 @@ const PAGE_TOURS: Record<string, PageTour> = {
         title: 'Create Time Slots ➕',
         message: "Hit 'Add Time Slot' to open the form. Pick a date, start/end time, location, and max bookings. Turn on 'Repeat' to auto-create weekly or monthly slots!",
         highlight: 'admin-availability-header',
+      },
+      {
+        title: 'Running a Camp? 🏕️',
+        message: "For anything spanning several days — a 3-day camp, a clinic series — use 'New Multi-Day Event' instead of adding slots one by one. Set a start and end date plus the daily times, and it creates every day for you. Athletes book the whole camp once.",
+        highlight: 'admin-availability-events',
       },
       {
         title: 'Your Slots List 📋',

@@ -478,7 +478,7 @@ export default function AvailabilityManagementPage() {
 
       {/* Multi-day events (camps). Creates one slot per day under one event,
           so a 3-day camp is booked once rather than three times. */}
-      <div className="mb-6">
+      <div className="mb-6" data-tour="admin-availability-events">
         <EventForm services={services} onCreated={() => fetchSlots()} />
       </div>
 

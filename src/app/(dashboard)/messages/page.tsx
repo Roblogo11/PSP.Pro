@@ -284,7 +284,7 @@ export default function MessagesPage() {
             {showNewChat && (
               <div className="p-3 border-b border-slate-200 dark:border-white/10 bg-cyan-50/50 dark:bg-cyan/5">
                 {/* Toggle: 1-on-1 vs named group with multi-select */}
-                <div className="flex gap-1 mb-3 p-1 rounded-lg bg-white/70 dark:bg-white/5">
+                <div data-tour="messages-group-toggle" className="flex gap-1 mb-3 p-1 rounded-lg bg-white/70 dark:bg-white/5">
                   {[
                     { key: false, label: 'One-on-one' },
                     { key: true, label: 'Group' },

@@ -73,7 +73,7 @@ const athleteCategories: GuideCategory[] = [
     accentColor: 'text-green-400',
     accentBg: 'bg-green-400/15',
     steps: [
-      { label: 'Progress', href: '/progress', icon: TrendingUp, color: 'text-green-400', description: 'Performance metrics across all sports. Time-series charts show how your velocity, exit velo, and more are trending.' },
+      { label: 'Progress', href: '/progress', icon: TrendingUp, color: 'text-green-400', description: 'Performance metrics across all sports, with charts showing how you\'re trending. Log your own data points between sessions, and switch athletes if you have more than one on the account.' },
       { label: 'Report', href: '/progress-report', icon: FileBarChart, color: 'text-indigo-400', description: 'AI-generated performance summary — what\'s improving, what needs work, and your coach\'s notes.' },
       { label: 'Achievements', href: '/achievements', icon: Trophy, color: 'text-yellow-400', description: 'Unlock badges by completing sessions, finishing drills, maintaining streaks, and hitting milestones.' },
       { label: 'Leaderboards', href: '/leaderboards', icon: Medal, color: 'text-amber-400', description: 'See where you rank. Filter by sport, metric, or time period across all verified athletes.' },
@@ -101,8 +101,8 @@ const athleteCategories: GuideCategory[] = [
     accentColor: 'text-blue-400',
     accentBg: 'bg-blue-400/15',
     steps: [
-      { label: 'Messages', href: '/messages', icon: MessageCircle, color: 'text-blue-400', description: 'Real-time chat with your coaches. Ask questions, share updates, stay in the loop between sessions.' },
-      { label: 'Settings', href: '/settings', icon: Settings, color: 'text-cyan-600', description: 'Profile, notifications, security, privacy. Export or delete your data anytime.' },
+      { label: 'Messages', href: '/messages', icon: MessageCircle, color: 'text-blue-400', description: 'Chat with your coaches one-on-one, or create a named group chat and add or remove people as you go.' },
+      { label: 'Settings', href: '/settings', icon: Settings, color: 'text-cyan-600', description: 'Profile, notifications, security, privacy. Parents can add several athletes to one account here.' },
     ],
   },
 ]
@@ -118,7 +118,7 @@ const coachCategories: GuideCategory[] = [
     steps: [
       { label: 'Admin Home', href: '/admin', icon: Shield, color: 'text-red-400', description: 'Your command center. Athlete counts, active sessions, pending bookings, and quick actions at a glance.' },
       { label: 'Calendar', href: '/admin/bookings', icon: Calendar, color: 'text-blue-400', description: 'Calendar view of all bookings. Confirm requests, log performance metrics per sport after each session.' },
-      { label: 'Availability', href: '/admin/availability', icon: Clock, color: 'text-green-400', description: 'Create and manage your available time slots. Set recurring schedules, bulk edit, and control when athletes can book.' },
+      { label: 'Availability', href: '/admin/availability', icon: Clock, color: 'text-green-400', description: 'Create and manage time slots, set recurring schedules, and bulk edit. Multi-day camps are set up here too — one event covering a whole date range.' },
       { label: 'Manage Athletes', href: '/admin/athletes', icon: Users, color: 'text-cyan-400', description: 'Full athlete roster with individual stats, drill assignments, and course enrollment tracking.' },
     ],
   },

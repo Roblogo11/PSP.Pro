@@ -586,7 +586,9 @@ export default function BookingPage() {
               />
               {/* Multi-day camps shown as ONE card with the full date range,
                   rather than as separate daily slots. */}
-              <UpcomingEvents />
+              <div data-tour="booking-events">
+                <UpcomingEvents />
+              </div>
               <ServiceSelector
                 services={services}
                 selectedServiceId={selectedServiceId}

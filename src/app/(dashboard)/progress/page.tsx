@@ -202,17 +202,19 @@ export default function ProgressPage() {
       </div>
 
       {/* Parent accounts with 2+ children: pick whose data this page shows. */}
-      <AthleteSwitcher
-        athletes={children}
-        activeChild={activeChild}
-        onSwitch={switchChild}
-        show={isParent && hasMultiple}
-      />
+      <div data-tour="progress-athlete-switcher">
+        <AthleteSwitcher
+          athletes={children}
+          activeChild={activeChild}
+          onSwitch={switchChild}
+          show={isParent && hasMultiple}
+        />
+      </div>
 
       {/* Parents/athletes can log their own data points between sessions.
           Always saved as Self-Reported — see LogDataPoint + migration 063. */}
       {effectiveUserId && !isImpersonating && (
-        <div className="mb-6">
+        <div className="mb-6" data-tour="progress-log-data">
           <LogDataPoint
             athleteId={effectiveUserId}
             childId={activeChildId}
