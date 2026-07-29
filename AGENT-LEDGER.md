@@ -106,6 +106,24 @@ These exist because we hit the pain first. Each rule leads with the fact, then `
 
 ## 2. Recent Ships
 
+### `daa765a` — 2026-07-28 — DEPLOYED: dashboard load waterfall, stages 1–2 + query noise
+
+Three commits, all live on propersports.pro (Vercel READY):
+
+- **Stage 1 (`c5673de`)** — batched independent queries that were running as sequential `await`s.
+- **Stage 2 (`1558893`)** — the dashboard layout already runs `getUser()` + a `profiles` query before emitting HTML; `useUserRole` then repeated that exact pair after hydration, and every dashboard data effect gates on `effectiveUserId`, so nothing could start until it resolved. The layout now selects the full `UserProfile` shape (same single query, more columns) and passes it down via `UserProfileProvider`; the hook seeds from it with `loading:false`. Provider is scoped to the dashboard layout, NOT root — the 6 public pages that call `useUserRole` have no server profile and keep the client-fetch path.
+- **Query noise (`daa765a`)** — two real bugs found by browser-verifying stage 2. (1) `profile` (the object) was a dep of the sidebar badge effect and the pricing package effect alongside `profile?.id`; `useUserRole` builds a NEW object on every auth event and tab `visibilitychange`, so identity churn re-ran both effects — 4 `athlete_packages` queries in ~2s per `/locker` load, now 2. (2) Three `.single()` calls treated no-rows as an error; a first-time athlete legitimately has no completed booking / package / membership, and all three were already guarded by `if (data)`. Now `.maybeSingle()`. **This closes the "known pre-existing noise" logged under `f8681cf` below.**
+
+Browser-verified across normal / impersonation / simulation on `/locker`, `/booking`, `/progress`: console errors 6 → 0, no loading gate, impersonation still re-targets queries to the impersonated athlete.
+
+**Deliberately NOT done:** converting the three pages to server components (the original "stage 2" framing). `effectiveUserId` resolves from impersonation cookies polled client-side on a 3s interval; moving that server-side is a rewrite of impersonation resolution — the same surface as the child-data leak fixed in `c079c68` — for a marginally better first paint.
+
+**Measurement gotcha for the next session:** dev cold-compile is ~20-60s. A page measured during compile looks "stuck on the loading gate" but makes **zero** REST calls; a genuinely stuck page still makes calls. Check `performance.getEntriesByType('resource')` before concluding anything from a first load.
+
+### `4bf2734` — 2026-07-28 — Git hooks were never installed in the Desktop clone
+
+`.git/hooks/` was **empty** — `npm run hooks` had never been run here, so the pre-commit that regenerates `COMPONENT-INDEX.md` never fired. The index sat frozen at 2026-07-06 while commits landed through 07-28. Installed + regenerated (172 files). **On a fresh clone, run `npm run hooks` — `npm run hooks:check` verifies.**
+
 ### `f8681cf` — 2026-07-28 — DEPLOYED: client fix list #1–#8 live on propersports.pro
 
 Shipped and verified against **production**, not just locally:
@@ -115,11 +133,11 @@ Shipped and verified against **production**, not just locally:
 - **Mobile menu fixed in prod**: 3 nav cycles on a 390×844 viewport, sheet reopens each time, no refresh. Rachel's repro no longer reproduces.
 - `/api/events` responding 200.
 
-**Known pre-existing noise (NOT from this work):** the dashboard logs `406` from Supabase on `bookings`/`athlete_packages` for accounts with no rows — `.single()` on an empty result. Cosmetic; worth converting to `.maybeSingle()` in a future pass.
+**Known pre-existing noise (NOT from this work):** the dashboard logs `406` from Supabase on `bookings`/`athlete_packages` for accounts with no rows — `.single()` on an empty result. Cosmetic; worth converting to `.maybeSingle()` in a future pass. → **FIXED in `daa765a`** (above).
 
-**Known real issue, deliberately not fixed here:** every dashboard page renders empty then fetches client-side (`useEffect` → `fetch` → `setState`), so users see skeleton-then-content on every navigation ("double loading"). Fixing it means converting pages to server components — touches every dashboard page, deserves its own focused pass rather than a late-session change to a live app.
+**Known real issue, deliberately not fixed here:** every dashboard page renders empty then fetches client-side (`useEffect` → `fetch` → `setState`), so users see skeleton-then-content on every navigation ("double loading"). Fixing it means converting pages to server components — touches every dashboard page, deserves its own focused pass rather than a late-session change to a live app. → **Substantially addressed by stages 1–2 (`c5673de`, `1558893`)** without the server-component rewrite; see `daa765a` above for why that rewrite was rejected.
 
-### (pending) — 2026-07-28 — Client fix list: features #4–#8
+### `4550d5b` — 2026-07-28 — Client fix list: features #4–#8 (SHIPPED — deployed via `f8681cf`)
 
 **Files:** migrations `063_parent_metric_entry.sql`, `064_multi_day_events.sql`, `065_group_chat.sql` (all applied + verified live); `src/lib/hooks/use-active-child.ts`, `src/lib/events/format.ts`, `src/components/parent/athlete-switcher.tsx`, `src/components/parent/log-data-point.tsx`, `src/components/events/event-form.tsx`, `src/components/events/upcoming-events.tsx`, `src/app/api/events/route.ts`, `src/app/api/messages/group/route.ts` (all new); plus progress/messages/booking/availability/leaderboards pages and `use-athlete-metrics.ts`.
 
@@ -133,7 +151,7 @@ Recon changed the scope of two items before any code was written:
 
 **#4 multi-day events** are a new `events` table grouping per-day slots (verified live: 3-day camp → 3 linked slots, reversed range rejected 400, cascade delete clean). **#8 group chat** extends the existing N-participant `conversations` model with `is_group`/`title`/`created_by` and the participant DELETE policy that was missing entirely.
 
-### (pending) — 2026-07-28 — Course tier access control + mobile menu fix
+### `f9322de` — 2026-07-28 — Course tier access control + mobile menu fix (SHIPPED — deployed via `f8681cf`)
 
 **Files:** `supabase/migrations/062_course_tier_access_control.sql` (new), `src/lib/courses/access.ts` (new), `src/app/api/courses/enroll/route.ts` (new), `src/app/(dashboard)/courses/page.tsx`, `src/app/(dashboard)/courses/[slug]/page.tsx`, `src/components/layout/sidebar.tsx`
 
