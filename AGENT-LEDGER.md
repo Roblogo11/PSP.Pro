@@ -53,6 +53,15 @@ These exist because we hit the pain first. Each rule leads with the fact, then `
 - **An event GROUPS per-day `available_slots` rows; it never replaces them.** `available_slots` stays one-row-per-date because the slot-count triggers + hourly pg_cron heal assume that shape. `POST /api/events` creates the event, then one slot per day, and rolls the event back if slot creation fails.
 - **Parse date-only strings with an explicit midday time.** `new Date('2026-08-03')` is UTC midnight → renders as Aug 2 in US timezones, so a camp displays starting a day early. `src/lib/events/format.ts` does this correctly — reuse it rather than hand-rolling.
 
+### Chatbot & tours (they go stale silently)
+
+- **Dr. Prop's knowledge base hardcodes prices and service names.** `KNOWLEDGE_BASE` in `src/components/psp-assistant.tsx` is a static array — it does NOT read from `services` / `membership_tiers`. Change a price anywhere and the chatbot keeps quoting the old one to customers with no error, no warning, nothing. *Why this matters:* audited 2026-07-28 and it was quoting membership at **$30/mo** (never a real price — not the old $60, not the new $50), plus six services and three session packages that exist in NO table. **Any pricing change must include a grep of this file.**
+- **Verify chatbot prices against the DB, not against memory.** `services` (7 active, $30–$150) and `membership_tiers` are the truth. `packages` and `training_packages` return 400 — they aren't real tables, so never quote packages.
+- **`KBEntry.role` has no `'admin'` value** — it's `'all' | 'athlete' | 'coach' | 'visitor'`, and admins resolve to `'coach'`. An entry tagged `'athlete'` is invisible to logged-out visitors; leave `role` unset for anything the public must see. Match threshold is `score >= 2`, so give new entries distinctive multi-word keywords.
+- **Tour steps live ONLY in `PAGE_TOURS` in `src/components/tour-hud.tsx`**, keyed by exact pathname. `highlight: 'x'` resolves via `document.querySelector('[data-tour="x"]')`. Add a step and you must add the matching `data-tour` attribute, or the step silently spotlights nothing.
+- **Check for orphans after touching tours:** compare `grep -o "highlight: '[^']*'" src/components/tour-hud.tsx` against `grep -rho 'data-tour="[^"]*"' src/`. Should be zero diff.
+- **`src/lib/tour/track.ts` `TOUR_PAGES` is a hand-maintained mirror** of the `PAGE_TOURS` keys and uses PREFIX matching while `PAGE_TOURS` uses exact matching — so `/courses/<slug>` advertises a tour that never renders. Keep both lists in sync when adding a tour.
+
 ### Auth & roles (don't break these)
 
 - **Membership gating** lives in `src/app/(dashboard)/layout.tsx`. Open routes (any auth user): `/booking`, `/sessions`, `/locker`, `/settings`, `/guide`, `/leaderboards`. Member-only (active package): `/progress`, `/drills`, `/achievements`, `/video-analysis`, `/courses`, `/questionnaires`, `/progress-report`. Staff (`coach`/`admin`/`master_admin`) bypass all checks.
