@@ -201,7 +201,9 @@ export default function AthleteLockerPage() {
         .eq('status', 'completed')
         .order('booking_date', { ascending: false })
         .limit(1)
-        .single()
+        // A first-time athlete has no completed booking yet — that's the normal
+        // path (guarded by `if (data)` below), not a 406-worthy error.
+        .maybeSingle()
 
       if (data) {
         setLastBooking({

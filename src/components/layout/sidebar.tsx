@@ -151,7 +151,9 @@ export function Sidebar() {
           .gte('expires_at', new Date().toISOString())
           .order('expires_at', { ascending: false })
           .limit(1)
-          .single()
+          // maybeSingle, not single: an athlete with no active package is normal,
+          // but single() answers no-rows with a 406 that shows up as a console error.
+          .maybeSingle()
 
         if (activePkg) {
           const remaining = activePkg.sessions_total - activePkg.sessions_used
@@ -168,7 +170,8 @@ export function Sidebar() {
             .in('status', ['active', 'trialing'])
             .or('current_period_end.is.null,current_period_end.gt.' + new Date().toISOString())
             .limit(1)
-            .single()
+            // No membership row is a valid answer here (it drives setHasMembership).
+            .maybeSingle()
           setHasMembership(!!activeMembership)
         }
       }
@@ -194,7 +197,12 @@ export function Sidebar() {
     }
 
     fetchBadges()
-  }, [profile, profile?.id, isCoach, isAdmin, impersonatedUserId])
+    // `profile` (the object) is deliberately NOT a dependency — useUserRole builds
+    // a fresh object on every auth-state change and every tab visibilitychange, so
+    // depending on its identity re-ran this whole badge fetch when nothing had
+    // actually changed (observed: 4 athlete_packages queries in ~2s per load).
+    // This effect only reads `.id`, which is already covered below.
+  }, [profile?.id, isCoach, isAdmin, impersonatedUserId])
 
   const handleLogout = async () => {
     const supabase = createClient()

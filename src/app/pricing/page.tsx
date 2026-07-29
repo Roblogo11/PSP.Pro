@@ -123,7 +123,10 @@ export default function PricingPage() {
     }
 
     fetchMemberPackage()
-  }, [profile, profile?.id, isCoach, isAdmin])
+    // Same reason as sidebar.tsx: `profile`'s identity changes on every auth event
+    // and tab focus, but this effect only reads `.id`. Depending on the object
+    // re-fired the package query for no reason.
+  }, [profile?.id, isCoach, isAdmin])
 
   // Group services by category dynamically
   const servicesByCategory = services.reduce<Record<string, PricingService[]>>((acc, s) => {
