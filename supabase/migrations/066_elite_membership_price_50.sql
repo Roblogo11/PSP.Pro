@@ -2,15 +2,26 @@
 -- 066: Elite membership price → $50/month (client request, 2026-07-28)
 -- ============================================================================
 --
--- ⚠ BEFORE RUNNING THIS, YOU MUST ALSO:
---    1. Create a NEW $50/month recurring price in Stripe on product
---       prod_U2CksacYNIHyph ("PSP.Pro Elite Membership"). Stripe price objects
---       are immutable — you cannot edit $60 into $50, you create a new one.
---    2. Repoint membership_tiers.stripe_price_id at the new price id.
---    3. Archive the old $60 price (price_1T48LRDvIKXE2EmOfXLJ6UDr) so it can't
---       be selected again.
---    Without step 1-2, the DB will advertise $50 while Stripe checkout charges
---    $60. That mismatch is exactly what this whole ticket was about.
+-- STATUS: APPLIED to the live DB on 2026-07-28, and the Stripe side is DONE.
+--
+-- ⚠ IF YOU EVER CHANGE A TIER PRICE AGAIN, the DB is only half the job.
+--    Stripe price objects are IMMUTABLE — you cannot edit $60 into $50. The
+--    full sequence that was actually performed here:
+--      1. Create a new recurring price on prod_U2CksacYNIHyph
+--         -> created price_1TyKlRDvIKXE2EmOPgxfWKHf ($50/mo, live)
+--      2. Set it as the product's default_price. This MUST come before step 3:
+--         Stripe refuses to archive a price that is its product's default
+--         ("This price cannot be archived because it is the default price").
+--      3. Archive the old price (price_1T48LRDvIKXE2EmOfXLJ6UDr, $60) so it
+--         can never be selected again.
+--      4. Repoint membership_tiers.stripe_price_id at the new price
+--         (done by migration 066b / elite_repoint_stripe_price_50).
+--    Skip 1-2 and 4 and the DB advertises $50 while checkout charges $60 —
+--    which is exactly the class of mismatch this whole ticket was about.
+--
+-- VERIFIED after the change: DB price_cents = 5000 and stripe_price_id
+--    resolves to a price with unit_amount = 5000, active = true; the $60
+--    price reads active = false.
 --
 -- WHY THIS IS SAFE TO RUN NOW (audited 2026-07-28):
 --    - athlete_memberships rows carrying a stripe_subscription_id: 0

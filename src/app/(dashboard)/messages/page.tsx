@@ -56,38 +56,48 @@ export default function MessagesPage() {
   const toggleGroupPick = (id: string) =>
     setGroupPicks(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id])
 
-  const createGroup = async () => {
-    if (!groupName.trim() || groupPicks.length === 0) return
-    setCreatingGroup(true)
-    setGroupError(null)
-
-    const res = await fetch('/api/messages/group', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: groupName.trim(), participantIds: groupPicks }),
-    })
-    const data = await res.json().catch(() => ({}))
-    setCreatingGroup(false)
-
-    if (!res.ok) {
-      setGroupError(data.error || 'Could not create the group')
-      return
-    }
-
-    setShowNewChat(false)
-    setGroupMode(false)
-    setGroupPicks([])
-    setGroupName('')
-    await fetchConversations()
-    setSelectedConv(data.conversationId)
-  }
-
   const fetchConversations = useCallback(async () => {
     const res = await fetch('/api/messages')
     const data = await res.json()
     if (data.conversations) setConversations(data.conversations)
     setLoading(false)
   }, [])
+
+  // ⚠ Must be declared AFTER fetchConversations — `const` is not hoisted, so
+  // calling it from above throws a ReferenceError that an async handler
+  // swallows silently: the group is created server-side but the list never
+  // refreshes and no error is shown.
+  const createGroup = async () => {
+    if (!groupName.trim() || groupPicks.length === 0) return
+    setCreatingGroup(true)
+    setGroupError(null)
+
+    try {
+      const res = await fetch('/api/messages/group', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: groupName.trim(), participantIds: groupPicks }),
+      })
+      const data = await res.json().catch(() => ({}))
+
+      if (!res.ok) {
+        setGroupError(data.error || 'Could not create the group')
+        return
+      }
+
+      setShowNewChat(false)
+      setGroupMode(false)
+      setGroupPicks([])
+      setGroupName('')
+      await fetchConversations()
+      setSelectedConv(data.conversationId)
+    } catch (err: any) {
+      // Never fail silently — a swallowed error here is what hid the bug above.
+      setGroupError(err?.message || 'Could not create the group')
+    } finally {
+      setCreatingGroup(false)
+    }
+  }
 
   useEffect(() => {
     fetchConversations()
