@@ -10,6 +10,7 @@
     "lint": "next lint",
     "clean": "rm -rf .next",
     "index": "node scripts/generate-component-index.mjs",
+    "prepare": "bash scripts/install-hooks.sh",
     "hooks": "bash scripts/install-hooks.sh",
     "hooks:check": "bash scripts/install-hooks.sh --check"
   },

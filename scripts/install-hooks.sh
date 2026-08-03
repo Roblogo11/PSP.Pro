@@ -23,6 +23,20 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
 
+# --- Deploy safety -------------------------------------------------------
+# npm runs this via the `prepare` lifecycle on every `npm install`, which
+# includes Vercel/CI builds. There is no .git there (and no developer to
+# protect), so skip silently. Without this the `exit 1` below would fail a
+# production build.
+# A human running the script by hand in a broken dir still gets the error.
+if [[ -n "${CI:-}" || -n "${VERCEL:-}" ]]; then
+  exit 0
+fi
+if [[ "${npm_lifecycle_event:-}" == "prepare" && ! -d "$REPO_ROOT/.git/hooks" ]]; then
+  exit 0
+fi
+# -------------------------------------------------------------------------
+
 CHECK_ONLY=0
 if [[ "${1:-}" == "--check" ]]; then
   CHECK_ONLY=1
